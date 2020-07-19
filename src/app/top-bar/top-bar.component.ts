@@ -7,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TopBarComponent implements OnInit {
 
+  logo_header = `src/assets/img/logo_header.png`;
   constructor() { }
 
   ngOnInit(): void {

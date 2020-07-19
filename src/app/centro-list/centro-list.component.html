@@ -23,8 +23,9 @@
   <div>
 
     <h2>Centros Alianca Espirita Evangelica</h2>
+    <mat-spinner id ='loading' *ngIf="!centroData" diameter="100"></mat-spinner>
     <ul>
-      <table id="centros">
+      <table *ngIf="centroData" id="centros">
         <tr>
           <th>Nome</th>
           <th>Endereço</th>
