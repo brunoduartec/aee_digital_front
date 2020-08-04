@@ -1,28 +1,32 @@
 <title>Alianca Tecnologia</title>
 
-<!--Futuramente essa parte vai ficar na sidebar-->>
-<!-- <nav class="menu">
-  <ul class="menu">
-    <li>
-      <a href="#centros">Centros</a>
-    </li>
-    <li>
-      <a href="#eventos">Eventos</a>
-    </li>
-    <li>
-      <a href="#atividades">Atividades</a>
-    </li>
-  </ul>
-</nav> -->
-
-
 <a id="centros"></a>
 <!-- <div class="section-hero">
   <div class="container"> -->
 <div>
   <div>
 
-    <h2>Centros Alianca Espirita Evangelica</h2>
+    <h2>Centros Alianca Espírita Evangelica</h2>
+
+    <!-- <div id="form">
+      <app-range-date #rangeDate></app-range-date>
+      <mat-form-field id="tipo-busca" appearance="fill" class="mat-form-field--white" floatLabel="always">
+        <mat-label>Tipo de busca*</mat-label>
+        <mat-select [(ngModel)]="tipo">
+          <mat-option *ngFor="let tipo of tipoPesquisa" [value]="tipo" ngDefaultControl>
+            {{tipo.value}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field> -->
+    <div id="form">
+        <mat-form-field MatFormFieldControl appearance="fill" floatLabel="always" id="form-busca">
+          <mat-label>Buscar</mat-label>
+          <input id="argumento-busca" [(ngModel)]="argumentoPesquisa" matInput>
+        </mat-form-field>
+      <button id="pesquisar" (click)="pesquisar()" class="mat-raised-button">PESQUISAR</button>
+    </div>
+    <!-- </div> -->
+
     <mat-spinner id ='loading' *ngIf="!centroData" diameter="100"></mat-spinner>
     <ul>
       <table *ngIf="centroData" id="centros">
@@ -49,27 +53,6 @@
     </ul>
   </div>
 </div>
-
-<!-- 
-<a id="eventos"></a>
-<div id="overview" class="section">
-  <div class="container">
-    <div class="overview-content">
-      <div>
-        <h2>Eventos Cadastrados</h2>
-      </div>
-    </div>
-  </div>
-</div>
-
-<a id="atividades"></a>
-<div id="insert" class="section">
-  <div class="container">
-    <h2>Inserir Atividades</h2>
-    <p>Add a new Activity</p>
-
-  </div>
-</div> -->
 
 
 <!-- footer -->
