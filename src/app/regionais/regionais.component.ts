@@ -1,21 +1,22 @@
 import { Component, OnInit } from '@angular/core';
-import { CentroServiceService } from "./centro-service.service";
+import { RegionaisServiceService } from "./regionais-service.service";
 import { TipoConsultaCentro } from '../util/consulta-centros.enum';
 
 @Component({
-  selector: 'app-centro-list',
-  templateUrl: './centro-list.component.html',
-  styleUrls: ['./centro-list.component.css']
+  selector: 'app-regionais',
+  templateUrl: './regionais.component.html',
+  styleUrls: ['./regionais.component.css']
 })
-export class CentroListComponent implements OnInit {
-  public centroData: any;
+export class RegionaisComponent implements OnInit {
+  public regionalData: any;
   tipo: { key: number, value: string };
   tipoPesquisa: { key: number, value: string }[] = [];
   argumentoPesquisa: string;
   campo: string;
   dadosCarregados = false;
 
-  constructor(private svc: CentroServiceService) {
+
+  constructor(private svc: RegionaisServiceService) {
     this.campo = "Campo";
 
     for (const tipo in TipoConsultaCentro) {
@@ -27,16 +28,16 @@ export class CentroListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.svc.getAllCentros().then(data => {
-      this.centroData = data;
+    this.svc.getAllRegionais().then(data => {
+      this.regionalData = data;
     });
   }
 
   pesquisar() {
-    this.svc.getCentroPorId(this.argumentoPesquisa)
+    this.svc.getRegionalPorId(this.argumentoPesquisa)
       .then((resultado: any) => {
         if (resultado) {
-          this.centroData = resultado;
+          this.regionalData = resultado;
           this.dadosCarregados = true;
         }
       });

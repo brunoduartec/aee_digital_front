@@ -21,19 +21,19 @@ body {
   width: 240px;
 }
 
-::ng-deep  .mat-form-field-label {
+::ng-deep .mat-form-field-label {
   color: green;
- }
+}
 
-::ng-deep  .mat-form-field .mat-input-element {
+::ng-deep .mat-form-field .mat-input-element {
   color: green;
 }
 
 ::ng-deep .mat-form-field .mat-form-field-underline {
-  background-color:green;
+  background-color: green;
 }
 
-::ng-deep .mat-form-field  .mat-form-field-underline {
+::ng-deep .mat-form-field .mat-form-field-underline {
   background-color: slategray;
 }
 
@@ -43,9 +43,9 @@ body {
   width: 100%;
 }
 
-#form-busca{
-  border:solid 2px #5F9EA0;
-  border-radius:10px;
+#form-busca {
+  border: solid 2px #5F9EA0;
+  border-radius: 10px;
   width: 50%;
   height: 20%;
   margin-left: 10px;
@@ -60,7 +60,7 @@ button {
   letter-spacing: 1px;
   font-weight: 200;
   text-transform: uppercase;
-  margin:20px;
+  margin: 20px;
 }
 
 #pesquisar {
@@ -68,26 +68,27 @@ button {
   align-content: flex-start;
 }
 
-#centros {
+#regionais {
   font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
   border-collapse: collapse;
   width: 100%;
 }
-#centros td,
-#centros th {
+
+#regionais td,
+#regionais th {
   border: 1px solid #ddd;
   padding: 8px;
 }
 
-#centros tr:nth-child(even) {
+#regionais tr:nth-child(even) {
   background-color: #f2f2f2;
 }
 
-#centros tr:hover {
+#regionais tr:hover {
   background-color: #ddd;
 }
 
-#centros th {
+#regionais th {
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;

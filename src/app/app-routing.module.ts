@@ -4,11 +4,13 @@ import { CentroListComponent } from './centro-list/centro-list.component';
 import { AtividadesComponent } from './atividades/atividades.component';
 import { EventosComponent } from './eventos/eventos.component';
 import { AliancaComponent } from './alianca/alianca.component';
+import { RegionaisComponent } from './regionais/regionais.component';
 
 const centros ="centros";
 const atividades ="atividades";
 const eventos ="eventos";
 const alianca ="alianca";
+const regionais ="regionais";
 
 const routes: Routes = [{
   path: centros,
@@ -25,6 +27,10 @@ const routes: Routes = [{
 {
   path: alianca,
   component: AliancaComponent
+},
+{
+  path: regionais,
+  component: RegionaisComponent
 },
 {
   path: '**',

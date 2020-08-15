@@ -26,6 +26,9 @@ npm-debug.log
 testem.log
 typings/
 
+# Visual Studio 2015/2017 cache/options directory
+.vs/
+
 # e2e
 e2e/*.js
 e2e/*.map
