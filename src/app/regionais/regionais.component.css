@@ -1,0 +1,157 @@
+body {
+  font-family: Roboto;
+  margin: 0;
+  background: #343233;
+}
+
+.container {
+  max-width: 1200px;
+  text-align: center;
+  margin: 0 auto;
+  padding: 0 3rem;
+}
+
+@media screen and (max-width: 1580px) {
+  .container {
+    padding: 0 2rem;
+  }
+}
+
+#tipo-busca {
+  width: 240px;
+}
+
+::ng-deep .mat-form-field-label {
+  color: green;
+}
+
+::ng-deep .mat-form-field .mat-input-element {
+  color: green;
+}
+
+::ng-deep .mat-form-field .mat-form-field-underline {
+  background-color: green;
+}
+
+::ng-deep .mat-form-field .mat-form-field-underline {
+  background-color: slategray;
+}
+
+#form {
+  grid-auto-flow: column;
+  display: flex;
+  width: 100%;
+}
+
+#form-busca {
+  border: solid 2px #5F9EA0;
+  border-radius: 10px;
+  width: 50%;
+  height: 20%;
+  margin-left: 10px;
+
+}
+
+button {
+  padding: 10px 10px;
+  background: #FFD152;
+  font-family: Roboto;
+  color: #282627;
+  letter-spacing: 1px;
+  font-weight: 200;
+  text-transform: uppercase;
+  margin: 20px;
+}
+
+#pesquisar {
+  margin-left: 10px;
+  align-content: flex-start;
+}
+
+#regionais {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#regionais td,
+#regionais th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#regionais tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+#regionais tr:hover {
+  background-color: #ddd;
+}
+
+#regionais th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #9B81AE;
+  color: white;
+}
+
+#loading {
+  margin: auto;
+  align-content: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+h1 {
+  font-size: 54px;
+  color: #FFD152;
+}
+
+h2 {
+  font-size: 42px;
+  color: #8D8273;
+}
+
+h3 {
+  font-size: 28px;
+  color: #8D8273;
+}
+
+h4 {
+  font-size: 20px;
+  color: #8D8273;
+  font-weight: 400;
+  margin-bottom: 0;
+}
+
+p {
+  margin: 20px 0;
+  color: #8D8273;
+  line-height: 24px;
+}
+
+img {
+  margin: 20px 0;
+  width: 100%;
+}
+
+i {
+  font-size: 42px;
+  letter-spacing: 14px;
+}
+
+/* footer */
+
+footer {
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  padding: 1em 0;
+  background: #282627;
+}
+
+footer span {
+  color: #8D8273;
+  font-weight: 600;
+}

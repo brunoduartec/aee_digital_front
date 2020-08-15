@@ -6,12 +6,13 @@ import { Observable } from "rxjs/Observable";
 @Injectable({
   providedIn: 'root'
 })
-export class CentroServiceService {
+export class RegionaisServiceService {
+
   constructor(private http: HttpClient) { }
 
-  getAllCentros(): Promise<any> {
+  getAllRegionais(): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.http.get<any>(`${environment.centrosApi}/centros`)
+      this.http.get<any>(`${environment.centrosApi}/regionais`)
         .subscribe((a) => {
           resolve(a);
         }, () => {
@@ -19,9 +20,9 @@ export class CentroServiceService {
     })
   }
 
-  getCentroPorId(id: string): Promise<any> {
+  getRegionalPorId(id: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.http.get<any>(`${environment.centrosApi}/centros/${id}`)
+      this.http.get<any>(`${environment.centrosApi}/regionais/${id}`)
         .subscribe((a) => {
           resolve(a);
         }, () => {

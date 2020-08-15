@@ -24,12 +24,12 @@ export class CentroListComponent implements OnInit {
       }
     }
     this.tipo = this.tipoPesquisa[0];
-   }
+  }
 
   ngOnInit(): void {
-    // this.svc.getAllCentros().then(data => {
-    //   this.centroData = data;
-    // });
+    this.svc.getAllCentros().then(data => {
+      this.centroData = data;
+    });
   }
 
   pesquisar() {
