@@ -22,7 +22,7 @@ export class RegionaisServiceService {
 
   getRegionalPorId(id: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.http.get<any>(`${environment.centrosApi}/regionais/${id}`)
+      this.http.get<any>(`${environment.centrosApi}/regionais?searchParam=NOME_CENTRO&searchValue=${id}`)
         .subscribe((a) => {
           resolve(a);
         }, () => {
