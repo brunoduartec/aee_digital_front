@@ -6,7 +6,7 @@
 <div>
   <div>
 
-    <h2>Centros Alianca Espírita Evangelica</h2>
+    <h2>Centros Aliança Espírita Evangélica</h2>
 
     <!-- <div id="form">
       <app-range-date #rangeDate></app-range-date>
@@ -31,24 +31,19 @@
     <ul>
       <table *ngIf="centroData" id="centros">
         <tr>
+          <th>Regional</th>
           <th>Nome</th>
           <th>Endereço</th>
-          <th>Bairro</th>
-          <th>CEP</th>
           <th>Cidade</th>
-          <th>CNPJ</th>
-          <th>Data de Fundação</th>
+          <th>Pais</th>
         </tr>
         <tr *ngFor="let centro of centroData">
-          <td>{{centro.NOME_CENTRO}} </td>
-          <td>{{centro.ENDERECO}} </td>
-          <td>{{centro.BAIRRO}} </td>
-          <td>{{centro.CEP}} </td>
-          <td>{{centro.CIDADE}} </td>
-          <td>{{centro.CNPJ_CENTRO}} </td>
-          <td>{{centro.DATA_FUNDACAO}} </td>
+          <td>{{centro.ID_REGIONAL  | RegionaisPipe}} </td>
+          <td>{{centro.NOME_CURTO}} - {{centro.NOME_CENTRO}} </td>
+          <td>{{centro.ENDERECO}} {{centro.NUMERO_ENDERECO}} - {{centro.BAIRRO}} - {{centro.CEP}} </td>
+          <td>{{centro.CIDADE}} / {{centro.ESTADO}}</td>
+          <td>{{centro.PAIS}}</td>
         </tr>
-
       </table>
     </ul>
   </div>
