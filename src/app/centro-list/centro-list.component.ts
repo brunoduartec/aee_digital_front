@@ -24,7 +24,7 @@ export class CentroListComponent implements OnInit {
       }
     }
     this.tipo = this.tipoPesquisa[0];
-  }
+   }
 
   ngOnInit(): void {
     this.svc.getAllCentros().then(data => {
@@ -32,7 +32,7 @@ export class CentroListComponent implements OnInit {
     });
   }
 
-  pesquisar() {
+  pesquisar() { 
     this.svc.getCentroPorId(this.argumentoPesquisa)
       .then((resultado: any) => {
         if (resultado) {

@@ -8,12 +8,11 @@ body {
   max-width: 1200px;
   text-align: center;
   margin: 0 auto;
-  padding: 0 3rem;
 }
 
 @media screen and (max-width: 1580px) {
   .container {
-    padding: 0 2rem;
+    padding: 0 2rem;  
   }
 }
 
@@ -48,8 +47,7 @@ body {
   border-radius:10px;
   width: 50%;
   height: 20%;
-  margin-left: 10px;
-
+  margin-left: 25px;
 }
 
 button {
@@ -71,7 +69,8 @@ button {
 #centros {
   font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
   border-collapse: collapse;
-  width: 100%;
+  width: 100%;  
+  margin-left: -15px;
 }
 #centros td,
 #centros th {
