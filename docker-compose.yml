@@ -8,5 +8,5 @@ services:
       - "4200:4200"
     container_name: angular-ui
     volumes:
-       - .:/usr/src/app/app-ui
-       - /usr/src/app/app-ui/node_modules
+       - .:/usr/app/app-ui
+       - /usr/app/app-ui/node_modules

@@ -1,12 +1,12 @@
 FROM node:10
 
-WORKDIR /usr/src/app/app-ui
+WORKDIR /usr/app/app-ui
 
 COPY package*.json ./
 
 RUN npm install -g @angular/cli @angular-devkit/build-angular && npm install
 
-COPY . .
+COPY . /usr/app/app-ui
 
 EXPOSE 4200
 
