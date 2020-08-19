@@ -15,6 +15,8 @@ import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RegionaisPipe } from './util/pipes/regionais.pipe';
+
 
 @NgModule({
   declarations: [
@@ -24,7 +26,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     EventosComponent,
     AtividadesComponent,
     AliancaComponent,
-    RegionaisComponent
+    RegionaisComponent,
+    RegionaisPipe
   ],
   imports: [
     BrowserModule,
