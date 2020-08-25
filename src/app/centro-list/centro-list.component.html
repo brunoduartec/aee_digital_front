@@ -8,22 +8,21 @@
 
     <h2>Centros Aliança Espírita Evangélica</h2>
 
-    <!-- <div id="form">
-      <app-range-date #rangeDate></app-range-date>
-      <mat-form-field id="tipo-busca" appearance="fill" class="mat-form-field--white" floatLabel="always">
-        <mat-label>Tipo de busca*</mat-label>
-        <mat-select [(ngModel)]="tipo">
-          <mat-option *ngFor="let tipo of tipoPesquisa" [value]="tipo" ngDefaultControl>
-            {{tipo.value}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field> -->
+      
     <div id="form">
         <mat-form-field MatFormFieldControl appearance="fill" floatLabel="always" id="form-busca">
           <mat-label>Buscar</mat-label>
           <input id="argumento-busca" [(ngModel)]="argumentoPesquisa" matInput>
         </mat-form-field>
-      <button id="pesquisar" (click)="pesquisar()" class="mat-raised-button">PESQUISAR</button>
+        <mat-form-field id="tipo-busca" appearance="fill" floatLabel="always">
+          <mat-label>Tipo de busca</mat-label>
+          <mat-select [(ngModel)]="tipo">
+            <mat-option *ngFor="let tipo of tipoPesquisa" [value]="tipo" ngDefaultControl>
+              {{tipo.value}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button id="pesquisar" (click)="pesquisar()" class="mat-raised-button">PESQUISAR</button>
     </div>
     <!-- </div> -->
 
