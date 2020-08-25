@@ -36,6 +36,10 @@ body {
   background-color: slategray;
 }
 
+:host /deep/ .mat-select-value-text {
+  color: green;
+} 
+
 #form {
   grid-auto-flow: column;
   display: flex;
@@ -48,6 +52,14 @@ body {
   width: 50%;
   height: 20%;
   margin-left: 25px;
+}
+
+#tipo-busca{
+  border:solid 2px #5F9EA0;
+  color: green;
+  border-radius:10px;
+  height: 20%;
+  margin-left: 15px;
 }
 
 button {

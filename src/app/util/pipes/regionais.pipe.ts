@@ -12,4 +12,3 @@ export class RegionaisPipe implements PipeTransform {
 }
 
      
-    

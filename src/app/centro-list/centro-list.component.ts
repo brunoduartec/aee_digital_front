@@ -33,7 +33,7 @@ export class CentroListComponent implements OnInit {
   }
 
   pesquisar() { 
-    this.svc.getCentroPorId(this.argumentoPesquisa)
+    this.svc.getCentro(this.argumentoPesquisa, this.tipo.key)
       .then((resultado: any) => {
         if (resultado) {
           this.centroData = resultado;

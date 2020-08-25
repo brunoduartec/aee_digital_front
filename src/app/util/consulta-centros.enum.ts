@@ -1,5 +1,9 @@
 export enum TipoConsultaCentro {
-    id = 1,
-    regional = 2
+    Nome = 1,
+    Regional = 2,
+    Endereço = 3,
+    Cidade = 4,
+    Estado = 5,
+    País = 6
   }
   

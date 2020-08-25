@@ -19,9 +19,9 @@ export class CentroServiceService {
     })
   }
 
-  getCentroPorId(id: string): Promise<any> {
+  getCentro(searchValue: string, searchParam: number): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.http.get<any>(`${environment.centrosApi}/centros?searchParam=NOME_CENTRO&searchValue=${id}`)
+      this.http.get<any>(`${environment.centrosApi}/centros?searchParam=${searchParam}&searchValue=${searchValue}`)
         .subscribe((a) => {
           resolve(a);
         }, () => {
