@@ -11,3 +11,8 @@ services:
     volumes:
        - .:/usr/app/app-ui
        - /usr/app/app-ui/node_modules
+    networks: 
+      - app-network
+networks:
+  app-network:
+      driver: bridge
