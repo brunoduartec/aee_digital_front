@@ -8,28 +8,29 @@
 
     <h2>Centros Aliança Espírita Evangélica</h2>
 
-      
+
     <div id="form">
-        <mat-form-field MatFormFieldControl appearance="fill" floatLabel="always" id="form-busca">
-          <mat-label>Buscar</mat-label>
-          <input id="argumento-busca" [(ngModel)]="argumentoPesquisa" matInput>
-        </mat-form-field>
-        <mat-form-field id="tipo-busca" appearance="fill" floatLabel="always">
-          <mat-label>Tipo de busca</mat-label>
-          <mat-select [(ngModel)]="tipo">
-            <mat-option *ngFor="let tipo of tipoPesquisa" [value]="tipo" ngDefaultControl>
-              {{tipo.value}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <button id="pesquisar" (click)="pesquisar()" class="mat-raised-button">PESQUISAR</button>
+      <mat-form-field MatFormFieldControl appearance="fill" floatLabel="always" id="form-busca">
+        <mat-label>Buscar</mat-label>
+        <input id="argumento-busca" [(ngModel)]="argumentoPesquisa" matInput>
+      </mat-form-field>
+      <mat-form-field id="tipo-busca" appearance="fill" floatLabel="always">
+        <mat-label>Tipo de busca</mat-label>
+        <mat-select [(ngModel)]="tipo">
+          <mat-option *ngFor="let tipo of tipoPesquisa" [value]="tipo" ngDefaultControl>
+            {{tipo.value}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button id="pesquisar" (click)="pesquisar()" class="mat-raised-button">PESQUISAR</button>
     </div>
     <!-- </div> -->
 
-    <mat-spinner id ='loading' *ngIf="!centroData" diameter="100"></mat-spinner>
+    <mat-spinner id='loading' *ngIf="!centroData" diameter="100"></mat-spinner>
     <ul>
       <table *ngIf="centroData" id="centros">
         <tr>
+          <th width="20"></th>
           <th>Regional</th>
           <th>Nome</th>
           <th>Endereço</th>
@@ -37,6 +38,7 @@
           <th>Pais</th>
         </tr>
         <tr *ngFor="let centro of centroData">
+          <img src="assets/img/lupa-icon.png" (click)="detalhe(centro.ID_CENTRO)" height="20" />
           <td>{{centro.ID_REGIONAL  | RegionaisPipe}} </td>
           <td>{{centro.NOME_CURTO}} - {{centro.NOME_CENTRO}} </td>
           <td>{{centro.ENDERECO}} {{centro.NUMERO_ENDERECO}} - {{centro.BAIRRO}} - {{centro.CEP}} </td>

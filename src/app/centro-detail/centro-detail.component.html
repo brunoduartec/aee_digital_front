@@ -1,0 +1,31 @@
+<title>Alianca Tecnologia</title>
+
+<a id="centros"></a>
+<!-- <div class="section-hero">
+  <div class="container"> -->
+<div>
+  <div>
+
+    <h2>Centros Aliança Espírita Evangélica</h2>
+
+    <ul>
+      <table *ngIf="centroDetail" id="centros">
+        <tr>
+          <th>Informação</th>
+          <th>Valor</th>
+        </tr>
+        <tr *ngFor="let param of params">
+          <td>{{param.alias}} </td>
+          <td>{{centroDetail[param.name]}}</td>
+        </tr>
+
+      </table>
+    </ul>
+  </div>
+</div>
+
+
+<!-- footer -->
+<footer>
+  <span>created by Alianca Espirita Evangélica</span>
+</footer>
