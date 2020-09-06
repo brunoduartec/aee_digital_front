@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CentroServiceService } from "./centro-service.service";
 import { TipoConsultaCentro } from '../util/consulta-centros.enum';
+import { Router } from "@angular/router";
+
 
 @Component({
   selector: 'app-centro-list',
@@ -15,7 +17,7 @@ export class CentroListComponent implements OnInit {
   campo: string;
   dadosCarregados = false;
 
-  constructor(private svc: CentroServiceService) {
+  constructor(private svc: CentroServiceService, private router: Router) {
     this.campo = "Campo";
 
     for (const tipo in TipoConsultaCentro) {
@@ -24,7 +26,7 @@ export class CentroListComponent implements OnInit {
       }
     }
     this.tipo = this.tipoPesquisa[0];
-   }
+  }
 
   ngOnInit(): void {
     this.svc.getAllCentros().then(data => {
@@ -32,7 +34,7 @@ export class CentroListComponent implements OnInit {
     });
   }
 
-  pesquisar() { 
+  pesquisar() {
     this.svc.getCentro(this.argumentoPesquisa, this.tipo.key)
       .then((resultado: any) => {
         if (resultado) {
@@ -40,6 +42,11 @@ export class CentroListComponent implements OnInit {
           this.dadosCarregados = true;
         }
       });
+  }
+
+  detalhe(id: string) {
+    window.localStorage.setItem("centroID", id);
+    this.router.navigate(['centro-detail']);
   }
 
 }

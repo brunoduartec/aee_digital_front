@@ -17,6 +17,7 @@ import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RegionaisPipe } from './util/pipes/regionais.pipe';
 import {MatSelectModule} from '@angular/material/select';
+import { CentroDetailComponent } from './centro-detail/centro-detail.component';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import {MatSelectModule} from '@angular/material/select';
     AtividadesComponent,
     AliancaComponent,
     RegionaisComponent,
-    RegionaisPipe
+    RegionaisPipe,
+    CentroDetailComponent
   ],
   imports: [
     BrowserModule,
