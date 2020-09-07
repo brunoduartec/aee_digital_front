@@ -31,10 +31,10 @@ export class CentroDetailComponent implements OnInit {
         "name": "ENDERECO",
         "alias": "Endereço"
       },
-      {
-        "name": "NUMERO_ENDERECO",
-        "alias": "Número"
-      },
+      // {
+      //   "name": "NUMERO_ENDERECO",
+      //   "alias": "Número"
+      // },
       {
         "name": "CIDADE",
         "alias": "Cidade"
@@ -65,6 +65,8 @@ export class CentroDetailComponent implements OnInit {
     console.log("PEGANDO O VALOR DE " + this.id)
     this.svc.getCentro(this.id).then(data => {
       this.centroDetail = data[0];
+
+      console.log(this.centroDetail)
     });
   }
 
