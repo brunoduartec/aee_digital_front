@@ -16,7 +16,8 @@
         </tr>
         <tr *ngFor="let param of params">
           <td>{{param.alias}} </td>
-          <td>{{centroDetail[param.name]}}</td>
+          <td *ngIf="param.name == 'DATA_FUNDACAO'">{{centroDetail[param.name] | date:'d/M/yyyy'}}</td>
+          <td *ngIf="param.name != 'DATA_FUNDACAO'">{{centroDetail[param.name]}}</td>
         </tr>
 
       </table>
