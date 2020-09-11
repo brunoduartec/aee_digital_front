@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { CentroDetailService } from "./centro-detail.service";
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-centro-detail',
+  selector: 'centro-detail',
   templateUrl: './centro-detail.component.html',
   styleUrls: ['./centro-detail.component.css']
 })
@@ -58,10 +59,12 @@ export class CentroDetailComponent implements OnInit {
     ]
 
 
-  constructor(private svc: CentroDetailService) { }
+  constructor(
+    private svc: CentroDetailService,
+    @Inject(MAT_DIALOG_DATA) public dados: any) { }
 
   ngOnInit(): void {
-    this.id = window.localStorage.getItem("centroID");
+    this.id = this.dados;
     console.log("PEGANDO O VALOR DE " + this.id)
     this.svc.getCentro(this.id).then(data => {
       this.centroDetail = data[0];
