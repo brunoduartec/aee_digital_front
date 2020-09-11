@@ -18,7 +18,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RegionaisPipe } from './util/pipes/regionais.pipe';
 import {MatSelectModule} from '@angular/material/select';
 import { CentroDetailComponent } from './centro-detail/centro-detail.component';
-
+import {MatDialogModule} from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -42,7 +42,8 @@ import { CentroDetailComponent } from './centro-detail/centro-detail.component';
     MatFormFieldModule,
     MatInputModule,
     BrowserAnimationsModule,
-    MatSelectModule
+    MatSelectModule,
+    MatDialogModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,19 +1,10 @@
 <title>Alianca Tecnologia</title>
 
-<a id="centros"></a>
-<!-- <div class="section-hero">
-  <div class="container"> -->
 <div>
   <div>
-
     <h2>Centros Aliança Espírita Evangélica</h2>
-
     <ul>
-      <table *ngIf="centroDetail" id="centros">
-        <tr>
-          <th>Informação</th>
-          <th>Valor</th>
-        </tr>
+      <table *ngIf="centroDetail" id="centros_detail">
         <tr *ngFor="let param of params">
           <td>{{param.alias}} </td>
           <td *ngIf="param.name == 'DATA_FUNDACAO'">{{centroDetail[param.name] | date:'d/M/yyyy'}}</td>
