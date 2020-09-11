@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CentroDetailService } from "./centro-detail.service";
-
+import { Router } from "@angular/router";
 @Component({
   selector: 'app-centro-detail',
   templateUrl: './centro-detail.component.html',
@@ -31,10 +31,6 @@ export class CentroDetailComponent implements OnInit {
         "name": "ENDERECO",
         "alias": "Endereço"
       },
-      // {
-      //   "name": "NUMERO_ENDERECO",
-      //   "alias": "Número"
-      // },
       {
         "name": "CIDADE",
         "alias": "Cidade"
@@ -58,7 +54,7 @@ export class CentroDetailComponent implements OnInit {
     ]
 
 
-  constructor(private svc: CentroDetailService) { }
+  constructor(private svc: CentroDetailService, private router: Router) { }
 
   ngOnInit(): void {
     this.id = window.localStorage.getItem("centroID");
@@ -68,6 +64,11 @@ export class CentroDetailComponent implements OnInit {
 
       console.log(this.centroDetail)
     });
+  }
+
+  atualizar() {
+    // window.localStorage.setItem()
+    this.router.navigate(['edit-centro']);
   }
 
 }

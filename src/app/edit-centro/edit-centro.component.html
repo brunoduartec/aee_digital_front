@@ -1,0 +1,39 @@
+<title>Alianca Tecnologia</title>
+
+<a id="centros"></a>
+<!-- <div class="section-hero">
+  <div class="container"> -->
+<div>
+  <div>
+
+    <h2>Centros Aliança Espírita Evangélica</h2>
+    <div class="col-md-6 user-container">
+      <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+        <div class="hidden">
+          <input type="text" formControlName="ID_CENTRO" placeholder="ID_CENTRO" name="ID_CENTRO" class="form-control"
+            ID_CENTRO="ID_CENTRO">
+        </div>
+        <ul>
+          <table *ngIf="centroDetail" id="centros">
+            <tr>
+              <th>Informação</th>
+              <th>Valor</th>
+            </tr>
+            <tr *ngFor="let param of params">
+              <td>{{param.alias}} </td>
+              <td><input type={{param.type}} formControlName={{param.name}} placeholder={{param.name}}
+                  name={{param.name}} class="form-control" id={{param.name}}></td>
+            </tr>
+          </table>
+        </ul>
+        <button class="btn btn-success">Update</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<!-- footer -->
+<footer>
+  <span>created by Alianca Espirita Evangélica</span>
+</footer>

@@ -6,11 +6,13 @@ import { AtividadesComponent } from './atividades/atividades.component';
 import { EventosComponent } from './eventos/eventos.component';
 import { AliancaComponent } from './alianca/alianca.component';
 import { RegionaisComponent } from './regionais/regionais.component';
+import { EditCentroComponent } from './edit-centro/edit-centro.component';
 
 
 
 const centros = "centros";
 const centro_detail = "centro-detail"
+const edit_centro = "edit-centro"
 const atividades = "atividades";
 const eventos = "eventos";
 const alianca = "alianca";
@@ -39,6 +41,10 @@ const routes: Routes = [{
 {
   path: centro_detail,
   component: CentroDetailComponent
+},
+{
+  path: edit_centro,
+  component: EditCentroComponent
 },
 {
   path: '**',
