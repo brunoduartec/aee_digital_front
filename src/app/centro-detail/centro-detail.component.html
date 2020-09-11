@@ -4,6 +4,7 @@
   <div>
     <h2>Centros Aliança Espírita Evangélica</h2>
     <ul>
+      <mat-spinner id='loading' *ngIf="!centroDetail" diameter="100"></mat-spinner>
       <table *ngIf="centroDetail" id="centros_detail">
         <tr *ngFor="let param of params">
           <td>{{param.alias}} </td>
