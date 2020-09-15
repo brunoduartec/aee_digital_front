@@ -21,6 +21,7 @@ import { CentroDetailComponent } from './centro-detail/centro-detail.component';
 import { EditCentroComponent } from './edit-centro/edit-centro.component';
 import { ReactiveFormsModule } from "@angular/forms";
 
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { ReactiveFormsModule } from "@angular/forms";
     MatInputModule,
     BrowserAnimationsModule,
     MatSelectModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatDialogModule
   ],
   providers: [],
   bootstrap: [AppComponent]

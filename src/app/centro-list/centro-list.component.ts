@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CentroServiceService } from "./centro-service.service";
 import { TipoConsultaCentro } from '../util/consulta-centros.enum';
 import { Router } from "@angular/router";
+import { MatDialog } from '@angular/material/dialog';
+import { CentroDetailComponent } from '../centro-detail/centro-detail.component';
 
 
 @Component({
@@ -16,8 +18,9 @@ export class CentroListComponent implements OnInit {
   argumentoPesquisa: string;
   campo: string;
   dadosCarregados = false;
+ 
 
-  constructor(private svc: CentroServiceService, private router: Router) {
+  constructor(private svc: CentroServiceService, private router: Router, private matDialog: MatDialog) {
     this.campo = "Campo";
 
     for (const tipo in TipoConsultaCentro) {
@@ -45,8 +48,15 @@ export class CentroListComponent implements OnInit {
   }
 
   detalhe(id: string) {
-    window.localStorage.setItem("centroID", id);
-    this.router.navigate(['centro-detail']);
+    const data = id;
+    this.matDialog.open(CentroDetailComponent, {
+      data,
+      maxHeight: '90vh',
+      maxWidth: '80vw',
+      height: '100vh',
+      width: '100vw',
+      panelClass: 'custom-dialog-container'
+    });
   }
 
 }

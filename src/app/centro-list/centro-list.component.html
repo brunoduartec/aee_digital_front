@@ -38,7 +38,7 @@
           <th>Pais</th>
         </tr>
         <tr *ngFor="let centro of centroData">
-          <img src="assets/img/lupa-icon.png" (click)="detalhe(centro.ID_CENTRO)" height="20" />
+          <img src="assets/img/lupa.svg" (click)="detalhe(centro.ID_CENTRO)" height="20" />
           <td>{{centro.ID_REGIONAL  | RegionaisPipe}} </td>
           <td>{{centro.NOME_CURTO}} - {{centro.NOME_CENTRO}} </td>
           <td>{{centro.ENDERECO}} {{centro.NUMERO_ENDERECO}} - {{centro.BAIRRO}} - {{centro.CEP}} </td>
