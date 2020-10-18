@@ -6,8 +6,6 @@ import { AtividadesComponent } from './atividades/atividades.component';
 import { EventosComponent } from './eventos/eventos.component';
 import { AliancaComponent } from './alianca/alianca.component';
 import { RegionaisComponent } from './regionais/regionais.component';
-import { EditCentroComponent } from './edit-centro/edit-centro.component';
-
 
 
 const centros = "centros";
@@ -41,10 +39,6 @@ const routes: Routes = [{
 {
   path: centro_detail,
   component: CentroDetailComponent
-},
-{
-  path: edit_centro,
-  component: EditCentroComponent
 },
 {
   path: '**',

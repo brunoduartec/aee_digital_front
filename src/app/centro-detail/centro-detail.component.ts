@@ -11,6 +11,8 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class CentroDetailComponent implements OnInit {
   public centroDetail: any;
   public id: string;
+  public date: Date = new Date(2013, 9, 22);
+  dummy: string = 'Ramin';
   public params =
     [
       {
@@ -60,16 +62,23 @@ export class CentroDetailComponent implements OnInit {
   ngOnInit(): void {
     this.id = this.dados;
     console.log("PEGANDO O VALOR DE " + this.id)
+
     this.svc.getCentro(this.id).then(data => {
       this.centroDetail = data[0];
+
+      this.centroDetail["DATA_FUNDACAO"] = this.date;
 
       console.log(this.centroDetail)
     });
   }
 
   atualizar() {
-    // window.localStorage.setItem()
-    this.router.navigate(['edit-centro']);
+    this.svc.updateCentro(this.centroDetail).then(data => {
+
+      console.log("Atualizou", this.centroDetail.NOME_CENTRO)
+      console.log(this.centroDetail)
+    })
+
   }
 
 }

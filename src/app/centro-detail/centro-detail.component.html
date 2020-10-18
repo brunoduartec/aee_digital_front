@@ -5,17 +5,22 @@
     <h2>Centros Aliança Espírita Evangélica</h2>
     <ul>
       <mat-spinner id='loading' *ngIf="!centroDetail" diameter="100"></mat-spinner>
-      <table *ngIf="centroDetail" id="centros_detail">
-        <tr *ngFor="let param of params">
-          <td>{{param.alias}} </td>
-          <td *ngIf="param.name == 'DATA_FUNDACAO'">{{centroDetail[param.name] | date:'d/M/yyyy'}}</td>
-          <td *ngIf="param.name != 'DATA_FUNDACAO'">{{centroDetail[param.name]}}</td>
-        </tr>
+        <table *ngIf="centroDetail" id="centros_detail">
+          <tr *ngFor="let param of params">
+            <td>{{param.alias}} </td>
+            <td *ngIf="param.name == 'DATA_FUNDACAO'">
 
-      </table>
+              
+              <app-edit-inline [ngModel]= "centroDetail[param.name] | date:'d/M/yyyy'" (ngModelChange)="centroDetail[param.name] = $event"  type="date"> </app-edit-inline>
+            </td>
+            <td *ngIf="param.name != 'DATA_FUNDACAO'">
+              <app-edit-inline [(ngModel)]="centroDetail[param.name]" type="text"> </app-edit-inline>
+            </td>
+          </tr>
 
-      <button class="btn btn-danger" style="width:100px" (click)="atualizar()"> Editar</button>
+        </table>
 
+        <button class="btn btn-danger" style="width:100px" (click)="atualizar()"> Editar</button>
     </ul>
   </div>
 </div>
