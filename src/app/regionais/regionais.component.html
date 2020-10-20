@@ -6,29 +6,15 @@
 
     <h2>Regionais Alianca Espírita Evangelica</h2>
 
-    <div id="form">
-      <mat-form-field MatFormFieldControl appearance="fill" floatLabel="always" id="form-busca">
-        <mat-label>Buscar</mat-label>
-        <input id="argumento-busca" [(ngModel)]="argumentoPesquisa" matInput>
-      </mat-form-field>
-      <button id="pesquisar" (click)="pesquisar()" class="mat-raised-button">PESQUISAR</button>
-    </div>
-    <!-- </div> -->
-
     <mat-spinner id='loading' *ngIf="!regionalData" diameter="100"></mat-spinner>
     <ul>
       <table *ngIf="regionalData" id="regionais">
         <tr>
-          <th>Nome</th>
-          <th>Estado</th>
-          <th>Pais</th>
+          <th *ngFor="let param of params">{{param.alias}}</th>
         </tr>
         <tr *ngFor="let regional of regionalData">
-          <td>{{regional.NOME_REGIONAL}} </td>
-          <td>{{regional.ESTADO}} </td>
-          <td>{{regional.PAIS}} </td>
+            <td *ngFor="let param of params">{{regional[param.name]}}</td>
         </tr>
-
       </table>
     </ul>
   </div>
