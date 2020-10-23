@@ -1,1 +1,27 @@
-<p>atividades works!</p>
+<title>Alianca Tecnologia</title>
+
+<a id="regionais"></a>
+<div>
+  <div>
+
+    <h2>Atividades Alianca Espírita Evangelica</h2>
+
+    <mat-spinner id='loading' *ngIf="!atividadesData" diameter="100"></mat-spinner>
+    <ul>
+      <table *ngIf="atividadesData" id="atividades">
+        <tr>
+          <th *ngFor="let param of params">{{param.alias}}</th>
+        </tr>
+        <tr *ngFor="let atividade of atividadesData">
+            <td *ngFor="let param of params">{{atividade[param.name]}}</td>
+        </tr>
+      </table>
+    </ul>
+  </div>
+</div>
+
+
+<!-- footer -->
+<footer>
+  <span>created by Alianca Espirita Evangélica</span>
+</footer>
