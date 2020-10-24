@@ -11,7 +11,7 @@ import { EventosComponent } from './eventos/eventos.component';
 import { AtividadesComponent } from './atividades/atividades.component';
 import { AliancaComponent } from './alianca/alianca.component';
 import { RegionaisComponent } from './regionais/regionais.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -19,6 +19,7 @@ import { RegionaisPipe } from './util/pipes/regionais.pipe';
 import {MatSelectModule} from '@angular/material/select';
 import { CentroDetailComponent } from './centro-detail/centro-detail.component';
 import {MatDialogModule} from '@angular/material/dialog';
+import { CadastroCentroComponent } from './cadastro-centro/cadastro-centro.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import {MatDialogModule} from '@angular/material/dialog';
     AliancaComponent,
     RegionaisComponent,
     RegionaisPipe,
-    CentroDetailComponent
+    CentroDetailComponent,
+    CadastroCentroComponent
   ],
   imports: [
     BrowserModule,
@@ -39,6 +41,7 @@ import {MatDialogModule} from '@angular/material/dialog';
     MatProgressSpinnerModule,
     MatListModule,
     FormsModule,
+    ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     BrowserAnimationsModule,

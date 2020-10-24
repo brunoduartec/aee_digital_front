@@ -1,0 +1,49 @@
+<form [formGroup]="checkoutForm" (ngSubmit)="onSubmit(checkoutForm.value)">
+
+    <div>
+      <label for="nomeCentro">
+        Nome da Casa Espírita
+      </label>
+      <input id="nomeCentro" type="text" formControlName="nomeCentro">
+    </div>
+
+    <div>
+        <label for="nomeCurto">
+          Nome  Espírita
+        </label>
+        <input id="nomeCentro" type="text" formControlName="nomeCentro">
+    </div>
+    <div>
+        <label for="endereco">
+            Endereço
+        </label>
+        <input id="endereco" type="text" formControlName="endereco">
+    </div>  
+    <div>
+        <label for="bairro">
+          Bairro
+        </label>
+        <input id="bairro" type="text" formControlName="bairro">
+    </div>
+    <div>
+        <label for="cidade">
+          Cidade
+        </label>
+        <input id="cidade" type="text" formControlName="cidade">
+    </div>
+    <div>
+        <label for="estado">
+          Estado
+        </label>
+        <input id="estado" type="text" formControlName="estado">
+    </div>
+    <div>
+        <label for="pais">
+          País
+        </label>
+        <input id="pais" type="text" formControlName="pais">
+    </div>
+
+    <button class="button" type="submit">Purchase</button>
+  
+  </form>

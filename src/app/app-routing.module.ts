@@ -6,6 +6,7 @@ import { AtividadesComponent } from './atividades/atividades.component';
 import { EventosComponent } from './eventos/eventos.component';
 import { AliancaComponent } from './alianca/alianca.component';
 import { RegionaisComponent } from './regionais/regionais.component';
+import { CadastroCentroComponent } from './cadastro-centro/cadastro-centro.component';
 
 
 
@@ -15,6 +16,7 @@ const atividades = "atividades";
 const eventos = "eventos";
 const alianca = "alianca";
 const regionais = "regionais";
+const cadastroCentros = "centros/cadastro";
 
 const routes: Routes = [{
   path: centros,
@@ -39,6 +41,10 @@ const routes: Routes = [{
 {
   path: centro_detail,
   component: CentroDetailComponent
+},
+{
+  path: cadastroCentros,
+  component: CadastroCentroComponent
 },
 {
   path: '**',
