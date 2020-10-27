@@ -35,6 +35,8 @@ export class EditInlineComponent implements ControlValueAccessor {
     }
   }
 
+  @Input() type: SelectConfig['type'];
+
   writeValue(value: any) {
     this._value = value;
   }

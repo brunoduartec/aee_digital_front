@@ -1,6 +1,6 @@
 <div>
     <div *ngIf="editing">
-      <input [required]="required" (blur)="onBlur($event)" [name]="value" [(ngModel)]="value" [placeholder]="label"/>
+      <input [required]="required" (blur)="onBlur($event)" [name]="value" [(ngModel)]="value" [placeholder]="label" [type]="type"/>
     </div>
     <div *ngIf="!editing">
       <a href="#" (click)="beginEdit(value)" (focus)="beginEdit(value)" tabindex="0">{{value}}</a>

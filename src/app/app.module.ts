@@ -19,9 +19,6 @@ import { RegionaisPipe } from './util/pipes/regionais.pipe';
 import { MatSelectModule } from '@angular/material/select';
 import { CentroDetailComponent } from './centro-detail/centro-detail.component';
 import { ReactiveFormsModule } from "@angular/forms";
-import { InputEditorModule } from 'angular-inline-editors';
-
-
 
 import { MatDialogModule } from '@angular/material/dialog';
 import { EditInlineComponent } from './edit-inline/edit-inline.component';
@@ -51,8 +48,7 @@ import { EditInlineComponent } from './edit-inline/edit-inline.component';
     BrowserAnimationsModule,
     MatSelectModule,
     ReactiveFormsModule,
-    MatDialogModule,
-    InputEditorModule
+    MatDialogModule
   ],
   providers: [],
   bootstrap: [AppComponent]

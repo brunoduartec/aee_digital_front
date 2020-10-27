@@ -9,8 +9,6 @@
           <tr *ngFor="let param of params">
             <td>{{param.alias}} </td>
             <td *ngIf="param.name == 'DATA_FUNDACAO'">
-
-              
               <app-edit-inline [ngModel]= "centroDetail[param.name] | date:'d/M/yyyy'" (ngModelChange)="centroDetail[param.name] = $event"  type="date"> </app-edit-inline>
             </td>
             <td *ngIf="param.name != 'DATA_FUNDACAO'">
