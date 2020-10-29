@@ -24,7 +24,6 @@ export class AtividadesComponent implements OnInit {
   ngOnInit(): void {
     this.svc.getAtividades(this.id).then(atividade_info => {
       this.atividadesData = atividade_info;
-      console.log(this.atividadesData);
     })
   }
 
