@@ -19,6 +19,7 @@ import { RegionaisPipe } from './util/pipes/regionais.pipe';
 import {MatSelectModule} from '@angular/material/select';
 import { CentroDetailComponent } from './centro-detail/centro-detail.component';
 import {MatDialogModule} from '@angular/material/dialog';
+import { AtividadesCentroComponent } from './atividades-centro/atividades-centro.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import {MatDialogModule} from '@angular/material/dialog';
     AliancaComponent,
     RegionaisComponent,
     RegionaisPipe,
-    CentroDetailComponent
+    CentroDetailComponent,
+    AtividadesCentroComponent
   ],
   imports: [
     BrowserModule,

@@ -11,8 +11,8 @@
           <td *ngIf="param.name == 'DATA_FUNDACAO'">{{centroDetail[param.name] | date:'d/M/yyyy'}}</td>
           <td *ngIf="param.name != 'DATA_FUNDACAO'">{{centroDetail[param.name]}}</td>
         </tr>
-
       </table>
+      <app-atividades-centro [id]="id"></app-atividades-centro>
 
     </ul>
   </div>

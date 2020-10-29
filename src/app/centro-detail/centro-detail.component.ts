@@ -65,11 +65,8 @@ export class CentroDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.id = this.dados;
-    console.log("PEGANDO O VALOR DE " + this.id)
     this.svc.getCentro(this.id).then(data => {
       this.centroDetail = data[0];
-
-      console.log(this.centroDetail)
     });
   }
 
