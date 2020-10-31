@@ -18,10 +18,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RegionaisPipe } from './util/pipes/regionais.pipe';
 import { MatSelectModule } from '@angular/material/select';
 import { CentroDetailComponent } from './centro-detail/centro-detail.component';
-import { ReactiveFormsModule } from "@angular/forms";
 
-import { MatDialogModule } from '@angular/material/dialog';
 import { EditInlineComponent } from './edit-inline/edit-inline.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { AtividadesCentroComponent } from './atividades-centro/atividades-centro.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +34,8 @@ import { EditInlineComponent } from './edit-inline/edit-inline.component';
     RegionaisComponent,
     RegionaisPipe,
     CentroDetailComponent,
-    EditInlineComponent
+    EditInlineComponent,
+    AtividadesCentroComponent
   ],
   imports: [
     BrowserModule,
@@ -47,7 +48,6 @@ import { EditInlineComponent } from './edit-inline/edit-inline.component';
     MatInputModule,
     BrowserAnimationsModule,
     MatSelectModule,
-    ReactiveFormsModule,
     MatDialogModule
   ],
   providers: [],
