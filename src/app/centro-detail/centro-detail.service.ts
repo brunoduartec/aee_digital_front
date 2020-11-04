@@ -20,14 +20,16 @@ export class CentroDetailService {
   }
 
   updateCentro(centro) {
-
-    console.log("=====")
-    console.log(centro)
-
     return new Promise((resolve, reject) => {
+
       let id = centro.ID_CENTRO
-      this.http.put<any>(`${environment.centrosApi}/centros/${id}`, centro)
+      let centroInfo = JSON.parse(JSON.stringify(centro))
+
+      delete centroInfo.ID_CENTRO
+
+      this.http.put<any>(`${environment.centrosApi}/centros/${id}`, centroInfo)
         .subscribe((a) => {
+
           resolve(a);
         }, () => {
         })
