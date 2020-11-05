@@ -6,12 +6,13 @@ import { Observable } from "rxjs/Observable";
 @Injectable({
   providedIn: 'root'
 })
-export class CentroDetailService {
+export class AtividadesCentroService {
+
   constructor(private http: HttpClient) { }
 
-  getCentro(id: string) {
+  getAtividadeInfo(id: string) {
     return new Promise((resolve, reject) => {
-      this.http.get<any>(`${environment.centrosApi}/centros/${id}`)
+      this.http.get<any>(`${environment.trabalhosApi}/atividades/${id}`)
         .subscribe((a) => {
           resolve(a);
         }, () => {
@@ -19,21 +20,20 @@ export class CentroDetailService {
     })
   }
 
-  updateCentro(centro) {
+  getAtividadesCentro(id: string) {
     return new Promise((resolve, reject) => {
-
-      let id = centro.ID_CENTRO
-      let centroInfo = JSON.parse(JSON.stringify(centro))
-
-      delete centroInfo.ID_CENTRO
-
-      this.http.put<any>(`${environment.centrosApi}/centros/${id}`, centroInfo)
+      this.http.get<any>(`${environment.trabalhosApi}/atividades_centro?searchParam=2&searchValue=${id}`)
         .subscribe((a) => {
 
+          a.forEach(atividade => {
+            this.getAtividadeInfo(atividade.ID_ATIVIDADE)
+              .then((b) => {
+                atividade.NOME_ATIVIDADE = b[0]["NOME_ATIVIDADE"];
+              })
+          });
           resolve(a);
         }, () => {
         })
     })
   }
-
 }

@@ -15,6 +15,22 @@ export class RegionaisComponent implements OnInit {
   campo: string;
   dadosCarregados = false;
 
+  public params =
+    [
+      {
+        "name": "NOME_REGIONAL",
+        "alias": "Nome"
+      },
+      {
+        "name": "ESTADO",
+        "alias": "Estado"
+      },
+      {
+        "name": "PAIS",
+        "alias": "País"
+      }
+    ];
+
 
   constructor(private svc: RegionaisServiceService) {
     this.campo = "Campo";

@@ -8,9 +8,9 @@ import { AliancaComponent } from './alianca/alianca.component';
 import { RegionaisComponent } from './regionais/regionais.component';
 
 
-
 const centros = "centros";
 const centro_detail = "centro-detail"
+const edit_centro = "edit-centro"
 const atividades = "atividades";
 const eventos = "eventos";
 const alianca = "alianca";
