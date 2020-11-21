@@ -17,6 +17,10 @@ import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RegionaisPipe } from './util/pipes/regionais.pipe';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table'
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatIconModule } from '@angular/material/icon';
+
 import { CentroDetailComponent } from './centro-detail/centro-detail.component';
 
 import { EditInlineComponent } from './edit-inline/edit-inline.component';
@@ -48,7 +52,10 @@ import { AtividadesCentroComponent } from './atividades-centro/atividades-centro
     MatInputModule,
     BrowserAnimationsModule,
     MatSelectModule,
-    MatDialogModule
+    MatDialogModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatIconModule
   ],
   providers: [],
   bootstrap: [AppComponent]
