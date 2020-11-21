@@ -1,13 +1,32 @@
+          
 <div>
     <div *ngIf="editing">
       <input [required]="required" (blur)="onBlur($event)" [name]="value" [(ngModel)]="value" [placeholder]="label" [type]="type"/>
     </div>
     <div *ngIf="!editing">
       <div *ngIf="type!='date'">
-        <a href="#" (click)="beginEdit(value)" (focus)="beginEdit(value)">{{value}}</a>
+        <table>
+          <tr>
+            <th>
+              <p  (click)="beginEdit(value)" (focus)="beginEdit(value)">{{value}}</p>
+            </th>
+            <th>
+              <mat-icon svgIcon="pen" aria-hidden="false" aria-label="Example thumbs up SVG icon"></mat-icon>
+            </th>
+          </tr>
+        </table>
       </div>
       <div *ngIf="type=='date'">
-        <a href="#" id="date" placeholder="dd-mm-yyyy" (click)="beginEdit(value)" (focus)="beginEdit(value)">{{value.split("-")[2]}}/{{value.split("-")[1]}}/{{value.split("-")[0]}}</a>
+        <table>
+          <tr>
+            <th>
+              <p id="date" placeholder="dd-mm-yyyy" (click)="beginEdit(value)" (focus)="beginEdit(value)">{{value}}</p>
+            </th>
+            <th>
+              <mat-icon svgIcon="pen" aria-hidden="false" aria-label="Example thumbs up SVG icon"></mat-icon>
+            </th>
+          </tr>
+        </table>
       </div>
     </div>
   </div>

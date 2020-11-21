@@ -1,6 +1,9 @@
 import { Component, Input, ViewChild, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
+import { DomSanitizer } from '@angular/platform-browser';
+import { MatIconRegistry } from '@angular/material/icon';
+
 const VALUE_ACCESSOR = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => EditInlineComponent),
@@ -14,6 +17,11 @@ const VALUE_ACCESSOR = {
   styleUrls: ['./edit-inline.component.scss']
 })
 export class EditInlineComponent implements ControlValueAccessor {
+  constructor(iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
+    iconRegistry.addSvgIcon(
+      'pen',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/img/pen.svg'));
+  }
   @Input() label: string = "Enter value here";
   @Input() required: boolean = true;
   private _value: string = '';
@@ -23,6 +31,7 @@ export class EditInlineComponent implements ControlValueAccessor {
   public editing: boolean = false;
   public onChange: any = Function.prototype;
   public onTouched: any = Function.prototype;
+
 
   get value(): any {
     return this._value;
@@ -68,4 +77,9 @@ export class EditInlineComponent implements ControlValueAccessor {
     this.preValue = value;
     this.editing = true;
   }
+
+
+  // public atualizar() {
+  //   console.log("======UPDATE=====")
+  // }
 }
