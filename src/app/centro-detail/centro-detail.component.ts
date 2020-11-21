@@ -57,7 +57,7 @@ export class CentroDetailComponent implements OnInit {
       }
     ]
 
-  constructor(private svc: CentroDetailService, private router: Router, @Inject(MAT_DIALOG_DATA) public dados: any) { }
+  constructor(private svc: CentroDetailService, @Inject(MAT_DIALOG_DATA) public dados: any) { }
 
   ngOnInit(): void {
     this.id = this.dados;
