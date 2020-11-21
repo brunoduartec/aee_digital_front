@@ -5,47 +5,39 @@
   <div class="container"> -->
 <div>
   <div>
-
-    <h2>Centros Aliança Espírita Evangélica</h2>
-
-
-    <div id="form">
-      <mat-form-field MatFormFieldControl appearance="fill" floatLabel="always" id="form-busca">
-        <mat-label>Buscar</mat-label>
-        <input id="argumento-busca" [(ngModel)]="argumentoPesquisa" matInput>
-      </mat-form-field>
-      <mat-form-field id="tipo-busca" appearance="fill" floatLabel="always">
-        <mat-label>Tipo de busca</mat-label>
-        <mat-select [(ngModel)]="tipo">
-          <mat-option *ngFor="let tipo of tipoPesquisa" [value]="tipo" ngDefaultControl>
-            {{tipo.value}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <button id="pesquisar" (click)="pesquisar()" class="mat-raised-button">PESQUISAR</button>
-    </div>
-    <!-- </div> -->
-
-    <mat-spinner id='loading' *ngIf="!centroData" diameter="100"></mat-spinner>
+    
     <ul>
-      <table *ngIf="centroData" id="centros">
-        <tr>
-          <th width="20"></th>
-          <th>Regional</th>
-          <th>Nome</th>
-          <th>Endereço</th>
-          <th>Cidade</th>
-          <th>Pais</th>
+      <mat-form-field>
+        <mat-label>Filtro</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Ex. AME" #input>
+      </mat-form-field>
+
+      <table mat-table [dataSource]="dataSource" id="centros" matSort>
+
+        <ng-container matColumnDef="{{column}}" *ngFor="let column of displayedColumns">
+          <th mat-header-cell *matHeaderCellDef> {{displayedColumnsAlias[column]}} </th>
+          <td mat-cell *matCellDef="let element">
+            <div *ngIf="column=='NOME_CURTO'">
+              <mat-icon svgIcon="lupa" aria-hidden="false" aria-label="Example thumbs up SVG icon" (click)="detalhe(element.ID_CENTRO)"></mat-icon>
+              {{element[column]}}
+            </div>
+            <div *ngIf="column!='NOME_CURTO'">
+              {{element[column]}}
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+            class="example-element-row">
         </tr>
-        <tr *ngFor="let centro of centroData" >
-          <img src="../../assets/img/lupa.svg" (click)="detalhe(centro.ID_CENTRO)" height="20" />
-          <td>{{centro.ID_REGIONAL  | RegionaisPipe}} </td>
-          <td>{{centro.NOME_CURTO}} - {{centro.NOME_CENTRO}} </td>
-          <td>{{centro.ENDERECO}} {{centro.NUMERO_ENDERECO}} - {{centro.BAIRRO}} - {{centro.CEP}} </td>
-          <td>{{centro.CIDADE}} / {{centro.ESTADO}}</td>
-          <td>{{centro.PAIS}}</td>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="4">Não existem centros com esse filtro:"{{input.value}}" Você pode colocar o nome da regional, do centro ou mesmo o pedaço do endereço</td>
         </tr>
+
       </table>
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+
     </ul>
   </div>
 </div>
