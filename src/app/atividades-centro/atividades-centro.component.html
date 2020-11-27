@@ -1,18 +1,33 @@
-<div>
-    <h3>Atividades do Centro</h3>
-    <table *ngIf="atividadeCentroData" id="atividades-centro">
-        <tr>
-            <th>Atividade</th>
-            <th>Horário</th>
-            <th> Dia da semana</th>
-            <th>Turma</th>
-        </tr>
-        
-        <tr *ngFor="let atividade of atividadeCentroData">
-            <td>{{atividade["NOME_ATIVIDADE"]}}</td>
-            <td>{{atividade["HORINI"]}} - {{atividade["HORFIM"]}}</td>
-            <td>{{atividade["DIA_SEMANA"]}}</td>
-            <td>{{atividade["NUMERO_TURMA"]}}</td>
-        </tr>
-    </table>
-</div>
+<mat-grid-list cols="2" rowHeight="2:1">
+    <mat-grid-tile *ngFor="let atividade of atividadeCentroData">
+        <mat-card class="example-card">
+            <mat-card-header>
+              <div mat-card-avatar class="example-header-image"></div>
+              <mat-card-title>{{atividade["NOME_ATIVIDADE"]}}</mat-card-title>
+              <mat-card-subtitle>
+                <b>
+                    {{atividade["DIA_SEMANA"]}}
+                </b>
+                  {{atividade["HORINI"]}} - {{atividade["HORFIM"]}}
+              </mat-card-subtitle>
+            </mat-card-header>
+            <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu"> -->
+            <mat-card-content>
+              <p>
+                
+              </p>
+            </mat-card-content>
+            <!-- <mat-card-actions>
+              <button mat-button>LIKE</button>
+              <button mat-button>SHARE</button>
+            </mat-card-actions> -->
+          </mat-card>
+
+    </mat-grid-tile>
+    
+  </mat-grid-list>
+
+
+
+    
+

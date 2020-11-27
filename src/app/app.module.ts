@@ -20,12 +20,21 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table'
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 import { CentroDetailComponent } from './centro-detail/centro-detail.component';
 
 import { EditInlineComponent } from './edit-inline/edit-inline.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AtividadesCentroComponent } from './atividades-centro/atividades-centro.component';
+
+import { LOCALE_ID } from '@angular/core';
+
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+
+registerLocaleData(localePt);
 
 @NgModule({
   declarations: [
@@ -55,9 +64,11 @@ import { AtividadesCentroComponent } from './atividades-centro/atividades-centro
     MatDialogModule,
     MatTableModule,
     MatPaginatorModule,
-    MatIconModule
+    MatIconModule,
+    MatCardModule,
+    MatGridListModule
   ],
-  providers: [],
+  providers: [{ provide: LOCALE_ID, useValue: 'pt' }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
