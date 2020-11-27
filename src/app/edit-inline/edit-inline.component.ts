@@ -4,6 +4,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
 
+
 const VALUE_ACCESSOR = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => EditInlineComponent),
@@ -26,6 +27,7 @@ export class EditInlineComponent implements ControlValueAccessor {
   @Input() required: boolean = true;
   private _value: string = '';
   private _type: string = "text";
+  private _valueFormated: string = '';
 
   private preValue: string = '';
   public editing: boolean = false;
@@ -35,6 +37,10 @@ export class EditInlineComponent implements ControlValueAccessor {
 
   get value(): any {
     return this._value;
+  }
+
+  get valueFormated(): any {
+    return this._valueFormated;
   }
 
   set value(v: any) {
@@ -47,6 +53,8 @@ export class EditInlineComponent implements ControlValueAccessor {
   @Input()
   set type(type: any) {
     this._type = type;
+
+
   }
 
   get type(): any {
@@ -55,6 +63,13 @@ export class EditInlineComponent implements ControlValueAccessor {
 
   writeValue(value: any) {
     this._value = value;
+    this._valueFormated = this._value;
+
+    if (this._type == "date") {
+      let valueStriped = String(this._valueFormated).split("-");
+      this._valueFormated = `${valueStriped[2]}/${valueStriped[1]}/${valueStriped[0]}`
+    }
+
   }
 
   public registerOnChange(fn: (_: any) => {}): void {

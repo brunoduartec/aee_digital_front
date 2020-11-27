@@ -11,7 +11,7 @@
                 <app-edit-inline [ngModel]= "centroDetail[param.name] | date:'yyyy-MM-dd'" (ngModelChange)="centroDetail[param.name] = $event"  type="date"> </app-edit-inline>
               </td>
               <td *ngIf="param.name != 'DATA_FUNDACAO'">
-                <app-edit-inline [(ngModel)]="centroDetail[param.name]" type="text" (change)="atualizar()"> </app-edit-inline>
+                <app-edit-inline [(ngModel)]="centroDetail[param.name]" type="text" (change)="atualizar()" label={{param.alias}}> </app-edit-inline>
               </td>
             </tr>
           </table>

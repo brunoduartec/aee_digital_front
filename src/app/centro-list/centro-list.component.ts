@@ -72,7 +72,7 @@ export class CentroListComponent implements AfterViewInit {
       data,
       position: { top: '1%' },
       maxHeight: '90vh',
-      maxWidth: '80vw',
+      maxWidth: '40%',
       height: '100vh',
       width: '100vw',
       panelClass: 'custom-dialog-container'
