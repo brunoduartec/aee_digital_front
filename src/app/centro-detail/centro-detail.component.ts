@@ -1,18 +1,48 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject, forwardRef, Input } from '@angular/core';
 import { CentroDetailService } from "./centro-detail.service";
-import { Router } from "@angular/router";
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+
+const VALUE_ACCESSOR = {
+  provide: NG_VALUE_ACCESSOR,
+  useExisting: forwardRef(() => CentroDetailComponent),
+  multi: true
+};
+
 
 @Component({
   selector: 'centro-detail',
   templateUrl: './centro-detail.component.html',
   styleUrls: ['./centro-detail.component.css']
 })
-export class CentroDetailComponent implements OnInit {
+export class CentroDetailComponent implements ControlValueAccessor {
   public centroDetail: any;
-  public id: string;
   public date: Date = new Date(2013, 9, 22);
-  dummy: string = 'Ramin';
+  public _id: string = "1";
+
+  @Input()
+  set id(id: any) {
+
+    console.log("=====COMPONENT===", id)
+
+    this._id = id;
+
+    console.log("=======PEGANDO O VALOR===: ", this._id);
+
+    this.svc.getCentro(this._id).then(data => {
+      console.log("======ENTROU===")
+      this.centroDetail = data[0];
+    });
+  }
+
+  get id(): any {
+    return this._id;
+  }
+
+  public onChange: any = Function.prototype;
+  public onTouched: any = Function.prototype;
+
   public params =
     [
       {
@@ -57,14 +87,7 @@ export class CentroDetailComponent implements OnInit {
       }
     ]
 
-  constructor(private svc: CentroDetailService, @Inject(MAT_DIALOG_DATA) public dados: any) { }
-
-  ngOnInit(): void {
-    this.id = this.dados;
-    this.svc.getCentro(this.id).then(data => {
-      this.centroDetail = data[0];
-    });
-  }
+  constructor(private svc: CentroDetailService) { }
 
   atualizar() {
     this.svc.updateCentro(this.centroDetail).then(data => {
@@ -72,7 +95,17 @@ export class CentroDetailComponent implements OnInit {
       console.log("Atualizou", this.centroDetail.NOME_CENTRO)
       console.log(this.centroDetail)
     })
+  }
 
+  writeValue(value: any) {
+  }
+
+  public registerOnChange(fn: (_: any) => {}): void {
+    this.onChange = fn;
+  }
+
+  public registerOnTouched(fn: () => {}): void {
+    this.onTouched = fn;
   }
 
 }
