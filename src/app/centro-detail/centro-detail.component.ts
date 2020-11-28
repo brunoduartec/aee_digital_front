@@ -23,15 +23,8 @@ export class CentroDetailComponent implements ControlValueAccessor {
 
   @Input()
   set id(id: any) {
-
-    console.log("=====COMPONENT===", id)
-
     this._id = id;
-
-    console.log("=======PEGANDO O VALOR===: ", this._id);
-
     this.svc.getCentro(this._id).then(data => {
-      console.log("======ENTROU===")
       this.centroDetail = data[0];
     });
   }
