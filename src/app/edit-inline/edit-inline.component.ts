@@ -92,9 +92,4 @@ export class EditInlineComponent implements ControlValueAccessor {
     this.preValue = value;
     this.editing = true;
   }
-
-
-  // public atualizar() {
-  //   console.log("======UPDATE=====")
-  // }
 }

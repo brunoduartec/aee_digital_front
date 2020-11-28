@@ -8,7 +8,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 
 import { RegionaisServiceService } from "../regionais/regionais-service.service";
 
-import { CentroDetailComponent } from '../centro-detail/centro-detail.component';
+import { CentroDetailPopupComponent } from '../centro-detail-popup/centro-detail-popup.component';
 
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
@@ -67,9 +67,10 @@ export class CentroListComponent implements AfterViewInit {
   }
 
   detalhe(id: string) {
-    const data = id;
-    this.matDialog.open(CentroDetailComponent, {
-      data,
+    this.matDialog.open(CentroDetailPopupComponent, {
+      data: {
+        id: id
+      },
       position: { top: '1%' },
       maxHeight: '90vh',
       maxWidth: '40%',
