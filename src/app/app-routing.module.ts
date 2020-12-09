@@ -6,6 +6,7 @@ import { AtividadesComponent } from './atividades/atividades.component';
 import { EventosComponent } from './eventos/eventos.component';
 import { AliancaComponent } from './alianca/alianca.component';
 import { RegionaisComponent } from './regionais/regionais.component';
+import { CentroReviewComponent } from './centro-review/centro-review.component';
 
 
 const centros = "centros";
@@ -15,6 +16,7 @@ const atividades = "atividades";
 const eventos = "eventos";
 const alianca = "alianca";
 const regionais = "regionais";
+const centro_review = "revisar/:ID_CENTRO";
 
 const routes: Routes = [{
   path: centros,
@@ -40,9 +42,13 @@ const routes: Routes = [{
   path: centro_detail,
   component: CentroDetailComponent
 },
+// {
+//   path: '**',
+//   redirectTo: alianca
+// },
 {
-  path: '**',
-  redirectTo: alianca
+  path: centro_review,
+  component: CentroReviewComponent
 }];
 
 @NgModule({

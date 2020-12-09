@@ -36,4 +36,24 @@ export class AtividadesCentroService {
         })
     })
   }
+
+  updateAtividadeCentro(atividadeCentro) {
+    return new Promise((resolve, reject) => {
+
+      let id = atividadeCentro.ID_ATIVIDADE_CENTRO
+      let atividadeCentroInfo = JSON.parse(JSON.stringify(atividadeCentro))
+
+      delete atividadeCentroInfo.ID_ATIVIDADE_CENTRO
+      delete atividadeCentroInfo.NOME_ATIVIDADE
+
+      this.http.put<any>(`${environment.trabalhosApi}/atividades_centro/${id}`, atividadeCentroInfo)
+        .subscribe((a) => {
+
+          resolve(a);
+        }, () => {
+        })
+    })
+  }
+
+
 }
