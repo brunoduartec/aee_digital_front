@@ -34,6 +34,7 @@ import { LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import { CentroDetailPopupComponent } from './centro-detail-popup/centro-detail-popup.component';
+import { CentroReviewComponent } from './centro-review/centro-review.component';
 
 registerLocaleData(localePt);
 
@@ -50,7 +51,8 @@ registerLocaleData(localePt);
     CentroDetailComponent,
     EditInlineComponent,
     AtividadesCentroComponent,
-    CentroDetailPopupComponent
+    CentroDetailPopupComponent,
+    CentroReviewComponent
   ],
   imports: [
     BrowserModule,
