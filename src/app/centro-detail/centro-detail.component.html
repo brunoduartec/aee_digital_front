@@ -1,8 +1,8 @@
 <body style='margin-top:20px;margin-left:0;margin-right:0;'>
   <div>
     <div>
-      <h2>Detalhes</h2>
       <ul>
+        <h3>Detalhes</h3>
         <mat-spinner id='loading' *ngIf="!centroDetail" diameter="100"></mat-spinner>
           <table *ngIf="centroDetail" id="centros_detail">
             <tr *ngFor="let param of params">
@@ -16,6 +16,7 @@
             </tr>
           </table>
           <br>
+          <h3>Atividades do Centro</h3>
           <app-atividades-centro [id]="id"></app-atividades-centro>
       </ul>
     </div>
