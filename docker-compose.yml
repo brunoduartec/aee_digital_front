@@ -1,18 +1,18 @@
 version: "3"
 
 services:
-  aee_tech_front:
+  aee_digital_front:
     build:
       context: .
     ports:
       - "4200:4200"
-    container_name: aee_tech_front
-    image: aee_tech_front
+    container_name: aee_digital_front
+    image: aee_digital_front
     volumes:
-       - .:/usr/app/app-ui
-       - /usr/app/app-ui/node_modules
-    networks: 
+      - .:/usr/app/app-ui
+      - /usr/app/app-ui/node_modules
+    networks:
       - app-network
 networks:
   app-network:
-      driver: bridge
+    driver: bridge
