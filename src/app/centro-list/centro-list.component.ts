@@ -1,12 +1,18 @@
 import { Component, AfterViewInit, ViewChild } from '@angular/core';
-import { CentroServiceService } from "./centro-service.service";
+import { CentroServiceService } from './centro-service.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { animate, state, style, transition, trigger } from '@angular/animations';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 
-import { RegionaisServiceService } from "../regionais/regionais-service.service";
+import { RegionaisServiceService } from '../regionais/regionais-service.service';
 
 import { CentroDetailPopupComponent } from '../centro-detail-popup/centro-detail-popup.component';
 
@@ -21,18 +27,27 @@ import { MatIconRegistry } from '@angular/material/icon';
     trigger('detailExpand', [
       state('collapsed', style({ height: '0px', minHeight: '0' })),
       state('expanded', style({ height: '*' })),
-      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+      transition(
+        'expanded <=> collapsed',
+        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
+      ),
     ]),
   ],
 })
 export class CentroListComponent implements AfterViewInit {
-  displayedColumns: string[] = ['NOME_CURTO', 'REGIONAL', 'ENDERECO', 'CIDADE', 'PAIS'];
+  displayedColumns: string[] = [
+    'NOME_CURTO',
+    'REGIONAL',
+    'ENDERECO',
+    'CIDADE',
+    'PAIS',
+  ];
   displayedColumnsAlias = {
-    "NOME_CURTO": "Nome Curto",
-    "REGIONAL": "Regional",
-    "ENDERECO": "Endereço",
-    "CIDADE": "Cidade",
-    "PAIS": "País"
+    NOME_CURTO: 'Nome Curto',
+    REGIONAL: 'Regional',
+    ENDERECO: 'Endereço',
+    CIDADE: 'Cidade',
+    PAIS: 'País',
   };
 
   dataSource: MatTableDataSource<centro>;
@@ -43,15 +58,22 @@ export class CentroListComponent implements AfterViewInit {
 
   isLoadingResults = true;
 
-  constructor(private svc: CentroServiceService, private regionaidService: RegionaisServiceService, iconRegistry: MatIconRegistry, sanitizer: DomSanitizer, private matDialog: MatDialog) {
+  constructor(
+    private svc: CentroServiceService,
+    private regionaidService: RegionaisServiceService,
+    iconRegistry: MatIconRegistry,
+    sanitizer: DomSanitizer,
+    private matDialog: MatDialog
+  ) {
     iconRegistry.addSvgIcon(
       'lupa',
-      sanitizer.bypassSecurityTrustResourceUrl('assets/img/lupa.svg'));
+      sanitizer.bypassSecurityTrustResourceUrl('assets/img/lupa.svg')
+    );
   }
 
   ngAfterViewInit() {
-    this.svc.getAllCentros().then(data => {
-      this.dataSource = new MatTableDataSource(data)
+    this.svc.getAllCentros().then((data) => {
+      this.dataSource = new MatTableDataSource(data);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });
@@ -69,18 +91,16 @@ export class CentroListComponent implements AfterViewInit {
   detalhe(id: string) {
     this.matDialog.open(CentroDetailPopupComponent, {
       data: {
-        id: id
+        id: id,
       },
       position: { top: '1%' },
       maxHeight: '90vh',
-      maxWidth: '40%',
+      maxWidth: '80%',
       height: '100vh',
       width: '100vw',
-      panelClass: 'custom-dialog-container'
+      panelClass: 'custom-dialog-container',
     });
   }
-
-
 }
 
 export interface centro {
