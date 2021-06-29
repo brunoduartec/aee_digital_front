@@ -37,7 +37,7 @@ import { MatIconRegistry } from '@angular/material/icon';
 export class CentroListComponent implements AfterViewInit {
   displayedColumns: string[] = [
     'NOME_CURTO',
-    'REGIONAL',
+    'Regional',
     'ENDERECO',
     'CIDADE',
     'PAIS',
@@ -114,5 +114,5 @@ export interface centro {
   PAIS: string;
   CNPJ_CENTRO: string;
   DATA_FUNDACAO: string;
-  ID_CENTRO: string;
+  ID: string;
 }

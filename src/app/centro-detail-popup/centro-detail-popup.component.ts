@@ -8,14 +8,14 @@ import { CentroDetailComponent } from '../centro-detail/centro-detail.component'
 @Component({
   selector: 'app-centro-detail-popup',
   templateUrl: './centro-detail-popup.component.html',
-  styleUrls: ['./centro-detail-popup.component.css']
+  styleUrls: ['./centro-detail-popup.component.css'],
 })
 export class CentroDetailPopupComponent {
-  public centroId: string = "1";
+  public centroId: string = '1';
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
-    this.centroId = data.id
-    console.log("=========CENTROID=====: ", this.centroId)
+    this.centroId = data.id;
+    console.log(data);
+    console.log('=========CENTROID=====: ', this.centroId);
   }
-
 }
