@@ -9,28 +9,12 @@ import { Observable } from 'rxjs/Observable';
 export class CentroDetailService {
   constructor(private http: HttpClient) {}
 
-  getRegional(id: string) {
-    return new Promise((resolve, reject) => {
-      this.http
-        .get<any>(`${environment.centrosApi}/regionais?_id=${id}`)
-        .subscribe(
-          (a) => {
-            resolve(a);
-          },
-          () => {}
-        );
-    });
-  }
-
   getCentro(id: string) {
     return new Promise((resolve, reject) => {
       this.http
         .get<any>(`${environment.centrosApi}/centros?_id=${id}`)
         .subscribe(
           (a) => {
-            this.getRegional(a.REGIONAL_ID).then((b) => {
-              a.NOME_REGIONAL = b[0]['NOME_REGIONAL'];
-            });
             resolve(a);
           },
           () => {}

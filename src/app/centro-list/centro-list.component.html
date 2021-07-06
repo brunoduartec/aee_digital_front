@@ -34,7 +34,10 @@
               ></mat-icon>
               {{ element[column] }}
             </div>
-            <div *ngIf="column != 'NOME_CURTO'">
+            <div *ngIf="column == 'REGIONAL'">
+              {{ element.REGIONAL.NOME_REGIONAL }}
+            </div>
+            <div *ngIf="column != 'NOME_CURTO' && column != 'REGIONAL'">
               {{ element[column] }}
             </div>
           </td>

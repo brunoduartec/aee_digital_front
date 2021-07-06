@@ -37,7 +37,7 @@ import { MatIconRegistry } from '@angular/material/icon';
 export class CentroListComponent implements AfterViewInit {
   displayedColumns: string[] = [
     'NOME_CURTO',
-    'Regional',
+    'REGIONAL',
     'ENDERECO',
     'CIDADE',
     'PAIS',
@@ -60,7 +60,6 @@ export class CentroListComponent implements AfterViewInit {
 
   constructor(
     private svc: CentroServiceService,
-    private regionaidService: RegionaisServiceService,
     iconRegistry: MatIconRegistry,
     sanitizer: DomSanitizer,
     private matDialog: MatDialog
@@ -73,7 +72,9 @@ export class CentroListComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     this.svc.getAllCentros().then((data) => {
+      console.log('CENTROS');
       this.dataSource = new MatTableDataSource(data);
+      console.log(this.dataSource);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });
@@ -114,5 +115,8 @@ export interface centro {
   PAIS: string;
   CNPJ_CENTRO: string;
   DATA_FUNDACAO: string;
+  REGIONAL: {
+    NOME_REGIONAL: string;
+  };
   ID: string;
 }
