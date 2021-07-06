@@ -32,9 +32,7 @@ export class AtividadesCentroService {
         .subscribe(
           (a) => {
             a.forEach((atividade) => {
-              this.getAtividadeInfo(atividade.ATIVIDADE_ID).then((b) => {
-                atividade.NOME_ATIVIDADE = b[0]['NOME_ATIVIDADE'];
-              });
+              atividade.NOME_ATIVIDADE = atividade.ATIVIDADE.NOME_ATIVIDADE;
             });
             resolve(a);
           },
