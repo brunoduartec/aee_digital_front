@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+  <body class="body">
+    <header><%- include('../partials/header'); %></header>
+
+    <main>
+      <div class="container-fluid">
+        <div class="pesquisa">
+          <div class="titulo">
+            <p>O que você procura?</p>
+          </div>
+          <form action="/pesquisa" method="post">
+            <div class="form-group">
+              <label for="sel1">Escolha</label>
+              <select class="form-control pesquisa-input" id="opcao" name="opcao">
+                <% opcoes.forEach(function(opcao) { %>
+                <option><%= opcao %></option>
+                <% }); %>
+              </select>
+              <br>
+
+              <input
+              type="text"
+              class="form-control pesquisa-input"
+              id="centro"
+              name="centro"
+            />
+
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg">
+              Pesquisar <i class="bi bi-search"></i>
+            </button>
+
+<!-- 
+            <div class="form-group">
+              <label for="sel1">Regional</label>
+              <select class="form-control pesquisa-input" id="regional" name="regional">
+                <% regionals.forEach(function(regional) { %>
+                <option><%= regional.NOME_REGIONAL %></option>
+                <% }); %>
+              </select>
+            </div> -->
+            <!-- <div class="form-group">
+              <button type="submit" class="btn btn-primary btn-lg">
+                Pesquisar <i class="bi bi-search"></i>
+              </button>
+            </div> -->
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <footer><%- include('../partials/footer'); %></footer>
+  </body>
+</html>
