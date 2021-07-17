@@ -10,6 +10,9 @@ const regionalcontroller = new regionalController();
 const authController = require("./controllers/auth.controller");
 const authcontroller = new authController();
 
+const SearchController = require("./controllers/search.controller")
+const searchcontroller = new SearchController(regionalcontroller);
+
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 
@@ -23,57 +26,17 @@ app.use(
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-async function authenticate(req, res, route, params) {
-  if (!req.session.loggedin) {
-    const loginInfo = {
-      user: req.body.email,
-      pass: req.body.pass
-    };
-    if (await authcontroller.authenticate(loginInfo.user, loginInfo.pass)) {
-      req.session.loggedin = true;
-      console.log("ROTA", route, params);
-      res.render(route, params);
-    }
-    else{
-      res.render("pages/login", { auth: false, ...loginInfo });
-    }
-  }else{
-    console.log("ROTA", route, params);
-    res.render(route, params);
-  }
-}
-
-async function getPesquisaResult(opcao, search){
-  const searchByOpcao = {
-    "Centro": async function(){
-      const centro = await regionalcontroller.getCentroByParam({NOME_CURTO: search})
-      return centro;
-    },
-    "Trabalho": async function(){
-      const trabalho = [{
-        "NOME": "teste"
-      }]
-      return trabalho;
-    },
-    "Regional": async function(){
-      const centros = await regionalcontroller.getCentros()
-      return centros;
-    }
-  }
-  return await searchByOpcao[opcao].call();
-}
-
 app.get("/", async function (req, res) {
-  await authenticate(req,res,'pages/index');
+  await authcontroller.authenticate(req,res,'pages/index');
 });
 
 app.get("/login", async function (req, res) {
-  await authenticate(req,res,'pages/login');
+  await authcontroller.authenticate(req,res,'pages/login');
 });
 
 app.post("/login", async function (req, res) {
   console.log("POST");
-  await authenticate(req,res,'pages/index');
+  await authcontroller.authenticate(req,res,'pages/index');
 });
 
 app.get("/pesquisar", async function (req, res) {
@@ -83,7 +46,7 @@ app.get("/pesquisar", async function (req, res) {
     "Trabalho"
   ]
 
-  await authenticate(req,res,'pages/pesquisar',{ opcoes: opcoes });
+  await authcontroller.authenticate(req,res,'pages/pesquisar',{ opcoes: opcoes });
 });
 
 app.post("/pesquisa", async function (req, res) {
@@ -94,10 +57,20 @@ app.post("/pesquisa", async function (req, res) {
 
     console.log("PESQUISAR", opcao, search)
 
-    const result = await getPesquisaResult(opcao,search);
+    const result = await searchcontroller.getPesquisaResult(opcao,search);
 
     console.log("RESULT",result)
-    await authenticate(req,res,'pages/pesquisa',{ opcao: opcao, result: result });
+    if(result){
+      await authcontroller.authenticate(req,res,'pages/pesquisa',{ opcao: opcao, result: result });
+    }
+    else{
+      const opcoes = [
+        "Centro",
+        "Regional",
+        "Trabalho"
+      ]
+      await authcontroller.authenticate(req,res,'pages/pesquisar',{ opcoes: opcoes, result: null });
+    }
   } catch (error) {
     
   }
