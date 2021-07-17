@@ -12,13 +12,21 @@ module.exports = class regionalController {
     return regionals.data;
   }
 
-  async getCentrosByRegional() {}
+  async getCentrosByRegional(regionalName) {
+    console.log("CONFIG->",config.aee_digital_regionais)
+    const regionals = await axios.get(`${config.aee_digital_regionais}/regionais`);
+    return regionals.data;
+  }
 
-  async getCentros() {}
+  async getCentros() {
+    const centro = await axios.get(`${config.aee_digital_regionais}/centros`);
+    return centro.data;
+  }
 
   async getCentroByID() {}
 
   async getCentroByParam(params) {
+    console.log()
     const centro = await axios.get(`${config.aee_digital_regionais}/centros?NOME_CURTO=${params.NOME_CURTO}`);
     return centro.data[0];
   }

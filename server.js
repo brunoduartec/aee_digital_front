@@ -43,6 +43,26 @@ async function authenticate(req, res, route, params) {
   }
 }
 
+async function getPesquisaResult(opcao, search){
+  const searchByOpcao = {
+    "Centro": async function(){
+      const centro = await regionalcontroller.getCentroByParam({NOME_CURTO: search})
+      return centro;
+    },
+    "Trabalho": async function(){
+      const trabalho = [{
+        "NOME": "teste"
+      }]
+      return trabalho;
+    },
+    "Regional": async function(){
+      const centros = await regionalcontroller.getCentros()
+      return centros;
+    }
+  }
+  return await searchByOpcao[opcao].call();
+}
+
 app.get("/", async function (req, res) {
   await authenticate(req,res,'pages/index');
 });
@@ -57,36 +77,32 @@ app.post("/login", async function (req, res) {
 });
 
 app.get("/pesquisar", async function (req, res) {
-  let regionals = []
   const opcoes = [
     "Centro",
     "Regional",
     "Trabalho"
   ]
-  try {
-    regionals = await regionalcontroller.getRegionais();
-    
-  } catch (error) {
-    
-  }
-  console.log(regionals);
 
-  await authenticate(req,res,'pages/pesquisar',{ regionals: regionals, opcoes: opcoes });
+  await authenticate(req,res,'pages/pesquisar',{ opcoes: opcoes });
 });
 
 app.post("/pesquisa", async function (req, res) {
   let centro = []
   try {
-    
+    const opcao = req.body.opcao
+    const search = req.body.search
 
-    console.log("CENTRO=>", centroInfo, centro)
-    
+    console.log("PESQUISAR", opcao, search)
+
+    const result = await getPesquisaResult(opcao,search);
+
+    console.log("RESULT",result)
+    await authenticate(req,res,'pages/pesquisa',{ opcao: opcao, result: result });
   } catch (error) {
     
   }
   console.log(centro);
 
-  await authenticate(req,res,'pages/pesquisa',{ centro: centro });
 });
 
 // about page

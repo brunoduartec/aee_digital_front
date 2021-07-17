@@ -8,8 +8,14 @@
 
     <main>
       <div class="container">
-          <% centro.NOME_CURTO %>
-        <%- include('../partials/centro', {centro: centro}); %>
+
+        <%if (opcao == "Centro") { %>
+          <%- include('../partials/centro', {centro: result}); %>
+        <% } %>
+        <%if (opcao == "Regional") { %>
+          <%- include('../partials/centros', {centros: result}); %>
+        <% } %>
+
       </div>
     </main>
 
