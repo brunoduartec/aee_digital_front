@@ -7,11 +7,14 @@ var bodyParser = require("body-parser");
 const regionalController = require("./controllers/regional.controller");
 const regionalcontroller = new regionalController();
 
+const trabalhosController = require("./controllers/trabalhos.controller");
+const trabalhoscontroller = new trabalhosController();
+
 const authController = require("./controllers/auth.controller");
 const authcontroller = new authController();
 
 const SearchController = require("./controllers/search.controller")
-const searchcontroller = new SearchController(regionalcontroller);
+const searchcontroller = new SearchController(regionalcontroller,trabalhoscontroller);
 
 app.set("view engine", "ejs");
 app.use(express.static("public"));
@@ -40,24 +43,34 @@ app.post("/login", async function (req, res) {
 });
 
 app.get("/pesquisar", async function (req, res) {
-  const opcoes = [
-    "Centro",
-    "Regional",
-    "Trabalho"
-  ]
+  const regionais = await regionalcontroller.getRegionais();
+  const atividades = await trabalhoscontroller.getAtividades();
 
-  await authcontroller.authenticate(req,res,'pages/pesquisar',{ opcoes: opcoes });
+  await authcontroller.authenticate(req,res,'pages/pesquisar',
+  { 
+    regionais: regionais, 
+    atividades: atividades 
+  });
 });
 
 app.post("/pesquisa", async function (req, res) {
   let centro = []
   try {
-    const opcao = req.body.opcao
+    const regional = req.body.regional
+    const trabalho = req.body.trabalho
     const search = req.body.search
+    const opcao = "Trabalho"
 
-    console.log("PESQUISAR", opcao, search)
+    const pesquisaInfo ={
+      regional: regional,
+      trabalho: trabalho,
+      search: search,
+      option: opcao
+    }
 
-    const result = await searchcontroller.getPesquisaResult(opcao,search);
+    console.log("PESQUISAR", regional, trabalho, search)
+
+    const result = await searchcontroller.getPesquisaResult(pesquisaInfo);
 
     console.log("RESULT",result)
     if(result){
@@ -69,6 +82,9 @@ app.post("/pesquisa", async function (req, res) {
         "Regional",
         "Trabalho"
       ]
+
+      
+
       await authcontroller.authenticate(req,res,'pages/pesquisar',{ opcoes: opcoes, result: null });
     }
   } catch (error) {

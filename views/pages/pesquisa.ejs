@@ -8,16 +8,19 @@
 
     <main>
       <div class="container">
-
+        <a href="/pesquisar" >
+          <button type="button" class="btn btn-info">Voltar</button>
+       </a> 
         <%if (opcao == "Centro") { %>
           <%- include('../partials/centro', {centro: result}); %>
         <% } %>
         <%if (opcao == "Regional") { %>
           <%- include('../partials/centros', {centros: result}); %>
         <% } %>
-        <a href="/pesquisar" >
-          <button type="button" class="btn btn-info">Voltar</button>
-       </a>  
+        <%if (opcao == "Trabalho") { %>
+          <%- include('../partials/trabalhos', {trabalhos_centros: result}); %>
+        <% } %>
+         
       </div>
     </main>
 
