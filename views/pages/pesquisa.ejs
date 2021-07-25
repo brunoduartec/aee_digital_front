@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+  <body class="body">
+    <header><%- include('../partials/header'); %></header>
+
+    <main>
+      <div class="container">
+        <a href="/pesquisar" >
+          <button type="button" class="btn btn-info">Voltar</button>
+       </a> 
+        <%if (opcao == "Centro") { %>
+          <%- include('../partials/centro', {centro: result}); %>
+        <% } %>
+        <%if (opcao == "Regional") { %>
+          <%- include('../partials/centros', {centros: result}); %>
+        <% } %>
+        <%if (opcao == "Trabalho") { %>
+          <%- include('../partials/trabalhos', {trabalhos_centros: result}); %>
+        <% } %>
+         
+      </div>
+    </main>
+
+    <footer><%- include('../partials/footer'); %></footer>
+  </body>
+</html>

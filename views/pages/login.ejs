@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+  <body class="body">
+    <header><%- include('../partials/header'); %></header>
+
+    <main>
+      <div class="container">
+        <div class="titulo">
+          <p>Seja bem vindo!</p>
+        </div>
+        <form action="/login" method="post">
+          <div class="login">
+            <p>
+              <input
+                class="input"
+                id="email"
+                name="email"
+                type="text"
+                value=""
+                placeholder="Usuario"
+              />
+              <br />
+              <!-- <input placeholder="Senha" type="password" id="pass" /> -->
+              <input
+                class="input"
+                id="pass"
+                name="pass"
+                type="password"
+                value=""
+                placeholder="Senha"
+              />
+            </p>
+          </div>
+          <div class="continuar">
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary btn-lg">
+                Entrar
+              </button>
+            </div>
+          </div>
+          <div class="bloco-esqueci">
+            <ul>
+              <li>Esqueci minha senha</li>
+              <li>Ainda não sou cadastrado</li>
+            </ul>
+          </div>
+        </form>
+      </div>
+    </main>
+
+    <footer><%- include('../partials/footer'); %></footer>
+  </body>
+</html>
