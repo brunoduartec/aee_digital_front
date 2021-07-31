@@ -2,6 +2,8 @@ version: "3"
 
 services:
   aee_digital_front:
+    environment:
+      - NODE_ENV=development
     build: .
     command: npm start
     image: aee_digital_front

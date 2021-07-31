@@ -11,6 +11,9 @@
         <a href="/pesquisar" >
           <button type="button" class="btn btn-info">Voltar</button>
        </a> 
+       <div>
+         resultados: <%= result.length   %> 
+       </div>
         <%if (opcao == "Centro") { %>
           <%- include('../partials/centro', {centro: result}); %>
         <% } %>
