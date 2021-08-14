@@ -1,0 +1,7 @@
+input{
+    font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+  }
+
+.input::placeholder{
+    color: black;
+  }

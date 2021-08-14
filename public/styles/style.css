@@ -36,7 +36,6 @@
   margin-bottom: 10px;
   height:38px;
   width: 354px;
-  font-family: 'Montserrat';
   font-size: 20px;
 }
 
@@ -153,12 +152,7 @@ width: 60%;
   margin-bottom: 10px;
   height:20px;
   width: 300px;
-  font-family: 'Montserrat';
   font-size: 14px;
-}
-
-.opcoes-pesquisar input::placeholder{
-  color: black;
 }
 
 .opcoes-pesquisar select{
@@ -180,6 +174,7 @@ width: 60%;
   font-family: 'Montserrat';
   font-size: 15px;
 }
+
 .botao-pesquisar{
   text-align: left;
   margin-left:300px;
