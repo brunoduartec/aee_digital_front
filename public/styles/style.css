@@ -1,191 +1,195 @@
-.body{
+.body {
   width: 100%;
   height: 100%;
   margin: 0px auto;
 }
 
-.cabeçalho{
+.container {
+  height: 80%;
+}
+
+.cabeçalho {
   background-color: #ffffff;
   width: 100%;
   height: 50px;
-  float:left;
-  position:relative;
+  float: left;
+  position: relative;
   padding-bottom: 10px;
 }
 
-.cab-logo{
-  float:left;
+.cab-logo {
+  float: left;
   margin-left: 55px;
   width: 10%;
 }
 
-.cab-menu{
+.cab-menu {
   margin-left: 510px;
-  position:relative;
-  float:left;
+  position: relative;
+  float: left;
 }
 
 .cab-menu ul li {
   display: inline-block;
   list-style: none;
-  margin-left:10px;
-  font-family: 'Montserrat';
-  font-size: 13px; 
+  margin-left: 10px;
+  font-family: "Montserrat";
+  font-size: 13px;
 }
 
-.botao-contato{
-  float:right;
-  position:relative;
-  margin-right:105px;
+.botao-contato {
+  float: right;
+  position: relative;
+  margin-right: 105px;
   padding-top: 11px;
 }
 
-.titulo{
+.titulo {
   width: 100%;
   height: 80px;
-  float:left;
-  position:relative;
+  float: left;
+  position: relative;
   margin-bottom: 30px;
 }
 
-.titulo p{
+.titulo p {
   text-align: center;
-  font-family: 'Montserrat';
+  font-family: "Montserrat";
   font-size: 40px;
 }
 
-.login{
+.login {
   width: 100%;
   height: 160px;
-  float:left;
-  position:relative;
+  float: left;
+  position: relative;
 }
 
-.login p{
+.login p {
   text-align: center;
 }
 
-.login input{
-  margin-top:10px;
-  margin-left:auto;
-  margin-right:auto;
+.login input {
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
   margin-bottom: 10px;
-  height:38px;
+  height: 38px;
   width: 354px;
-  font-family: 'Montserrat';
+  font-family: "Montserrat";
   font-size: 20px;
 }
 
-.bloco-continuar{
+.bloco-continuar {
   margin-left: auto;
-  margin-right:auto;
+  margin-right: auto;
   width: 30%;
 }
 
-.continuar{
+.continuar {
   text-align: center;
 }
 
-.bloco-esqueci{
-  width:100%;
-  height:40px;
-  position:relative;
-  margin-left:auto;
-  margin-right:auto;
+.bloco-esqueci {
+  width: 100%;
+  height: 40px;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
   width: 50%;
-  padding-left:90px;
+  padding-left: 90px;
 }
-.bloco-esqueci ul li{
-  display:inline-block;
+.bloco-esqueci ul li {
+  display: inline-block;
   list-style: none;
-  margin-left:20px;
-  font-family: 'Montserrat';
+  margin-left: 20px;
+  font-family: "Montserrat";
   font-size: 20px;
 }
 
-.fundo-branco-final{
+.fundo-branco-final {
   width: 100%;
-  height:128px;
+  height: 128px;
   background-color: #ffffff;
 }
 
-.fundo-final{
+.fundo-final {
   width: 100%;
-  height:90px;
+  height: 140px;
   background-color: #5faec6;
 }
 
-.fundo-final-siga{
+.fundo-final-siga {
   width: 50%;
-  margin:0px;
-  float:left;
+  margin: 0px;
+  float: left;
   /* height:40px; */
 }
 
 .fundo-final-siga p {
   text-align: right;
   color: #ffffff;
-  font-size:30px;
-  font-family: 'Montserrat';
+  font-size: 30px;
+  font-family: "Montserrat";
   /* margin-top:20px;
   margin-bottom: 10px;
   margin-right: 3px; */
 }
 
-.fundo-final-redes{
+.fundo-final-redes {
   width: 50%;
-  float:right;
-  padding-inline-start: 0px; 
-  height:40px;
-  margin-bottom:0px;
+  float: right;
+  padding-inline-start: 0px;
+  height: 40px;
+  margin-bottom: 0px;
 }
 
 .fundo-final-redes ul {
-  padding:0px;
-  margin-bottom:0px;
+  padding: 0px;
+  margin-bottom: 0px;
 }
 
-.fundo-final-redes ul li{
+.fundo-final-redes ul li {
   display: inline-block;
   list-style: none;
 }
 
-.fundo-final-alianca{
+.fundo-final-alianca {
   width: 100%;
-  height:50px;
-  position:relative;
-  float:left;
-}
-
-.fundo-final-alianca p{
-  color: #ffffff;
-  font-size:10px;
-  text-align: center;
-  font-family: 'Montserrat';
-  margin-top:30px;
-}
-
-.tela-inicio{
-  width:100%;
+  height: 50px;
   position: relative;
   float: left;
-  margin-bottom:140px;
 }
 
-.tela-inicio p{
-  text-align:center;
-  font-family: 'Montserrat';
+.fundo-final-alianca p {
+  color: #ffffff;
+  font-size: 10px;
+  text-align: center;
+  font-family: "Montserrat";
+  margin-top: 30px;
+}
+
+.tela-inicio {
+  width: 100%;
+  position: relative;
+  float: left;
+  margin-bottom: 140px;
+}
+
+.tela-inicio p {
+  text-align: center;
+  font-family: "Montserrat";
   font-size: 50px;
   margin-bottom: 55px;
 }
 
-.botoes-inicio{
-margin-right: auto;
-margin-left:auto;
-width: 60%;
+.botoes-inicio {
+  margin-right: auto;
+  margin-left: auto;
+  width: 60%;
 }
 
-.botoes-inicio ul li{
+.botoes-inicio ul li {
   display: inline-block;
 }
 
@@ -193,18 +197,17 @@ width: 60%;
   width: 100%;
   position: relative;
   float: left;
-  margin-left:300px;
+  margin-left: 300px;
   margin-top: 15px;
   margin-bottom: 200px;
 }
 
-.pesquisa{
+.pesquisa {
   width: 400px;
   height: 160px;
-  margin-left:auto;
-  margin-right:auto;
+  margin-left: auto;
+  margin-right: auto;
 }
-
 
 .tela-pesquisar {
   width: 100%;
@@ -214,64 +217,64 @@ width: 60%;
   margin-bottom: 51px;
 }
 
-.titulo-pesquisar{
+.titulo-pesquisar {
   width: 50%;
   text-align: center;
 }
 
-.titulo-pesquisar h{
-  font-family: 'Montserrat';
+.titulo-pesquisar h {
+  font-family: "Montserrat";
   font-size: 30px;
 }
 
-.opcoes-pesquisar{
-  font-family: 'Montserrat';
+.opcoes-pesquisar {
+  font-family: "Montserrat";
   font-size: 20px;
   margin-top: 30px;
   /* margin-left:300px;
   margin-right:300px; */
 }
 
-.opcoes-pesquisar p{
-  margin-top:10px;
+.opcoes-pesquisar p {
+  margin-top: 10px;
   margin-bottom: 10px;
 }
 
-.opcoes-pesquisar input{
-  margin-left:auto;
-  margin-right:auto;
+.opcoes-pesquisar input {
+  margin-left: auto;
+  margin-right: auto;
   margin-bottom: 10px;
-  height:20px;
+  height: 20px;
   width: 300px;
-  font-family: 'Montserrat';
+  font-family: "Montserrat";
   font-size: 14px;
 }
 
-.opcoes-pesquisar input::placeholder{
+.opcoes-pesquisar input::placeholder {
   color: black;
 }
 
-.opcoes-pesquisar select{
-  margin-left:auto;
-  margin-right:auto;
+.opcoes-pesquisar select {
+  margin-left: auto;
+  margin-right: auto;
   margin-bottom: 10px;
-  height:25px;
+  height: 25px;
   width: 300px;
-  font-family: 'Montserrat';
+  font-family: "Montserrat";
   font-size: 15px;
 }
 
-.opcoes-pesquisar option{
-  margin-left:auto;
-  margin-right:auto;
+.opcoes-pesquisar option {
+  margin-left: auto;
+  margin-right: auto;
   margin-bottom: 10px;
-  height:25px;
+  height: 25px;
   width: 300px;
-  font-family: 'Montserrat';
+  font-family: "Montserrat";
   font-size: 15px;
 }
-.botao-pesquisar{
+.botao-pesquisar {
   text-align: left;
-  margin-left:300px;
+  margin-left: 300px;
   margin-bottom: 68px;
 }
