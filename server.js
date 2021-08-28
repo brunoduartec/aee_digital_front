@@ -149,14 +149,14 @@ app.post("/pesquisa", async function (req, res) {
       const result = await searchcontroller.getPesquisaResult(pesquisaInfo);
 
       if (result) {
-        res.render(req, res, "pages/pesquisa", {
+        res.render("pages/pesquisa", {
           opcao: opcao,
           result: result,
         });
       } else {
         const opcoes = ["Centro", "Regional", "Trabalho"];
 
-        res.render(req, res, "pages/pesquisar", {
+        res.render("pages/pesquisar", {
           opcoes: opcoes,
           result: null,
         });
