@@ -4,10 +4,6 @@
   margin: 0px auto;
 }
 
-.container {
-  height: 80%;
-}
-
 .cabeçalho {
   background-color: #ffffff;
   width: 100%;
@@ -40,8 +36,8 @@
 .botao-contato {
   float: right;
   position: relative;
-  margin-right: 105px;
-  padding-top: 11px;
+  margin-right: 80px;
+  padding-top: 18px;
 }
 
 .titulo {
@@ -49,7 +45,6 @@
   height: 80px;
   float: left;
   position: relative;
-  margin-bottom: 30px;
 }
 
 .titulo p {
@@ -115,7 +110,9 @@
 
 .fundo-final {
   width: 100%;
-  height: 140px;
+  height: 90px;
+  float: left;
+  position: relative;
   background-color: #5faec6;
 }
 
@@ -123,7 +120,7 @@
   width: 50%;
   margin: 0px;
   float: left;
-  /* height:40px; */
+  height: 40px;
 }
 
 .fundo-final-siga p {
@@ -131,9 +128,9 @@
   color: #ffffff;
   font-size: 30px;
   font-family: "Montserrat";
-  /* margin-top:20px;
+  margin-top: 20px;
   margin-bottom: 10px;
-  margin-right: 3px; */
+  margin-right: 3px;
 }
 
 .fundo-final-redes {
@@ -179,7 +176,7 @@
 .tela-inicio p {
   text-align: center;
   font-family: "Montserrat";
-  font-size: 50px;
+  font-size: 40px;
   margin-bottom: 55px;
 }
 
@@ -197,22 +194,6 @@
   width: 100%;
   position: relative;
   float: left;
-  margin-left: 300px;
-  margin-top: 15px;
-  margin-bottom: 200px;
-}
-
-.pesquisa {
-  width: 400px;
-  height: 160px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.tela-pesquisar {
-  width: 100%;
-  position: relative;
-  float: left;
   margin-top: 15px;
   margin-bottom: 51px;
 }
@@ -220,6 +201,8 @@
 .titulo-pesquisar {
   width: 50%;
   text-align: center;
+  margin-left: 300px;
+  margin-right: 300px;
 }
 
 .titulo-pesquisar h {
@@ -231,8 +214,8 @@
   font-family: "Montserrat";
   font-size: 20px;
   margin-top: 30px;
-  /* margin-left:300px;
-  margin-right:300px; */
+  margin-left: 300px;
+  margin-right: 300px;
 }
 
 .opcoes-pesquisar p {
@@ -273,8 +256,142 @@
   font-family: "Montserrat";
   font-size: 15px;
 }
+
 .botao-pesquisar {
   text-align: left;
   margin-left: 300px;
   margin-bottom: 68px;
+}
+
+.título {
+  text-align: center;
+  width: 100%;
+  position: relative;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  float: left;
+}
+
+h {
+  font-family: "Montserrat";
+  font-size: 30px;
+  text-align: center;
+}
+
+h1 {
+  font-family: "Montserrat";
+  font-size: 25px;
+  text-align: left;
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+
+p {
+  font-family: "Montserrat";
+  font-size: 25px;
+  text-align: left;
+}
+
+.formulario {
+  width: 60%;
+  position: relative;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: 300px;
+  margin-right: 300px;
+  float: left;
+}
+
+.formulario p {
+  margin-block-start: 0px;
+  margin-block-end: 0px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.formulario input {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 8px;
+  margin-bottom: 13px;
+  height: 30px;
+  font-family: "Montserrat";
+  font-size: 14px;
+}
+
+.formulario textarea {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 8px;
+  margin-bottom: 13px;
+  height: 120px;
+  font-family: "Montserrat";
+  font-size: 14px;
+}
+
+.radio {
+  display: inline-block;
+  align-items: center;
+}
+
+.formulario input[type="radio"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.formulario label {
+  font-family: "Montserrat";
+  font-size: 25px;
+  text-align: left;
+  margin: 10 0 10 0px;
+}
+
+.formulario select {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 10px;
+  height: 30px;
+  width: 28%;
+  font-family: "Montserrat";
+  font-size: 18px;
+}
+
+.botoes {
+  text-align: center;
+  position: relative;
+  float: left;
+  width: 100%;
+}
+
+.botoes ul li {
+  display: inline-block;
+  list-style: none;
+  margin-left: 20px;
+  font-family: "Montserrat";
+  font-size: 12px;
+  color: #5faec6;
+}
+
+.btn {
+  border: none;
+  padding: 8px 20px 10px 20px;
+  margin: 0 5px 0 5px;
+  cursor: pointer;
+  color: #ffffff;
+  background-color: #9cd29e;
+  border-radius: 2px;
+  border: solid 0.5px #ccc9c9;
+}
+
+.botoes ul li button {
+  height: 30px;
+  width: 100px;
+}
+
+.formulario {
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
