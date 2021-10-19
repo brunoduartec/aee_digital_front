@@ -186,7 +186,7 @@ async function getFormInfo(centro_id, form_alias) {
 
 app.get("/cadastro_alianca", requireAuth, async function (req, res) {
   const centro_id = req.query.ID;
-  const  page = req.query.page || 1;
+  const  page = req.query.page || 0;
   const form_alias = "Cadastro de Informações Anual";
 
   const form_info = await getFormInfo(centro_id, form_alias);
@@ -204,10 +204,15 @@ app.post("/quiz", requireAuth, async function (req, res) {
   let responses = req.body;
   const form_alias = responses.form_alias;
   const centro_id = responses.centro_id;
+  const page_index = responses.page;
+  const page_redirect = responses.redirect;
+  const action = responses.action;
 
   const form_info = await getFormInfo(centro_id, form_alias);
 
-  const quizes = form_info.templates.QUIZES;
+  const page = form_info.templates.PAGES[page_index];
+
+  const quizes = page.QUIZES;
 
   for (let index = 0; index < quizes.length; index++) {
     const quiz = quizes[index];
@@ -239,6 +244,14 @@ app.post("/quiz", requireAuth, async function (req, res) {
         }
       }
     }
+  }
+
+  if(action != 0){
+    let page_to = 0;
+    if(action != "begin"){
+      page_to = parseInt(page_index,10) + parseInt(action,10);
+    }
+    res.redirect(`${page_redirect}&page=${page_to}`);
   }
 });
 

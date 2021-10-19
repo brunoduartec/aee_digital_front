@@ -1,49 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <%- include('../partials/head'); %>
-  </head>
-  <body class="body">
-    <header><%- include('../partials/header'); %></header>
 
-    <main>
-      <div class="título">
-        <h> <%=form_alias  %> </h>
-     </div>
-     <div class="Botoes">
-         <ul>
-           <% 
+<head>
+  <%- include('../partials/head'); %>
+</head>
+
+<body class="body">
+  <header><%- include('../partials/header'); %></header>
+
+  <main>
+
+    <div class="container">
+      <div >
+        <h1> <%=form_alias  %> </h1>
+      </div>
+      <div class="cab-menu">
+        <ul class="list-group list-group-horizontal">
+          <% 
            const pages = titles.length
            for(i=0;i<pages;i++){
              let title = titles[i];
             %>
-             <li>
-              <a href="/cadastro_alianca?ID=<%=centro_id%>&page=<%=i%>">
+          <li>
+            <a href="/cadastro_alianca?ID=<%=centro_id%>&page=<%=i%>">
               <%=i+1%>° <%=title%>
-              </a>
-            </li>
-             <%};%>
-            
-         </ul>
-     </div>
+            </a>
+          </li>
+          <%};%>
 
-     <div class="formulario">
-    <form name="quiz" action="/quiz" method="post">
-      <input
-        type="hidden"
-        id="form_alias"
-        name="form_alias"
-        value="<%=form_alias%>"
-      />
+        </ul>
+      </div>
 
-      <input
-        type="hidden"
-        id="centro_id"
-        name="centro_id"
-        value="<%=centro_id%>"
-      />
+      <div>
+        <form name="quiz" action="/quiz" method="post">
+          <input type="hidden" id="form_alias" name="form_alias" value="<%=form_alias%>" />
 
-      <%
+          <input type="hidden" id="centro_id" name="centro_id" value="<%=centro_id%>" />
+
+          <input type="hidden" id="page" name="page" value="<%=index%>" />
+
+
+          <input type="hidden" id="page" name="redirect" value="/cadastro_alianca?ID=<%=centro_id%>" />
+
+
+          <%
       const indexToNumber = parseInt(index, 10);
       let page = results.PAGES[index];
 
@@ -51,27 +51,31 @@
       include('../partials/sub_quiz', {quiz:result}); %> <%}); %>
 
 
-      <a href="/cadastro_alianca?ID=<%=centro_id%>&page=<%=0%>">
-        <button class="btn btn-primary">Início</button>
-      </a>
+          <a href="/cadastro_alianca?ID=<%=centro_id%>&page=<%=0%>">
+            <button class="btn btn-primary" value="begin" name="action">Início</button>
+          </a>
 
-      <%if(indexToNumber > 0){%>
-      <a href="/cadastro_alianca?ID=<%=centro_id%>&page=<%=indexToNumber - 1%>">
-        <button class="btn btn-primary">Anterior</button>
-      </a>
-      <%}%>
+          <%if(indexToNumber > 0){ %>
+          <a href="/cadastro_alianca?ID=<%=centro_id%>&page=<%=indexToNumber - 1%>">
+            <button class="btn btn-primary" value="-1" name="action">Anterior</button>
+          </a>
+          <%}%>
 
-      <button type="submit" class="btn btn-primary">Salvar</button>
+      <button type="submit" class="btn btn-primary" value="0" name="action">Salvar</button>
 
       <%if(indexToNumber < (pages-1)){%>
-      <a href="/cadastro_alianca?ID=<%=centro_id%>&page=<%=indexToNumber+1%>">
-        <button class="btn btn-primary">Próximo</button>
-      </a>
-      <%}%>
+          <a href="/cadastro_alianca?ID=<%=centro_id%>&page=<%=indexToNumber+1%>">
+            <button class="btn btn-primary" value="1" name="action">Próximo</button>
+          </a>
+          <%}%>
     </form>
   </div>
+        
+    </div>
+
     </main>
 
     <footer><%- include('../partials/footer'); %></footer>
-  </body>
+</body>
+
 </html>
