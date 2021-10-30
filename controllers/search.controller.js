@@ -15,7 +15,9 @@ module.exports = class SearchController {
       const key = keys[index];
       const value = params[key];
 
-      paramsParsed = paramsParsed.concat(`&${key}=${value}`);
+      if(value){
+        paramsParsed = paramsParsed.concat(`&${key}=${value}`);
+      }
     }
 
     return paramsParsed.substring(1);

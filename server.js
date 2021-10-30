@@ -4,6 +4,8 @@ const app = express();
 var session = require("express-session");
 // const cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
+const puppeteer = require("puppeteer");
+
 
 const crypto = require("crypto");
 
@@ -30,6 +32,8 @@ app.use(express.static("public"));
 // app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+
 
 app.use(
   session({
@@ -88,6 +92,36 @@ async function TryAuthenticate(req, res, route) {
 app.get("/", requireAuth, async function (req, res) {
   res.render("pages/index");
 });
+
+app.get("/pdf", requireAuth, async (req, res) => {
+  const url = req.query.target;
+
+  const browser = await puppeteer.launch({
+      headless: true
+  });
+
+  const webPage = await browser.newPage();
+
+  await webPage.goto(url, {
+      waitUntil: "networkidle0"
+  });
+  
+  const pdf = await webPage.pdf({
+      printBackground: true,
+      format: "Letter",
+      margin: {
+          top: "20px",
+          bottom: "40px",
+          left: "20px",
+          right: "20px"
+      }
+  });
+
+  await browser.close();
+
+  res.contentType("application/pdf");
+  res.send(pdf);
+})
 
 app.get("/centro", requireAuth, async function (req, res) {
   const centro = req.query.nome;
@@ -208,52 +242,62 @@ app.post("/quiz", requireAuth, async function (req, res) {
   const page_redirect = responses.redirect;
   const action = responses.action;
 
-  const form_info = await getFormInfo(centro_id, form_alias);
+  
+  if(action == "pdf"){
+    
+    let pageToRender = `http://localhost:4200/cadastro_alianca?ID=${centro_id}&page=4`
+    res.redirect(`pdf?target=${pageToRender}`);
+  }else{
 
-  const page = form_info.templates.PAGES[page_index];
-
-  const quizes = page.QUIZES;
-
-  for (let index = 0; index < quizes.length; index++) {
-    const quiz = quizes[index];
-    const questions = quiz.QUESTIONS;
-
-    for (let j = 0; j < questions.length; j++) {
-      const question = questions[j];
-
-      let answer = responses[question._id];
-      if(responses[question._id] == "on") answer = "true"
-
-      if (responses[question._id]) {
-        if (!question.ANSWER) {
-          await trabalhoscontroller.postQuizResponse({
-            CENTRO_ID: centro_id,
-            QUIZ_ID: quiz._id,
-            QUESTION_ID: question._id,
-            ANSWER: answer,
-          });
-        } else if (question.ANSWER != responses[question._id]) {
-          let paramsParsed = searchcontroller.getParamsParsed({
-            CENTRO_ID: centro_id,
-            QUIZ_ID: quiz._id,
-            QUESTION_ID: question._id,
-          });
-          await trabalhoscontroller.putQuizResponse(paramsParsed, {
-            ANSWER: answer,
-          });
+    const form_info = await getFormInfo(centro_id, form_alias);
+  
+    const page = form_info.templates.PAGES[page_index];
+  
+    const quizes = page.QUIZES;
+  
+    for (let index = 0; index < quizes.length; index++) {
+      const quiz = quizes[index];
+      const questions = quiz.QUESTIONS;
+  
+      for (let j = 0; j < questions.length; j++) {
+        const question = questions[j];
+  
+        let answer = responses[question._id];
+        if(responses[question._id] == "on") answer = "true"
+  
+        if (responses[question._id]) {
+          if (!question.ANSWER) {
+            await trabalhoscontroller.postQuizResponse({
+              CENTRO_ID: centro_id,
+              QUIZ_ID: quiz._id,
+              QUESTION_ID: question._id,
+              ANSWER: answer,
+            });
+          } else if (question.ANSWER != responses[question._id]) {
+            let paramsParsed = searchcontroller.getParamsParsed({
+              CENTRO_ID: centro_id,
+              QUIZ_ID: quiz._id,
+              QUESTION_ID: question._id,
+            });
+            await trabalhoscontroller.putQuizResponse(paramsParsed, {
+              ANSWER: answer,
+            });
+          }
         }
       }
     }
+  
+    if(action != 0){
+      let page_to = 0;
+      if(action != "begin"){
+        page_to = parseInt(page_index,10) + parseInt(action,10);
+      }
+      res.redirect(`${page_redirect}&page=${page_to}`);
+    }
   }
 
-  if(action != 0){
-    let page_to = 0;
-    if(action != "begin"){
-      page_to = parseInt(page_index,10) + parseInt(action,10);
-    }
-    res.redirect(`${page_redirect}&page=${page_to}`);
-  }
 });
+
 
 app.post("/update_centro", requireAuth, async function (req, res) {
   const centroInfo = {

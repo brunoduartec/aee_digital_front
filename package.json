@@ -29,6 +29,7 @@
     "express-session": "^1.17.2",
     "http": "0.0.1-security",
     "jquery": "^3.6.0",
-    "nodemon": "^2.0.12"
+    "nodemon": "^2.0.12",
+    "puppeteer": "^10.4.0"
   }
 }
