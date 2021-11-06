@@ -1,4 +1,5 @@
-const { param } = require("jquery");
+const Logger = require("../helpers/logger");
+const logger = new Logger();
 
 module.exports = class SearchController {
   constructor(regionalcontroller, trabalhocontroller) {
@@ -15,10 +16,12 @@ module.exports = class SearchController {
       const key = keys[index];
       const value = params[key];
 
-      if(value){
+      if (value) {
         paramsParsed = paramsParsed.concat(`&${key}=${value}`);
       }
     }
+
+    logger.info("getParamsParsed", paramsParsed.substring(1));
 
     return paramsParsed.substring(1);
   }
@@ -42,6 +45,8 @@ module.exports = class SearchController {
           amount: centro ? centro.length : 0,
           items: centro,
         };
+
+        logger.info("getPesquisaResult:Centro", centros);
         return centros;
       },
       Centro_Summary: async function () {
@@ -85,6 +90,7 @@ module.exports = class SearchController {
           }
         });
 
+        logger.info("getPesquisaResult:Centro_Summary", centroSummary);
         return centroSummary;
       },
 
@@ -126,6 +132,7 @@ module.exports = class SearchController {
           }
         }
 
+        logger.info("getPesquisaResult:Trabalhos", atividades);
         return atividades;
       },
       Regional: async function (s) {
@@ -134,6 +141,7 @@ module.exports = class SearchController {
           amount: centros.length,
           items: centros,
         };
+        logger.info("getPesquisaResult:Regional", regional);
         return regional;
       },
 
@@ -153,32 +161,30 @@ module.exports = class SearchController {
         let pages = form_template.PAGES;
         let page_titles = [];
 
-
         for (let index = 0; index < pages.length; index++) {
           const page = pages[index];
           page_titles.push(page.PAGE_NAME);
-          
+
           let quizes = page.QUIZES;
           for (let index = 0; index < quizes.length; index++) {
             const quiz = quizes[index];
-  
+
             paramsParsed = this.getParamsParsed({
               CENTRO_ID: centro_id,
               QUIZ_ID: quiz._id,
             });
-  
+
             const quiz_responses =
               await trabalhocontroller.getQuizResponseByParams(paramsParsed);
-  
-  
+
             let questions = quiz.QUESTIONS;
-  
+
             for (let j = 0; j < questions.length; j++) {
               const question = questions[j];
               let answer = quiz_responses.find(
                 (m) => m.QUESTION_ID == question._id
               );
-  
+
               if (answer) {
                 question.ANSWER = answer.ANSWER;
               }
@@ -188,8 +194,10 @@ module.exports = class SearchController {
 
         let quiz = {
           templates: form_template,
-          titles: page_titles
+          titles: page_titles,
         };
+
+        logger.info("getPesquisaResult:Quiz", quiz);
         return quiz;
       },
     };

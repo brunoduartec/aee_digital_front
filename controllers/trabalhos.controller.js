@@ -6,6 +6,9 @@ const config = require("../env.json")[env];
 const Request = require("../helpers/request");
 const request = new Request();
 
+const Logger = require("../helpers/logger");
+const logger = new Logger();
+
 module.exports = class trabalhosController {
   constructor() {}
 
@@ -13,12 +16,13 @@ module.exports = class trabalhosController {
     try {
       const atividades = await request.get(
         "aee_digital_trabalhos",
-        `/atividades`
+        `/atividade`
       );
 
-      return atividades.data;
+      logger.info("getAtividades", atividades);
+      return atividades;
     } catch (error) {
-      console.log("trabalhos.controller.getAtividades: Error=>", error);
+      logger.error("trabalhos.controller.getAtividades: Error=>", error);
     }
   }
 
@@ -26,11 +30,12 @@ module.exports = class trabalhosController {
     try {
       const atividades = await request.get(
         "aee_digital_trabalhos",
-        `/atividades_centro?${params}`
+        `/atividade_centro?${params}`
       );
-      return atividades.data;
+      logger.info("getAtividadesCentroByParams", atividades);
+      return atividades;
     } catch (error) {
-      console.log("trabalhos.controller.getAtividades: Error=>", error);
+      logger.error("trabalhos.controller.getAtividades: Error=>", error);
     }
   }
 
@@ -41,9 +46,10 @@ module.exports = class trabalhosController {
         `/atividade_centro_summary?${params}`
       );
 
-      return atividades.data;
+      logger.info("getAtividadesCentroSummaryByParams", atividades);
+      return atividades;
     } catch (error) {
-      console.log(
+      logger.error(
         "trabalhos.controller.getAtividadesCentroSummaryByParams: Error=>",
         error
       );
@@ -57,9 +63,10 @@ module.exports = class trabalhosController {
         `/atividade_generic_form?${params}`
       );
 
-      return form.data;
+      logger.info("getFormByParams", form);
+      return form;
     } catch (error) {
-      console.log("trabalhos.controller.getFormByParams: Error=>", error);
+      logger.error("trabalhos.controller.getFormByParams: Error=>", error);
     }
   }
 
@@ -70,9 +77,10 @@ module.exports = class trabalhosController {
         `/atividade_generic_quiz?${params}`
       );
 
-      return quiz.data;
+      logger.info("getQuizTemplateByParams", quiz);
+      return quiz;
     } catch (error) {
-      console.log(
+      logger.error(
         "trabalhos.controller.getQuizTemplateByParams: Error=>",
         error
       );
@@ -86,9 +94,10 @@ module.exports = class trabalhosController {
         `/atividade_generic_quiz_answer?${params}`
       );
 
-      return quiz_response.data;
+      logger.info("getQuizResponseByParams", quiz_response);
+      return quiz_response;
     } catch (error) {
-      console.log(
+      logger.error(
         "trabalhos.controller.getQuizResponseByParams: Error=>",
         error
       );
@@ -103,9 +112,10 @@ module.exports = class trabalhosController {
         value
       );
 
-      return quiz_response.data;
+      logger.info("putQuizResponse", quiz_response);
+      return quiz_response;
     } catch (error) {
-      console.log(
+      logger.error(
         "trabalhos.controller.getQuizResponseByParams: Error=>",
         error
       );
@@ -120,9 +130,10 @@ module.exports = class trabalhosController {
         params
       );
 
-      return quiz_response.data;
+      logger.info("postQuizResponse", quiz_response);
+      return quiz_response;
     } catch (error) {
-      console.log(
+      logger.error(
         "trabalhos.controller.getQuizResponseByParams: Error=>",
         error
       );

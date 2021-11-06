@@ -5,6 +5,9 @@ const config = require("../env.json")[env];
 const Request = require("../helpers/request");
 const request = new Request();
 
+const Logger = require("../helpers/logger");
+const logger = new Logger();
+
 module.exports = class regionalController {
   constructor() {}
 
@@ -14,10 +17,10 @@ module.exports = class regionalController {
         "aee_digital_regionais",
         `/regionais`
       );
-
-      return regionals.data;
+      logger.info("getRegionais", regionals);
+      return regionals;
     } catch (error) {
-      console.log("regional.controller.getRegionais: Error=>", error);
+      logger.error("regional.controller.getRegionais: Error=>", error);
     }
   }
 
@@ -27,10 +30,10 @@ module.exports = class regionalController {
         "aee_digital_regionais",
         `/centros?REGIONAL.NOME_REGIONAL=${regionalName}`
       );
-
-      return centros.data;
+      logger.info("getCentrosByRegional", centros);
+      return centros;
     } catch (error) {
-      console.log("regional.controller.getCentrosByRegional: Error=>", error);
+      logger.error("regional.controller.getCentrosByRegional: Error=>", error);
       return null;
     }
   }
@@ -38,10 +41,10 @@ module.exports = class regionalController {
   async getCentros() {
     try {
       const centros = await request.get("aee_digital_regionais", `/centros`);
-
-      return centros.data;
+      logger.info("getCentros", centros);
+      return centros;
     } catch (error) {
-      console.log("regional.controller.getCentros: Error=>", error);
+      logger.error("regional.controller.getCentros: Error=>", error);
       return null;
     }
   }
@@ -54,9 +57,10 @@ module.exports = class regionalController {
         "aee_digital_regionais",
         `/centros?NOME_CURTO=${params.NOME_CURTO}`
       );
-      return centro.data[0];
+      logger.info("getCentroByParam", centro[0]);
+      return centro[0];
     } catch (error) {
-      console.log("regional.controller.getCentros: Error=>", error);
+      logger.error("regional.controller.getCentros: Error=>", error);
       return null;
     }
   }
@@ -69,10 +73,10 @@ module.exports = class regionalController {
         `/centros?NOME_CURTO=${nome_curto}`,
         centroInfo
       );
-
-      return centros.data;
+      logger.info("updateCentro", centros);
+      return centros;
     } catch (error) {
-      console.log("regional.controller.updateCentro: Error=>", error);
+      logger.error("regional.controller.updateCentro: Error=>", error);
       return null;
     }
   }

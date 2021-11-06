@@ -5,11 +5,13 @@ var session = require("express-session");
 var bodyParser = require("body-parser");
 const puppeteer = require("puppeteer");
 
+const Logger = require("./helpers/logger");
+const logger = new Logger();
 
 const crypto = require("crypto");
 
 const env = process.env.NODE_ENV ? process.env.NODE_ENV : "local";
-const config = require("../env.json")[env];
+const config = require("./env.json")[env];
 
 const regionalController = require("./controllers/regional.controller");
 const regionalcontroller = new regionalController();
@@ -38,8 +40,6 @@ app.use(express.static("public"));
 // app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
-
 
 app.use(
   session({
@@ -103,31 +103,31 @@ app.get("/pdf", requireAuth, async (req, res) => {
   const url = req.query.target;
 
   const browser = await puppeteer.launch({
-      headless: true
+    headless: true,
   });
 
   const webPage = await browser.newPage();
 
   await webPage.goto(url, {
-      waitUntil: "networkidle0"
+    waitUntil: "networkidle0",
   });
-  
+
   const pdf = await webPage.pdf({
-      printBackground: true,
-      format: "Letter",
-      margin: {
-          top: "20px",
-          bottom: "40px",
-          left: "20px",
-          right: "20px"
-      }
+    printBackground: true,
+    format: "Letter",
+    margin: {
+      top: "20px",
+      bottom: "40px",
+      left: "20px",
+      right: "20px",
+    },
   });
 
   await browser.close();
 
   res.contentType("application/pdf");
   res.send(pdf);
-})
+});
 
 app.get("/centro", requireAuth, async function (req, res) {
   const centro = req.query.nome;
@@ -226,7 +226,7 @@ async function getFormInfo(centro_id, form_alias) {
 
 app.get("/cadastro_alianca", requireAuth, async function (req, res) {
   const centro_id = req.query.ID;
-  const  page = req.query.page || 0;
+  const page = req.query.page || 0;
   const form_alias = "Cadastro de Informações Anual";
 
   const form_info = await getFormInfo(centro_id, form_alias);
@@ -236,7 +236,7 @@ app.get("/cadastro_alianca", requireAuth, async function (req, res) {
     form_alias: form_alias,
     centro_id: centro_id,
     results: form_info.templates,
-    titles: form_info.titles
+    titles: form_info.titles,
   });
 });
 
@@ -248,29 +248,26 @@ app.post("/quiz", requireAuth, async function (req, res) {
   const page_redirect = responses.redirect;
   const action = responses.action;
 
-  
-  if(action == "pdf"){
-    
-    let pageToRender = `http://localhost:4200/cadastro_alianca?ID=${centro_id}&page=4`
+  if (action == "pdf") {
+    let pageToRender = `http://localhost:4200/cadastro_alianca?ID=${centro_id}&page=4`;
     res.redirect(`pdf?target=${pageToRender}`);
-  }else{
-
+  } else {
     const form_info = await getFormInfo(centro_id, form_alias);
-  
+
     const page = form_info.templates.PAGES[page_index];
-  
+
     const quizes = page.QUIZES;
-  
+
     for (let index = 0; index < quizes.length; index++) {
       const quiz = quizes[index];
       const questions = quiz.QUESTIONS;
-  
+
       for (let j = 0; j < questions.length; j++) {
         const question = questions[j];
-  
+
         let answer = responses[question._id];
-        if(responses[question._id] == "on") answer = "true"
-  
+        if (responses[question._id] == "on") answer = "true";
+
         if (responses[question._id]) {
           if (!question.ANSWER) {
             await trabalhoscontroller.postQuizResponse({
@@ -292,18 +289,16 @@ app.post("/quiz", requireAuth, async function (req, res) {
         }
       }
     }
-  
-    if(action != 0){
+
+    if (action != 0) {
       let page_to = 0;
-      if(action != "begin"){
-        page_to = parseInt(page_index,10) + parseInt(action,10);
+      if (action != "begin") {
+        page_to = parseInt(page_index, 10) + parseInt(action, 10);
       }
       res.redirect(`${page_redirect}&page=${page_to}`);
     }
   }
-
 });
-
 
 app.post("/update_centro", requireAuth, async function (req, res) {
   const centroInfo = {
@@ -332,7 +327,6 @@ app.get("/login", async function (req, res) {
 app.post("/login", async function (req, res) {
   await TryAuthenticate(req, res);
 });
-
 
 app.get("/pesquisar", requireAuth, async function (req, res) {
   const regionais = await regionalcontroller.getRegionais();
@@ -374,7 +368,7 @@ app.post("/pesquisa", requireAuth, async function (req, res) {
       });
     }
   } catch (error) {}
-  console.log(centro);
+  logger.error("post:pesquisa", centro);
 });
 
 // about page

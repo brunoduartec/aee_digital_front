@@ -1,4 +1,5 @@
-const dns = require("dns");
+const axios = require("axios");
+
 const env = process.env.NODE_ENV ? process.env.NODE_ENV : "local";
 
 const config = require("../env.json")[env];
@@ -8,24 +9,28 @@ const logger = new Logger();
 
 module.exports = class Request {
   constructor() {
-    if (this.instances.constructor) {
-      return this.instances.constructor;
+    const instance = this.constructor.instance;
+    if (instance) {
+      return instance;
     }
 
+    this.constructor.instance = this;
+
+    this.base = "/api/v1";
     this.instances = {};
-    this.instances.constructor = this;
   }
 
   addInstance(name, host) {
-    this.instances[name] = axios.create({
-      baseURL: `${host}`,
-    });
+    this.instances[name] = host;
   }
 
   async get(instanceName, route) {
     try {
-      const response = await this.instances[instanceName].get(route);
+      const response = await axios.get(
+        `${this.instances[instanceName]}${this.base}${route}`
+      );
       logger.info("request:get", response.data);
+      return response.data;
     } catch (error) {
       logger.error(error);
       throw error;
@@ -34,8 +39,26 @@ module.exports = class Request {
 
   async post(instanceName, route, body) {
     try {
-      const response = await this.instances[instanceName].post(route, body);
+      const response = await axios.post(
+        `${this.instances[instanceName]}${this.base}${route}`,
+        body
+      );
       logger.info("request:post", response.data);
+      return response.data;
+    } catch (error) {
+      logger.error(error);
+      throw error;
+    }
+  }
+
+  async put(instanceName, route, body) {
+    try {
+      const response = await axios.put(
+        `${this.instances[instanceName]}${this.base}${route}`,
+        body
+      );
+      logger.info("request:put", response.data);
+      return response.data;
     } catch (error) {
       logger.error(error);
       throw error;
