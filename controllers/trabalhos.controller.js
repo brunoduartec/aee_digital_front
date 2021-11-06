@@ -3,18 +3,19 @@ const { default: axios } = require("axios");
 const env = process.env.NODE_ENV ? process.env.NODE_ENV : "local";
 const config = require("../env.json")[env];
 
+const Request = require("../helpers/request");
+const request = new Request();
+
 module.exports = class trabalhosController {
   constructor() {}
 
   async getAtividades() {
     try {
-      const atividades = await axios.get(
-        `${config.aee_digital_trabalhos}/atividade`
+      const atividades = await request.get(
+        "aee_digital_trabalhos",
+        `/atividades`
       );
-      console.log(
-        "trabalhos.controller.getAtividades: Success=>",
-        atividades.data
-      );
+
       return atividades.data;
     } catch (error) {
       console.log("trabalhos.controller.getAtividades: Error=>", error);
@@ -23,12 +24,9 @@ module.exports = class trabalhosController {
 
   async getAtividadesCentroByParams(params) {
     try {
-      const atividades = await axios.get(
-        `${config.aee_digital_trabalhos}/atividade_centro?${params}`
-      );
-      console.log(
-        "trabalhos.controller.getAtividades: Success=>",
-        atividades.data
+      const atividades = await request.get(
+        "aee_digital_trabalhos",
+        `/atividades_centro?${params}`
       );
       return atividades.data;
     } catch (error) {
@@ -38,13 +36,11 @@ module.exports = class trabalhosController {
 
   async getAtividadesCentroSummaryByParams(params) {
     try {
-      const atividades = await axios.get(
-        `${config.aee_digital_trabalhos}/atividade_centro_summary?${params}`
+      const atividades = await request.get(
+        "aee_digital_trabalhos",
+        `/atividade_centro_summary?${params}`
       );
-      console.log(
-        "trabalhos.controller.getAtividadesCentroSummaryByParams: Success=>",
-        atividades.data
-      );
+
       return atividades.data;
     } catch (error) {
       console.log(
@@ -56,10 +52,11 @@ module.exports = class trabalhosController {
 
   async getFormByParams(params) {
     try {
-      const form = await axios.get(
-        `${config.aee_digital_trabalhos}/atividade_generic_form?${params}`
+      const form = await request.get(
+        "aee_digital_trabalhos",
+        `/atividade_generic_form?${params}`
       );
-      console.log("trabalhos.controller.getFormByParams: Success=>", form.data);
+
       return form.data;
     } catch (error) {
       console.log("trabalhos.controller.getFormByParams: Error=>", error);
@@ -68,13 +65,11 @@ module.exports = class trabalhosController {
 
   async getQuizTemplateByParams(params) {
     try {
-      const quiz = await axios.get(
-        `${config.aee_digital_trabalhos}/atividade_generic_quiz?${params}`
+      const quiz = await request.get(
+        "aee_digital_trabalhos",
+        `/atividade_generic_quiz?${params}`
       );
-      console.log(
-        "trabalhos.controller.getQuizTemplateByParams: Success=>",
-        quiz.data
-      );
+
       return quiz.data;
     } catch (error) {
       console.log(
@@ -86,13 +81,11 @@ module.exports = class trabalhosController {
 
   async getQuizResponseByParams(params) {
     try {
-      const quiz_response = await axios.get(
-        `${config.aee_digital_trabalhos}/atividade_generic_quiz_answer?${params}`
+      const quiz_response = await request.get(
+        "aee_digital_trabalhos",
+        `/atividade_generic_quiz_answer?${params}`
       );
-      console.log(
-        "trabalhos.controller.getQuizResponseByParams: Success=>",
-        quiz_response.data
-      );
+
       return quiz_response.data;
     } catch (error) {
       console.log(
@@ -103,17 +96,13 @@ module.exports = class trabalhosController {
   }
 
   async putQuizResponse(params, value) {
-    console.log(params);
-
     try {
-      const quiz_response = await axios.put(
-        `${config.aee_digital_trabalhos}/atividade_generic_quiz_answer?${params}`,
+      const quiz_response = await request.put(
+        "aee_digital_trabalhos",
+        `/atividade_generic_quiz_answer?${params}`,
         value
       );
-      console.log(
-        "trabalhos.controller.getQuizResponseByParams: Success=>",
-        quiz_response.data
-      );
+
       return quiz_response.data;
     } catch (error) {
       console.log(
@@ -124,17 +113,13 @@ module.exports = class trabalhosController {
   }
 
   async postQuizResponse(params) {
-    console.log(params);
-
     try {
-      const quiz_response = await axios.post(
-        `${config.aee_digital_trabalhos}/atividade_generic_quiz_answer`,
+      const quiz_response = await request.post(
+        "aee_digital_trabalhos",
+        `/atividade_generic_quiz_answer`,
         params
       );
-      console.log(
-        "trabalhos.controller.getQuizResponseByParams: Success=>",
-        quiz_response.data
-      );
+
       return quiz_response.data;
     } catch (error) {
       console.log(

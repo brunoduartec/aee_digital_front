@@ -1,4 +1,3 @@
-const config = require("./env.json")["local"];
 const express = require("express");
 const app = express();
 var session = require("express-session");
@@ -8,6 +7,9 @@ const puppeteer = require("puppeteer");
 
 
 const crypto = require("crypto");
+
+const env = process.env.NODE_ENV ? process.env.NODE_ENV : "local";
+const config = require("../env.json")[env];
 
 const regionalController = require("./controllers/regional.controller");
 const regionalcontroller = new regionalController();
@@ -26,6 +28,10 @@ const searchcontroller = new SearchController(
 
 // This will hold the users and authToken related to users
 const authTokens = {};
+const Request = require("./helpers/request");
+const request = new Request();
+request.addInstance("aee_digital_regionais", config.aee_digital_regionais);
+request.addInstance("aee_digital_trabalhos", config.aee_digital_trabalhos);
 
 app.set("view engine", "ejs");
 app.use(express.static("public"));

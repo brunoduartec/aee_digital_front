@@ -4,6 +4,7 @@ services:
   aee_digital_front:
     environment:
       - NODE_ENV=development
+      - trabalho_api=trabalho_api
     build: .
     command: npm start
     image: aee_digital_front
