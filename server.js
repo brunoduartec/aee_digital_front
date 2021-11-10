@@ -72,6 +72,15 @@ const requireAuth = (req, res, next) => {
   }
 };
 
+async function TryLogout(req, res) {
+  authTokens[req.session.authToken] = null;
+  req.session.authToken = null;
+  req.session.auth = null;
+  req.session = null;
+
+  res.redirect("/login");
+}
+
 async function TryAuthenticate(req, res, route) {
   const loginInfo = {
     user: req.body.email,
@@ -339,6 +348,10 @@ app.get("/login", async function (req, res) {
 
 app.post("/login", async function (req, res) {
   await TryAuthenticate(req, res);
+});
+
+app.get("/logout", async function (req, res) {
+  await TryLogout(req, res);
 });
 
 app.get("/pesquisar", requireAuth, async function (req, res) {
