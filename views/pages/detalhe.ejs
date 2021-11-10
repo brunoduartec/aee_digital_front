@@ -6,7 +6,7 @@
   <body class="body">
     <header><%- include('../partials/header'); %></header>
 
-    <main>
+    <main class="flex-shrink-0">
       <div class="container">
         <%if (opcao == "Centro") { %> <%- include('../partials/centro',
         {centro:result}); %> <% } %> <%if (opcao == "Trabalhos") { %> <%-
@@ -14,6 +14,6 @@
       </div>
     </main>
 
-    <footer><%- include('../partials/footer'); %></footer>
+    <%- include('../partials/footer'); %>
   </body>
 </html>

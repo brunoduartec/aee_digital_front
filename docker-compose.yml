@@ -11,3 +11,9 @@ services:
     container_name: aee_digital_front
     ports:
       - "4200:4200"
+    networks:
+      - aee_digital_backend
+networks:
+  aee_digital_backend:
+    external: true
+    name: aee_digital_backend

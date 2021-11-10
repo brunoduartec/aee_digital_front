@@ -1,1 +1,26 @@
-{}
+[
+  {
+    "user": "admin",
+    "pass": "admin",
+    "groups": ["admin"],
+    "scope_id": "*"
+  },
+  {
+    "user": "COORDVALE",
+    "pass": "COORDVALE",
+    "groups": ["coord_regional"],
+    "scope_id": "612a622bbc3c160013e01d3d"
+  },
+  {
+    "user": "AME",
+    "pass": "AME",
+    "groups": ["presidente"],
+    "scope_id": "612a622bbc3c160013e01d3e"
+  },
+  {
+    "user": "geraldoferreira",
+    "pass": "sd153ctr",
+    "groups": ["presidente"],
+    "scope_id": "612a6205bc3c160013e01c02"
+  }
+]

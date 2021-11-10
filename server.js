@@ -87,16 +87,29 @@ async function TryAuthenticate(req, res, route) {
 
     req.session.authToken = authToken;
 
+    req.session.auth = auth;
+
     if (req.session.originalUrl) {
       res.redirect(req.session.originalUrl);
     } else {
-      res.render("pages/index");
+      res.render("pages/index", {
+        info: {
+          link: auth.scope_id,
+        },
+        permissions: auth.permissions,
+      });
     }
   }
 }
 
 app.get("/", requireAuth, async function (req, res) {
-  res.render("pages/index");
+  const auth = req.session.auth;
+  res.render("pages/index", {
+    info: {
+      link: auth.scope_id,
+    },
+    permissions: auth.permissions,
+  });
 });
 
 app.get("/pdf", requireAuth, async (req, res) => {
