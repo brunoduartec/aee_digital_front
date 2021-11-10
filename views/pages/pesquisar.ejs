@@ -6,7 +6,7 @@
   <body class="body">
     <header><%- include('../partials/header'); %></header>
 
-    <main>
+    <main class="flex-shrink-0">
       <div class="container-fluid">
         <div class="tela-pesquisar">
           <div class="titulo-pesquisar">
@@ -15,16 +15,20 @@
           <div class="opcoes-pesquisar">
             <form action="/pesquisa" method="post">
               <div>
-                <label for="sel1">Regional</label><br>
+                <label for="sel1">Regional</label><br />
                 <select id="regional" name="regional">
                   <option>Todos</option>
                   <% regionais.forEach(function(regional) { %>
-                  <option><%= regional.NOME_REGIONAL %></option>
+                  <option>
+                    <% if(regional.PAIS!="Brasil"){ %> <%= regional.PAIS %>
+                    <%}else{%> <%= regional.NOME_REGIONAL %> <%}%>
+                  </option>
+
                   <% }); %>
                 </select>
               </div>
               <div>
-                <label for="sel1">Trabalho do Centro Espírita</label><br>
+                <label for="sel1">Trabalho do Centro Espírita</label><br />
                 <select id="trabalho" name="trabalho">
                   <option>Todos</option>
                   <% atividades.forEach(function(atividade) { %>
@@ -33,7 +37,7 @@
                 </select>
               </div>
               <div class="botao-pesquisar">
-                <br>
+                <br />
                 <button type="submit" class="btn btn-primary btn-lg">
                   Pesquisar <i class="bi bi-search"></i>
                 </button>
@@ -44,6 +48,6 @@
       </div>
     </main>
 
-    <footer><%- include('../partials/footer'); %></footer>
+    <%- include('../partials/footer'); %>
   </body>
 </html>

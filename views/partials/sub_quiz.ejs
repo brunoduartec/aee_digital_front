@@ -1,0 +1,58 @@
+<h1><%=quiz.CATEGORY %></h1>
+
+<%quiz.QUESTIONS.forEach(function(question){ %>
+
+  <div class="mb-3">
+  <label for="<%= question._id%>" class="form-label"><%= question.QUESTION%></label>
+
+  <%if(question.ANSWER_TYPE == "Option"){%>
+    <select id="<%= question._id%>" name="<%= question._id%>" class="form-select">
+      <% question.PRESET_VALUES.forEach(function(option) { %>
+      <option <%if(question.ANSWER == option){%> selected <%}%>><%= option %></option>
+      <% }); %>
+    </select>
+
+  <%} else if(question.ANSWER_TYPE == "Date"){%>
+    <input type="date" id="datepicker" name="<%= question._id%>" value = "<%=question.ANSWER%>">
+
+  <%}else if(question.ANSWER_TYPE == "Boolean"){%>
+
+  <div class="radio">
+    <input type="radio" name="<%= question._id%>"
+    id="flexRadioDefault1" <%if(question.ANSWER == "true"){%> checked  value="true"<%}%>  />
+    <label for="flexRadioDefault1"> Sim </label>
+ 
+    <input type="radio" name="<%= question._id%>"
+    id="flexRadioDefault2" <%if(!question.ANSWER || question.ANSWER!="true"){%> 
+      checked 
+      value = "false"
+      <%}%> />
+
+    <label for="flexRadioDefault2"> Não </label>
+  </div>
+
+  <br />
+  <%}else if(question.ANSWER_TYPE == "TextArea"){%>
+  <textarea
+    class="form-control"
+    id="<%= question._id%>"
+    name="<%= question._id%>"
+    rows="3"
+  >
+  <%=question.ANSWER%>
+</textarea>
+
+
+  <%}else{%>
+
+  <input
+    type="text"
+    class="form-control"
+    id="<%= question._id%>"
+    name="<%= question._id%>"
+    value="<%=question.ANSWER%>"
+  />
+</div>
+
+
+<%} }); %>

@@ -1,0 +1,50 @@
+<%if (trabalhos) { %>
+
+<form>
+  <% trabalhos.forEach(function(trabalho){ %>
+  <h1><%=trabalho.ATIVIDADE.NOME_ATIVIDADE %></h1>
+
+  <% trabalho.RECEPTORES.forEach(function(receptor){ %>
+  <div class="form-group">
+    <label for="receivers"
+      >Qual a quantidade total de <%= receptor.TIPO%></label
+    >
+    <input
+      type="text"
+      class="form-control"
+      id="nome"
+      value="<%=receptor.QUANTIDADE%>"
+    />
+  </div>
+  <%}); %> <% trabalho.ATUADORES.forEach(function(atuador){ %>
+  <div class="form-group">
+    <label for="receivers"
+      >Qual a quantidade total de <%= atuador.TIPO%> ativos</label
+    >
+    <input
+      type="text"
+      class="form-control"
+      id="nome"
+      value="<%=atuador.QUANTIDADE%>"
+    />
+  </div>
+  <%}); %> <%
+  trabalho.ATUADORES_HABILITADOS.forEach(function(atuador_habilitado){ %>
+  <div class="form-group">
+    <label for="receivers"
+      >Qual a quantidade total de <%= atuador_habilitado.TIPO%>
+      disponíveis</label
+    >
+    <input
+      type="text"
+      class="form-control"
+      id="nome"
+      value="<%=atuador_habilitado.QUANTIDADE%>"
+    />
+  </div>
+  <%}); %> <%}); %>
+</form>
+
+<%} else{%>
+<p>Trabalhos do Centro não encontrado</p>
+<%}%>

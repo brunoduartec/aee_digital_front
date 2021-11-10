@@ -4,11 +4,16 @@ services:
   aee_digital_front:
     environment:
       - NODE_ENV=development
+      - trabalho_api=trabalho_api
     build: .
     command: npm start
     image: aee_digital_front
     container_name: aee_digital_front
     ports:
       - "4200:4200"
-    volumes:
-      - .:/usr/app
+    networks:
+      - aee_digital_backend
+networks:
+  aee_digital_backend:
+    external: true
+    name: aee_digital_backend

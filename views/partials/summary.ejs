@@ -1,0 +1,34 @@
+<h1>Validação</h1>
+
+<%
+let pages = results.PAGES;
+
+pages.forEach(function(page){
+    page.QUIZES.forEach(quiz => {%>
+        <h2><%=quiz.CATEGORY%> </h2>
+    <table  style="border: 1px solid black; width:100%">
+    <%quiz.QUESTIONS.forEach(question => {%>
+        <tr>
+            <td>
+                <%if(!question.ANSWER){%>
+                <b style="color:red">
+                    <%= question.QUESTION%>
+                </b>
+                <%}else{%>
+                <b> <%= question.QUESTION%> </b>
+                <%}%>
+            </td>
+            <td>
+                <%if(question.ANSWER == "true"){%>
+                    sim
+                <%} else if(question.ANSWER == "false"){%>
+                    não
+                <%}else{%>
+                 <%= question.ANSWER%> 
+                 <%}%>
+            </td>
+        </tr>    
+    <%});%>
+    </table>
+    <%});%>    
+<%});%>

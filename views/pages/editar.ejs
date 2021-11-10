@@ -8,9 +8,10 @@
 
     <main class="flex-shrink-0">
       <div class="container">
-        <%if (opcao == "Centro") { %> <%- include('../partials/centro',
-        {centro:result}); %> <% } %> <%if (opcao == "Trabalhos") { %> <%-
-        include('../partials/trabalhos', {trabalhos_centros:result}); %> <% } %>
+        <%if (opcao == "Trabalhos") { %> <%-
+        include('../partials/editar_trabalho_centro', {trabalhos: result});%>
+        <%}%> <%if (opcao == "Centro") { %> <%-
+        include('../partials/editar_centro', {centro: result});%> <%}%>
       </div>
     </main>
 
