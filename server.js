@@ -253,6 +253,8 @@ app.get("/cadastro_alianca", requireAuth, async function (req, res) {
 
   const form_info = await getFormInfo(centro_id, form_alias);
 
+  logger.info("get:cadastro_alianca", JSON.stringify(form_info));
+
   res.render("pages/quiz", {
     index: page,
     form_alias: form_alias,
