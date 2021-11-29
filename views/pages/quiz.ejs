@@ -69,18 +69,18 @@
 
           <%if(indexToNumber > 0){ %>
           <a href="/cadastro_alianca?ID=<%=centro_id%>&page=<%=indexToNumber - 1%>">
-            <button class="btn btn-primary" value="-1" name="action">Anterior</button>
+            <button class="btn btn-primary" value="previous" name="action">Anterior</button>
           </a>
           <%}%>
 
       <%if(indexToNumber == pages){%>
-        <button type="submit" class="btn btn-primary" value="pdf" name="action">Finalizar</button>
+        <button type="submit" class="btn btn-primary" value="send" name="action">Finalizar</button>
       <%}else{%>
-        <button type="submit" class="btn btn-primary" value="0" name="action">Salvar</button>
+        <button type="submit" class="btn btn-primary" value="save" name="action">Salvar</button>
       <%}%>
       <%if(indexToNumber < (pages-1)){%>
           <a href="/cadastro_alianca?ID=<%=centro_id%>&page=<%=indexToNumber+1%>">
-            <button class="btn btn-primary" value="1" name="action">Próximo</button>
+            <button class="btn btn-primary" value="next" name="action">Próximo</button>
           </a>
           <%}%>
     </form>

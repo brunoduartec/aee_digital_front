@@ -139,4 +139,19 @@ module.exports = class trabalhosController {
       );
     }
   }
+
+  async postQuizSummary(params) {
+    try {
+      const quiz_response = await request.post(
+        "aee_digital_trabalhos",
+        `/atividade_generic_quiz_summary`,
+        params
+      );
+
+      logger.info("postQuizSummary", quiz_response);
+      return quiz_response;
+    } catch (error) {
+      logger.error("trabalhos.controller.postQuizSummary: Error=>", error);
+    }
+  }
 };

@@ -13,6 +13,7 @@ services:
       - "4200:4200"
     networks:
       - aee_digital_backend
+    restart: always
 networks:
   aee_digital_backend:
     external: true

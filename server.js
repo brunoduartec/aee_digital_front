@@ -28,9 +28,17 @@ const searchcontroller = new SearchController(
   trabalhoscontroller
 );
 
+const QuizActions = require("./helpers/quiz_actions");
+const quiz_actions = new QuizActions(
+  searchcontroller,
+  trabalhoscontroller,
+  logger
+);
+
 // This will hold the users and authToken related to users
 const authTokens = {};
 const Request = require("./helpers/request");
+const { save } = require("./helpers/quiz_actions");
 const request = new Request();
 request.addInstance("aee_digital_regionais", config.aee_digital_regionais);
 request.addInstance("aee_digital_trabalhos", config.aee_digital_trabalhos);
@@ -225,43 +233,12 @@ app.get("/cadastro", requireAuth, async function (req, res) {
   }
 });
 
-async function getFormInfo(centro_id, form_alias) {
-  let option = "Centro";
-
-  let pesquisaInfo = {
-    search: centro_id,
-    option: option,
-  };
-
-  option = "Quiz";
-
-  pesquisaInfo = {
-    search: {
-      id: centro_id,
-      name: form_alias,
-    },
-    option: option,
-  };
-  const result = await searchcontroller.getPesquisaResult(pesquisaInfo);
-  return result;
-}
-
 app.get("/cadastro_alianca", requireAuth, async function (req, res) {
   const centro_id = req.query.ID;
   const page = req.query.page || 0;
   const form_alias = "Cadastro de Informações Anual";
 
-  const form_info = await getFormInfo(centro_id, form_alias);
-
-  logger.info("get:cadastro_alianca", JSON.stringify(form_info));
-
-  res.render("pages/quiz", {
-    index: page,
-    form_alias: form_alias,
-    centro_id: centro_id,
-    results: form_info.templates,
-    titles: form_info.titles,
-  });
+  quiz_actions.open(res, { centro_id, form_alias, page });
 });
 
 app.post("/quiz", requireAuth, async function (req, res) {
@@ -272,56 +249,13 @@ app.post("/quiz", requireAuth, async function (req, res) {
   const page_redirect = responses.redirect;
   const action = responses.action;
 
-  if (action == "pdf") {
-    let pageToRender = `http://localhost:4200/cadastro_alianca?ID=${centro_id}&page=4`;
-    res.redirect(`pdf?target=${pageToRender}`);
-  } else {
-    const form_info = await getFormInfo(centro_id, form_alias);
-
-    const page = form_info.templates.PAGES[page_index];
-
-    const quizes = page.QUIZES;
-
-    for (let index = 0; index < quizes.length; index++) {
-      const quiz = quizes[index];
-      const questions = quiz.QUESTIONS;
-
-      for (let j = 0; j < questions.length; j++) {
-        const question = questions[j];
-
-        let answer = responses[question._id];
-        if (responses[question._id] == "on") answer = "true";
-
-        if (responses[question._id]) {
-          if (!question.ANSWER) {
-            await trabalhoscontroller.postQuizResponse({
-              CENTRO_ID: centro_id,
-              QUIZ_ID: quiz._id,
-              QUESTION_ID: question._id,
-              ANSWER: answer,
-            });
-          } else if (question.ANSWER != responses[question._id]) {
-            let paramsParsed = searchcontroller.getParamsParsed({
-              CENTRO_ID: centro_id,
-              QUIZ_ID: quiz._id,
-              QUESTION_ID: question._id,
-            });
-            await trabalhoscontroller.putQuizResponse(paramsParsed, {
-              ANSWER: answer,
-            });
-          }
-        }
-      }
-    }
-
-    if (action != 0) {
-      let page_to = 0;
-      if (action != "begin") {
-        page_to = parseInt(page_index, 10) + parseInt(action, 10);
-      }
-      res.redirect(`${page_redirect}&page=${page_to}`);
-    }
-  }
+  await quiz_actions[action](res, {
+    centro_id,
+    form_alias,
+    page_index,
+    page_redirect,
+    responses,
+  });
 });
 
 app.post("/update_centro", requireAuth, async function (req, res) {
