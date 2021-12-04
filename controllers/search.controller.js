@@ -1,29 +1,9 @@
-const Logger = require("../helpers/logger");
-const logger = new Logger();
-
 module.exports = class SearchController {
-  constructor(regionalcontroller, trabalhocontroller) {
+  constructor(regionalcontroller, trabalhocontroller, logger, parser) {
     this.regionalcontroller = regionalcontroller;
     this.trabalhocontroller = trabalhocontroller;
-  }
-
-  getParamsParsed(params) {
-    let paramsParsed = "";
-
-    let keys = Object.keys(params);
-
-    for (let index = 0; index < keys.length; index++) {
-      const key = keys[index];
-      const value = params[key];
-
-      if (value) {
-        paramsParsed = paramsParsed.concat(`&${key}=${value}`);
-      }
-    }
-
-    logger.info("getParamsParsed", paramsParsed.substring(1));
-
-    return paramsParsed.substring(1);
+    this.logger = logger;
+    this.parser = parser;
   }
 
   async getPesquisaResult(pesquisaInfo) {
@@ -38,27 +18,30 @@ module.exports = class SearchController {
 
     const searchByOpcao = {
       Centro: async function (s) {
-        const centro = await regionalcontroller.getCentroByParam({
+        const paramsParsed = this.parser.getParamsParsed({
           NOME_CURTO: search,
         });
+        const centro = await regionalcontroller.getCentroByParam(paramsParsed);
         let centros = {
           amount: centro ? centro.length : 0,
           items: centro,
         };
 
-        logger.info("getPesquisaResult:Centro", centros);
+        this.logger.info("getPesquisaResult:Centro", centros);
         return centros;
       },
       Centro_Summary: async function () {
         let centroInfo = [];
+        const paramsParsed = this.parser.getParamsParsed({
+          NOME_CURTO: centro,
+        });
+
         centroInfo.push(
-          await regionalcontroller.getCentroByParam({
-            NOME_CURTO: centro,
-          })
+          await regionalcontroller.getCentroByParam(paramsParsed)
         );
         const centro_id = centroInfo[0].ID;
 
-        let paramsParsed = this.getParamsParsed({
+        paramsParsed = this.parser.getParamsParsed({
           CENTRO_ID: centro_id,
         });
 
@@ -90,7 +73,7 @@ module.exports = class SearchController {
           }
         });
 
-        logger.info("getPesquisaResult:Centro_Summary", centroSummary);
+        this.logger.info("getPesquisaResult:Centro_Summary", centroSummary);
         return centroSummary;
       },
 
@@ -112,7 +95,7 @@ module.exports = class SearchController {
           const centro = centros[index];
           const centro_id = centro.ID;
 
-          let paramsParsed = this.getParamsParsed({
+          let paramsParsed = this.parser.getParamsParsed({
             CENTRO_ID: centro_id,
             "ATIVIDADE.NOME_ATIVIDADE": trabalho != "Todos" ? trabalho : null,
           });
@@ -132,7 +115,7 @@ module.exports = class SearchController {
           }
         }
 
-        logger.info("getPesquisaResult:Trabalhos", atividades);
+        this.logger.info("getPesquisaResult:Trabalhos", atividades);
         return atividades;
       },
       Regional: async function (s) {
@@ -141,7 +124,7 @@ module.exports = class SearchController {
           amount: centros.length,
           items: centros,
         };
-        logger.info("getPesquisaResult:Regional", regional);
+        this.logger.info("getPesquisaResult:Regional", regional);
         return regional;
       },
 
@@ -149,7 +132,7 @@ module.exports = class SearchController {
         let name = search.name;
         let centro_id = search.id;
 
-        let paramsParsed = this.getParamsParsed({
+        let paramsParsed = this.parser.getParamsParsed({
           NAME: name,
         });
 
@@ -169,7 +152,7 @@ module.exports = class SearchController {
           for (let index = 0; index < quizes.length; index++) {
             const quiz = quizes[index];
 
-            paramsParsed = this.getParamsParsed({
+            paramsParsed = this.parser.getParamsParsed({
               CENTRO_ID: centro_id,
               QUIZ_ID: quiz._id,
             });
@@ -197,7 +180,7 @@ module.exports = class SearchController {
           titles: page_titles,
         };
 
-        logger.info("getPesquisaResult:Quiz", quiz);
+        this.logger.info("getPesquisaResult:Quiz", quiz);
         return quiz;
       },
     };

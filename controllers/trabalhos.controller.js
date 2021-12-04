@@ -104,6 +104,31 @@ module.exports = class trabalhosController {
     }
   }
 
+  async getPasses() {
+    try {
+      const atividades = await request.get("aee_digital_trabalhos", `/pass`);
+
+      logger.info("getPasses", atividades);
+      return atividades;
+    } catch (error) {
+      logger.error("trabalhos.controller.getPasses: Error=>", error);
+    }
+  }
+
+  async getPassByParams(params) {
+    try {
+      const passes = await request.get(
+        "aee_digital_trabalhos",
+        `/pass?${params}`
+      );
+
+      logger.info("getPasssByParams", passes);
+      return passes;
+    } catch (error) {
+      logger.error("trabalhos.controller.getPasssByParams: Error=>", error);
+    }
+  }
+
   async putQuizResponse(params, value) {
     try {
       const quiz_response = await request.put(

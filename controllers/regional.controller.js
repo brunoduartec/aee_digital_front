@@ -49,13 +49,11 @@ module.exports = class regionalController {
     }
   }
 
-  async getCentroByID() {}
-
   async getCentroByParam(params) {
     try {
       const centro = await request.get(
         "aee_digital_regionais",
-        `/centros?NOME_CURTO=${params.NOME_CURTO}`
+        `/centros?${params}`
       );
       logger.info("getCentroByParam", centro[0]);
       return centro[0];
