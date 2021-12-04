@@ -1,8 +1,9 @@
 module.exports = class QuizActions {
-  constructor(searchcontroller, trabalhocontroller, logger) {
+  constructor(searchcontroller, trabalhocontroller, logger, parser) {
     this.searchcontroller = searchcontroller;
     this.trabalhocontroller = trabalhocontroller;
     this.logger = logger;
+    this.parser = parser;
   }
 
   async _getFormInfo(centro_id, form_alias) {
@@ -72,7 +73,7 @@ module.exports = class QuizActions {
               ANSWER: answer,
             });
           } else if (question.ANSWER != responses[question._id]) {
-            let paramsParsed = searchcontroller.getParamsParsed({
+            let paramsParsed = this.parser.getParamsParsed({
               CENTRO_ID: centro_id,
               QUIZ_ID: quiz._id,
               QUESTION_ID: question._id,
