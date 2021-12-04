@@ -1,16 +1,55 @@
 module.exports = class authController {
-  constructor() {
-    this.passes = require("../resources/pass.json");
+  constructor(
+    logger,
+    reader,
+    trabalhocontroller,
+    regionalcontroller,
+    userinfocontroller,
+    parser
+  ) {
+    this.logger = logger;
+    this.trabalhocontroller = trabalhocontroller;
+    this.regionalcontroller = regionalcontroller;
+    this.userinfocontroller = userinfocontroller;
+
+    this.xlsReader = reader;
     this.groups = require("../resources/groups.json");
     this.permissions = require("../resources/permissions.json");
+    this.fileName = "./resources/Senhas.xlsx";
+    this.parser = parser;
+
+    this.cache = {};
+  }
+
+  async generatePassCache() {
+    const schema = require("../schema")();
+    let excel = await this.xlsReader(this.fileName, { schema });
+    let objects = excel.rows;
+
+    for (let index = 0; index < objects.length; index++) {
+      const row = objects[index];
+
+      const centro = row.centro;
+
+      this.cache[centro.user] = {
+        centro: centro.nome,
+        regional: centro.regional,
+      };
+    }
+
+    this.logger.info("End generate cache");
   }
 
   async checkUserPass(user, pass) {
-    const auth = this.passes.find((m) => {
-      return m.user == user && m.pass == pass;
-    });
+    const params = {
+      user: user,
+      pass: pass,
+    };
 
-    return auth;
+    const paramsParsed = this.parser.getParamsParsed(params);
+    const auth = await this.trabalhocontroller.getPassByParams(paramsParsed);
+
+    return auth[0];
   }
 
   async getUserPermissions(auth) {
@@ -45,12 +84,22 @@ module.exports = class authController {
         send: send,
         summary: summary,
       },
+      groups: auth.groups,
     };
+  }
+
+  async initUserInfo(auth) {
+    const cache = this.cache[auth.user];
+
+    if (cache) {
+      await this.userinfocontroller.initializeUserInfo(cache);
+    }
   }
 
   async authenticate(loginInfo) {
     const auth = await this.checkUserPass(loginInfo.user, loginInfo.pass);
     const permissions = await this.getUserPermissions(auth);
+    await this.initUserInfo(auth);
     return permissions;
   }
 };
