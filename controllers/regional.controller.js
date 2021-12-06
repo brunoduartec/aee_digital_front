@@ -24,6 +24,20 @@ module.exports = class regionalController {
     }
   }
 
+  async getRegionalByParams(params) {
+    try {
+      const regional = await request.get(
+        "aee_digital_regionais",
+        `/regionais?${params}`
+      );
+      logger.info("getRegionalByParams", regional[0]);
+      return regional[0];
+    } catch (error) {
+      logger.error("regional.controller.getRegionalByParams: Error=>", error);
+      return null;
+    }
+  }
+
   async getCentrosByRegional(regionalName) {
     try {
       const centros = await request.get(

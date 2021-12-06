@@ -6,91 +6,104 @@
 </head>
 
 <body class="body">
-  <header><%- include('../partials/header'); %></header>
-  <main class="flex-shrink-0">
-    <% const indexToNumber = parseInt(index, 10);%>
-    <div class="container">
-      <div >
-        <h1> <%=form_alias  %> </h1>
-      </div>
-      <div class="cab-menu">
-        <ul class="list-group list-group-horizontal">
-          <% 
+  <header class="cabeçalho"><%- include('../partials/header'); %></header>
+
+  <% const indexToNumber = parseInt(index, 10);%>
+
+  <div class="cadastrar-titulo">
+    <h2> <%=form_alias  %> </h2>
+  </div>
+
+  <div class="cadastrar-links">
+    <ul class="nav nav-tabs justify-content-center">
+      <% 
            const pages = titles.length
            for(i=0;i<pages;i++){
              let title = titles[i];
             %>
-          <li>
-            <a href="/cadastro_alianca?ID=<%=centro_id%>&page=<%=i%>">
-             <%if(i == indexToNumber){%>
-             <u><%=i+1%>° <%=title%></u>
-             <%}else{%>
-              <%=i+1%>° <%=title%>
-            <%}%>
-            </a>
+      <li class="nav-item">
+        <%if(i == indexToNumber){%>
+        <a class="nav-link active" aria-current="page" href="/cadastro_alianca?ID=<%=centro_id%>&page=<%=i%>"><%=i+1%>°
+          <%=title%></a>
+
+        <%}else{%>
+        <a class="nav-link" href="/cadastro_alianca?ID=<%=centro_id%>&page=<%=i%>"><%=i+1%>° <%=title%></a>
+        <%}%>
           </li>
           <%};%>
-          <li>
-            <a href="/cadastro_alianca?ID=<%=centro_id%>&page=<%=i%>">
-              <%if(indexToNumber>=pages){%>
-                <u><%=i+1%>° Validação</u>
-                <%}else{%>
-              <%=i+1%>° Validação
-              <%}%>
-            </a>
+      <li class="nav-item">
+
+        <%if(indexToNumber>=pages){%>
+        <a class="nav-link active" aria-current="page" href="/cadastro_alianca?ID=<%=centro_id%>&page=<%=i%>"><%=i+1%>°
+          Validação</a>
+
+        <%}else{%>
+        <a class="nav-link" href="/cadastro_alianca?ID=<%=centro_id%>&page=<%=i%>"><%=i+1%>° Validação</a>
+        <%}%>
           </li>
 
         </ul>
       </div>
 
       <div>
-        <form name="quiz" action="/quiz" method="post">
+        <form class="cadastrar-form" name="quiz" action="/quiz" method="post">
           <input type="hidden" id="form_alias" name="form_alias" value="<%=form_alias%>" />
-          <input type="hidden" id="centro_id" name="centro_id" value="<%=centro_id%>" />
-          <input type="hidden" id="page" name="page" value="<%=index%>" />
-          <input type="hidden" id="page" name="redirect" value="/cadastro_alianca?ID=<%=centro_id%>" />
+        <input type="hidden" id="centro_id" name="centro_id" value="<%=centro_id%>" />
+        <input type="hidden" id="page" name="page" value="<%=index%>" />
+        <input type="hidden" id="page" name="redirect" value="/cadastro_alianca?ID=<%=centro_id%>" />
 
-          <%
-            
+        <%
             const maxPage = results.PAGES.length;
 
             if(indexToNumber >= maxPage){%>
-              <%- include('../partials/summary', {quiz:results}); %>
-          <%}else{
+        <%- include('../partials/summary', {quiz:results}); %>
+        <%}else{
             let page = results.PAGES[indexToNumber];
 
-            page.QUIZES.forEach(function(result){%> 
-              <%- include('../partials/sub_quiz', {quiz:result}); %> 
-            <%}); %>
-          <%}%>
-          <a href="/cadastro_alianca?ID=<%=centro_id%>&page=<%=0%>">
-            <button class="btn btn-primary" value="begin" name="action">Início</button>
-          </a>
+            page.QUIZES.forEach(function(result){%>
+        <%- include('../partials/sub_quiz', {quiz:result}); %>
+        <%}); %>
+        <%}%>
 
-          <%if(indexToNumber > 0){ %>
-          <a href="/cadastro_alianca?ID=<%=centro_id%>&page=<%=indexToNumber - 1%>">
-            <button class="btn btn-primary" value="previous" name="action">Anterior</button>
-          </a>
-          <%}%>
+          <div class="cadastrar-botoes">
+            <ul>
+              <%if(indexToNumber > 0){ %>
+              <li>
+                <a href="/cadastro_alianca?ID=<%=centro_id%>&page=<%=indexToNumber - 1%>">
+                  <button class="btn btn-primary" value="previous" name="action">Anterior</button>
+                </a>
+              </li>
+              <%}%>
+                    <%if(indexToNumber == pages){%>
+              <li>
+                <button type="submit" class="btn btn-primary" value="send" name="action">Finalizar</button>
+              </li>
+              <%}else{%>
+              <li>
+                <button type="submit" class="btn btn-primary" value="save" name="action">Salvar</button>
+              </li>
+              <%}%>
+              <%if(indexToNumber < (pages-1)){%>
+              <li>
+                <a href="/cadastro_alianca?ID=<%=centro_id%>&page=<%=indexToNumber+1%>">
+                  <button class="btn btn-primary" value="next" name="action">Próximo</button>
+                </a>
 
-      <%if(indexToNumber == pages){%>
-        <button type="submit" class="btn btn-primary" value="send" name="action">Finalizar</button>
-      <%}else{%>
-        <button type="submit" class="btn btn-primary" value="save" name="action">Salvar</button>
-      <%}%>
-      <%if(indexToNumber < (pages-1)){%>
-          <a href="/cadastro_alianca?ID=<%=centro_id%>&page=<%=indexToNumber+1%>">
-            <button class="btn btn-primary" value="next" name="action">Próximo</button>
-          </a>
-          <%}%>
+              </li>
+              <%}%>
+            </ul>
+          </div>
     </form>
   </div>
         
-    </div>
 
-    </main>
 
-    <%- include('../partials/footer'); %>
+
+
+    <footer>
+          <%- include('../partials/footer'); %>
+      </footer>
+
 </body>
 
 </html>

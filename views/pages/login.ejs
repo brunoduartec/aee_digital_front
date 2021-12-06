@@ -3,54 +3,35 @@
   <head>
     <%- include('../partials/head'); %>
   </head>
-  <body class="d-flex flex-column h-100">
-    <header><%- include('../partials/header'); %></header>
+  <body class="body">
+    <header class="cabeçalho"><%- include('../partials/header'); %></header>
 
-    <main class="flex-shrink-0">
-      <div class="container">
-        <div class="titulo">
-          <p>Seja bem vindo!</p>
-        </div>
-        <form action="/login" method="post">
-          <div class="login">
-            <p>
-              <input
-                class="input"
-                id="email"
-                name="email"
-                type="text"
-                value=""
-                placeholder="Usuario"
-              />
-              <br />
-              <!-- <input placeholder="Senha" type="password" id="pass" /> -->
-              <input
-                class="input"
-                id="pass"
-                name="pass"
-                type="password"
-                value=""
-                placeholder="Senha"
-              />
-            </p>
-          </div>
-          <div class="continuar">
-            <div class="form-group">
-              <button type="submit" class="btn btn-primary btn-lg">
-                Entrar
-              </button>
-            </div>
-          </div>
-          <div class="bloco-esqueci">
-            <ul>
-              <li>Esqueci minha senha</li>
-              <li>Ainda não sou cadastrado</li>
-            </ul>
-          </div>
-        </form>
-      </div>
-    </main>
+    <div class="titulo">
+      <h2>Seja bem vindo!</h2>
 
-    <%- include('../partials/footer'); %>
+      <form action="/login" method="post">
+        <input
+          class="form-control"
+          id="email"
+          name="email"
+          type="text"
+          value=""
+          placeholder="Usuario"
+        />
+
+        <input
+          class="form-control"
+          id="pass"
+          name="pass"
+          type="password"
+          value=""
+          placeholder="Senha"
+        />
+
+        <button type="submit" class="btn btn-success btn-lg">Acessar</button>
+      </form>
+    </div>
+
+    <footer><%- include('../partials/footer'); %></footer>
   </body>
 </html>

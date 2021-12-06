@@ -1,9 +1,9 @@
-<h1><%=quiz.CATEGORY %></h1>
+<h3><%=quiz.CATEGORY %></h3>
 
 <%quiz.QUESTIONS.forEach(function(question){ %>
 
   <div class="mb-3">
-  <label for="<%= question._id%>" class="form-label"><%= question.QUESTION%></label>
+  <label for="<%= question._id%>"><%= question.QUESTION%></label>
 
   <%if(question.ANSWER_TYPE == "Option"){%>
     <select id="<%= question._id%>" name="<%= question._id%>" class="form-select">
@@ -13,16 +13,16 @@
     </select>
 
   <%} else if(question.ANSWER_TYPE == "Date"){%>
-    <input type="date" id="datepicker" name="<%= question._id%>" value = "<%=question.ANSWER%>">
+    <input type="date" id="datepicker" name="<%= question._id%>" value = "<%=question.ANSWER%>" class="form-control">
 
   <%}else if(question.ANSWER_TYPE == "Boolean"){%>
 
   <div class="radio">
-    <input type="radio" name="<%= question._id%>"
+    <input class="form-check-input" type="radio" name="<%= question._id%>"
     id="flexRadioDefault1" <%if(question.ANSWER == "true"){%> checked  value="true"<%}%>  />
     <label for="flexRadioDefault1"> Sim </label>
  
-    <input type="radio" name="<%= question._id%>"
+    <input class="form-check-input" type="radio" name="<%= question._id%>"
     id="flexRadioDefault2" <%if(!question.ANSWER || question.ANSWER!="true"){%> 
       checked 
       value = "false"

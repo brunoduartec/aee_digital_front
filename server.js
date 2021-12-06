@@ -19,20 +19,42 @@ const regionalcontroller = new regionalController();
 const trabalhosController = require("./controllers/trabalhos.controller");
 const trabalhoscontroller = new trabalhosController();
 
+const readXlsxFile = require("read-excel-file/node");
+
+const parser = require("./helpers/parser");
+
+const userInfoController = require("./controllers/userInfo.controller");
+const userinfocontroller = new userInfoController(
+  regionalcontroller,
+  logger,
+  parser
+);
+
 const authController = require("./controllers/auth.controller");
-const authcontroller = new authController();
+const authcontroller = new authController(
+  logger,
+  readXlsxFile,
+  trabalhoscontroller,
+  regionalcontroller,
+  userinfocontroller,
+  parser
+);
+authcontroller.generatePassCache();
 
 const SearchController = require("./controllers/search.controller");
 const searchcontroller = new SearchController(
   regionalcontroller,
-  trabalhoscontroller
+  trabalhoscontroller,
+  logger,
+  parser
 );
 
 const QuizActions = require("./helpers/quiz_actions");
 const quiz_actions = new QuizActions(
   searchcontroller,
   trabalhoscontroller,
-  logger
+  logger,
+  parser
 );
 
 // This will hold the users and authToken related to users
@@ -59,6 +81,15 @@ app.use(
 
 const generateAuthToken = () => {
   return crypto.randomBytes(30).toString("hex");
+};
+
+const pageByPermission = {
+  presidente: function (info) {
+    return `/cadastro_alianca?ID=${info.link}&page=0`;
+  },
+  coord_regional: function (info) {
+    return `/summary_coord?ID=${info.link}`;
+  },
 };
 
 app.use((req, res, next) => {
@@ -109,24 +140,26 @@ async function TryAuthenticate(req, res, route) {
     if (req.session.originalUrl) {
       res.redirect(req.session.originalUrl);
     } else {
-      res.render("pages/index", {
-        info: {
-          link: auth.scope_id,
-        },
-        permissions: auth.permissions,
-      });
+      let info = {
+        link: auth.scope_id,
+      };
+      res.redirect(pageByPermission[auth.groups[0]](info));
     }
   }
 }
 
 app.get("/", requireAuth, async function (req, res) {
   const auth = req.session.auth;
-  res.render("pages/index", {
-    info: {
-      link: auth.scope_id,
-    },
-    permissions: auth.permissions,
-  });
+  let info = {
+    link: auth.scope_id,
+  };
+  res.redirect(pageByPermission[auth.groups[0]](info));
+  // res.render("pages/index", {
+  //   info: {
+  //     link: auth.scope_id,
+  //   },
+  //   permissions: auth.permissions,
+  // });
 });
 
 app.get("/pdf", requireAuth, async (req, res) => {
@@ -239,6 +272,26 @@ app.get("/cadastro_alianca", requireAuth, async function (req, res) {
   const form_alias = "Cadastro de Informações Anual";
 
   quiz_actions.open(res, { centro_id, form_alias, page });
+});
+
+app.get("/summary_coord", requireAuth, async function (req, res) {
+  const regional_id = req.query.ID;
+
+  const paramsParsed = parser.getParamsParsed({
+    _id: regional_id,
+  });
+  const regionalInfo = await regionalcontroller.getRegionalByParams(
+    paramsParsed
+  );
+
+  const centros = await regionalcontroller.getCentrosByRegional(
+    regionalInfo.NOME_REGIONAL
+  );
+
+  res.render("pages/summary_coord", {
+    regionalInfo: regionalInfo,
+    centros: centros,
+  });
 });
 
 app.post("/quiz", requireAuth, async function (req, res) {

@@ -66,7 +66,7 @@ module.exports = class QuizActions {
 
         if (responses[question._id]) {
           if (!question.ANSWER) {
-            await trabalhoscontroller.postQuizResponse({
+            await this.trabalhocontroller.postQuizResponse({
               CENTRO_ID: centro_id,
               QUIZ_ID: quiz._id,
               QUESTION_ID: question._id,
@@ -78,7 +78,7 @@ module.exports = class QuizActions {
               QUIZ_ID: quiz._id,
               QUESTION_ID: question._id,
             });
-            await trabalhoscontroller.putQuizResponse(paramsParsed, {
+            await this.trabalhocontroller.putQuizResponse(paramsParsed, {
               ANSWER: answer,
             });
           }

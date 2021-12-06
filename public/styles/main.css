@@ -1,0 +1,377 @@
+.body {
+  width: 100%;
+  height: 100%;
+  font-family: "Montserrat";
+}
+
+/*Tela de Login*/
+
+.cabeçalho {
+  background-color: #ffffff;
+  width: 100%;
+  height: 20vh;
+  float: left;
+  position: relative;
+}
+
+.cab-logo {
+  width: 85%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cab-menu {
+  position: relative;
+  float: right;
+  margin-right: 10%;
+  width: 50%;
+}
+
+.cab-menu ul {
+  text-align: right;
+  margin-top: 4%;
+}
+
+.cab-menu ul li {
+  display: inline-block;
+  list-style: none;
+  font-size: 13px;
+  margin-left: 10%;
+}
+
+.titulo {
+  width: 100%;
+  height: 90%;
+  float: left;
+  position: relative;
+  text-align: center;
+}
+
+.titulo h2 {
+  text-align: center;
+  font-size: clamp(0.6em, 1.1em + 1vw, 2.5em);
+  margin-bottom: 3%;
+}
+
+.needs-validation .form-group {
+  margin-bottom: 2%;
+}
+
+.titulo input {
+  margin-left: auto;
+  margin-right: auto;
+  width: 30%;
+  font-family: "Montserrat";
+  font-size: clamp(0.4em, 0.8em + 1vw, 1.5em);
+}
+
+.button {
+  cursor: pointer;
+}
+
+.titulo button {
+  margin-top: 2%;
+  margin-bottom: 4%;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.rodape {
+  width: 100%;
+  height: 20vh;
+  float: left;
+  position: relative;
+  background-color: #5faec6;
+}
+
+.rodape-texto {
+  margin-top: 1%;
+  float: left;
+  position: relative;
+  width: 50%;
+  margin-left: 1%;
+}
+
+.rodape-texto h2 {
+  color: #ffffff;
+  font-size: clamp (0.8em, 1.4em + 1vw, 1.5em);
+  text-align: right;
+}
+
+.rodape-redes {
+  margin-top: 1%;
+  width: 49%;
+  float: left;
+  position: relative;
+  display: inline-block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.rodape-redes ul {
+  padding: 0px;
+  margin-left: 0.5%;
+}
+
+.rodape-redes ul li {
+  display: inline-block;
+  list-style: none;
+}
+
+.rodape p {
+  text-align: center;
+  color: #ffffff;
+  font-size: clamp(0.2em, 0.4em + 1vw, 1em);
+}
+
+/*Tela de Início*/
+
+.inicio {
+  width: 100%;
+  position: relative;
+  float: left;
+}
+
+.inicio h2 {
+  font-weight: bold;
+  text-align: center;
+  font-size: clamp(0.6em, 1.1em + 1vw, 2.5em);
+  margin-bottom: 4%;
+}
+
+.inicio-botoes {
+  margin-right: auto;
+  margin-left: auto;
+  width: 60%;
+  position: relative;
+  float: none;
+}
+
+.inicio-botoes ul {
+  padding: 0;
+  text-align: center;
+  margin-top: 3%;
+  margin-bottom: 16%;
+}
+
+.inicio-botoes a {
+  cursor: pointer;
+}
+
+.inicio-botoes ul li {
+  display: inline-block;
+}
+
+/* Tela Pesquisar */
+
+.tela-pesquisar {
+  width: 100%;
+  position: relative;
+  float: left;
+  margin-top: 15px;
+  margin-bottom: 51px;
+}
+
+.titulo-pesquisar {
+  width: 50%;
+  text-align: center;
+  margin-left: 300px;
+  margin-right: 300px;
+}
+
+.titulo-pesquisar h {
+  font-family: "Montserrat";
+  font-size: 30px;
+}
+
+.opcoes-pesquisar {
+  font-family: "Montserrat";
+  font-size: 20px;
+  margin-top: 30px;
+  margin-left: 300px;
+  margin-right: 300px;
+}
+
+.opcoes-pesquisar p {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.opcoes-pesquisar input {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 10px;
+  height: 20px;
+  width: 300px;
+  font-family: "Montserrat";
+  font-size: 14px;
+}
+
+.opcoes-pesquisar input::placeholder {
+  color: black;
+}
+
+.opcoes-pesquisar select {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 10px;
+  height: 25px;
+  width: 300px;
+  font-family: "Montserrat";
+  font-size: 15px;
+}
+
+.opcoes-pesquisar option {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 10px;
+  height: 25px;
+  width: 300px;
+  font-family: "Montserrat";
+  font-size: 15px;
+}
+
+.botao-pesquisar {
+  text-align: left;
+  margin-left: 300px;
+  margin-bottom: 68px;
+}
+
+/* Tela Cadastro */
+
+.cadastrar-titulo {
+  text-align: center;
+  width: 100%;
+  position: relative;
+  float: left;
+  margin-bottom: 3%;
+}
+
+.cadastrar-titulo h2 {
+  text-align: center;
+  font-size: clamp(0.6em, 1.1em + 1vw, 2.5em);
+}
+
+.cadastrar-links {
+  width: 100%;
+  position: relative;
+  float: left;
+  margin-bottom: 2%;
+}
+
+.cadastrar-links ul {
+  width: 85%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
+}
+
+.cadastrar-form {
+  width: 85%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cadastrar-form div {
+  margin-top: 5px;
+}
+
+.cadastrar-form h3 {
+  margin-top: 2%;
+  margin-bottom: 2%;
+  color: #0d6efd;
+}
+
+.cadastrar-form p {
+  margin-top: 5px;
+  margin-bottom: 3px;
+}
+
+.cadastrar-form div p {
+  margin-top: 5px;
+  margin-bottom: 3px;
+}
+
+.cadastrar-botoes {
+  text-align: center;
+  position: relative;
+  float: left;
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.cadastrar-botoes ul li {
+  display: inline-block;
+  list-style: none;
+  margin-left: 1%;
+  margin-right: 1%;
+}
+
+.cadastrar-botoes button {
+  width: 120px;
+}
+
+/* Tela Validação */
+
+.validacao {
+  width: 85%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.validacao h3 {
+  margin-top: 2%;
+  margin-bottom: 1%;
+  color: #0d6efd;
+}
+
+.border {
+  border-collapse: collapse;
+  border: 1px solid;
+}
+
+/* Tela Validação Coord*/
+
+.validacao-coord-subtitulo {
+  width: 85%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.validacao-coord-subtitulo h3 {
+  margin-top: 2%;
+  margin-bottom: 1%;
+  color: #0d6efd;
+}
+
+.validacao-coord-dados {
+  width: 85%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.validacao-coord-dados .form-group p,
+select {
+  text-align: center;
+  margin: 5px;
+}
+
+/* Tela Feedback*/
+
+.feedback {
+  width: 100%;
+  height: 90%;
+  float: left;
+  position: relative;
+  text-align: center;
+  margin-top: 5%;
+  margin-bottom: 15%;
+}
+
+.feedback h2 {
+  text-align: center;
+  font-size: clamp(0.6em, 1.1em + 1vw, 2.5em);
+  margin-bottom: 3%;
+}

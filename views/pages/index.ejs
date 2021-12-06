@@ -4,42 +4,40 @@
     <%- include('../partials/head'); %>
   </head>
 
-  <body class="d-flex flex-column h-100">
-    <header><%- include('../partials/header'); %></header>
+  <body class="body">
+    <header class="cabeçalho"><%- include('../partials/header'); %></header>
 
-    <main class="flex-shrink-0">
-      <div class="container">
-        <div class="tela-inicio">
-          <p>Em que podemos ajudar?</p>
+    <div class="container">
+      <div class="tela-inicio">
+        <p>Em que podemos ajudar?</p>
 
-          <div class="container">
-            <div class="row justify-content-center">
-              <div class="row">
-                <%if (permissions.edit){%>
-                <div class="col">
-                  <a href="<%=`/cadastro_alianca?ID=${info.link}&page=0` %>">
-                    <img src="img/cadastrar.png" height="70%" width="70%" />
-                  </a>
-                </div>
-                <%}%> <%if(permissions.view){%>
-                <div class="col">
-                  <a href="<%=`/cadastro_alianca?ID=${info.link}&page=4` %>">
-                    <img src="img/pesquisar.png" height="70%" width="70%" />
-                  </a>
-                </div>
-                <%}%> <%if(permissions.summary){%>
-                <div class="col">
-                  <a href="/pesquisar">
-                    <img src="img/pesquisar.png" height="70%" width="70%" />
-                  </a>
-                </div>
-                <%}%>
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="row">
+              <%if (permissions.edit){%>
+              <div class="col">
+                <a href="<%=`/cadastro_alianca?ID=${info.link}&page=0` %>">
+                  <img src="img/cadastrar.png" height="70%" width="70%" />
+                </a>
               </div>
+              <%}%> <%if(permissions.view){%>
+              <div class="col">
+                <a href="<%=`/cadastro_alianca?ID=${info.link}&page=4` %>">
+                  <img src="img/pesquisar.png" height="70%" width="70%" />
+                </a>
+              </div>
+              <%}%> <%if(permissions.summary){%>
+              <div class="col">
+                <a href="/pesquisar">
+                  <img src="img/pesquisar.png" height="70%" width="70%" />
+                </a>
+              </div>
+              <%}%>
             </div>
           </div>
         </div>
       </div>
-    </main>
-    <%- include('../partials/footer'); %>
+    </div>
+    <footer><%- include('../partials/footer'); %></footer>
   </body>
 </html>
