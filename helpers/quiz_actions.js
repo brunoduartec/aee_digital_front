@@ -6,7 +6,7 @@ module.exports = class QuizActions {
     this.parser = parser;
   }
 
-  async _getFormInfo(centro_id, form_alias) {
+  async _getFormInfo(centro_id, form_alias, page) {
     let option = "Centro";
 
     let pesquisaInfo = {
@@ -20,6 +20,7 @@ module.exports = class QuizActions {
       search: {
         id: centro_id,
         name: form_alias,
+        page: page,
       },
       option: option,
     };
@@ -48,11 +49,19 @@ module.exports = class QuizActions {
 
   async save(res, action_info) {
     let { centro_id, form_alias, page_index, responses } = action_info;
-    const form_info = await this._getFormInfo(centro_id, form_alias);
+    const form_info = await this._getFormInfo(
+      centro_id,
+      form_alias,
+      page_index
+    );
 
     const page = form_info.templates.PAGES[page_index];
 
     const quizes = page.QUIZES;
+
+    let summaryParamsParsed = this.parser.getParamsParsed({
+      CENTRO_ID: centro_id,
+    });
 
     for (let index = 0; index < quizes.length; index++) {
       const quiz = quizes[index];
@@ -66,7 +75,7 @@ module.exports = class QuizActions {
 
         if (responses[question._id]) {
           if (!question.ANSWER) {
-            await this.trabalhocontroller.postQuizResponse({
+            const response = await this.trabalhocontroller.postQuizResponse({
               CENTRO_ID: centro_id,
               QUIZ_ID: quiz._id,
               QUESTION_ID: question._id,
@@ -113,7 +122,7 @@ module.exports = class QuizActions {
 
   async open(res, action_info) {
     let { centro_id, form_alias, page } = action_info;
-    const form_info = await this._getFormInfo(centro_id, form_alias);
+    const form_info = await this._getFormInfo(centro_id, form_alias, page);
 
     this.logger.info("get:cadastro_alianca", JSON.stringify(form_info));
 

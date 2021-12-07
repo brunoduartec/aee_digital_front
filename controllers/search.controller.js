@@ -47,7 +47,7 @@ module.exports = class SearchController {
 
         let centroSummary = {};
         const summary =
-          await trabalhocontroller.getAtividadesCentroSummaryByParams(
+          await this.trabalhocontroller.getAtividadesCentroSummaryByParams(
             paramsParsed
           );
         centroSummary.items = [];
@@ -100,9 +100,10 @@ module.exports = class SearchController {
             "ATIVIDADE.NOME_ATIVIDADE": trabalho != "Todos" ? trabalho : null,
           });
 
-          let atividade = await trabalhocontroller.getAtividadesCentroByParams(
-            paramsParsed
-          );
+          let atividade =
+            await this.trabalhocontroller.getAtividadesCentroByParams(
+              paramsParsed
+            );
 
           atividades.amount += atividade.length;
           for (let index = 0; index < atividade.length; index++) {
@@ -131,22 +132,34 @@ module.exports = class SearchController {
       Quiz: async function (s) {
         let name = search.name;
         let centro_id = search.id;
+        const page = search.page;
 
         let paramsParsed = this.parser.getParamsParsed({
           NAME: name,
         });
 
-        let form_template = await trabalhocontroller.getFormByParams(
+        let form_template = await this.trabalhocontroller.getFormByParams(
           paramsParsed
         );
 
         form_template = form_template[0];
         let pages = form_template.PAGES;
-        let page_titles = [];
+        let page_titles = pages.map((m) => {
+          return m.PAGE_NAME;
+        });
+
+        paramsParsed = this.parser.getParamsParsed({
+          CENTRO_ID: centro_id,
+        });
+
+        if (page < pages.length) {
+          let page_info = pages[page];
+          pages = [];
+          pages.push(page_info);
+        }
 
         for (let index = 0; index < pages.length; index++) {
           const page = pages[index];
-          page_titles.push(page.PAGE_NAME);
 
           let quizes = page.QUIZES;
           for (let index = 0; index < quizes.length; index++) {
@@ -158,7 +171,9 @@ module.exports = class SearchController {
             });
 
             const quiz_responses =
-              await trabalhocontroller.getQuizResponseByParams(paramsParsed);
+              await this.trabalhocontroller.getQuizResponseByParams(
+                paramsParsed
+              );
 
             let questions = quiz.QUESTIONS;
 

@@ -1,34 +1,27 @@
-<h1>Validação</h1>
+<div class="validacao">
+  <% let pages = results.PAGES; pages.forEach(function(page){%>
+  <h3><%=page.PAGE_NAME%></h3>
+  <%page.QUIZES.forEach(quiz => {%>
 
-<%
-let pages = results.PAGES;
+  <div class="form row">
+    <span class="border col-md-12">
+      <div class="form-group" style="color: #0d6efd">
+        <p><b><%=quiz.CATEGORY%> </b></p>
+      </div>
+    </span>
+  </div>
 
-pages.forEach(function(page){
-    page.QUIZES.forEach(quiz => {%>
-        <h2><%=quiz.CATEGORY%> </h2>
-    <table  style="border: 1px solid black; width:100%">
+  <div class="form row">
     <%quiz.QUESTIONS.forEach(question => {%>
-        <tr>
-            <td>
-                <%if(!question.ANSWER){%>
-                <b style="color:red">
-                    <%= question.QUESTION%>
-                </b>
-                <%}else{%>
-                <b> <%= question.QUESTION%> </b>
-                <%}%>
-            </td>
-            <td>
-                <%if(question.ANSWER == "true"){%>
-                    sim
-                <%} else if(question.ANSWER == "false"){%>
-                    não
-                <%}else{%>
-                 <%= question.ANSWER%> 
-                 <%}%>
-            </td>
-        </tr>    
+
+    <span class="border col-md-12"
+      ><div class="form-group">
+        <p><b><%= question.QUESTION%>:</b><%= question.ANSWER%></p>
+      </div></span
+    >
+
     <%});%>
-    </table>
-    <%});%>    
-<%});%>
+  </div>
+
+  <%});%> <%});%>
+</div>

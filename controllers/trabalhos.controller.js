@@ -165,6 +165,19 @@ module.exports = class trabalhosController {
     }
   }
 
+  async getQuizSummaryByParams(params) {
+    try {
+      const quiz_response = await request.get(
+        "aee_digital_trabalhos",
+        `/atividade_generic_quiz_summary?${params}`
+      );
+
+      logger.info("getQuizSummary", quiz_response);
+      return quiz_response;
+    } catch (error) {
+      logger.error("trabalhos.controller.getQuizSummary: Error=>", error);
+    }
+  }
   async postQuizSummary(params) {
     try {
       const quiz_response = await request.post(
@@ -177,6 +190,21 @@ module.exports = class trabalhosController {
       return quiz_response;
     } catch (error) {
       logger.error("trabalhos.controller.postQuizSummary: Error=>", error);
+    }
+  }
+
+  async putQuizSummary(params, value) {
+    try {
+      const quiz_response = await request.put(
+        "aee_digital_trabalhos",
+        `/atividade_generic_quiz_summary?${params}`,
+        value
+      );
+
+      logger.info("putQuizSummary", quiz_response);
+      return quiz_response;
+    } catch (error) {
+      logger.error("trabalhos.controller.putQuizSummary: Error=>", error);
     }
   }
 };

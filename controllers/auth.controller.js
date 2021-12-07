@@ -98,8 +98,11 @@ module.exports = class authController {
 
   async authenticate(loginInfo) {
     const auth = await this.checkUserPass(loginInfo.user, loginInfo.pass);
-    const permissions = await this.getUserPermissions(auth);
-    await this.initUserInfo(auth);
+    let permissions;
+    if (auth) {
+      permissions = await this.getUserPermissions(auth);
+      await this.initUserInfo(auth);
+    }
     return permissions;
   }
 };
