@@ -88,20 +88,40 @@ module.exports = class authController {
     };
   }
 
-  async initUserInfo(auth) {
-    const cache = this.cache[auth.user];
+  async initUserInfo(loginInfo) {
+    let { user, pass } = loginInfo;
+    const cache = this.cache[user];
+    let userInfo;
 
     if (cache) {
-      await this.userinfocontroller.initializeUserInfo(cache);
+      userInfo = await this.userinfocontroller.initializeUserInfo(cache);
+
+      let params = {
+        user: user,
+        pass: pass,
+        groups: ["presidente"],
+        scope_id: userInfo.centro_id,
+      };
+
+      try {
+        const passInfo = await this.trabalhocontroller.postPass(params);
+        return passInfo[0];
+      } catch (error) {
+        return;
+      }
     }
   }
 
   async authenticate(loginInfo) {
-    const auth = await this.checkUserPass(loginInfo.user, loginInfo.pass);
+    let auth = await this.checkUserPass(loginInfo.user, loginInfo.pass);
     let permissions;
+
+    if (!auth) {
+      auth = await this.initUserInfo(loginInfo);
+    }
+
     if (auth) {
       permissions = await this.getUserPermissions(auth);
-      await this.initUserInfo(auth);
     }
     return permissions;
   }

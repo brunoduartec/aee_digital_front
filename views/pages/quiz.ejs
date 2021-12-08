@@ -83,7 +83,7 @@
                 <button type="submit" class="btn btn-primary" value="save" name="action">Salvar</button>
               </li>
               <%}%>
-              <%if(indexToNumber < (pages-1)){%>
+              <%if(indexToNumber < pages){%>
               <li>
                 <a href="/cadastro_alianca?ID=<%=centro_id%>&page=<%=indexToNumber+1%>">
                   <button class="btn btn-primary" value="next" name="action">Próximo</button>

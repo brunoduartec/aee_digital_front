@@ -129,6 +129,17 @@ module.exports = class trabalhosController {
     }
   }
 
+  async postPass(params) {
+    try {
+      const pass = await request.post("aee_digital_trabalhos", `/pass`, params);
+
+      logger.info("postPass", pass);
+      return pass;
+    } catch (error) {
+      logger.error("trabalhos.controller.postPass: Error=>", error);
+    }
+  }
+
   async putQuizResponse(params, value) {
     try {
       const quiz_response = await request.put(
