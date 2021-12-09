@@ -22,7 +22,7 @@ module.exports = class authController {
   }
 
   async generatePassCache() {
-    const schema = require("../schema")();
+    const schema = require("../resources/schema")();
     let excel = await this.xlsReader(this.fileName, { schema });
     let objects = excel.rows;
 

@@ -1,0 +1,432 @@
+[
+  {
+    "FROM": "regional",
+    "QUIZ": "Dados do Centro Espírita",
+    "QUESTION": "Regional "
+  },
+  {
+    "FROM": "Name",
+    "QUIZ": "Dados do Centro Espírita",
+    "QUESTION": "Nome do centro (Ex: Assistência Maternal Espirita)"
+  },
+  {
+    "FROM": "short",
+    "QUIZ": "Dados do Centro Espírita",
+    "QUESTION": "Apelido do centro (Ex: AME)"
+  },
+  {
+    "FROM": "cnpj",
+    "QUIZ": "Dados do Centro Espírita",
+    "QUESTION": "CNPJ (se houver)"
+  },
+  {
+    "FROM": "telefone",
+    "QUIZ": "Dados do Centro Espírita",
+    "QUESTION": "Telefone do centro"
+  },
+  {
+    "FROM": "fundacao",
+    "QUIZ": "Dados do Centro Espírita",
+    "QUESTION": "Data de Fundação"
+  },
+  {
+    "FROM": "site",
+    "QUIZ": "Dados do Centro Espírita",
+    "QUESTION": "Site na Internet"
+  },
+  {
+    "FROM": "facebook",
+    "QUIZ": "Dados do Centro Espírita",
+    "QUESTION": "Facebook"
+  },
+  {
+    "FROM": "instagram",
+    "QUIZ": "Dados do Centro Espírita",
+    "QUESTION": "Instagram"
+  },
+  {
+    "FROM": "local.endereco",
+    "QUIZ": "Dados de Localização",
+    "QUESTION": "Endereço"
+  },
+  {
+    "FROM": "local.bairro",
+    "QUIZ": "Dados de Localização",
+    "QUESTION": "Bairro"
+  },
+  {
+    "FROM": "local.cidade",
+    "QUIZ": "Dados de Localização",
+    "QUESTION": "Cidade"
+  },
+  {
+    "FROM": "local.uf",
+    "QUIZ": "Dados de Localização",
+    "QUESTION": "UF"
+  },
+  {
+    "FROM": "local.cep",
+    "QUIZ": "Dados de Localização",
+    "QUESTION": "CEP"
+  },
+  {
+    "FROM": "local.pais",
+    "QUIZ": "Dados de Localização",
+    "QUESTION": "País"
+  },
+  {
+    "FROM": "local.sede",
+    "QUIZ": "Dados de Localização",
+    "QUESTION": "Possui sede própria?"
+  },
+  {
+    "FROM": "contato.nome",
+    "QUIZ": "Dados de Contato",
+    "QUESTION": "Nome do Presidente"
+  },
+  {
+    "FROM": "contato.email",
+    "QUIZ": "Dados de Contato",
+    "QUESTION": "E-mail do Presidente"
+  },
+  {
+    "FROM": "contato.telefone",
+    "QUIZ": "Dados de Contato",
+    "QUESTION": "Telefone do Responsável"
+  },
+  {
+    "FROM": "contato.periodo",
+    "QUIZ": "Dados de Contato",
+    "QUESTION": "Período do Mandato"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Dados de Contato",
+    "QUESTION": "Incluir outras pessoas como responsável"
+  },
+  {
+    "FROM": "contato.autorizacao",
+    "QUIZ": "Dados de Contato",
+    "QUESTION": "Você autoriza a divulgação de informações como nome, telefone e email?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "",
+    "QUESTION": "Qual a média de assistidos por semana?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Assistência Espiritual",
+    "QUESTION": "Qual a média de voluntários por semana?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Assistência Espiritual",
+    "QUESTION": "Qual a quantidade de preleitores na casa?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Assistência Espiritual",
+    "QUESTION": "Qual a quantidade de entrevistadores?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Curso Básico do Espiritismo",
+    "QUESTION": "Qual a quantidade total de alunos?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Curso Básico do Espiritismo",
+    "QUESTION": "Qual a quantidade total de expositores?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Curso Básico do Espiritismo",
+    "QUESTION": "Qual a quantidade total de dirigentes disponíveis?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Curso Básico do Espiritismo",
+    "QUESTION": "Qual a quantidade total de dirigentes ativos?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Escola de Aprendizes do Evangelho",
+    "QUESTION": "Qual a quantidade total de alunos?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Escola de Aprendizes do Evangelho",
+    "QUESTION": "Qual a quantidade total de expositores?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Escola de Aprendizes do Evangelho",
+    "QUESTION": "Qual a quantidade total de dirigentes disponíveis?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Escola de Aprendizes do Evangelho",
+    "QUESTION": "Qual a quantidade total de dirigentes ativos?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Curso de Médiuns",
+    "QUESTION": "Qual a quantidade total de alunos?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Curso de Médiuns",
+    "QUESTION": "Qual a quantidade total de expositores?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Curso de Médiuns",
+    "QUESTION": "Qual a quantidade total de dirigentes disponíveis?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Curso de Médiuns",
+    "QUESTION": "Qual a quantidade total de dirigentes ativos?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Evangelização Infantil",
+    "QUESTION": "Qual a quantidade total de crianças?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Evangelização Infantil",
+    "QUESTION": "Qual a quantidade total de pais ou responsáveis?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Evangelização Infantil",
+    "QUESTION": "Qual a quantidade total de evangelizadores disponíveis?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Evangelização Infantil",
+    "QUESTION": "Qual a quantidade total de evangelizadores ativos?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Evangelização Infantil",
+    "QUESTION": "Qual a quantidade total de evangelizadores que veio da Mocidade?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Evangelização Infantil",
+    "QUESTION": "Qual a quantidade total de evangelizadores que veio da EAE?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Evangelização Infantil",
+    "QUESTION": "Quantos evangelizadores fizeram o curso de Evangelização Infantil?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Evangelização Infantil",
+    "QUESTION": "Os evangelizadores utilizam o material de apoio da Evangelização Infantil da AEE?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "",
+    "QUESTION": "Qual a quantidade total de alunos?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Mocidade Espírita",
+    "QUESTION": "Qual a quantidade total de expositores?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Mocidade Espírita",
+    "QUESTION": "Qual a quantidade total de dirigentes disponíveis?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Mocidade Espírita",
+    "QUESTION": "Qual a quantidade total de dirigentes ativos?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Fraternidade dos Discípulos de Jesus",
+    "QUESTION": "Qual é a quantidade de pessoas que ingressaram na FDJ?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Fraternidade dos Discípulos de Jesus",
+    "QUESTION": "Qual é a quantidade de pessoas encaminhadas para ingresso na FDJ?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Fraternidade dos Discípulos de Jesus",
+    "QUESTION": "Qual é a quantidade de pessoas que ingressaram na FDJ desde a fundação?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Falando ao Coração",
+    "QUESTION": "Qual a média de trabalhadores que participam do Falando ao Coração?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Falando ao Coração",
+    "QUESTION": "Qual a média de voluntários que já realizou o Curso de Formadores do Falando ao Coração?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Escola de Aprendizes à Distância",
+    "QUESTION": "Você conhece o trabalho de EAED - Escola de Aprendizes do Evangelho à Distância?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Escola de Aprendizes à Distância",
+    "QUESTION": "Gostaria de receber informações sobre o trabalho de EAED?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Escola de Aprendizes à Distância",
+    "QUESTION": "Qual a quantidade total de alunos de EAED?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Escola de Aprendizes à Distância",
+    "QUESTION": "Qual a quantidade total de dirigentes disponíveis de EAED?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Escola de Aprendizes à Distância",
+    "QUESTION": "Qual a quantidade total de dirigentes ativos de EAED?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Escola de Aprendizes à Distância em Grupo",
+    "QUESTION": "Você conhece o trabalho de EAEgD - Escola de Aprendizes do Evangelho à Distância?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Escola de Aprendizes à Distância em Grupo",
+    "QUESTION": "Gostaria de receber informações sobre o trabalho de EAEgD?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Escola de Aprendizes à Distância em Grupo",
+    "QUESTION": "Qual a quantidade total de alunos de EAEgD?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Escola de Aprendizes à Distância em Grupo",
+    "QUESTION": "Qual a quantidade total de dirigentes disponíveis de EAEgD?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Escola de Aprendizes à Distância em Grupo",
+    "QUESTION": "Qual a quantidade total de dirigentes ativos de EAEgD?"
+  },
+  {
+    "FROM": "trabalhos.livraria",
+    "QUIZ": "Outros Trabalhos",
+    "QUESTION": "Possui livraria"
+  },
+  {
+    "FROM": "trabalhos.bazar",
+    "QUIZ": "Outros Trabalhos",
+    "QUESTION": "Possui bazar"
+  },
+  {
+    "FROM": "trabalhos.biblioteca",
+    "QUIZ": "Outros Trabalhos",
+    "QUESTION": "Possui biblioteca"
+  },
+  {
+    "FROM": "trabalhos.apoio_gestante",
+    "QUIZ": "Outros Trabalhos",
+    "QUESTION": "Apoio à Gestante"
+  },
+  {
+    "FROM": "trabalhos.apoio_fumante",
+    "QUIZ": "Outros Trabalhos",
+    "QUESTION": "Apoio ao Fumante"
+  },
+  {
+    "FROM": "trabalhos.cesta_basica",
+    "QUIZ": "Outros Trabalhos",
+    "QUESTION": "Cestas Básicas"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Outros Trabalhos",
+    "QUESTION": "Outros Trabalhos"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "",
+    "QUESTION": "Sua casa costuma participar das reuniões da sua regional ?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Regionais",
+    "QUESTION": "Sua casa costuma realizar cursos de formadores internamente ou participa dos cursos de formadores da sua regional ?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Regionais",
+    "QUESTION": "Encaminhamos pessoas para os cursos aplicados pela regional"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Regionais",
+    "QUESTION": "Qual a quantidade total de pessoas encaminhadas no último ano para o curso de dirigentes de EAE ?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Regionais",
+    "QUESTION": "Qual a quantidade total de pessoas encaminhadas no último ano para o curso de dirigentes de Curso de Médiuns ?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Regionais",
+    "QUESTION": "Qual a quantidade total de pessoas encaminhadas no último ano para o curso de dirigentes de Mocidade ?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Regionais",
+    "QUESTION": "Qual a quantidade total de pessoas encaminhadas no último ano para o curso de dirigentes de Pré - Mocidade ?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Regionais",
+    "QUESTION": "Qual a quantidade total de pessoas encaminhadas no último ano para o curso de dirigentes de Evangelização Infantil ?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Regionais",
+    "QUESTION": "Qual a quantidade total de pessoas encaminhadas no último ano para o curso de aplicadores de Falando ao Coração ?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Regionais",
+    "QUESTION": "Como você avalia a importância do trabalho da Regional para o desenvolvimento do seu centro ?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Regionais",
+    "QUESTION": "Comente abaixo qualquer ideia, projeto, melhoria, critica, sugestão, que você e sua casa entendam ser importante para o ano de 2020, na Aliança Espírita Evangélica"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Secretaria da Aliança",
+    "QUESTION": "Você ou sua casa conhecem a Secretaria da Aliança ?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Secretaria da Aliança",
+    "QUESTION": "Quais dúvidas ou informações você e a sua casa acreditam que a Secretaria poderia colaborar ?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Secretaria da Aliança",
+    "QUESTION": "Deixe aqui seu comentário ou avaliação sobre este cadastro"
+  }
+]

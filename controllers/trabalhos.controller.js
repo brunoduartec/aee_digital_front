@@ -87,6 +87,20 @@ module.exports = class trabalhosController {
     }
   }
 
+  async getQuestionByParams(params) {
+    try {
+      const quiz = await request.get(
+        "aee_digital_trabalhos",
+        `/atividade_generic_question?${params}`
+      );
+
+      logger.info("getQuestionByParams", quiz);
+      return quiz;
+    } catch (error) {
+      logger.error("trabalhos.controller.getQuestionByParams: Error=>", error);
+    }
+  }
+
   async getQuizResponseByParams(params) {
     try {
       const quiz_response = await request.get(

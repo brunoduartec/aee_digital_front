@@ -23,9 +23,19 @@ const readXlsxFile = require("read-excel-file/node");
 
 const parser = require("./helpers/parser");
 
+const CentroInfoController = require("./controllers/centroInfo.controller");
+const centroinfocontroller = new CentroInfoController(
+  logger,
+  readXlsxFile,
+  parser
+);
+centroinfocontroller.generatePassCache();
+
 const userInfoController = require("./controllers/userInfo.controller");
 const userinfocontroller = new userInfoController(
   regionalcontroller,
+  centroinfocontroller,
+  trabalhoscontroller,
   logger,
   parser
 );
