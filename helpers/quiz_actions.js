@@ -57,11 +57,11 @@ module.exports = class QuizActions {
 
     const page = form_info.templates.PAGES[page_index];
 
-    const quizes = page.QUIZES;
+    if (!page) {
+      return;
+    }
 
-    let summaryParamsParsed = this.parser.getParamsParsed({
-      CENTRO_ID: centro_id,
-    });
+    const quizes = page.QUIZES;
 
     for (let index = 0; index < quizes.length; index++) {
       const quiz = quizes[index];

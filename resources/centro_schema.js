@@ -76,6 +76,11 @@ function funcionamentoParser(funcionamento) {
   }
 }
 
+function parseBoolean(answer) {
+  if (answer == "Sim") return true;
+  else return false;
+}
+
 function getSchema() {
   let schema = {
     Centro: {
@@ -146,7 +151,9 @@ function getSchema() {
             },
             "Sede Própria?": {
               prop: "sede",
-              type: Boolean,
+              type: (answer) => {
+                return parseBoolean(answer);
+              },
             },
           },
         },
@@ -172,7 +179,9 @@ function getSchema() {
             "Você autoriza a divulgação de informações como nome, telefone e email?":
               {
                 prop: "autorizacao",
-                type: Boolean,
+                type: (answer) => {
+                  return parseBoolean(answer);
+                },
               },
           },
         },
@@ -187,11 +196,11 @@ function getSchema() {
             let dateParsed = "";
 
             if (date) {
-              day = date.getDate();
-              month = date.getMonth();
-              year = date.getFullYear();
+              day = date.getDate().toString().padStart(2, "0");
+              month = date.getMonth().toString().padStart(2, "0");
+              year = date.getFullYear().toString().padStart(4, "0");
 
-              dateParsed = `${day}-${month}-${year}`;
+              dateParsed = `${year}-${month}-${day}`;
             }
 
             return dateParsed;
@@ -200,33 +209,47 @@ function getSchema() {
         Traballhos: {
           prop: "trabalhos",
           type: {
-            "Livraria?": {
+            Livraria: {
               prop: "livraria",
-              type: String,
+              type: (answer) => {
+                return parseBoolean(answer);
+              },
             },
-            "Bazar?": {
+            Bazar: {
               prop: "bazar",
-              type: String,
+              type: (answer) => {
+                return parseBoolean(answer);
+              },
             },
-            "Biblioteca?": {
+            Biblioteca: {
               prop: "biblioteca",
-              type: String,
+              type: (answer) => {
+                return parseBoolean(answer);
+              },
             },
-            "Apoio ao Exterior?": {
+            "Apoio ao Exterior": {
               prop: "apoio_exterior",
-              type: String,
+              type: (answer) => {
+                return parseBoolean(answer);
+              },
             },
-            "Apoio a Gestante?": {
+            "Apoio a Gestante": {
               prop: "apoio_gestante",
-              type: String,
+              type: (answer) => {
+                return parseBoolean(answer);
+              },
             },
-            "Apoio ao Fumante?": {
+            "Apoio ao Fumante": {
               prop: "apoio_fumante",
-              type: String,
+              type: (answer) => {
+                return parseBoolean(answer);
+              },
             },
-            "Cestas Básicas?": {
+            "Cestas Básicas": {
               prop: "cesta_basica",
-              type: String,
+              type: (answer) => {
+                return parseBoolean(answer);
+              },
             },
           },
         },

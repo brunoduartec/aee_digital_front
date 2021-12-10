@@ -1,0 +1,15 @@
+<div class="radio">
+  <input class="form-check-input" type="radio" name="<%= question._id%>" id="<%=
+  question._id%>1" <%if(question.ANSWER == "true" ){%> checked value="true"<%}%>
+  />
+  <label for="<%= question._id%>1"> Sim </label>
+
+  <input
+    class="form-check-input"
+    type="radio"
+    name="<%= question._id%>"
+    id="<%= question._id%>2"
+    <% if(!question.ANSWER || question.ANSWER!="true" ){%> checked value = "false" <%}%>
+   />
+   <label for="<%= question._id%>2"> Não </label>
+</div>

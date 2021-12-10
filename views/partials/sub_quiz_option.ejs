@@ -1,0 +1,5 @@
+<select id="<%= question._id%>" name="<%= question._id%>" class="form-select">
+    <% question.PRESET_VALUES.forEach(function(option) { %>
+    <option <%if(question.ANSWER == option){%> selected <%}%>><%= option %></option>
+    <% }); %>
+  </select>
