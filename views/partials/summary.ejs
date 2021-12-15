@@ -12,15 +12,16 @@
   </div>
 
   <div class="form row">
-    <%quiz.QUESTIONS.forEach(question => {%>
-
-    <span class="border col-md-12"
-      ><div class="form-group">
+    <%quiz.QUESTIONS.forEach(questionGroup => {
+      const group = questionGroup.GROUP;
+      const itemSize = 12/group.length;
+      group.forEach(question => {
+      %>
+      <div class="form-group col-md-<%=itemSize%>">
         <p><b><%= question.QUESTION%>:</b> <%= question.ANSWER%></p>
-      </div></span
-    >
-
-    <%});%>
+      </div>
+      <%});%>
+      <%});%>
   </div>
 
   <%});%> <%});%>

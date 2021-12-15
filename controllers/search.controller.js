@@ -175,17 +175,23 @@ module.exports = class SearchController {
                 paramsParsed
               );
 
-            let questions = quiz.QUESTIONS;
+            let groups = quiz.QUESTIONS;
 
-            for (let j = 0; j < questions.length; j++) {
-              const question = questions[j];
-              let answer = quiz_responses.find(
-                (m) => m.QUESTION_ID == question._id
-              );
+            for (let j = 0; j < groups.length; j++) {
+              const group = groups[j].GROUP;
 
-              if (answer) {
-                question.ANSWER = answer.ANSWER;
+              for (let k = 0; k < group.length; k++) {
+                const question = group[k];
+                
+                let answer = quiz_responses.filter(
+                  (m) => m.QUESTION_ID == question._id
+                );
+                if (answer) {
+                  question.ANSWER = JSON.parse(JSON.stringify(answer.map(m=>{return m.ANSWER})));
+                  question.ANSWER_ID = JSON.parse(JSON.stringify(answer.map(m=>{return m.ID})))
+                }
               }
+
             }
           }
         }

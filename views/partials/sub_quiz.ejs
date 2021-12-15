@@ -1,37 +1,79 @@
 <h3><%=quiz.CATEGORY %></h3>
-
-<%quiz.QUESTIONS.forEach(function(question){ %>
-
-  <div class="mb-3">
-  <label for="<%= question._id%>"><%= question.QUESTION%></label>
-
-  <%if(question.ANSWER_TYPE == "Option"){%>
-
-
-   <%- include('./sub_quiz_option', {question:question});%>
-
-  <%} else if(question.ANSWER_TYPE == "Date"){%>
-
-    <%- include('./sub_quiz_date', {question:question});%>
-
-  <%}else if(question.ANSWER_TYPE == "Boolean"){%>
-
-   
-    <%- include('./sub_quiz_radio', {question:question});%>
-
- 
-  <%}else if(question.ANSWER_TYPE == "TextArea"){%>
+<%quiz.QUESTIONS.forEach(function(group){ %>
+  <%if(group.IS_MULTIPLE){%>
+    <table id=<%=group._id%> class="col-md-12">
+    <tr>
+      <td>
+        <div id="template_<%=group._id%>" name="template_<%=group._id%>">
+  <%}%>
   
-  <%=question.ANSWER%>
-  <%- include('./sub_quiz_textarea', {question:question});%>
-</textarea>
+  <div class="form row">
+    <p><%=group.GROUP_NAME%></p>
+  <%
+  const size = group.GROUP.length;
+  const itemSize = 12/size;
 
+  const answers_length = group.GROUP[0].ANSWER.length;
 
-  <%}else{%>
-
-    <%- include('./sub_quiz_input', {question:question});%>
+  for (let index = 0; index < answers_length; index++) {
+    
+    group.GROUP.forEach(function(question){
+      const answer = question.ANSWER[index]
+      const answer_id = question.ANSWER_ID[index]
+      const questionInfo = {
+        ANSWER: answer,
+        ANSWER_ID: answer_id,
+        PRESET_VALUES: question.PRESET_VALUES,
+        _id: question._id
+      }
+    %>
+    <div class="form-group col-md-<%= itemSize%>">
+      <label for="<%= answer_id%>"><%= question.QUESTION%></label>
+      
+      <% switch (question.ANSWER_TYPE) {
+        case 'Option' : %>
+          <%- include('./sub_quiz_option', {question:questionInfo});%>
+        <%break; 
+        case 'Date' :%>
+          <%- include('./sub_quiz_date', {question:questionInfo});%>
+        <%break;
+        case 'Boolean' :%>
+          <%- include('./sub_quiz_radio', {question:questionInfo});%>
+        <%break;
+          case 'TextArea' :%>
+          <%- include('./sub_quiz_textarea', {question:questionInfo});%>
+        <%break;
+          case 'Time' :%>
+          <%- include('./sub_quiz_time', {question:questionInfo});%>
+        <%break;
+        case 'Dia_Trabalho' :%>
+          <%- include('./sub_quiz_dia_trabalho', {question:questionInfo});%>
+        <%break;
+         default:%>
+          <%- include('./sub_quiz_input', {question:questionInfo});%>
+        <% break;
+    } %>
+    </div>
+  
+    <%});
+    } %>    
+    <%if(group.IS_MULTIPLE){%>
+      <div class="form-group col-md-<%= itemSize%> align-self-end">
+          <button type="button" class="btn btn-warning" style="vertical-align: bottom" onclick="Delete(this, '<%= group._id%>')">-</button>
+    </div>
+      <%}%>
  
-</div>
 
-
-<%} }); %>
+  </div>
+  <%if(group.IS_MULTIPLE){%>
+    </div>
+    
+    <div class="form-group col-md-<%= itemSize%> align-self-end">
+        <button type="button" class="btn btn-primary" style="vertical-align: bottom" onclick="Add('<%= group._id%>', '<%=centroId%>', '<%=quiz._id%>')">Adicionar</button>
+    </div>
+  </td>
+      </tr>
+      </table>
+    <%}%>
+    
+    <%}); %>

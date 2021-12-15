@@ -52,17 +52,20 @@ module.exports = class UserInfoController {
       question = question[0];
 
       let answer = this.getInfo(centroInfo, depara_item.FROM);
-      let answewrInfo = {
-        CENTRO_ID: centro_id,
-        QUIZ_ID: this.quiz_cache[depara_item.QUIZ].ID,
-        QUESTION_ID: question.ID,
-        ANSWER: answer,
-      };
-
-      console.log("===> ", answewrInfo);
-
-      if (answer) {
-        await this.trabalhocontroller.postQuizResponse(answewrInfo);
+      
+      if(this.quiz_cache[depara_item.QUIZ] && question){
+        let answewrInfo = {
+          CENTRO_ID: centro_id,
+          QUIZ_ID: this.quiz_cache[depara_item.QUIZ].ID,
+          QUESTION_ID: question.ID,
+          ANSWER: answer || " ",
+        };
+  
+        console.log("===> ", answewrInfo);
+  
+        // if (answer) {
+          await this.trabalhocontroller.postQuizResponse(answewrInfo);
+        // }
       }
     }
   }

@@ -164,12 +164,6 @@ app.get("/", requireAuth, async function (req, res) {
     link: auth.scope_id,
   };
   res.redirect(pageByPermission[auth.groups[0]](info));
-  // res.render("pages/index", {
-  //   info: {
-  //     link: auth.scope_id,
-  //   },
-  //   permissions: auth.permissions,
-  // });
 });
 
 app.get("/pdf", requireAuth, async (req, res) => {
@@ -320,6 +314,47 @@ app.post("/quiz", requireAuth, async function (req, res) {
     responses,
   });
 });
+
+app.get("/remove_answer", requireAuth, async function(req, res){
+  const answer = req.originalUrl;
+  let paramsFrom =parser.getQueryParamsParsed(answer);
+
+  let paramsParsed = parser.getParamsParsed({
+    _id: paramsFrom.answerId,
+  });
+  let quizResponse = await trabalhoscontroller.putQuizResponse(paramsParsed, {
+    ANSWER: paramsFrom.answer,
+  });
+
+  res.json(quizResponse)
+})
+
+app.get("/update_answer", requireAuth, async function(req,res){
+  const answer = req.originalUrl;
+  let paramsFrom =parser.getQueryParamsParsed(answer);
+
+  params = {
+    "CENTRO_ID": paramsFrom.centroId,
+    "QUIZ_ID": paramsFrom.quizId,
+    "QUESTION_ID": paramsFrom.questionId,
+    "ANSWER": paramsFrom.answer
+  }
+
+  let quizResponse
+  
+  if(paramsFrom.answerId){
+    let paramsParsed = parser.getParamsParsed({
+      _id: paramsFrom.answerId,
+    });
+    quizResponse = await trabalhoscontroller.putQuizResponse(paramsParsed, {
+      ANSWER: paramsFrom.answer,
+    });
+  }else{
+    quizResponse = await trabalhoscontroller.postQuizResponse(params);
+  }
+
+  res.json(quizResponse)
+})
 
 app.post("/update_centro", requireAuth, async function (req, res) {
   const centroInfo = {

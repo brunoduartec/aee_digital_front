@@ -29,7 +29,7 @@ module.exports = class QuizActions {
   }
 
   async _move(res, action_info) {
-    await this.save(res, action_info);
+    // await this.save(res, action_info);
 
     let { page_redirect, page_index, direction } = action_info;
 
@@ -68,28 +68,30 @@ module.exports = class QuizActions {
       const questions = quiz.QUESTIONS;
 
       for (let j = 0; j < questions.length; j++) {
-        const question = questions[j];
+        const groupQuestion = questions[j].GROUP;
 
-        let answer = responses[question._id];
-        if (responses[question._id] == "on") answer = "true";
+        for (let k = 0; k < groupQuestion.length; k++) {
+          const question = groupQuestion[k];
+          let answer = responses[question.ANSWER_ID];
 
-        if (responses[question._id]) {
-          if (!question.ANSWER) {
-            const response = await this.trabalhocontroller.postQuizResponse({
-              CENTRO_ID: centro_id,
-              QUIZ_ID: quiz._id,
-              QUESTION_ID: question._id,
-              ANSWER: answer,
-            });
-          } else if (question.ANSWER != responses[question._id]) {
-            let paramsParsed = this.parser.getParamsParsed({
-              CENTRO_ID: centro_id,
-              QUIZ_ID: quiz._id,
-              QUESTION_ID: question._id,
-            });
-            await this.trabalhocontroller.putQuizResponse(paramsParsed, {
-              ANSWER: answer,
-            });
+          if (responses[question.ANSWER_ID] == "on") answer = "true";
+  
+          if (responses[question.ANSWER_ID]) {
+            if (!question.ANSWER) {
+              const response = await this.trabalhocontroller.postQuizResponse({
+                CENTRO_ID: centro_id,
+                QUIZ_ID: quiz._id,
+                QUESTION_ID: question._id,
+                ANSWER: answer,
+              });
+            } else if (question.ANSWER != responses[question._id]) {
+              let paramsParsed = this.parser.getParamsParsed({
+                _id: question.ANSWER_ID,
+              });
+              await this.trabalhocontroller.putQuizResponse(paramsParsed, {
+                ANSWER: answer,
+              });
+            }
           }
         }
       }

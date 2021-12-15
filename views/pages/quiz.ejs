@@ -61,7 +61,7 @@
             let page = results.PAGES[indexToNumber];
 
             page.QUIZES.forEach(function(result){%>
-        <%- include('../partials/sub_quiz', {quiz:result}); %>
+        <%- include('../partials/sub_quiz', {quiz:result, centroId: centro_id}); %>
         <%}); %>
         <%}%>
 
@@ -77,10 +77,6 @@
                     <%if(indexToNumber == pages){%>
               <li>
                 <button type="submit" class="btn btn-primary" value="send" name="action">Finalizar</button>
-              </li>
-              <%}else{%>
-              <li>
-                <button type="submit" class="btn btn-primary" value="save" name="action">Salvar</button>
               </li>
               <%}%>
               <%if(indexToNumber < pages){%>
@@ -98,7 +94,81 @@
     <footer>
           <%- include('../partials/footer'); %>
       </footer>
+      <script>
+    function updateFormItem(item){
+      var itemChanged = document.getElementById(item.id);
+      const answerId = item.id
 
+      var apiUrl = `update_answer?answerId=${answerId}&answer=${itemChanged.value.toString()}`
+          fetch(apiUrl).then(response => {
+            return response.json();
+          }).then(data => {
+            const responseInfo = data[0];
+          }).catch(err => {
+            console.log("---ERROR---", err)
+            // Do something for an error here
+          });
+    }
+
+    function callCreateRoute(item, questionID, centroId, quizId){
+        var apiUrl = `update_answer?questionId=${questionID}&centroId=${centroId}&quizId=${quizId}`
+        fetch(apiUrl).then(response => {
+          return response.json();
+        }).then(data => {
+          const responstInfo = data[0];
+          item.setAttribute("id") = responstInfo.ID
+          item.setAttribute("name") = responstInfo.ID
+        }).catch(err => {
+          console.log("---ERROR---", err)
+          // Do something for an error here
+        });
+      }
+
+    function AddNewDataItems(ob, centroId, quizId){
+      const children = ob.children[0].children
+      
+      for(j=0; j< children.length; j++)
+      {
+        const leaf = children[j]
+        const child = leaf.children;
+        for(k=0;k<child.length; k++){
+          const item = child[k];
+          if(item.hasAttribute("questionId")){
+            let bb = item.getAttribute("questionId")  
+            
+            callCreateRoute(item, bb, centroId, quizId)
+          }
+        }
+      }
+    }
+
+
+    function Add(r, centroId, quizID) {
+        var table = document.getElementById(r);
+        var template = document.getElementsByName(`template_${r}`);
+        
+        
+        let lastTemplate = template[template.length-1];
+        
+        console.log("---Z-----", quizID)
+        AddNewDataItems(lastTemplate, centroId, quizID)
+        
+        var clone = lastTemplate.cloneNode(true);
+        var rowCount = table.rows.length;
+        var row = table.insertRow(rowCount-1);
+        row.appendChild(clone)
+    }
+
+    function Delete(r, table_id){
+      console.log(table_id)
+        var i = r.parentNode.parentNode.rowIndex;
+        let tab = document.getElementById(table_id);
+        if(tab.rows.length > 1){
+          tab.deleteRow(i);
+        } 
+    }
+  
+  </script>
 </body>
 
 </html>
