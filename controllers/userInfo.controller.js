@@ -30,44 +30,48 @@ module.exports = class UserInfoController {
   }
 
   async insertAnswers(centroInfo, centro_id) {
-    for (let j = 0; j < this.depara.length; j++) {
-      const depara_item = this.depara[j];
-
-      if (!this.quiz_cache[depara_item.QUIZ]) {
-        let paramsParsed = this.parser.getParamsParsed({
-          CATEGORY: depara_item.QUIZ,
-        });
-        let template = await this.trabalhocontroller.getQuizTemplateByParams(
-          paramsParsed
-        );
-        this.quiz_cache[depara_item.QUIZ] = template[0];
-      }
-
-      let question = await this.trabalhocontroller.getQuestionByParams(
-        this.parser.getParamsParsed({
-          QUESTION: depara_item.QUESTION,
-        })
-      );
-
-      question = question[0];
-
-      let answer = this.getInfo(centroInfo, depara_item.FROM);
-      
-      if(this.quiz_cache[depara_item.QUIZ] && question){
-        let answewrInfo = {
-          CENTRO_ID: centro_id,
-          QUIZ_ID: this.quiz_cache[depara_item.QUIZ].ID,
-          QUESTION_ID: question.ID,
-          ANSWER: answer || " ",
-        };
-  
-        console.log("===> ", answewrInfo);
-  
-        // if (answer) {
-          await this.trabalhocontroller.postQuizResponse(answewrInfo);
-        // }
-      }
+    const params = {
+      NAME:"Cadastro de Informações Anual"
     }
+    let form = await this.trabalhocontroller.getFormByParams(this.parser.getParamsParsed(params))
+    form = form[0];
+
+    for (let index = 0; index < form.PAGES.length; index++) {
+      const page = form.PAGES[index];
+      let QUIZES = page.QUIZES;
+      for (let j = 0; j < QUIZES.length; j++) {
+        const quiz = QUIZES[j];
+        let QUESTIONS = quiz.QUESTIONS;
+        for (let k = 0; k < QUESTIONS.length; k++) {
+          const question = QUESTIONS[k];
+          let GROUP = question.GROUP
+          for (let l = 0; l < GROUP.length; l++) {
+            const group = GROUP[l];
+            
+            let match = this.depara.find(m=>{
+              return (m.QUIZ == quiz.CATEGORY && m.QUESTION == group.QUESTION)
+            });
+
+            let answer=""
+            
+            if(match){
+              answer = this.getInfo(centroInfo, match.FROM);
+            }
+
+            let answewrInfo = {
+              CENTRO_ID: centro_id,
+              QUIZ_ID: quiz._id,
+              QUESTION_ID: group._id,
+              ANSWER: answer || " ",
+            };
+              await this.trabalhocontroller.postQuizResponse(answewrInfo);
+          }
+        }
+        
+      }
+      
+    }
+
   }
 
   async initializeUserInfo(info) {
