@@ -12,16 +12,16 @@ const crypto = require("crypto");
 
 const env = process.env.NODE_ENV ? process.env.NODE_ENV : "local";
 const config = require("./env.json")[env];
+const parser = require("./helpers/parser");
 
 const regionalController = require("./controllers/regional.controller");
 const regionalcontroller = new regionalController();
 
 const trabalhosController = require("./controllers/trabalhos.controller");
-const trabalhoscontroller = new trabalhosController();
+const trabalhoscontroller = new trabalhosController(parser);
 
 const readXlsxFile = require("read-excel-file/node");
 
-const parser = require("./helpers/parser");
 
 const CentroInfoController = require("./controllers/centroInfo.controller");
 const centroinfocontroller = new CentroInfoController(

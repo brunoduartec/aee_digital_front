@@ -133,6 +133,7 @@ module.exports = class SearchController {
         let name = search.name;
         let centro_id = search.id;
         const page = search.page;
+        let finalized = false;
 
         let paramsParsed = this.parser.getParamsParsed({
           NAME: name,
@@ -156,6 +157,8 @@ module.exports = class SearchController {
           let page_info = pages[page];
           pages = [];
           pages.push(page_info);
+        }else{
+          finalized = await this.trabalhocontroller.checkFormCompletion(name, centro_id);
         }
 
         for (let index = 0; index < pages.length; index++) {
@@ -199,6 +202,7 @@ module.exports = class SearchController {
         let quiz = {
           templates: form_template,
           titles: page_titles,
+          finalized: finalized
         };
 
         this.logger.info("getPesquisaResult:Quiz", quiz);

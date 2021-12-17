@@ -10,7 +10,9 @@ const Logger = require("../helpers/logger");
 const logger = new Logger();
 
 module.exports = class trabalhosController {
-  constructor() {}
+  constructor(parser) {
+    this.parser = parser;
+  }
 
   async getAtividades() {
     try {
@@ -231,5 +233,39 @@ module.exports = class trabalhosController {
     } catch (error) {
       logger.error("trabalhos.controller.putQuizSummary: Error=>", error);
     }
+  }
+
+  async checkFormCompletion(formName, centroId){
+    const form = await this.getFormByParams(this.parser.getParamsParsed({
+      NAME: formName
+    }));
+
+    const quiz = form[0].PAGES.map(m=>{return m.QUIZES});
+    let quizInline= [];
+
+    for (let index = 0; index < quiz.length; index++) {
+      const element = quiz[index];
+      quizInline = quizInline.concat(element)
+    }
+
+    const quizIds = quizInline.map(m=>{return m._id});
+
+    for (let index = 0; index < quizIds.length; index++) {
+      const id = quizIds[index];
+      let questions = await this.getQuizResponseByParams(this.parser.getParamsParsed({
+        CENTRO_ID: centroId,
+        QUIZ_ID: id
+      }));
+
+      const anwers = questions.filter(m=>{
+        return m.ANSWER == " ";
+      });
+      
+      if(anwers.length > 0)
+        return false
+    }
+
+    return true;
+
   }
 };

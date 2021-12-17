@@ -107,13 +107,17 @@ module.exports = class QuizActions {
 
     const responses = quiz_responses.map((m) => m.ID);
 
-    if (responses.length > 0) {
-      let params = {
-        CENTRO_ID: centro_id,
-        ANSWERS: responses,
-      };
-      const summary = await this.trabalhocontroller.postQuizSummary(params);
-    }
+    let params = {
+      CENTRO_ID: centro_id,
+      ANSWERS: responses,
+      LASTMODIFIED : new Date()
+    };
+    const summary = await this.trabalhocontroller.postQuizSummary(params);
+  
+    res.render("pages/thanks", {
+      
+    });
+
   }
 
   async pdf(res, action_info) {
@@ -134,6 +138,7 @@ module.exports = class QuizActions {
       centro_id: centro_id,
       results: form_info.templates,
       titles: form_info.titles,
+      canSend: form_info.finalized
     });
   }
 };

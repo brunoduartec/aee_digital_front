@@ -8,7 +8,7 @@
 <body class="body">
   <header class="cabeçalho"><%- include('../partials/header'); %></header>
 
-  <% const indexToNumber = parseInt(index, 10);%>
+   <% const indexToNumber = parseInt(index, 10);%>
 
   <div class="cadastrar-titulo">
     <h2> <%=form_alias  %> </h2>
@@ -74,7 +74,7 @@
                 </a>
               </li>
               <%}%>
-                    <%if(indexToNumber == pages){%>
+                    <%if(indexToNumber == pages && canSend){%>
               <li>
                 <button type="submit" class="btn btn-primary" value="send" name="action">Finalizar</button>
               </li>
@@ -95,6 +95,7 @@
           <%- include('../partials/footer'); %>
       </footer>
       <script>
+
     function updateFormItem(item){
       var itemChanged = document.getElementById(item.id);
       const answerId = item.id
