@@ -37,7 +37,7 @@ module.exports = class trabalhosController {
       logger.info("getAtividadesCentroByParams", atividades);
       return atividades;
     } catch (error) {
-      logger.error("trabalhos.controller.getAtividades: Error=>", error);
+      logger.error("trabalhos.controller.getAtividadesCentroByParams: Error=>", error);
     }
   }
 
@@ -134,6 +134,23 @@ module.exports = class trabalhosController {
     }
   }
 
+  async deleteQuizResponseByParams(params) {
+    try {
+      const quiz_response = await request.delete(
+        "aee_digital_trabalhos",
+        `/atividade_generic_quiz_answer?${params}`
+      );
+
+      logger.info("deleteQuizResponseByParams", quiz_response);
+      return quiz_response;
+    } catch (error) {
+      logger.error(
+        "trabalhos.controller.deleteQuizResponseByParams: Error=>",
+        error
+      );
+    }
+  }
+
   async getPasses() {
     try {
       const atividades = await request.get("aee_digital_trabalhos", `/pass`);
@@ -152,10 +169,10 @@ module.exports = class trabalhosController {
         `/pass?${params}`
       );
 
-      logger.info("getPasssByParams", passes);
+      logger.info("getPassByParams", passes);
       return passes;
     } catch (error) {
-      logger.error("trabalhos.controller.getPasssByParams: Error=>", error);
+      logger.error("trabalhos.controller.getPassByParams: Error=>", error);
     }
   }
 
@@ -182,7 +199,7 @@ module.exports = class trabalhosController {
       return quiz_response;
     } catch (error) {
       logger.error(
-        "trabalhos.controller.getQuizResponseByParams: Error=>",
+        "trabalhos.controller.putQuizResponse: Error=>",
         error
       );
     }
@@ -200,7 +217,7 @@ module.exports = class trabalhosController {
       return quiz_response;
     } catch (error) {
       logger.error(
-        "trabalhos.controller.getQuizResponseByParams: Error=>",
+        "trabalhos.controller.postQuizResponse: Error=>",
         error
       );
     }
@@ -213,10 +230,10 @@ module.exports = class trabalhosController {
         `/atividade_generic_quiz_summary?${params}`
       );
 
-      logger.info("getQuizSummary", quiz_response);
+      logger.info("getQuizSummaryByParams", quiz_response);
       return quiz_response;
     } catch (error) {
-      logger.error("trabalhos.controller.getQuizSummary: Error=>", error);
+      logger.error("trabalhos.controller.getQuizSummaryByParams: Error=>", error);
     }
   }
   async postQuizSummary(params) {

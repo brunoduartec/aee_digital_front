@@ -315,16 +315,14 @@ app.post("/quiz", requireAuth, async function (req, res) {
   });
 });
 
-app.get("/remove_answer", requireAuth, async function(req, res){
+app.delete("/remove_answer", requireAuth, async function(req, res){
   const answer = req.originalUrl;
   let paramsFrom =parser.getQueryParamsParsed(answer);
 
   let paramsParsed = parser.getParamsParsed({
     _id: paramsFrom.answerId,
   });
-  let quizResponse = await trabalhoscontroller.putQuizResponse(paramsParsed, {
-    ANSWER: paramsFrom.answer,
-  });
+  let quizResponse = await trabalhoscontroller.deleteQuizResponseByParams(paramsParsed);
 
   res.json(quizResponse)
 })
@@ -333,7 +331,7 @@ function getDefaultValue(question){
   return question.PRESET_VALUES.length > 0 ? question.PRESET_VALUES[0] : " ";
 }
 
-app.get("/add_answer", requireAuth, async function(req,res){
+app.post("/add_answer", requireAuth, async function(req,res){
   const answer = req.originalUrl;
   let paramsFrom =parser.getQueryParamsParsed(answer);
 
@@ -363,7 +361,7 @@ app.get("/add_answer", requireAuth, async function(req,res){
   res.json(response);
 });
 
-app.get("/update_answer", requireAuth, async function(req,res){
+app.put("/update_answer", requireAuth, async function(req,res){
   const answer = req.originalUrl;
   let paramsFrom =parser.getQueryParamsParsed(answer);
 

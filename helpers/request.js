@@ -64,4 +64,17 @@ module.exports = class Request {
       throw error;
     }
   }
+
+  async delete(instanceName, route) {
+    try {
+      const response = await axios.delete(
+        `${this.instances[instanceName]}${this.base}${route}`
+      );
+      logger.info("request:delete", response.data);
+      return response.data;
+    } catch (error) {
+      logger.error(error);
+      throw error;
+    }
+  }
 };

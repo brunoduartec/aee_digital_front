@@ -97,11 +97,25 @@
       <script>
 
     function updateFormItem(item){
-      var itemChanged = document.getElementById(item.id);
-      const answerId = item.id
 
+      var itemsChanged = document.getElementsByName(item.id);
+      var itemChanged
+
+      for (let index = 0; index < itemsChanged.length; index++) {
+        const element = itemsChanged[index];
+        if(element.value){
+          itemChanged = element
+          break;
+        }
+      }
+
+      const answerId = item.id
+      
+      console.log("---UPDATE---", item, item.id, itemChanged, itemChanged.value)
       var apiUrl = `update_answer?answerId=${answerId}&answer=${itemChanged.value.toString()}`
-          fetch(apiUrl).then(response => {
+          fetch(apiUrl,{
+            method: 'PUT'
+          }).then(response => {
             return response.json();
           }).then(data => {
             const responseInfo = data[0];
@@ -111,35 +125,58 @@
           });
     }
 
-    function callCreateRoute(clone, groupId, quizId, centroId){
+    function callCreateRoute(table, clone, groupId, quizId, centroId){
         var apiUrl = `add_answer?groupId=${groupId}&quizId=${quizId}&centroId=${centroId}`
-        fetch(apiUrl).then(response => {
+        fetch(apiUrl,{
+          method: 'POST'
+        }).then(response => {
           
           return response.json();
         }).then(data => {
           const children = clone.children;
-
+          
+          console.log("---DATAADDED---", data)
           for (let index = 0; index < data.length; index++) {
+
             const item = data[index];
             const child = children[index];
             const childrenOfChildren = child.children;
+            console.log("--ENTROU---")
 
             for (let index = 0; index < childrenOfChildren.length; index++) {
               const childOfChild = childrenOfChildren[index];
+              console.log("--VAI SETAR---", childOfChild, item)
               childOfChild.setAttribute("id", item.ID); 
               childOfChild.setAttribute("name", item.ID);
+              childOfChild.setAttribute("value", item.ANSWER);
             }
           }
+
+          var row = table.insertRow(-1);
+          row.appendChild(clone)
+        }).then(data=>{
+          console.log("----ITEM ADDED", data)
         }).catch(err => {
           console.log("---ERROR---", err)
           // Do something for an error here
         });
       }
 
-    function AddNewDataItems(clone, groupId, quizId, centroId){
-      callCreateRoute(clone, groupId, quizId, centroId)
-    }
-
+    function callDeleteRoute(item, table_id, answerId){
+        var apiUrl = `remove_answer?answerId=${answerId}`
+        fetch(apiUrl,{
+          method:'DELETE'
+        }).then(response => {
+          var p = item.parentNode;
+          p.remove();
+          return response.json();
+        }).then(data => {
+          console.log("--ITEM REMOVED--")
+        }).catch(err => {
+          console.log("---ERROR---", err)
+          // Do something for an error here
+        });
+      }
 
     function Add(groupId, quizId, centroId) {
         var table = document.getElementById(groupId);
@@ -149,19 +186,39 @@
         
         var clone = lastTemplate.cloneNode(true);
         
-        AddNewDataItems(clone, groupId, quizId, centroId)
-        var rowCount = table.rows.length;
-        var row = table.insertRow(-1);
-        row.appendChild(clone)
+        callCreateRoute(table, clone, groupId, quizId, centroId)
     }
 
-    function Delete(r, table_id){
-      console.log(table_id)
-        var i = r.parentNode.parentNode.rowIndex;
-        let tab = document.getElementById(table_id);
-        if(tab.rows.length > 1){
-          tab.deleteRow(i);
-        } 
+    function Delete(item, table_id){
+      console.log(table_id);
+
+      console.log("----ITEM----", item)
+      const itemParent = item.parentNode
+      const itemParentParent = itemParent.parentNode
+      const children = itemParentParent.children
+
+      console.log("----FAMILY---", itemParent, children)
+
+      if(children.length == 1){
+        return;
+      }
+
+      for (let index = 0; index < children.length; index++) {
+        const element = children[index];
+        console.log("----ELEMENT---", element)
+        const elementChildren = element.children;
+
+        console.log("---ELEMENTCHILDREN--", elementChildren, elementChildren.length)
+
+        for (let j = 0; j < elementChildren.length; j++) {
+          const elementChild = elementChildren[j];
+          id = elementChild.getAttribute("id")
+          if(id){
+            callDeleteRoute(element, table_id, id)
+            break;
+          }
+        }
+      }
     }
   
   </script>
