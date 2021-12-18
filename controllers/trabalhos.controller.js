@@ -103,6 +103,20 @@ module.exports = class trabalhosController {
     }
   }
 
+  async getGroupQuestionByParams(params) {
+    try {
+      const quiz = await request.get(
+        "aee_digital_trabalhos",
+        `/atividade_generic_group_question?${params}`
+      );
+
+      logger.info("getGroupQuestionByParams", quiz);
+      return quiz;
+    } catch (error) {
+      logger.error("trabalhos.controller.getGroupQuestionByParams: Error=>", error);
+    }
+  }
+
   async getQuizResponseByParams(params) {
     try {
       const quiz_response = await request.get(

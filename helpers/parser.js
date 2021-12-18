@@ -30,7 +30,7 @@ function getQueryParamsParsed(query){
     paramsParsed[parsed[0]] = decodeURIComponent(parsed[1])
   }
 
-  if(paramsParsed.answerId.includes("_")){
+  if(paramsParsed.answerId && paramsParsed.answerId.includes("_")){
     let ansparsed = paramsParsed.answerId.split("_");
     paramsParsed.answerId = ansparsed[0]
     let option = ansparsed[1]

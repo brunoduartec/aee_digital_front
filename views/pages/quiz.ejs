@@ -111,52 +111,47 @@
           });
     }
 
-    function callCreateRoute(item, questionID, centroId, quizId){
-        var apiUrl = `update_answer?questionId=${questionID}&centroId=${centroId}&quizId=${quizId}`
+    function callCreateRoute(clone, groupId, quizId, centroId){
+        var apiUrl = `add_answer?groupId=${groupId}&quizId=${quizId}&centroId=${centroId}`
         fetch(apiUrl).then(response => {
+          
           return response.json();
         }).then(data => {
-          const responstInfo = data[0];
-          item.setAttribute("id") = responstInfo.ID
-          item.setAttribute("name") = responstInfo.ID
+          const children = clone.children;
+
+          for (let index = 0; index < data.length; index++) {
+            const item = data[index];
+            const child = children[index];
+            const childrenOfChildren = child.children;
+
+            for (let index = 0; index < childrenOfChildren.length; index++) {
+              const childOfChild = childrenOfChildren[index];
+              childOfChild.setAttribute("id", item.ID); 
+              childOfChild.setAttribute("name", item.ID);
+            }
+          }
         }).catch(err => {
           console.log("---ERROR---", err)
           // Do something for an error here
         });
       }
 
-    function AddNewDataItems(ob, centroId, quizId){
-      const children = ob.children[0].children
-      
-      for(j=0; j< children.length; j++)
-      {
-        const leaf = children[j]
-        const child = leaf.children;
-        for(k=0;k<child.length; k++){
-          const item = child[k];
-          if(item.hasAttribute("questionId")){
-            let bb = item.getAttribute("questionId")  
-            
-            callCreateRoute(item, bb, centroId, quizId)
-          }
-        }
-      }
+    function AddNewDataItems(clone, groupId, quizId, centroId){
+      callCreateRoute(clone, groupId, quizId, centroId)
     }
 
 
-    function Add(r, centroId, quizID) {
-        var table = document.getElementById(r);
-        var template = document.getElementsByName(`template_${r}`);
-        
+    function Add(groupId, quizId, centroId) {
+        var table = document.getElementById(groupId);
+        var template = document.getElementsByName(`group_${groupId}`);
         
         let lastTemplate = template[template.length-1];
         
-        console.log("---Z-----", quizID)
-        AddNewDataItems(lastTemplate, centroId, quizID)
-        
         var clone = lastTemplate.cloneNode(true);
+        
+        AddNewDataItems(clone, groupId, quizId, centroId)
         var rowCount = table.rows.length;
-        var row = table.insertRow(rowCount-1);
+        var row = table.insertRow(-1);
         row.appendChild(clone)
     }
 

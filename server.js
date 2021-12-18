@@ -329,6 +329,40 @@ app.get("/remove_answer", requireAuth, async function(req, res){
   res.json(quizResponse)
 })
 
+function getDefaultValue(question){
+  return question.PRESET_VALUES.length > 0 ? question.PRESET_VALUES[0] : " ";
+}
+
+app.get("/add_answer", requireAuth, async function(req,res){
+  const answer = req.originalUrl;
+  let paramsFrom =parser.getQueryParamsParsed(answer);
+
+  const paramsParsed = parser.getParamsParsed({
+    _id: paramsFrom.groupId
+  })
+  const groupQuestion = await trabalhoscontroller.getGroupQuestionByParams(paramsParsed);
+
+  const questions = groupQuestion[0].GROUP;
+ 
+
+  let response = []
+
+  for (let index = 0; index < questions.length; index++) {
+    const question = questions[index]
+    
+    params = {
+      "CENTRO_ID": paramsFrom.centroId,
+      "QUIZ_ID": paramsFrom.quizId,
+      "QUESTION_ID": question._id,
+      "ANSWER": getDefaultValue(question)
+    }
+    quizResponse = await trabalhoscontroller.postQuizResponse(params);
+    response.push(quizResponse[0])
+  }
+
+  res.json(response);
+});
+
 app.get("/update_answer", requireAuth, async function(req,res){
   const answer = req.originalUrl;
   let paramsFrom =parser.getQueryParamsParsed(answer);
@@ -340,18 +374,13 @@ app.get("/update_answer", requireAuth, async function(req,res){
     "ANSWER": paramsFrom.answer
   }
 
-  let quizResponse
+  let paramsParsed = parser.getParamsParsed({
+    _id: paramsFrom.answerId,
+  });
+  const quizResponse = await trabalhoscontroller.putQuizResponse(paramsParsed, {
+    ANSWER: paramsFrom.answer,
+  });
   
-  if(paramsFrom.answerId){
-    let paramsParsed = parser.getParamsParsed({
-      _id: paramsFrom.answerId,
-    });
-    quizResponse = await trabalhoscontroller.putQuizResponse(paramsParsed, {
-      ANSWER: paramsFrom.answer,
-    });
-  }else{
-    quizResponse = await trabalhoscontroller.postQuizResponse(params);
-  }
 
   res.json(quizResponse)
 })

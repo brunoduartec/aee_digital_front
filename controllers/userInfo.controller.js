@@ -52,7 +52,7 @@ module.exports = class UserInfoController {
               return (m.QUIZ == quiz.CATEGORY && m.QUESTION == group.QUESTION)
             });
 
-            let answer=""
+            let answer=" "
             
             if(match){
               answer = this.getInfo(centroInfo, match.FROM);
@@ -62,7 +62,7 @@ module.exports = class UserInfoController {
               CENTRO_ID: centro_id,
               QUIZ_ID: quiz._id,
               QUESTION_ID: group._id,
-              ANSWER: answer || " ",
+              ANSWER: answer,
             };
               await this.trabalhocontroller.postQuizResponse(answewrInfo);
           }
@@ -76,11 +76,11 @@ module.exports = class UserInfoController {
 
   async initializeUserInfo(info) {
     const paramsParsed = this.parser.getParamsParsed({
-      NOME_CENTRO: info.centro,
+      NOME_CENTRO: decodeURIComponent(info.centro),
     });
     const centro = await this.regionalcontroller.getCentroByParam(paramsParsed);
     const centroInfo = await this.centroinfocontroller.getCentroInfo(
-      centro.NOME_CURTO
+      decodeURIComponent(centro.NOME_CURTO)
     );
 
     await this.insertAnswers(centroInfo.centro, centro.ID);

@@ -2,25 +2,6 @@
   <% let pages = results.PAGES; pages.forEach(function(page){%>
   <h3><%=page.PAGE_NAME%></h3>
 
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">Título do modal</h4>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal">Fechar</button>
-        <button type="button" class="btn btn-primary">Salvar mudanças</button>
-      </div>
-    </div>
-  </div>
-</div>
-
   <%page.QUIZES.forEach(quiz => {%>
 
   <div class="form row">
@@ -38,7 +19,21 @@
       group.forEach(question => {
       %>
       <div class="form-group col-md-<%=itemSize%>">
-        <p><b><%= question.QUESTION%>:</b> <%= question.ANSWER%></p>
+        <%if(question.ANSWER == " "){%>
+          <p style="background-color:Tomato;">
+        <%} else{ %>
+        <p>
+          <%}%>
+          <b><%= question.QUESTION%>:</b> 
+          
+          <%if(question.ANSWER == "true"){%>
+            Sim
+          <%}else if(question.ANSWER == "false"){%>
+            Não
+          <%} else { %>
+          <%= question.ANSWER%>
+          <%}%>
+          </p>
       </div>
       <%});%>
       <%});%>
