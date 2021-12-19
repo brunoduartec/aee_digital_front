@@ -11,7 +11,7 @@ function getParamsParsed(params) {
     const value = params[key];
 
     if (value) {
-      paramsParsed = paramsParsed.concat(`&${key}=${value}`);
+      paramsParsed = paramsParsed.concat(`&${key}=${decodeURIComponent(value)}`);
     }
   }
 
