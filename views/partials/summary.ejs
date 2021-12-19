@@ -3,7 +3,6 @@
   <h3><%=page.PAGE_NAME%></h3>
 
   <%page.QUIZES.forEach(quiz => {%>
-
   <div class="form row">
     <span class="border col-md-12">
       <div class="form-group" style="color: #0d6efd">
@@ -11,33 +10,37 @@
       </div>
     </span>
   </div>
-
   <div class="form row">
     <%quiz.QUESTIONS.forEach(questionGroup => {
       const group = questionGroup.GROUP;
       const itemSize = 12/group.length;
+      const answers_length = group[0].ANSWER.length;
+      %>
+      <%for (let index = 0; index < answers_length; index++) {%>
+      <%
       group.forEach(question => {
+        const answer = question.ANSWER[index]
       %>
       <div class="form-group col-md-<%=itemSize%>">
-        <%if(question.ANSWER == " "){%>
+        <%if(!question.ANSWER[0]){%>
           <p style="background-color:Tomato;">
         <%} else{ %>
         <p>
           <%}%>
           <b><%= question.QUESTION%>:</b> 
           
-          <%if(question.ANSWER == "true"){%>
+          <%if(answer == "true"){%>
             Sim
-          <%}else if(question.ANSWER == "false"){%>
+          <%}else if(answer == "false"){%>
             Não
           <%} else { %>
-          <%= question.ANSWER%>
+          <%= answer%>
           <%}%>
           </p>
       </div>
       <%});%>
+      <%}%>
       <%});%>
   </div>
-
   <%});%> <%});%>
 </div>
