@@ -26,8 +26,7 @@ module.exports = class Request {
 
   async get(instanceName, route) {
     try {
-      const response = await axios.get(
-        `${this.instances[instanceName]}${this.base}${route}`
+      const response = await axios.get(decodeURIComponent(`${this.instances[instanceName]}${this.base}${route}`)
       );
       logger.info("request:get", response.data);
       return response.data;
@@ -39,8 +38,7 @@ module.exports = class Request {
 
   async post(instanceName, route, body) {
     try {
-      const response = await axios.post(
-        `${this.instances[instanceName]}${this.base}${route}`,
+      const response = await axios.post(decodeURIComponent(`${this.instances[instanceName]}${this.base}${route}`),
         body
       );
       logger.info("request:post", response.data);
@@ -54,7 +52,7 @@ module.exports = class Request {
   async put(instanceName, route, body) {
     try {
       const response = await axios.put(
-        `${this.instances[instanceName]}${this.base}${route}`,
+        decodeURIComponent(`${this.instances[instanceName]}${this.base}${route}`),
         body
       );
       logger.info("request:put", response.data);
@@ -68,7 +66,7 @@ module.exports = class Request {
   async delete(instanceName, route) {
     try {
       const response = await axios.delete(
-        `${this.instances[instanceName]}${this.base}${route}`
+        decodeURIComponent(`${this.instances[instanceName]}${this.base}${route}`)
       );
       logger.info("request:delete", response.data);
       return response.data;
