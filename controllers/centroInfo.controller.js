@@ -21,7 +21,11 @@ module.exports = class CentroInfoController {
 
       const centro = row.centro;
 
-      this.cache[centro.short] = {
+      if(!this.cache[centro.regional]){
+        this.cache[centro.regional] = {}
+      }
+
+      this.cache[centro.regional][centro.Name] = {
         centro: centro,
       };
     }
@@ -29,8 +33,8 @@ module.exports = class CentroInfoController {
     this.logger.info("End generate centro cache");
   }
 
-  async getCentroInfo(short) {
-    this.logger.info(short);
-    return this.cache[short];
+  async getCentroInfo(regional, nome) {
+    this.logger.info(regional, nome);
+    return this.cache[regional][nome];
   }
 };

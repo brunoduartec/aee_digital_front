@@ -80,7 +80,7 @@ module.exports = class UserInfoController {
     });
     const centro = await this.regionalcontroller.getCentroByParam(paramsParsed);
     const centroInfo = await this.centroinfocontroller.getCentroInfo(
-      decodeURIComponent(centro.NOME_CURTO)
+      decodeURIComponent(centro.REGIONAL.NOME_REGIONAL), decodeURIComponent(centro.NOME_CENTRO)
     );
 
     await this.insertAnswers(centroInfo.centro, centro.ID);
