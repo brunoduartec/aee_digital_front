@@ -292,9 +292,30 @@ app.get("/summary_coord", requireAuth, async function (req, res) {
     regionalInfo.NOME_REGIONAL
   );
 
+  const responses = {}
+
+  for (let index = 0; index < centros.length; index++) {
+    const centro = centros[index];
+
+    response = await trabalhoscontroller.getQuizSummaryByParams(parser.getParamsParsed({
+      CENTRO_ID: centro.ID
+    }))
+
+    if(response.length>0){
+      responses[centro.NOME_CENTRO] = response
+    }
+    
+  }
+
+  const coordenador = await trabalhoscontroller.getPessoaByParams(parser.getParamsParsed({
+    "_id": regionalInfo.COORDENADOR_ID
+  }))
+
   res.render("pages/summary_coord", {
     regionalInfo: regionalInfo,
     centros: centros,
+    responses: responses,
+    coordenador: coordenador[0]
   });
 });
 
@@ -369,7 +390,7 @@ app.put("/update_answer", requireAuth, async function(req,res){
     "CENTRO_ID": paramsFrom.centroId,
     "QUIZ_ID": paramsFrom.quizId,
     "QUESTION_ID": paramsFrom.questionId,
-    "ANSWER": paramsFrom.answer
+    "ANSWER": decodeURIComponent(paramsFrom.answer)
   }
 
   let paramsParsed = parser.getParamsParsed({

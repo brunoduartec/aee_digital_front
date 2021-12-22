@@ -223,6 +223,20 @@ module.exports = class trabalhosController {
     }
   }
 
+  async getPessoaByParams(params) {
+    try {
+      const quiz_response = await request.get(
+        "aee_digital_trabalhos",
+        `/pessoa?${params}`
+      );
+
+      logger.info("getPessoaParams", quiz_response);
+      return quiz_response;
+    } catch (error) {
+      logger.error("trabalhos.controller.getPessoaParams: Error=>", error);
+    }
+  }
+
   async getQuizSummaryByParams(params) {
     try {
       const quiz_response = await request.get(

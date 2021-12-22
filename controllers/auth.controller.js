@@ -88,22 +88,46 @@ module.exports = class authController {
     };
   }
 
+  getPassInfoByScope(user, pass, userInfo){
+
+    let params;
+    if(userInfo.centro_id){
+      params = {
+        user: user,
+        pass: pass,
+        groups: ["presidente"],
+        scope_id: userInfo.centro_id,
+      };
+    }
+    else if( userInfo.regional_id){
+      params = {
+        user: user,
+        pass: pass,
+        groups: ["coord_regional"],
+        scope_id: userInfo.regional_id,
+      };
+    }else if(userInfo.admin){
+      params = {
+        user: user,
+        pass: pass,
+        groups: ["admin"],
+        scope_id: "*",
+      };
+    }
+
+    return params;
+  }
+
   async initUserInfo(loginInfo) {
     let { user, pass } = loginInfo;
     const cache = this.cache[user];
     let userInfo;
 
     if (cache) {
-      userInfo = await this.userinfocontroller.initializeUserInfo(cache);
-
-      let params = {
-        user: user,
-        pass: pass,
-        groups: ["presidente"],
-        scope_id: userInfo.centro_id,
-      };
-
       try {
+        userInfo = await this.userinfocontroller.initializeUserInfo(cache);
+        let params = this.getPassInfoByScope(user, pass, userInfo);
+      
         const passInfo = await this.trabalhocontroller.postPass(params);
         return passInfo[0];
       } catch (error) {

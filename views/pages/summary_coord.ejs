@@ -10,7 +10,7 @@
     </div>
     <div class="validacao-coord-subtitulo">
       <h3>Regional <%= regionalInfo.NOME_REGIONAL%></h3>
-      <p><b> Coordenador:</b></p>
+      <p><b> Coordenador:<%= coordenador.NOME%></b></p>
       <p><b> Quantidade de Casas:<%=centros.length%></b></p>
       <div class="form row">
         <span class="border col-md-12"
@@ -21,6 +21,14 @@
       </div>
       <br />
     </div>
+    <%
+    totalRespostas = Object.keys(responses).length
+    totalCentros = centros.length
+    porcentagemRespostas = 100*totalRespostas/totalCentros
+    porcentagemRespostasFaltantes = 100 - porcentagemRespostas
+
+    
+    %>
     <div class="validacao-coord-dados">
       <div class="form row">
         <span class="border col-md-12"
@@ -73,30 +81,30 @@
       </div>
       <div class="form row">
         <span class="border col-md-2"
-          ><div class="form-group"><p>0</p></div></span
+          ><div class="form-group"><p><%=totalRespostas%></p></div></span
         >
         <span class="border col-md-2"
-          ><div class="form-group"><p>0</p></div></span
+          ><div class="form-group"><p><%=totalCentros - totalRespostas%></p></div></span
         >
         <span class="border col-md-2"
-          ><div class="form-group"><p>0</p></div></span
+          ><div class="form-group"><p>A</p></div></span
         >
         <span class="border col-md-2"
-          ><div class="form-group"><p>0</p></div></span
+          ><div class="form-group"><p>B</p></div></span
         >
         <span class="border col-md-2"
-          ><div class="form-group"><p>0</p></div></span
+          ><div class="form-group"><p>C</p></div></span
         >
         <span class="border col-md-2"
-          ><div class="form-group"><p>0</p></div></span
+          ><div class="form-group"><p>D</p></div></span
         >
       </div>
       <div class="form row">
         <span class="border col-md-2"
-          ><div class="form-group"><p>0%</p></div></span
+          ><div class="form-group"><p><%=Math.round(porcentagemRespostas)%>%</p></div></span
         >
         <span class="border col-md-2"
-          ><div class="form-group"><p>0%</p></div></span
+          ><div class="form-group"><p><%=100 - Math.round(porcentagemRespostas)%>%</p></div></span
         >
         <span class="border col-md-2"
           ><div class="form-group"><p>0%</p></div></span
@@ -121,7 +129,7 @@
         >
       </div>
       <div class="form row">
-        <span class="border col-md-2"
+        <span class="border col-md-4"
           ><div class="form-group">
             <p><b>Nome da Casa:</b></p>
           </div></span
@@ -134,11 +142,6 @@
         <span class="border col-md-1"
           ><div class="form-group">
             <p><b>Tipo </b></p>
-          </div></span
-        >
-        <span class="border col-md-2"
-          ><div class="form-group">
-            <p><b>Status </b></p>
           </div></span
         >
         <span class="border col-md-2"
@@ -159,8 +162,12 @@
       </div>
 
       <% centros.forEach(function(centro) { %>
-      <div class="form row">
-        <span class="border col-md-2"
+        <%if(responses[centro.NOME_CENTRO]){%>
+          <div class="form row " style="background-color:rgb(71, 255, 126);">
+            <%}else{%>
+              <div class="form row " style="background-color:Tomato;">
+          <%}%>
+        <span class="border col-md-4"
           ><div class="form-group"><p><%=centro.NOME_CENTRO%></p></div></span
         >
         <span class="border col-md-1"
@@ -169,9 +176,7 @@
         <span class="border col-md-1"
           ><div class="form-group"><p>Antiga/ Nova</p></div></span
         >
-        <span class="border col-md-2"
-          ><div class="form-group"><p>Pendente/ Atualizada</p></div></span
-        >
+        
         <span class="border col-md-2"
           ><div class="form-group">
             <select
@@ -189,7 +194,13 @@
           ><div class="form-group"><p>xx</p></div></span
         >
         <span class="border col-md-2"
-          ><div class="form-group"><p>xx</p></div></span
+          ><div class="form-group"><p>
+            <%if(responses[centro.NOME_CENTRO]){%>
+                <%=new Date(responses[centro.NOME_CENTRO][0].LASTMODIFIED).toLocaleString()%>
+              <%}else{%>
+                Não Finalizado
+              <%}%>
+          </p></div></span
         >
       </div>
 

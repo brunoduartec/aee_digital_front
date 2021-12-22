@@ -98,8 +98,18 @@
 
     function updateFormItem(item){
 
-      var itemsChanged = document.getElementsByName(item.id);
+      console.log("----CHEGOU", item, item.id)
+
+      const subId = item.id.split("_")
+
+      id = subId[0]
+
+      console.log("-=-=--=", id)
+
+      var itemsChanged = document.getElementsByName(id);
       var itemChanged
+
+console.log("--CHANGED", itemsChanged)
 
       for (let index = 0; index < itemsChanged.length; index++) {
         const element = itemsChanged[index];

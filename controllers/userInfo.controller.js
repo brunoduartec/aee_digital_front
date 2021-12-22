@@ -75,19 +75,26 @@ module.exports = class UserInfoController {
   }
 
   async initializeUserInfo(info) {
-    const paramsParsed = this.parser.getParamsParsed({
-      NOME_CENTRO: decodeURIComponent(info.centro),
-    });
-    const centro = await this.regionalcontroller.getCentroByParam(paramsParsed);
-    const centroInfo = await this.centroinfocontroller.getCentroInfo(
-      decodeURIComponent(centro.REGIONAL.NOME_REGIONAL), decodeURIComponent(centro.NOME_CENTRO)
-    );
 
-    await this.insertAnswers(centroInfo.centro, centro.ID);
-
-    info.centro_id = centro.ID;
-
-    info.initialized = true;
+    if(info.centro == "*"){
+      const paramsParsed = this.parser.getParamsParsed({
+        NOME_REGIONAL: decodeURIComponent(info.regional),
+      });
+      const regional = await this.regionalcontroller.getRegionalByParams(paramsParsed);
+      info.regional_id= regional.ID;
+    }else{
+      const paramsParsed = this.parser.getParamsParsed({
+        NOME_CENTRO: decodeURIComponent(info.centro),
+      });
+      const centro = await this.regionalcontroller.getCentroByParam(paramsParsed);
+      const centroInfo = await this.centroinfocontroller.getCentroInfo(
+        decodeURIComponent(centro.REGIONAL.NOME_REGIONAL), decodeURIComponent(centro.NOME_CENTRO)
+      );
+  
+      await this.insertAnswers(centroInfo.centro, centro.ID);
+  
+      info.centro_id = centro.ID;
+    }
 
     return info;
   }
