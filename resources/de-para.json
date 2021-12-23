@@ -110,109 +110,109 @@
     "QUESTION": "Você autoriza a divulgação de informações como nome, telefone e email?"
   },
   {
-    "FROM": "",
-    "QUIZ": "",
-    "QUESTION": "Qual a média de assistidos por semana?"
-  },
-  {
-    "FROM": "",
+    "FROM": "AE.assistidos",
     "QUIZ": "Assistência Espiritual",
-    "QUESTION": "Qual a média de voluntários por semana?"
+    "QUESTION": "Média de assistidos por semana"
   },
   {
-    "FROM": "",
+    "FROM": "AE.voluntarios",
     "QUIZ": "Assistência Espiritual",
-    "QUESTION": "Qual a quantidade de preleitores na casa?"
+    "QUESTION": "Média de voluntários por semana"
   },
   {
-    "FROM": "",
+    "FROM": "AE.preletores",
     "QUIZ": "Assistência Espiritual",
-    "QUESTION": "Qual a quantidade de entrevistadores?"
+    "QUESTION": "Quantidade de Preleitores"
+  },
+  {
+    "FROM": "AE.entrevistadores",
+    "QUIZ": "Assistência Espiritual",
+    "QUESTION": "Quantidade de entrevistadores"
+  },
+  {
+    "FROM": "CB.alunos",
+    "QUIZ": "Curso Básico do Espiritismo",
+    "QUESTION": "Total de Alunos"
   },
   {
     "FROM": "",
     "QUIZ": "Curso Básico do Espiritismo",
-    "QUESTION": "Qual a quantidade total de alunos?"
+    "QUESTION": "Total de Expositores"
   },
   {
     "FROM": "",
     "QUIZ": "Curso Básico do Espiritismo",
-    "QUESTION": "Qual a quantidade total de expositores?"
+    "QUESTION": "Dirigentes Disponíveis"
   },
   {
     "FROM": "",
     "QUIZ": "Curso Básico do Espiritismo",
-    "QUESTION": "Qual a quantidade total de dirigentes disponíveis?"
+    "QUESTION": "Dirigentes Ativos"
   },
   {
-    "FROM": "",
-    "QUIZ": "Curso Básico do Espiritismo",
-    "QUESTION": "Qual a quantidade total de dirigentes ativos?"
-  },
-  {
-    "FROM": "",
+    "FROM": "EAE.alunos",
     "QUIZ": "Escola de Aprendizes do Evangelho",
-    "QUESTION": "Qual a quantidade total de alunos?"
+    "QUESTION": "Total de Alunos"
   },
   {
-    "FROM": "",
+    "FROM": "EAE.expositores",
     "QUIZ": "Escola de Aprendizes do Evangelho",
-    "QUESTION": "Qual a quantidade total de expositores?"
+    "QUESTION": "Total de Expositores"
   },
   {
-    "FROM": "",
+    "FROM": "EAE.dirigentes_aptos",
     "QUIZ": "Escola de Aprendizes do Evangelho",
-    "QUESTION": "Qual a quantidade total de dirigentes disponíveis?"
+    "QUESTION": "Dirigentes Disponíveis"
   },
   {
-    "FROM": "",
+    "FROM": "EAE.dirigentes",
     "QUIZ": "Escola de Aprendizes do Evangelho",
-    "QUESTION": "Qual a quantidade total de dirigentes ativos?"
+    "QUESTION": "Dirigentes Ativos"
   },
   {
-    "FROM": "",
+    "FROM": "CM.alunos",
     "QUIZ": "Curso de Médiuns",
-    "QUESTION": "Qual a quantidade total de alunos?"
+    "QUESTION": "Total de Alunos"
   },
   {
-    "FROM": "",
+    "FROM": "CM.expositores",
     "QUIZ": "Curso de Médiuns",
-    "QUESTION": "Qual a quantidade total de expositores?"
+    "QUESTION": "Total de Expositores"
   },
   {
-    "FROM": "",
+    "FROM": "CM.dirigentes_aptos",
     "QUIZ": "Curso de Médiuns",
-    "QUESTION": "Qual a quantidade total de dirigentes disponíveis?"
+    "QUESTION": "Dirigentes Disponíveis"
   },
   {
-    "FROM": "",
+    "FROM": "CM.dirigentes",
     "QUIZ": "Curso de Médiuns",
-    "QUESTION": "Qual a quantidade total de dirigentes ativos?"
+    "QUESTION": "Dirigentes Ativos"
+  },
+  {
+    "FROM": "EI.criancas",
+    "QUIZ": "Evangelização Infantil",
+    "QUESTION": "Total de Crianças"
+  },
+  {
+    "FROM": "EI.responsaveis",
+    "QUIZ": "Evangelização Infantil",
+    "QUESTION": "Total de Pais ou Responsáveis"
+  },
+  {
+    "FROM": "EI.evangelizadores",
+    "QUIZ": "Evangelização Infantil",
+    "QUESTION": "Evangelizadores Disponíveis"
   },
   {
     "FROM": "",
     "QUIZ": "Evangelização Infantil",
-    "QUESTION": "Qual a quantidade total de crianças?"
+    "QUESTION": "Evangelizadores Ativos"
   },
   {
-    "FROM": "",
+    "FROM": "EI.evangelizadores_advindos_mocidade",
     "QUIZ": "Evangelização Infantil",
-    "QUESTION": "Qual a quantidade total de pais ou responsáveis?"
-  },
-  {
-    "FROM": "",
-    "QUIZ": "Evangelização Infantil",
-    "QUESTION": "Qual a quantidade total de evangelizadores disponíveis?"
-  },
-  {
-    "FROM": "",
-    "QUIZ": "Evangelização Infantil",
-    "QUESTION": "Qual a quantidade total de evangelizadores ativos?"
-  },
-  {
-    "FROM": "",
-    "QUIZ": "Evangelização Infantil",
-    "QUESTION": "Qual a quantidade total de evangelizadores que veio da Mocidade?"
+    "QUESTION": "Evangelizadores que vieram da Mocidade"
   },
   {
     "FROM": "",
@@ -230,40 +230,65 @@
     "QUESTION": "Os evangelizadores utilizam o material de apoio da Evangelização Infantil da AEE?"
   },
   {
-    "FROM": "",
-    "QUIZ": "",
-    "QUESTION": "Qual a quantidade total de alunos?"
+    "FROM": "PRE.alunos",
+    "QUIZ": "Pré-Mocidade",
+    "QUESTION": "Total de Alunos"
   },
   {
-    "FROM": "",
+    "FROM": "PRE.alunos",
+    "QUIZ": "Pré-Mocidade",
+    "QUESTION": "Total de Expositores"
+  },
+  {
+    "FROM": "PRE.dirigentes_aptos",
+    "QUIZ": "Pré-Mocidade",
+    "QUESTION": "Dirigentes Disponíveis"
+  },
+  {
+    "FROM": "PRE.dirigentes",
+    "QUIZ": "Pré-Mocidade",
+    "QUESTION": "Dirigentes Ativos"
+  },
+  {
+    "FROM": "PRE.vinculados",
+    "QUIZ": "Pré-Mocidade",
+    "QUESTION": "Na sua casa, a Pré-Mocidade está mais vinculada à Evangelização Infantil ou à Mocidade?"
+  },
+
+
+
+
+  {
+    "FROM": "MOC.alunos",
     "QUIZ": "Mocidade Espírita",
-    "QUESTION": "Qual a quantidade total de expositores?"
+    "QUESTION": "Total de Alunos"
   },
   {
-    "FROM": "",
+    "FROM": "MOC.expositores",
+    "QUIZ": "Mocidade Espírita",
+    "QUESTION": "Total de Alunos"
+  },
+  {
+    "FROM": "MOC.dirigentes_aptos",
     "QUIZ": "Mocidade Espírita",
     "QUESTION": "Qual a quantidade total de dirigentes disponíveis?"
   },
   {
-    "FROM": "",
+    "FROM": "MOC.dirigentes",
     "QUIZ": "Mocidade Espírita",
     "QUESTION": "Qual a quantidade total de dirigentes ativos?"
   },
   {
-    "FROM": "",
+    "FROM": "FDJ.ingressantes_no_ano",
     "QUIZ": "Fraternidade dos Discípulos de Jesus",
-    "QUESTION": "Qual é a quantidade de pessoas que ingressaram na FDJ?"
+    "QUESTION": "Ingressaram no último ano"
   },
   {
-    "FROM": "",
+    "FROM": "FDJ.ingressantes_total",
     "QUIZ": "Fraternidade dos Discípulos de Jesus",
-    "QUESTION": "Qual é a quantidade de pessoas encaminhadas para ingresso na FDJ?"
+    "QUESTION": "Ingressaram desde a fundação do centro"
   },
-  {
-    "FROM": "",
-    "QUIZ": "Fraternidade dos Discípulos de Jesus",
-    "QUESTION": "Qual é a quantidade de pessoas que ingressaram na FDJ desde a fundação?"
-  },
+ 
   {
     "FROM": "",
     "QUIZ": "Falando ao Coração",
@@ -275,15 +300,49 @@
     "QUESTION": "Qual a média de voluntários que já realizou o Curso de Formadores do Falando ao Coração?"
   },
   {
-    "FROM": "",
+    "FROM": "EAED.conhece",
     "QUIZ": "Escola de Aprendizes à Distância",
     "QUESTION": "Você conhece o trabalho de EAED - Escola de Aprendizes do Evangelho à Distância?"
   },
   {
-    "FROM": "",
+    "FROM": "EAED.quer_informacoes",
     "QUIZ": "Escola de Aprendizes à Distância",
-    "QUESTION": "Gostaria de receber informações sobre o trabalho de EAED?"
+    "QUESTION": "Você gostaria de receber informações sobre o trabalho de EAED?"
   },
+  {
+    "FROM": "EAED.alunos",
+    "QUIZ": "Escola de Aprendizes à Distância",
+    "QUESTION": "Total de Alunos"
+  },
+  {
+    "FROM": "EAED.dirigentes",
+    "QUIZ": "Escola de Aprendizes à Distância",
+    "QUESTION": "Dirigentes Ativos"
+  },
+
+  {
+    "FROM": "EAEgD.conhece",
+    "QUIZ": "Escola de Aprendizes à Distância",
+    "QUESTION": "Você conhece o trabalho de EAEgD - Escola de Aprendizes do Evangelho à Distância?"
+  },
+  {
+    "FROM": "EAEgD.quer_informacoes",
+    "QUIZ": "Escola de Aprendizes à Distância",
+    "QUESTION": "Você gostaria de receber informações sobre o trabalho de EAEGd?"
+  },
+  {
+    "FROM": "EAEgD.alunos",
+    "QUIZ": "Escola de Aprendizes à Distância",
+    "QUESTION": "Total de Alunos"
+  },
+  {
+    "FROM": "EAEgD.dirigentes",
+    "QUIZ": "Escola de Aprendizes à Distância",
+    "QUESTION": "Dirigentes Ativos"
+  },
+
+
+  
   {
     "FROM": "",
     "QUIZ": "Escola de Aprendizes à Distância",

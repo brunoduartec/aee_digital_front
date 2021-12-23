@@ -1,5 +1,4 @@
 <div class="radio">
-  <%=question.ANSWER%>
   <input class="form-check-input" type="radio" name="<%= question.ANSWER_ID%>" id="<%=
   question.ANSWER_ID%>_1" <%if(question.ANSWER == "true" ){%> checked value="true"<%}%>
   onfocusout="updateFormItem(this)"/>

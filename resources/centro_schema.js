@@ -373,7 +373,7 @@ function getSchema() {
               },
             },
             "Quantidade de alunos do Curso Básico do Espiritismo": {
-              prop: "Alunos",
+              prop: "alunos",
               type: Number,
             },
           },
@@ -408,7 +408,7 @@ function getSchema() {
               prop: "dirigentes_aptos",
               type: Number,
             },
-            "Quantidade de dirigentes que estarão dirigindo turmas em 2020": {
+            "Quantidade de dirigentes que estarão dirigindo turmas em 2021": {
               prop: "dirigentes",
               type: Number,
             },
@@ -440,7 +440,7 @@ function getSchema() {
                 prop: "dirigentes_aptos",
                 type: Number,
               },
-            "Quantidade de dirigentes que estar dirigindo turmas em 2020": {
+            "Quantidade de dirigentes que estar dirigindo turmas em 2021": {
               prop: "dirigentes",
               type: Number,
             },
@@ -468,28 +468,32 @@ function getSchema() {
                 prop: "responsaveis",
                 type: Number,
               },
-            "Quantidade Total de Evangelizadores	": {
+            "Quantidade Total de Evangelizadores": {
               prop: "evangelizadores",
               type: Number,
             },
-            "Evangelizadores no Maternal	": {
+            "Evangelizadores no Maternal": {
               prop: "evangelizadores_maternal",
               type: Number,
             },
-            "Evangelizadores no Jardim	": {
+            "Evangelizadores no Jardim": {
               prop: "evangelizadores_jardim",
               type: Number,
             },
-            "Evangelizadores no Primário	": {
+            "Evangelizadores no Primário": {
               prop: "evangelizadores_primario",
               type: Number,
             },
-            "Evangelizadores no Intermediário	": {
+            "Evangelizadores no Intermediário": {
               prop: "evangelizadores_intermediario",
               type: Number,
             },
             "Evangelizadores na Escola de Pais": {
               prop: "evangelizadores_escola_de_pais",
+              type: Number,
+            },
+            "Do total de evangelizadores, quantos são advindos da Mocidade?": {
+              prop: "evangelizadores_advindos_mocidade",
               type: Number,
             },
           },
@@ -515,9 +519,13 @@ function getSchema() {
               prop: "dirigentes_aptos",
               type: Number,
             },
-            "Quantidade de dirigentes que estaro dirigindo turmas em 2020": {
+            "Quantidade de dirigentes que estarão dirigindo turmas em 2021 - Pré-Mocidade": {
               prop: "dirigentes",
               type: Number,
+            },
+            "Na sua casa, a Pré-Mocidade está mais vinculada à Evangelização Infantil ou à Mocidade?":{
+              prop: "vinculados",
+              type: String
             },
           },
         },
@@ -546,12 +554,76 @@ function getSchema() {
               prop: "dirigentes_aptos",
               type: Number,
             },
-            "Quantidade de dirigentes que estarão dirigindo turmas em 20203": {
+            "Quantidade de dirigentes que estarão dirigindo turmas em 2021 - Mocidade": {
               prop: "dirigentes",
               type: Number,
             },
           },
         },
+        FDJ: {
+          prop: "FDJ",
+          type: {
+            "Quantidade de pessoas que ingressaram na FDJ em 2020?": {
+              prop: "ingressantes_no_ano",
+              type: Number,
+            },
+            "Total de pessoas que já ingressaram na FDJ desde sua fundação": {
+              prop: "ingressantes_total",
+              type: Number,
+            }
+          },
+        },
+        EAED: {
+          prop: "EAED",
+          type: {
+            "Você conhece o trabalho de EAED - Escola de Aprendizes do Evangelho à Distância?": {
+              prop: "conhece",
+              type: (answer) => {
+                return parseBoolean(answer);
+              },
+            },
+            "Gostaria de receber informações sobre o trabalho de EAED?": {
+              prop: "quer_informacoes",
+              type: (answer) => {
+                return parseBoolean(answer);
+              },
+            },
+            "Quantidade de alunos de EAED": {
+              prop: "alunos",
+              type: Number,
+            },
+            "Quantidade de dirigentes que estarão dirigindo turmas de EAED em 2021":{
+              prop: "dirigentes",
+              type: Number,
+            },
+          },
+        },
+        EAEgD: {
+          prop: "EAEgD",
+          type: {
+            "Você conhece o trabalho de EAEgD - Escola de Aprendizes Grupo à Distância?": {
+              prop: "conhece",
+              type: (answer) => {
+                return parseBoolean(answer);
+              },
+            },
+            "Gostaria de receber informações sobre o trabalho de EAEgD?": {
+              prop: "quer_informacoes",
+              type: (answer) => {
+                return parseBoolean(answer);
+              },
+            },
+            "Quantidade de alunos de EAEgD": {
+              prop: "alunos",
+              type: Number,
+            },
+            "Quantidade de dirigentes que estarão dirigindo turmas de EAEgD em 2021":{
+              prop: "dirigentes",
+              type: Number,
+            },
+          },
+        },
+
       },
     },
   };
