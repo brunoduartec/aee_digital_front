@@ -10,9 +10,19 @@
               const size = group.GROUP.length;
               const itemSize = 12/size;
               
-              const answers_length = group.GROUP[0].ANSWER.length;
+             let answers_length = 1;
+              
+              if(group.GROUP[0].ANSWER){
+                
+                 if(group.IS_MULTIPLE){
+                   answers_length = group.GROUP[0].ANSWER.length;
+                 }
+              }
+              else{
+                group.GROUP[0].ANSWER = [];
+                group.GROUP[0].ANSWER.push(" ");
+              }
               %>
-
               <%for (let index = 0; index < answers_length; index++) {%>
                 <div class="form row" id="group_<%=group._id%>" name="group_<%=group._id%>">
                   <% group.GROUP.forEach(function(question){ 

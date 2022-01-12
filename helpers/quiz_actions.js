@@ -128,17 +128,22 @@ module.exports = class QuizActions {
 
   async open(res, action_info) {
     let { centro_id, form_alias, page } = action_info;
-    const form_info = await this._getFormInfo(centro_id, form_alias, page);
-
-    this.logger.info("get:cadastro_alianca", JSON.stringify(form_info));
-
-    res.render("pages/quiz", {
-      index: page,
-      form_alias: form_alias,
-      centro_id: centro_id,
-      results: form_info.templates,
-      titles: form_info.titles,
-      canSend: form_info.finalized
-    });
+    try {
+      const form_info = await this._getFormInfo(centro_id, form_alias, page);
+  
+      this.logger.info("get:cadastro_alianca", JSON.stringify(form_info));
+  
+      res.render("pages/quiz", {
+        index: page,
+        form_alias: form_alias,
+        centro_id: centro_id,
+        results: form_info.templates,
+        titles: form_info.titles,
+        canSend: form_info.finalized
+      });
+      
+    } catch (error) {
+      this.logger.error(error)
+    }
   }
 };

@@ -189,7 +189,7 @@ module.exports = class SearchController {
                 let answer = quiz_responses.filter(
                   (m) => m.QUESTION_ID == question._id
                 );
-                if (answer) {
+                if (answer.length > 0) {
                   question.ANSWER = JSON.parse(JSON.stringify(answer.map(m=>{return m.ANSWER})));
                   question.ANSWER_ID = JSON.parse(JSON.stringify(answer.map(m=>{return m.ID})))
                 }

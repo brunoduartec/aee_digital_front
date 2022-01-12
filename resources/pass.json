@@ -12,6 +12,12 @@
     "scope_id": "612a622bbc3c160013e01d3d"
   },
   {
+    "user": "COORDALIANCA",
+    "pass": "COORDALIANCA",
+    "groups": ["coord_geral"],
+    "scope_id": "*"
+  },
+  {
     "user": "AME",
     "pass": "AME",
     "groups": ["presidente"],

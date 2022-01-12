@@ -1,6 +1,11 @@
 const Logger = require("../helpers/logger");
 const logger = new Logger();
 
+function getNestedObject (nestedObj, pathArr) {
+  return pathArr.reduce((obj, key) =>
+      (obj && obj[key] !== 'undefined') ? obj[key] : undefined, nestedObj);
+}
+
 function getParamsParsed(params) {
   let paramsParsed = "";
 
@@ -47,5 +52,6 @@ function getQueryParamsParsed(query){
 
 module.exports = {
   getParamsParsed,
-  getQueryParamsParsed
+  getQueryParamsParsed,
+  getNestedObject
 };

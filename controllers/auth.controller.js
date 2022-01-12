@@ -113,6 +113,13 @@ module.exports = class authController {
         groups: ["admin"],
         scope_id: "*",
       };
+    }else if(userInfo.alianca){
+      params = {
+        user: user,
+        pass: pass,
+        groups: ["coord_geral"],
+        scope_id: "*",
+      };
     }
 
     return params;

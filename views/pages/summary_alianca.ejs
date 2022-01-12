@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+  <body class="body">
+    <header class="cabeçalho"><%- include('../partials/header'); %></header>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>Regional</tr>
+      
+      </tr>
+    </thead>
+    <tbody id="regionais">
+
+    </tbody>
+    </table>
+
+    <script>
+      $(document).ready(function(){
+        console.log('Ready disparado');
+        myFunction()
+      });
+      
+      
+      function myFunction() {
+        var div = document.getElementById("regionais");
+        callAddRegionais(div)
+      }
+
+      function addRegional(div,regionalInfo){
+        console.log(regionalInfo.NOME_REGIONAL)
+        
+        var cell = row.insertCell(0);
+
+        var p = document.createElement("p");
+        var a = document.createElement("a");
+        p.appendChild(a);
+        
+        a.className = "btn btn-primary"
+        a.setAttribute("data-bs-toggle","collapse");
+        a.setAttribute("aria-expanded","false");
+        a.setAttribute("aria-controls","collapseExample");
+        a.setAttribute("role","button");
+ 
+
+        a.href=("#collapseExample" + regionalInfo.ID)
+        a.innerText = regionalInfo.NOME_REGIONAL
+        
+        var div = document.createElement("div");
+        div.className = "collapse"
+        div.id=("#collapseExample" + regionalInfo.ID)
+        
+        var divCard = document.createElement("div");
+        divCard.className = "card card-body"
+        
+        div.appendChild(divCard);
+        
+        divCard.innerHTML = JSON.stringify(regionalInfo)
+        
+        
+        cell.appendChild(p)
+        cell.appendChild(div)
+      }
+
+      function callAddRegionais(div){
+        var apiUrl = `bff/regionais`
+        fetch(apiUrl,{
+          method: 'GET'
+        }).then(response => {
+          return response.json();
+        }).then(data => {
+          console.log(data)
+
+          for (const regional of data) {
+                   
+            
+            addRegional(div,  regional);
+            
+          }
+
+        }).catch(err => {
+          console.log("---ERROR---", err)
+          // Do something for an error here
+        });
+      }
+
+      </script>
+
+    <br />
+    <footer><%- include('../partials/footer'); %></footer>
+  </body>
+</html>

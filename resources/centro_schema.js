@@ -12,17 +12,19 @@ function getDayByShort(short) {
   return dayByShort[short];
 }
 
-function parseDate(element) {
+function parseTime(element) {
   try {
     let time = element.split("h");
-    const hours = time[0];
-    const minutes = time[1].trim().length > 0 ? time[1].trim() : "00";
-
-    let date = "";
+    let hours = time[0];
+    let minutes = time[1].trim().length > 0 ? time[1].trim() : "00";
+    let timeOut = "";
 
     if (hours != "-") {
-      date = `${hours}:${minutes}`;
-      return date;
+
+      hours = String(hours).padStart(2, '0');
+      minutes = String(minutes).padStart(2, '0');
+      timeOut = `${hours}:${minutes}`;
+      return timeOut;
     } else {
       return null;
     }
@@ -42,7 +44,7 @@ function dayTimeParser(dh) {
 
     let dayTimeStripped = element.trim().split(" ");
     let day = getDayByShort(dayTimeStripped[0]);
-    let time = parseDate(dayTimeStripped[1]);
+    let time = parseTime(dayTimeStripped[1]);
 
     let dayInfo = {
       day: day,
@@ -64,7 +66,7 @@ function funcionamentoParser(funcionamento) {
 
     for (let index = 0; index < daysStripped.length; index++) {
       const element = daysStripped[index];
-      const date = parseDate(element);
+      const date = parseTime(element);
       if (date) {
         timeFunction.push(date.toString());
       }
@@ -168,7 +170,7 @@ function getSchema() {
               prop: "email",
               type: String,
             },
-            "Telefone do presidente": {
+            "Telefone do Presidente": {
               prop: "telefone",
               type: String,
             },
@@ -251,6 +253,10 @@ function getSchema() {
                 return parseBoolean(answer);
               },
             },
+            "Conte-nos sobre outros trabalhos realizados pela casa espírita:":{
+              prop: "outros_trabalhos",
+              type: String,
+            }
           },
         },
         Funcionamento: {
@@ -362,7 +368,7 @@ function getSchema() {
         "Curso Básico": {
           prop: "CB",
           type: {
-            "DH CB": {
+            "Dias e Horários do CURSO BÁSICO": {
               prop: "dh_cb",
               type: (value) => {
                 const dateTime = dayTimeParser(value);
@@ -378,10 +384,55 @@ function getSchema() {
             },
           },
         },
+        "Falando ao Coração": {
+          prop: "FC",
+          type: {
+            "Dias e Horários - FALANDO AO CORAÇÃO": {
+              prop: "dh_fc",
+              type: (value) => {
+                const dateTime = dayTimeParser(value);
+                if (!dateTime) {
+                  throw new Error("invalid");
+                }
+                return dateTime;
+              },
+            }
+          },
+        },
+        "Projeto André Luiz": {
+          prop: "AL",
+          type: {
+            "Dias e Horários - PROJETO ANDRÉ LUIZ": {
+              prop: "dh_al",
+              type: (value) => {
+                const dateTime = dayTimeParser(value);
+                if (!dateTime) {
+                  throw new Error("invalid");
+                }
+                return dateTime;
+              },
+            }
+          },
+        },
+        "Projeto Paulo de Tarso": {
+          prop: "PT",
+          type: {
+            "Dias e Horários - PROJETO PAULO DE TARSO": {
+              prop: "dh_pt",
+              type: (value) => {
+                const dateTime = dayTimeParser(value);
+                if (!dateTime) {
+                  throw new Error("invalid");
+                }
+                return dateTime;
+              },
+            }
+          },
+        },
         "Escola de Aprendizes do Evangelho": {
           prop: "EAE",
           type: {
-            "DH EAE": {
+            "Dias e Horários da EAE": {
               prop: "dh_eae",
               type: (value) => {
                 const dateTime = dayTimeParser(value);
@@ -411,13 +462,13 @@ function getSchema() {
             "Quantidade de dirigentes que estarão dirigindo turmas em 2021": {
               prop: "dirigentes",
               type: Number,
-            },
+            }
           },
         },
         "Curso de Médiuns": {
           prop: "CM",
           type: {
-            "DH CM": {
+            "Dias e Horários do CURSO DE MÉDIUNS": {
               prop: "dh_cm",
               type: (value) => {
                 const dateTime = dayTimeParser(value);
@@ -449,7 +500,7 @@ function getSchema() {
         "Evangelização Infantil": {
           prop: "EI",
           type: {
-            "DH EI": {
+            "Dias e Horários EVANGELIZAÇÃO INFANTIL": {
               prop: "dh_ei",
               type: (value) => {
                 const dateTime = dayTimeParser(value);
@@ -496,12 +547,22 @@ function getSchema() {
               prop: "evangelizadores_advindos_mocidade",
               type: Number,
             },
+            "Quantos evangelizadores fizeram o Curso de Preparação para Evangelizador Infanto-Juvenil?": {
+              prop: "fizeram_curso",
+              type: Number,
+            },
+            "Os evangelizadores utilizam o material de apoio da Evangelização Infantil da AEE?": {
+              prop: "fizeram_curso",
+              type: (answer) => {
+                return parseBoolean(answer);
+              },
+            }
           },
         },
         "Pré-Mocidade": {
           prop: "PRE",
           type: {
-            "DH PRE": {
+            "Dias e Horários PRÉ-MOCIDADE": {
               prop: "dh_pre",
               type: (value) => {
                 const dateTime = dayTimeParser(value);
@@ -532,7 +593,7 @@ function getSchema() {
         Mocidade: {
           prop: "MOC",
           type: {
-            "DH MOC": {
+            "Dias e Horários MOCIDADE": {
               prop: "dh_moc",
               type: (value) => {
                 const dateTime = dayTimeParser(value);

@@ -1,0 +1,1612 @@
+[
+    {
+        "NAME": "Cadastro de Informações Anual",
+        "PAGES": [
+            {
+                "QUIZES": [
+                    {
+                        "QUESTIONS": [
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": true,
+                                        "PRESET_VALUES": [
+                                            "ABC",
+                                            "ARARAQUARA",
+                                            "CAMPINAS",
+                                            "CENTRO-OESTE",
+                                            "EXTREMO-SUL",
+                                            "LITORAL CENTRO",
+                                            "LITORAL Sul",
+                                            "MINAS GERAIS",
+                                            "NORDESTE",
+                                            "NORDESTE 1",
+                                            "PIRACICABA",
+                                            "RIBEIRÃO PRETO",
+                                            "SOROCABA",
+                                            "SP CENTRO",
+                                            "SP LESTE",
+                                            "SP NORTE",
+                                            "SP OESTE",
+                                            "SP SUL",
+                                            "VALE DO PARAÍBA"
+                                        ],
+                                        "QUESTION": "Regional",
+                                        "ANSWER_TYPE": "Option"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": true,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Nome do centro (Ex: Assistência Maternal Espirita)",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": true,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Apelido do centro (Ex: AME)",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "CNPJ (se houver)",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Telefone (se houver)",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Data de Fundação",
+                                        "ANSWER_TYPE": "Date"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Site na Internet",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Facebook",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Instagram",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": true,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Quantidade total de voluntários da casa",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            }
+                        ],
+                        "CATEGORY": "CENTRO ESPÍRITA"
+                    },
+                    {
+                        "QUESTIONS": [
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Endereço",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": true,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Bairro",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": true,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Cidade",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": true,
+                                        "PRESET_VALUES": [
+                                            "AC",
+                                            "AM",
+                                            "AP",
+                                            "TO",
+                                            "CE",
+                                            "RN",
+                                            "PB",
+                                            "PE",
+                                            "AL",
+                                            "BA",
+                                            "MG",
+                                            "ES",
+                                            "RJ",
+                                            "SP",
+                                            "PR",
+                                            "SC",
+                                            "RS",
+                                            "MS",
+                                            "GO",
+                                            "DF"
+                                        ],
+                                        "QUESTION": "UF",
+                                        "ANSWER_TYPE": "Option"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": true,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "CEP",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": true,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "País",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Possui sede própria?",
+                                        "ANSWER_TYPE": "Boolean"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            }
+                        ],
+                        "CATEGORY": "LOCALIZAÇÃO"
+                    },
+                    {
+                        "QUESTIONS": [
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": true,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Nome do Presidente",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": true,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Telefone do Presidente",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": true,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "E-mail do Presidente",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": true,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Período do Mandato",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": true,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Seu Nome",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": true,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Seu Telefone",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": true,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Seu E-mail",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": true,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Você autoriza a divulgação dos dados da CASA ESPÍRITA no site da AEE? São eles o endereço, telefone, horários de trabalhos e atividades. Nenhum dado pessoal será publicado no site.",
+                                        "ANSWER_TYPE": "Boolean"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            }
+                        ],
+                        "CATEGORY": "DIRETORIA/PRESIDÊNCIA"
+                    }
+                ],
+                "PAGE_NAME": "Centro Espírita"
+            },
+            {
+                "QUIZES": [
+                    {
+                        "QUESTIONS": [
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [
+                                            "SEGUNDA-FEIRA",
+                                            "TERÇA-FEIRA",
+                                            "QUARTA-FEIRA",
+                                            "QUINTA-FEIRA",
+                                            "SEXTA-FEIRA",
+                                            "SÁBADO",
+                                            "DOMINGO"
+                                        ],
+                                        "QUESTION": "Dia da semana",
+                                        "ANSWER_TYPE": "Option"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Horário de Início",
+                                        "ANSWER_TYPE": "Time"
+                                    }
+                                ],
+                                "IS_MULTIPLE": true,
+                                "GROUP_NAME": "Indique os dias em que este trabalho é realizado"
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Média de assistidos por semana",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Média de voluntários por semana",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Quantidade de entrevistadores",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Quantidade de Preletores",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false,
+                                "GROUP_NAME": "Indique a quantidade de pessoas para cada um dos campos abaixo"
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Nome do Responsável pela Assistência Espiritual",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "E-mail do Responsável",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Telefone do Responsável",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            }
+                        ],
+                        "CATEGORY": "Assistência Espiritual"
+                    },
+                    {
+                        "QUESTIONS": [
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [
+                                            "SEGUNDA-FEIRA",
+                                            "TERÇA-FEIRA",
+                                            "QUARTA-FEIRA",
+                                            "QUINTA-FEIRA",
+                                            "SEXTA-FEIRA",
+                                            "SÁBADO",
+                                            "DOMINGO"
+                                        ],
+                                        "QUESTION": "Dia da semana",
+                                        "ANSWER_TYPE": "Option"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Horário de Início",
+                                        "ANSWER_TYPE": "Time"
+                                    }
+                                ],
+                                "IS_MULTIPLE": true,
+                                "GROUP_NAME": "Indique os dias em que este trabalho é realizado"
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Total de Alunos",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Total de Expositores",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Dirigentes Disponíveis",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Dirigentes Ativos",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false,
+                                "GROUP_NAME": "Indique a quantidade de pessoas para cada um dos campos abaixo"
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Nome do Responsável pelo Curso Básico",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "E-mail do Responsável",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Telefone do Responsável",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            }
+                        ],
+                        "CATEGORY": "Curso Básico do Espiritismo"
+                    },
+                    {
+                        "QUESTIONS": [
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [
+                                            "SEGUNDA-FEIRA",
+                                            "TERÇA-FEIRA",
+                                            "QUARTA-FEIRA",
+                                            "QUINTA-FEIRA",
+                                            "SEXTA-FEIRA",
+                                            "SÁBADO",
+                                            "DOMINGO"
+                                        ],
+                                        "QUESTION": "Dia da semana",
+                                        "ANSWER_TYPE": "Option"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Horário de Início",
+                                        "ANSWER_TYPE": "Time"
+                                    }
+                                ],
+                                "IS_MULTIPLE": true,
+                                "GROUP_NAME": "Indique os dias em que este trabalho é realizado"
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Total de Alunos",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Total de Expositores",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Dirigentes Disponíveis",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Dirigentes Ativos",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false,
+                                "GROUP_NAME": "Indique a quantidade de pessoas para cada um dos campos abaixo"
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Nome do Responsável pela Escola de Aprendizes",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "E-mail do Responsável",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Telefone do Responsável",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Número da última turma de EAE aberta na casa espírita (Ex.: 20ª turma)",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            }
+                        ],
+                        "CATEGORY": "Escola de Aprendizes do Evangelho"
+                    },
+                    {
+                        "QUESTIONS": [
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [
+                                            "SEGUNDA-FEIRA",
+                                            "TERÇA-FEIRA",
+                                            "QUARTA-FEIRA",
+                                            "QUINTA-FEIRA",
+                                            "SEXTA-FEIRA",
+                                            "SÁBADO",
+                                            "DOMINGO"
+                                        ],
+                                        "QUESTION": "Dia da semana",
+                                        "ANSWER_TYPE": "Option"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Horário de Início",
+                                        "ANSWER_TYPE": "Time"
+                                    }
+                                ],
+                                "IS_MULTIPLE": true,
+                                "GROUP_NAME": "Indique os dias em que este trabalho é realizado"
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Total de Alunos",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Total de Expositores",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Dirigentes Disponíveis",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Dirigentes Ativos",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false,
+                                "GROUP_NAME": "Indique a quantidade de pessoas para cada um dos campos abaixo"
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Nome do Responsável pelo Curso de Médiuns",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "E-mail do Responsável",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Telefone do Responsável",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            }
+                        ],
+                        "CATEGORY": "Curso de Médiuns"
+                    },
+                    {
+                        "QUESTIONS": [
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [
+                                            "SEGUNDA-FEIRA",
+                                            "TERÇA-FEIRA",
+                                            "QUARTA-FEIRA",
+                                            "QUINTA-FEIRA",
+                                            "SEXTA-FEIRA",
+                                            "SÁBADO",
+                                            "DOMINGO"
+                                        ],
+                                        "QUESTION": "Dia da semana",
+                                        "ANSWER_TYPE": "Option"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Horário de Início",
+                                        "ANSWER_TYPE": "Time"
+                                    }
+                                ],
+                                "IS_MULTIPLE": true,
+                                "GROUP_NAME": "Indique os dias em que este trabalho é realizado"
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Total de Crianças",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Total de Pais ou Responsáveis",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Evangelizadores Disponíveis",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Evangelizadores Ativos",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false,
+                                "GROUP_NAME": "Indique a quantidade de pessoas para cada um dos campos abaixo"
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Evangelizadores que vieram da Mocidade",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Evangelizadores que vieram da EAE",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Os evangelizadores utilizam o material de apoio da Evangelização Infantil da AEE?",
+                                        "ANSWER_TYPE": "Boolean"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Nome do Responsável pela Evangelização Infantil",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "E-mail do Responsável",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Telefone do Responsável",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            }
+                        ],
+                        "CATEGORY": "Evangelização Infantil"
+                    },
+                    {
+                        "QUESTIONS": [
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [
+                                            "SEGUNDA-FEIRA",
+                                            "TERÇA-FEIRA",
+                                            "QUARTA-FEIRA",
+                                            "QUINTA-FEIRA",
+                                            "SEXTA-FEIRA",
+                                            "SÁBADO",
+                                            "DOMINGO"
+                                        ],
+                                        "QUESTION": "Dia da semana",
+                                        "ANSWER_TYPE": "Option"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Horário de Início",
+                                        "ANSWER_TYPE": "Time"
+                                    }
+                                ],
+                                "IS_MULTIPLE": true,
+                                "GROUP_NAME": "Indique os dias em que este trabalho é realizado"
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Total de Alunos",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Total de Expositores",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Dirigentes Disponíveis",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Dirigentes Ativos",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false,
+                                "GROUP_NAME": "Indique a quantidade de pessoas para cada um dos campos abaixo"
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [
+                                            "Evangelização Infantil",
+                                            "Mocidade Espírita"
+                                        ],
+                                        "QUESTION": "Na sua casa, a Pré-Mocidade está mais vinculada à Evangelização Infantil ou à Mocidade?",
+                                        "ANSWER_TYPE": "Option"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Nome do Responsável pela Pré-Mocidade",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "E-mail do Responsável",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Telefone do Responsável",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            }
+                        ],
+                        "CATEGORY": "Pré-Mocidade"
+                    },
+                    {
+                        "QUESTIONS": [
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [
+                                            "SEGUNDA-FEIRA",
+                                            "TERÇA-FEIRA",
+                                            "QUARTA-FEIRA",
+                                            "QUINTA-FEIRA",
+                                            "SEXTA-FEIRA",
+                                            "SÁBADO",
+                                            "DOMINGO"
+                                        ],
+                                        "QUESTION": "Dia da semana",
+                                        "ANSWER_TYPE": "Option"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Horário de Início",
+                                        "ANSWER_TYPE": "Time"
+                                    }
+                                ],
+                                "IS_MULTIPLE": true,
+                                "GROUP_NAME": "Indique os dias em que este trabalho é realizado"
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Total de Alunos",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Total de Expositores",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Dirigentes Disponíveis",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Dirigentes Ativos",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false,
+                                "GROUP_NAME": "Indique a quantidade de pessoas para cada um dos campos abaixo"
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Nome do Responsável pela Mocidade",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "E-mail do Responsável",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Telefone do Responsável",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            }
+                        ],
+                        "CATEGORY": "Mocidade"
+                    }
+                ],
+                "PAGE_NAME": "Trabalhos de Evangelização"
+            },
+            {
+                "QUIZES": [
+                    {
+                        "QUESTIONS": [
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [
+                                            "SEGUNDA-FEIRA",
+                                            "TERÇA-FEIRA",
+                                            "QUARTA-FEIRA",
+                                            "QUINTA-FEIRA",
+                                            "SEXTA-FEIRA",
+                                            "SÁBADO",
+                                            "DOMINGO"
+                                        ],
+                                        "QUESTION": "Dia da semana",
+                                        "ANSWER_TYPE": "Option"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Horário de Início",
+                                        "ANSWER_TYPE": "Time"
+                                    }
+                                ],
+                                "IS_MULTIPLE": true,
+                                "GROUP_NAME": "Indique os dias em que este trabalho é realizado"
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Total de Alunos",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Total de Expositores",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Dirigentes Disponíveis",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Dirigentes Ativos",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false,
+                                "GROUP_NAME": "Indique a quantidade de pessoas para cada um dos campos abaixo"
+                            }
+                        ],
+                        "CATEGORY": "Escola de Aprendizes à Distância"
+                    },
+                    {
+                        "QUESTIONS": [
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [
+                                            "SEGUNDA-FEIRA",
+                                            "TERÇA-FEIRA",
+                                            "QUARTA-FEIRA",
+                                            "QUINTA-FEIRA",
+                                            "SEXTA-FEIRA",
+                                            "SÁBADO",
+                                            "DOMINGO"
+                                        ],
+                                        "QUESTION": "Dia da semana",
+                                        "ANSWER_TYPE": "Option"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Horário de Início",
+                                        "ANSWER_TYPE": "Time"
+                                    }
+                                ],
+                                "IS_MULTIPLE": true,
+                                "GROUP_NAME": "Indique os dias em que este trabalho é realizado"
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Total de Alunos",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Total de Expositores",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Dirigentes Disponíveis",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Dirigentes Ativos",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            }
+                        ],
+                        "CATEGORY": "Escola de Aprendizes à Distância em Grupo"
+                    },
+                    {
+                        "QUESTIONS": [
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Possui livraria",
+                                        "ANSWER_TYPE": "Boolean"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Possui bazar",
+                                        "ANSWER_TYPE": "Boolean"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Possui biblioteca",
+                                        "ANSWER_TYPE": "Boolean"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Possui apoio à Gestante",
+                                        "ANSWER_TYPE": "Boolean"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Possui apoio ao Fumante?",
+                                        "ANSWER_TYPE": "Boolean"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Entrega cestas básicas?",
+                                        "ANSWER_TYPE": "Boolean"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Descreva outros trabbalhos realizados pela casa",
+                                        "ANSWER_TYPE": "TextArea"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            }
+                        ],
+                        "CATEGORY": "Outros Trabalhos"
+                    }
+                ],
+                "PAGE_NAME": "Outros Trabalhos"
+            },
+            {
+                "QUIZES": [
+                    {
+                        "QUESTIONS": [
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Encaminhadas para ingresso no último ano",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Ingressaram no último ano",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Ingressaram desde a fundação do centro",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false,
+                                "GROUP_NAME": "Em relação à FDJ, indique a quantidade de pessoas para cada um dos campos abaixo"
+                            }
+                        ],
+                        "CATEGORY": "Fraternidade dos Discípulos de Jesus"
+                    },
+                    {
+                        "QUESTIONS": [
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [
+                                            "SEGUNDA-FEIRA",
+                                            "TERÇA-FEIRA",
+                                            "QUARTA-FEIRA",
+                                            "QUINTA-FEIRA",
+                                            "SEXTA-FEIRA",
+                                            "SÁBADO",
+                                            "DOMINGO"
+                                        ],
+                                        "QUESTION": "Dia da semana",
+                                        "ANSWER_TYPE": "Option"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Horário de Início",
+                                        "ANSWER_TYPE": "Time"
+                                    }
+                                ],
+                                "IS_MULTIPLE": true,
+                                "GROUP_NAME": "Indique os dias em que este trabalho é realizado"
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Média de pessoas que participam do Falando ao Coração",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            }
+                        ],
+                        "CATEGORY": "Falando ao Coração"
+                    },
+                    {
+                        "QUESTIONS": [
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [
+                                            "SEGUNDA-FEIRA",
+                                            "TERÇA-FEIRA",
+                                            "QUARTA-FEIRA",
+                                            "QUINTA-FEIRA",
+                                            "SEXTA-FEIRA",
+                                            "SÁBADO",
+                                            "DOMINGO"
+                                        ],
+                                        "QUESTION": "Dia da semana",
+                                        "ANSWER_TYPE": "Option"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Horário de Início",
+                                        "ANSWER_TYPE": "Time"
+                                    }
+                                ],
+                                "IS_MULTIPLE": true,
+                                "GROUP_NAME": "Indique os dias em que este trabalho é realizado"
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Média de pessoas que participam do Projeto André Luiz",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            }
+                        ],
+                        "CATEGORY": "Projeto André Luiz"
+                    },
+                    {
+                        "QUESTIONS": [
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [
+                                            "SEGUNDA-FEIRA",
+                                            "TERÇA-FEIRA",
+                                            "QUARTA-FEIRA",
+                                            "QUINTA-FEIRA",
+                                            "SEXTA-FEIRA",
+                                            "SÁBADO",
+                                            "DOMINGO"
+                                        ],
+                                        "QUESTION": "Dia da semana",
+                                        "ANSWER_TYPE": "Option"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Horário de Início",
+                                        "ANSWER_TYPE": "Time"
+                                    }
+                                ],
+                                "IS_MULTIPLE": true,
+                                "GROUP_NAME": "Indique os dias em que este trabalho é realizado"
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Média de pessoas que participam do Paulo de Tarso",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            }
+                        ],
+                        "CATEGORY": "Paulo de Tarso"
+                    }
+                ],
+                "PAGE_NAME": "Plataforma FDJ"
+            },
+            {
+                "QUIZES": [
+                    {
+                        "QUESTIONS": [
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Sua casa participa das reuniões da sua regional?",
+                                        "ANSWER_TYPE": "Boolean"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [
+                                            "Encaminhamos pessoas para os cursos da regional",
+                                            "Organizamos cursos internamente",
+                                            "Ambas as opções acima",
+                                            "Não exigimos cursos para a realização dos trabalhos"
+                                        ],
+                                        "QUESTION": "Sua casa realiza curso de formadores internamente ou encaminha pessoas para os cursos de formação da regional?",
+                                        "ANSWER_TYPE": "Option"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Curso de Dirigentes de EAE",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Curso de Dirigentes de Mediunidade",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Curso de Dirigentes de Mocidade",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false,
+                                "GROUP_NAME": "Indique a quantidade de pessoas que fizeram cada um dos cursos abaixo"
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Curso de Dirigentes de Pré-Mocidade",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Curso de Evangelização Infantil",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Curso do Falando ao Coração",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            }
+                        ],
+                        "CATEGORY": "Regionais"
+                    },
+                    {
+                        "QUESTIONS": [
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Como você avalia a importância do trabalho da Regional para o desenvolvimento do seu centro?",
+                                        "ANSWER_TYPE": "TextArea"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Comente abaixo qualquer ideia, projeto, melhoria, critica, sugestão, que você e sua casa entendam ser importante para o ano de 2021, na Aliança Espírita Evangélica",
+                                        "ANSWER_TYPE": "TextArea"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Deixe aqui seu comentário ou avaliação sobre este cadastro",
+                                        "ANSWER_TYPE": "TextArea"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            }
+                        ],
+                        "CATEGORY": "Comentários Gerais"
+                    },
+                    {
+                        "QUESTIONS": [
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [
+                                            "Péssimo",
+                                            "Ruim",
+                                            "Regular",
+                                            "Bom",
+                                            "Ótimo"
+                                        ],
+                                        "QUESTION": "Como você avalia o cadastro de 2022?",
+                                        "ANSWER_TYPE": "Option"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            }
+                        ],
+                        "CATEGORY": "Avaliação do Cadastro"
+                    }
+                ],
+                "PAGE_NAME": "Regional e AEE"
+            },
+            {
+                "QUIZES": [
+                    {
+                        "QUESTIONS": [
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": false,
+                                        "PRESET_VALUES": [
+                                            "Inscrito",
+                                            "Integrado"
+                                        ],
+                                        "QUESTION": "O Estatuto da AEE define que o grupo integrado é aquele que possui os 5 (cinco) trabalhos de forma regular e contínua na casa: Evangelização Infantil, Mocidade, Escola de Aprendizes do Evangelho, Curso de Médiuns e Assistência Espiritual. Mesmo que sua casa não possua um ou mais dos 5 trabalhos, considerando a participação da casa na regional, engajamento dos trabalhadores ou qualquer outro fator que seja importante para vocês, faça uma auto-avaliação e responda como a casa espírita se considera em relação a AEE?",
+                                        "ANSWER_TYPE": "Option"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            }
+                        ],
+                        "CATEGORY": "Auto Avaliação"
+                    }
+                ],
+                "PAGE_NAME": "Auto Avaliação"
+            }
+        ]
+    }
+]

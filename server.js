@@ -22,11 +22,16 @@ const trabalhoscontroller = new trabalhosController(parser);
 
 const readXlsxFile = require("read-excel-file/node");
 
-
 const CentroInfoController = require("./controllers/centroInfo.controller");
+
+const schema = require("./resources/centro_schema")();
+const fileName = "./resources/Cadastro_2021_v2.xlsx";
+
+const Reader = require("./helpers/reader")
+const reader = new Reader(readXlsxFile, fileName, schema)
 const centroinfocontroller = new CentroInfoController(
   logger,
-  readXlsxFile,
+  reader,
   parser
 );
 centroinfocontroller.generatePassCache();
@@ -100,6 +105,9 @@ const pageByPermission = {
   coord_regional: function (info) {
     return `/summary_coord?ID=${info.link}`;
   },
+  coord_geral: function(info){
+    return `/summary_alianca`;
+  }
 };
 
 app.use((req, res, next) => {
@@ -319,6 +327,34 @@ app.get("/summary_coord", requireAuth, async function (req, res) {
   });
 });
 
+app.get("/summary_alianca", requireAuth, async function (req, res) {
+  // const regionaisInfo = await regionalcontroller.getRegionais();
+  // const answers ={}
+
+  // for (let index = 0; index < regionaisInfo.length; index++) {
+  //   const regional = regionaisInfo[index];
+
+  //   answers[regional.NOME_REGIONAL] = {}
+
+  //   const centros = await regionalcontroller.getCentrosByRegional( regional.NOME_REGIONAL);
+
+  //   for (let j = 0; j < centros.length; j++) {
+  //     const centro = centros[j];
+
+  //     const answer = await trabalhoscontroller.getQuizResponseByParams(parser.getParamsParsed({
+  //       CENTRO_ID: centro.ID
+  //     }))
+  //     answers[regional.NOME_REGIONAL][centro.NOME_CENTRO] = answer;
+  //   }
+    
+  // }
+
+ 
+
+  res.render("pages/summary_alianca", {
+  });
+});
+
 app.post("/quiz", requireAuth, async function (req, res) {
   let responses = req.body;
   const form_alias = responses.form_alias;
@@ -478,6 +514,14 @@ app.post("/pesquisa", requireAuth, async function (req, res) {
   } catch (error) {}
   logger.error("post:pesquisa", centro);
 });
+
+
+//BFF
+
+app.get("/bff/regionais", async function(req, res){
+  const regionaisInfo = await regionalcontroller.getRegionais();
+  res.json(regionaisInfo)
+})
 
 // about page
 app.get("/about", function (req, res) {

@@ -22,7 +22,7 @@
         const answer = question.ANSWER[index]
       %>
       <div class="form-group col-md-<%=itemSize%>">
-        <%if(!answer || answer == " "){%>
+        <%if(question.IS_REQUIRED && (!answer || answer == " ") ){%>
           <p style="background-color:Tomato;">
         <%} else{ %>
         <p>
