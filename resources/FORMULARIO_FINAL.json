@@ -5,6 +5,49 @@
             {
                 "QUIZES": [
                     {
+                        "QUESTIONS":[
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": true,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Seu Nome",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": true,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Seu Telefone",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            },
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": true,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Seu E-mail",
+                                        "ANSWER_TYPE": "String"
+                                    },
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": true,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Você autoriza a divulgação dos dados da CASA ESPÍRITA no site da AEE? São eles o endereço, telefone, horários de trabalhos e atividades. Nenhum dado pessoal será publicado no site.",
+                                        "ANSWER_TYPE": "Boolean"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            }
+                        ],
+                        "CATEGORY":"RESPONSÁVEL PELO CADASTRO"
+                    },
+                    {
                         "QUESTIONS": [
                             {
                                 "GROUP": [
@@ -113,19 +156,8 @@
                                     }
                                 ],
                                 "IS_MULTIPLE": false
-                            },
-                            {
-                                "GROUP": [
-                                    {
-                                        "IS_MULTIPLE": false,
-                                        "IS_REQUIRED": true,
-                                        "PRESET_VALUES": [],
-                                        "QUESTION": "Quantidade total de voluntários da casa",
-                                        "ANSWER_TYPE": "String"
-                                    }
-                                ],
-                                "IS_MULTIPLE": false
                             }
+                           
                         ],
                         "CATEGORY": "CENTRO ESPÍRITA"
                     },
@@ -258,45 +290,8 @@
                                     }
                                 ],
                                 "IS_MULTIPLE": false
-                            },
-                            {
-                                "GROUP": [
-                                    {
-                                        "IS_MULTIPLE": false,
-                                        "IS_REQUIRED": true,
-                                        "PRESET_VALUES": [],
-                                        "QUESTION": "Seu Nome",
-                                        "ANSWER_TYPE": "String"
-                                    },
-                                    {
-                                        "IS_MULTIPLE": false,
-                                        "IS_REQUIRED": true,
-                                        "PRESET_VALUES": [],
-                                        "QUESTION": "Seu Telefone",
-                                        "ANSWER_TYPE": "String"
-                                    }
-                                ],
-                                "IS_MULTIPLE": false
-                            },
-                            {
-                                "GROUP": [
-                                    {
-                                        "IS_MULTIPLE": false,
-                                        "IS_REQUIRED": true,
-                                        "PRESET_VALUES": [],
-                                        "QUESTION": "Seu E-mail",
-                                        "ANSWER_TYPE": "String"
-                                    },
-                                    {
-                                        "IS_MULTIPLE": false,
-                                        "IS_REQUIRED": true,
-                                        "PRESET_VALUES": [],
-                                        "QUESTION": "Você autoriza a divulgação dos dados da CASA ESPÍRITA no site da AEE? São eles o endereço, telefone, horários de trabalhos e atividades. Nenhum dado pessoal será publicado no site.",
-                                        "ANSWER_TYPE": "Boolean"
-                                    }
-                                ],
-                                "IS_MULTIPLE": false
                             }
+                            
                         ],
                         "CATEGORY": "DIRETORIA/PRESIDÊNCIA"
                     }
@@ -305,6 +300,23 @@
             },
             {
                 "QUIZES": [
+                    {
+                        "QUESTIONS":[
+                            {
+                                "GROUP": [
+                                    {
+                                        "IS_MULTIPLE": false,
+                                        "IS_REQUIRED": true,
+                                        "PRESET_VALUES": [],
+                                        "QUESTION": "Quantidade total de voluntários da casa",
+                                        "ANSWER_TYPE": "String"
+                                    }
+                                ],
+                                "IS_MULTIPLE": false
+                            }
+                        ],
+                        "CATEGORY": "Geral"
+                    },
                     {
                         "QUESTIONS": [
                             {
