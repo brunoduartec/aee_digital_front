@@ -1,7 +1,6 @@
 const express = require("express");
 const app = express();
 var session = require("express-session");
-// const cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
 const puppeteer = require("puppeteer");
 
@@ -75,7 +74,6 @@ const quiz_actions = new QuizActions(
 // This will hold the users and authToken related to users
 const authTokens = {};
 const Request = require("./helpers/request");
-const { save } = require("./helpers/quiz_actions");
 const request = new Request();
 request.addInstance("aee_digital_regionais", config.aee_digital_regionais);
 request.addInstance("aee_digital_trabalhos", config.aee_digital_trabalhos);
@@ -125,7 +123,7 @@ const requireAuth = (req, res, next) => {
     next();
   } else {
     req.session.originalUrl = req.originalUrl;
-    res.render("pages/login");
+    res.render("pages/login",{message:{}});
   }
 };
 
@@ -135,7 +133,7 @@ async function TryLogout(req, res) {
   req.session.auth = null;
   req.session = null;
 
-  res.redirect("/login");
+  res.redirect("/login?failedAuth=false");
 }
 
 async function TryAuthenticate(req, res, route) {
@@ -146,7 +144,7 @@ async function TryAuthenticate(req, res, route) {
 
   const auth = await authcontroller.authenticate(loginInfo);
   if (!auth) {
-    res.redirect("/login");
+    res.redirect("/login?failedAuth=true");
   } else {
     const authToken = generateAuthToken();
     authTokens[authToken] = loginInfo.user;
@@ -172,36 +170,6 @@ app.get("/", requireAuth, async function (req, res) {
     link: auth.scope_id,
   };
   res.redirect(pageByPermission[auth.groups[0]](info));
-});
-
-app.get("/pdf", requireAuth, async (req, res) => {
-  const url = req.query.target;
-
-  const browser = await puppeteer.launch({
-    headless: true,
-  });
-
-  const webPage = await browser.newPage();
-
-  await webPage.goto(url, {
-    waitUntil: "networkidle0",
-  });
-
-  const pdf = await webPage.pdf({
-    printBackground: true,
-    format: "Letter",
-    margin: {
-      top: "20px",
-      bottom: "40px",
-      left: "20px",
-      right: "20px",
-    },
-  });
-
-  await browser.close();
-
-  res.contentType("application/pdf");
-  res.send(pdf);
 });
 
 app.get("/centro", requireAuth, async function (req, res) {
@@ -461,7 +429,14 @@ app.post("/update_centro", requireAuth, async function (req, res) {
 });
 
 app.get("/login", async function (req, res) {
-  res.render("pages/login");
+  const failedAuth = req.query.failedAuth;
+  let error
+  if(failedAuth){
+    error = "Usuário ou senha incorretos. Favor tentar novamente"
+  }
+  res.render("pages/login", {message:{
+    error: error
+  }});
 });
 
 app.post("/login", async function (req, res) {
