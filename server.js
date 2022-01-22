@@ -254,6 +254,43 @@ app.get("/cadastro_alianca", requireAuth, async function (req, res) {
   quiz_actions.open(res, { centro_id, form_alias, page });
 });
 
+async function getCentroCoordResponses(centroId, quizInfo){
+  templates = []
+
+  quizInfo = quizInfo[0]
+
+  for (const question of quizInfo.QUESTIONS[0].GROUP) {
+    let response = await trabalhoscontroller.getQuizResponseByParams(parser.getParamsParsed({
+      CENTRO_ID: centroId,
+      QUESTION_ID: question._id
+    }))
+
+    response = response[0]
+  
+    if(!response){
+      let answewrInfo = {
+        CENTRO_ID: centroId,
+        QUIZ_ID: quizInfo.ID,
+        QUESTION_ID: question._id,
+        ANSWER: " ",
+      };
+      response = await trabalhoscontroller.postQuizResponse(answewrInfo);
+      response = response[0];
+      
+    }
+
+    templates.push({
+      ANSWER_ID: response.ID,
+      ANSWER: response.ANSWER,
+      _id: response.QUESTION_ID,
+      PRESET_VALUES: question.PRESET_VALUES
+    });
+    
+  }
+
+  return templates;
+}
+
 app.get("/summary_coord", requireAuth, async function (req, res) {
   const regional_id = req.query.ID;
 
@@ -268,7 +305,12 @@ app.get("/summary_coord", requireAuth, async function (req, res) {
     regionalInfo.NOME_REGIONAL
   );
 
+  let coord_quiz = await trabalhoscontroller.getQuizTemplateByParams(parser.getParamsParsed({
+    CATEGORY: "Coordenador"
+  }))
+
   const responses = {}
+  const coord_responses = {}
 
   for (let index = 0; index < centros.length; index++) {
     const centro = centros[index];
@@ -280,18 +322,24 @@ app.get("/summary_coord", requireAuth, async function (req, res) {
     if(response.length>0){
       responses[centro.NOME_CENTRO] = response
     }
-    
+
+    coord_responses[centro.NOME_CENTRO] = await getCentroCoordResponses(centro.ID,coord_quiz);
   }
 
-  const coordenador = await trabalhoscontroller.getPessoaByParams(parser.getParamsParsed({
+  let coordenador = await trabalhoscontroller.getPessoaByParams(parser.getParamsParsed({
     "_id": regionalInfo.COORDENADOR_ID
   }))
+
+  coordenador = coordenador[0];
+
+  coordenador = coordenador || { NOME:" "}
 
   res.render("pages/summary_coord", {
     regionalInfo: regionalInfo,
     centros: centros,
     responses: responses,
-    coordenador: coordenador[0]
+    coordenador: coordenador,
+    templates: coord_responses
   });
 });
 
@@ -497,6 +545,50 @@ app.get("/bff/regionais", async function(req, res){
   const regionaisInfo = await regionalcontroller.getRegionais();
   res.json(regionaisInfo)
 })
+
+app.get("/bff/situacao", async function(req, res){
+  const nomeRegional = req.query.regionalName;
+
+  const centros = await regionalcontroller.getCentrosByRegional(nomeRegional)
+
+  const centroIDs = centros.map(m=>{
+    return m.ID
+  })
+
+  let question = await trabalhoscontroller.getQuestionByParams(parser.getParamsParsed({
+    QUESTION:"Situação"
+  }))
+
+  question = question[0]
+
+  const situacoes = {
+    Integradas : [],
+    Inscritas : []
+  };
+  for (const id of centroIDs) {
+    let situacao = await trabalhoscontroller.getQuizResponseByParams(parser.getParamsParsed({
+      "CENTRO_ID": id,
+      "QUESTION_ID": question.ID
+    }));
+    situacao = situacao[0]
+    if(situacao){
+      if(situacao.ANSWER == " "){
+        situacao.ANSWER = question.PRESET_VALUES[0]
+      }
+
+
+      if(situacao.ANSWER == question.PRESET_VALUES[0])
+        situacoes.Integradas.push(situacao)
+      else{
+        situacoes.Inscritas.push(situacao)
+        }
+    }    
+  }
+
+  
+
+  res.json(situacoes)
+});
 
 // about page
 app.get("/about", function (req, res) {

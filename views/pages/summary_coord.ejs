@@ -4,6 +4,7 @@
     <%- include('../partials/head'); %>
   </head>
   <body class="body">
+    <%- include('../partials/quiz_validate');%>
     <header class="cabeçalho"><%- include('../partials/header'); %></header>
     <div class="cadastrar-titulo">
       <h2>Validação de Informações</h2>
@@ -87,16 +88,16 @@
           ><div class="form-group"><p><%=totalCentros - totalRespostas%></p></div></span
         >
         <span class="border col-md-2"
-          ><div class="form-group"><p>A</p></div></span
+          ><div class="form-group"><p id="Integradas">0</p></div></span
         >
         <span class="border col-md-2"
-          ><div class="form-group"><p>B</p></div></span
+          ><div class="form-group"><p id="Inscritas">0</p></div></span
         >
         <span class="border col-md-2"
-          ><div class="form-group"><p>C</p></div></span
+          ><div class="form-group"><p id="Pendentes">0</p></div></span
         >
         <span class="border col-md-2"
-          ><div class="form-group"><p>D</p></div></span
+          ><div class="form-group"><p id="Desfiliadas">0</p></div></span
         >
       </div>
       <div class="form row">
@@ -107,10 +108,10 @@
           ><div class="form-group"><p><%=100 - Math.round(porcentagemRespostas)%>%</p></div></span
         >
         <span class="border col-md-2"
-          ><div class="form-group"><p>0%</p></div></span
+          ><div class="form-group"><p id="Integradas_percent">0%</p></div></span
         >
         <span class="border col-md-2"
-          ><div class="form-group"><p>0%</p></div></span
+          ><div class="form-group"><p id="Inscritas_percent">0%</p></div></span
         >
         <span class="border col-md-2"
           ><div class="form-group"><p>0%</p></div></span
@@ -161,7 +162,9 @@
         >
       </div>
 
-      <% centros.forEach(function(centro) { %>
+      <% centros.forEach(function(centro) { 
+        
+        %>
         <%if(responses[centro.NOME_CENTRO]){%>
           <div class="form row " style="background-color:rgb(71, 255, 126);">
             <%}else{%>
@@ -178,20 +181,19 @@
         >
         
         <span class="border col-md-2"
-          ><div class="form-group">
-            <select
-              class="form-select"
-              id="Trabalho Centro Espírita"
-              aria-label="Default select example"
-            >
-              <option selected>Selecione</option>
-              <option value="ABC">Inscrito</option>
-              <option value="Araraquara">Integrado</option>
-            </select>
+          ><div class="form-group" name="prop_0">
+            <%
+            questionInfo = templates[centro.NOME_CENTRO][0]
+            %>
+            <%- include('../partials/sub_quiz_option', {question:questionInfo});%>
           </div>
         </span>
         <span class="border col-md-2"
-          ><div class="form-group"><p>xx</p></div></span
+          ><div class="form-group" name="prop_1"><p>
+            <%
+            questionInfo = templates[centro.NOME_CENTRO][1]
+            %>
+            <%- include('../partials/sub_quiz_input', {question:questionInfo});%></p></div></span
         >
         <span class="border col-md-2"
           ><div class="form-group"><p>
@@ -200,160 +202,64 @@
               <%}else{%>
                 Não Finalizado
               <%}%>
-          </p></div></span
-        >
+          </p></div></span>
       </div>
 
       <%});%>
 
       <br />
-
-      <div class="form row">
-        <span class="border col-md-12">
-          <div class="form-group" style="color: #0d6efd">
-            <p><b>Informações das Casas em 2020 </b></p>
-          </div>
-        </span>
-        <span class="border col-md-12">
-          <div class="form-group">
-            <p><b>Trabalhos Gerais </b></p>
-          </div>
-        </span>
-      </div>
-      <div class="form row">
-        <span class="border col-md-2"
-          ><div class="form-group">
-            <p><b>Situação 2020</b></p>
-          </div></span
-        >
-        <span class="border col-md-2"
-          ><div class="form-group">
-            <p><b>Curso Básico</b></p>
-          </div></span
-        >
-        <span class="border col-md-2"
-          ><div class="form-group">
-            <p><b>Pré-Mocidade</b></p>
-          </div></span
-        >
-        <span class="border col-md-2"
-          ><div class="form-group">
-            <p><b>Curso de Méd.</b></p>
-          </div></span
-        >
-        <span class="border col-md-2"
-          ><div class="form-group">
-            <p><b>Evang. Inf.</b></p>
-          </div></span
-        >
-        <span class="border col-md-1"
-          ><div class="form-group">
-            <p><b>EAE</b></p>
-          </div></span
-        >
-        <span class="border col-md-1"
-          ><div class="form-group">
-            <p><b>Mocidade</b></p>
-          </div></span
-        >
-      </div>
-      <div class="form row">
-        <span class="border col-md-2"
-          ><div class="form-group"><p>xxx</p></div></span
-        >
-        <span class="border col-md-2"
-          ><div class="form-group"><p>xxx</p></div></span
-        >
-        <span class="border col-md-2"
-          ><div class="form-group"><p>xxx</p></div></span
-        >
-        <span class="border col-md-2"
-          ><div class="form-group"><p>xxx</p></div></span
-        >
-        <span class="border col-md-2"
-          ><div class="form-group"><p>xxx</p></div></span
-        >
-        <span class="border col-md-1"
-          ><div class="form-group"><p>xxx</p></div></span
-        >
-        <span class="border col-md-1"
-          ><div class="form-group"><p>xxx</p></div></span
-        >
-      </div>
-      <br />
-      <div class="form row">
-        <span class="border col-md-12"
-          ><div class="form-group">
-            <p><b>Assistência Espiritual</b></p>
-          </div></span
-        >
-      </div>
-      <div class="form row">
-        <span class="border col-md-2"
-          ><div class="form-group">
-            <p><b>Segunda-Feira</b></p>
-          </div></span
-        >
-        <span class="border col-md-2"
-          ><div class="form-group">
-            <p><b>Terça-Feira</b></p>
-          </div></span
-        >
-        <span class="border col-md-2"
-          ><div class="form-group">
-            <p><b>Quarta-Feira</b></p>
-          </div></span
-        >
-        <span class="border col-md-2"
-          ><div class="form-group">
-            <p><b>Quinta-Feira</b></p>
-          </div></span
-        >
-        <span class="border col-md-2"
-          ><div class="form-group">
-            <p><b>Sexta-Feira</b></p>
-          </div></span
-        >
-        <span class="border col-md-1"
-          ><div class="form-group">
-            <p><b>Sábado</b></p>
-          </div></span
-        >
-        <span class="border col-md-1"
-          ><div class="form-group">
-            <p><b>Domingo</b></p>
-          </div></span
-        >
-      </div>
-      <div class="form row">
-        <span class="border col-md-2"
-          ><div class="form-group"><p>xxx</p></div></span
-        >
-        <span class="border col-md-2"
-          ><div class="form-group"><p>xxx</p></div></span
-        >
-        <span class="border col-md-2"
-          ><div class="form-group"><p>xxx</p></div></span
-        >
-        <span class="border col-md-2"
-          ><div class="form-group"><p>xxx</p></div></span
-        >
-        <span class="border col-md-2"
-          ><div class="form-group"><p>xxx</p></div></span
-        >
-        <span class="border col-md-1"
-          ><div class="form-group"><p>xxx</p></div></span
-        >
-        <span class="border col-md-1"
-          ><div class="form-group"><p>xxx</p></div></span
-        >
-      </div>
-    </div>
-
-    <div class="cadastrar-botoes">
-      <button type="button" class="btn btn-success btn">Atualizar</button>
-    </div>
+  
     <br />
+
+      <script>
+
+        function setSummaryInfo(data){
+          let integradas = document.getElementById("Integradas");
+            
+            let integradasAmount = data.Integradas.length
+            let inscritasAmount = data.Inscritas.length
+
+            integradas.innerText = Math.round(integradasAmount)
+            let inscritas =  document.getElementById("Inscritas");
+            inscritas.innerText = Math.round(inscritasAmount)
+            
+            
+            let  percent = 100* integradasAmount / (integradasAmount + inscritasAmount)
+            let Integradas_percent = document.getElementById("Integradas_percent");
+            Integradas_percent.innerText = Math.round(percent).toString().concat("%")
+            let inscritas_percent =  document.getElementById("Inscritas_percent");
+            inscritas_percent.innerText = Math.round(100 - percent).toString().concat("%")
+        }
+
+        function checkSituacao(nomeRegional){
+
+          const prop_0 = document.getElementsByName("prop_0")
+          const prop_1 = document.getElementsByName("prop_1")
+
+          console.log(prop_0.length)
+          console.log(prop_0[0].children[0])
+          console.log(prop_0[0].children[0].value)
+
+          let data = {
+            Integradas:[{}],
+            Inscritas:[{}]
+          }
+
+          
+          for (const iterator of prop_0) {
+            const value = iterator.children[0].value
+            data[`${value}s`].push(iterator.children[0])
+          }
+          
+          setSummaryInfo(data)
+        }
+
+        var intervalId = window.setInterval(function(){
+          /// call your function here
+          checkSituacao("<%=regionalInfo.NOME_REGIONAL %>")
+        }, 5000);
+        </script>
+
     <footer><%- include('../partials/footer'); %></footer>
   </body>
 </html>
