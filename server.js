@@ -561,10 +561,23 @@ app.get("/bff/situacao", async function(req, res){
   question = question[0]
 
   const situacoes = {
+    centros: centros,
+    summary: [],
     Integradas : [],
     Inscritas : []
   };
   for (const id of centroIDs) {
+
+    summary = await trabalhoscontroller.getQuizSummaryByParams(parser.getParamsParsed({
+      CENTRO_ID: id
+    }))
+    summary = summary[0]
+
+    if(summary){
+      situacoes.summary.push(summary);
+    }
+
+
     let situacao = await trabalhoscontroller.getQuizResponseByParams(parser.getParamsParsed({
       "CENTRO_ID": id,
       "QUESTION_ID": question.ID

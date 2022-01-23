@@ -6,16 +6,12 @@
   <body class="body">
     <header class="cabeçalho"><%- include('../partials/header'); %></header>
 
-    <table class="table table-striped">
-      <thead>
-        <tr>Regional</tr>
-      
-      </tr>
-    </thead>
-    <tbody id="regionais">
 
-    </tbody>
-    </table>
+    <div  class="container-fluid">
+      <div id="regionais" class="row">
+
+      </div>
+    </div>
 
     <script>
       $(document).ready(function(){
@@ -26,45 +22,87 @@
       
       function myFunction() {
         var div = document.getElementById("regionais");
-        callAddRegionais(div)
+        callGetRegionais(div)
+      }
+
+      function addCard(regionalInfo){
+
+        let divCard = document.createElement("div");
+        divCard.setAttribute("class", "card")
+        divCard.setAttribute("style", "width: 18rem;")
+        
+        let divBody = document.createElement("div")
+        divBody.setAttribute("class", "card-body");
+
+        divCard.appendChild(divBody);
+
+        let h5 = document.createElement("h5");
+        h5.innerText = regionalInfo.NOME_REGIONAL
+
+        divBody.appendChild(h5)
+
+        let p = document.createElement("p");
+        p.setAttribute("class", "card-text")
+        p.innerText = "Recuperando Info"
+        divBody.appendChild(p);
+
+        let a = document.createElement("a");
+        a.setAttribute("class", "btn btn-primary")
+        a.setAttribute("href", `/summary_coord?ID=${regionalInfo.ID}`)
+        a.innerText = "Ver detalhes"
+        divBody.appendChild(a);
+
+        return divCard
       }
 
       function addRegional(div,regionalInfo){
         console.log(regionalInfo.NOME_REGIONAL)
-        
-        var cell = row.insertCell(0);
 
-        var p = document.createElement("p");
-        var a = document.createElement("a");
-        p.appendChild(a);
-        
-        a.className = "btn btn-primary"
-        a.setAttribute("data-bs-toggle","collapse");
-        a.setAttribute("aria-expanded","false");
-        a.setAttribute("aria-controls","collapseExample");
-        a.setAttribute("role","button");
- 
+       
+        let divCol = document.createElement("div");
+        divCol.setAttribute("class", "col-sm")
 
-        a.href=("#collapseExample" + regionalInfo.ID)
-        a.innerText = regionalInfo.NOME_REGIONAL
-        
-        var div = document.createElement("div");
-        div.className = "collapse"
-        div.id=("#collapseExample" + regionalInfo.ID)
-        
-        var divCard = document.createElement("div");
-        divCard.className = "card card-body"
-        
-        div.appendChild(divCard);
-        
-        divCard.innerHTML = JSON.stringify(regionalInfo)
-        
-        
-        cell.appendChild(p)
-        cell.appendChild(div)
+        let regionalDiv = addCard(regionalInfo)
+        divCol.appendChild(regionalDiv)
+
+
+        div.appendChild(divCol);
+
+        return regionalDiv;
+     
       }
 
-      function callAddRegionais(div){
+      function setRegionalInfo(div,data){
+        let children = div.children[0].children[1]
+        console.log("a")
+        console.log(data)
+
+        let total = data.centros.length
+
+        let respondido = data.summary.length;
+
+
+        children.innerText = `${respondido}/${total}`
+      }
+
+      function callGetSituacao(div, regionalName){
+        var apiUrl = `bff/situacao?regionalName=${regionalName}`
+        fetch(apiUrl,{
+          method: 'GET'
+        }).then(response => {
+          return response.json();
+        }).then(data => {
+          console.log(data)
+
+           setRegionalInfo(div,data)
+            
+        }).catch(err => {
+          console.log("---ERROR---", err)
+          // Do something for an error here
+        });
+      }
+
+      function callGetRegionais(div){
         var apiUrl = `bff/regionais`
         fetch(apiUrl,{
           method: 'GET'
@@ -74,10 +112,8 @@
           console.log(data)
 
           for (const regional of data) {
-                   
-            
-            addRegional(div,  regional);
-            
+            let regionalDiv = addRegional(div,  regional);
+            callGetSituacao(regionalDiv, regional.NOME_REGIONAL)
           }
 
         }).catch(err => {
