@@ -1,3 +1,6 @@
+const env = process.env.NODE_ENV ? process.env.NODE_ENV : "local";
+const config = require("../env.json")[env];
+
 module.exports = class authController {
   constructor(
     logger,
@@ -15,7 +18,7 @@ module.exports = class authController {
     this.xlsReader = reader;
     this.groups = require("../resources/groups.json");
     this.permissions = require("../resources/permissions.json");
-    this.fileName = "./resources/Senhas.xlsx";
+    this.fileName = `./resources/${config.users.pass}.xlsx`;
     this.parser = parser;
 
     this.cache = {};

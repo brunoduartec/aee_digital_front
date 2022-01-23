@@ -2,7 +2,6 @@ const express = require("express");
 const app = express();
 var session = require("express-session");
 var bodyParser = require("body-parser");
-const puppeteer = require("puppeteer");
 
 const Logger = require("./helpers/logger");
 const logger = new Logger();
@@ -24,7 +23,7 @@ const readXlsxFile = require("read-excel-file/node");
 const CentroInfoController = require("./controllers/centroInfo.controller");
 
 const schema = require("./resources/centro_schema")();
-const fileName = "./resources/Cadastro_2021_v2.xlsx";
+const fileName = `./resources/${config.centros.base}.xlsx`;
 
 const Reader = require("./helpers/reader")
 const reader = new Reader(readXlsxFile, fileName, schema)
@@ -133,7 +132,7 @@ async function TryLogout(req, res) {
   req.session.auth = null;
   req.session = null;
 
-  res.redirect("/login?failedAuth=false");
+  res.redirect("/login");
 }
 
 async function TryAuthenticate(req, res, route) {
