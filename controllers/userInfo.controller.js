@@ -131,7 +131,11 @@ module.exports = class UserInfoController {
           decodeURIComponent(centro.REGIONAL.NOME_REGIONAL), decodeURIComponent(centro.NOME_CENTRO)
         );
     
-        await this.insertAnswers(centroInfo.centro, centro.ID);
+        if(centroInfo && centroInfo.centro){
+          await this.insertAnswers(centroInfo.centro, centro.ID);
+        }else{
+          await this.insertAnswers({}, centro.ID);
+        }
     
         info.centro_id = centro.ID;
       }
