@@ -6,7 +6,7 @@
   <body class="body">
     <header class="cabeçalho"><%- include('../partials/header'); %></header>
 
-    <!-- <canvas id="myChart" style="width:100%;max-width:600px"></canvas> -->
+    <canvas id="myChart" style="width:100%;max-width:600px"></canvas>
     
     <div  class="container-fluid">
       <div id="regionais" class="row">
@@ -20,8 +20,8 @@
         myFunction()
       });
 
-      var xValues = ["Iniciaram", "Terminaram"];
-      var yValues = [55, 49];
+      var xValues = ["Total","Iniciaram", "Terminaram"];
+      var yValues = [100,55, 0,0];
       var barColors = ["yellow", "green"];
       
       var myChart = new Chart("myChart", {
@@ -112,13 +112,14 @@
           chart.update();
       }
 
-      function setGeneralInfo(started, finished){
+      function setGeneralInfo(total, started, finished){
 
         console.log(myChart)
 
         console.log(myChart.data)
-        myChart.data.datasets[0].data[0] = started
-        myChart.data.datasets[0].data[1] = finished
+        myChart.data.datasets[0].data[0] = total
+        myChart.data.datasets[0].data[1] = started
+        myChart.data.datasets[0].data[2] = finished
 
         myChart.update()
 
@@ -172,7 +173,7 @@
 
           }
 
-          setGeneralInfo(passes.length, responses.length)
+          setGeneralInfo(centros.length,passes.length, responses.length)
 
             
         }).catch(err => {
