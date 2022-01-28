@@ -6,7 +6,8 @@
   <body class="body">
     <header class="cabeçalho"><%- include('../partials/header'); %></header>
 
-
+    <!-- <canvas id="myChart" style="width:100%;max-width:600px"></canvas> -->
+    
     <div  class="container-fluid">
       <div id="regionais" class="row">
 
@@ -18,11 +19,34 @@
         console.log('Ready disparado');
         myFunction()
       });
+
+      var xValues = ["Iniciaram", "Terminaram"];
+      var yValues = [55, 49];
+      var barColors = ["yellow", "green"];
+      
+      var myChart = new Chart("myChart", {
+        type: "bar",
+        data: {
+          labels: xValues,
+          datasets: [{
+            backgroundColor: barColors,
+            data: yValues
+          }]
+        },
+        options: {
+          legend: {display: false},
+          title: {
+            display: true,
+            text: "Cadastros"
+          }
+        }
+      });
       
       
       function myFunction() {
         var div = document.getElementById("regionais");
-        callGetRegionais(div)
+        // callGetRegionais(div)
+        callGetGeneralInfo(div)
       }
 
       function addCard(regionalInfo){
@@ -56,8 +80,6 @@
       }
 
       function addRegional(div,regionalInfo){
-        console.log(regionalInfo.NOME_REGIONAL)
-
        
         let divCol = document.createElement("div");
         divCol.setAttribute("class", "col-sm")
@@ -74,48 +96,85 @@
 
       function setRegionalInfo(div,data){
         let children = div.children[0].children[1]
-        console.log("a")
-        console.log(data)
 
         let total = data.centros.length
-
         let respondido = data.summary.length;
-
-
         children.innerText = `${respondido}/${total}`
       }
 
-      function callGetSituacao(div, regionalName){
-        var apiUrl = `bff/situacao?regionalName=${regionalName}`
-        fetch(apiUrl,{
-          method: 'GET'
-        }).then(response => {
-          return response.json();
-        }).then(data => {
-          console.log(data)
-
-           setRegionalInfo(div,data)
-            
-        }).catch(err => {
-          console.log("---ERROR---", err)
-          // Do something for an error here
-        });
+      function addData(chart, label, data) {
+          chart.data.labels.push(label);
+          chart.data.datasets[0].data.push(data)
+          
+          // chart.data.datasets.forEach((dataset) => {
+          //     dataset.data.push(data);
+          // });
+          chart.update();
       }
 
-      function callGetRegionais(div){
-        var apiUrl = `bff/regionais`
+      function setGeneralInfo(started, finished){
+
+        console.log(myChart)
+
+        console.log(myChart.data)
+        myChart.data.datasets[0].data[0] = started
+        myChart.data.datasets[0].data[1] = finished
+
+        myChart.update()
+
+        console.log(myChart)
+        // addData(myChart, "Iniciaram", started)
+        // addData(myChart, "Finalizaram", finished)
+
+       
+      }
+
+      function callGetGeneralInfo(div){
+        var apiUrl = `bff/generalinfo`
         fetch(apiUrl,{
           method: 'GET'
         }).then(response => {
           return response.json();
         }).then(data => {
-          console.log(data)
 
-          for (const regional of data) {
+           const responses = data.responses
+           const regionais = data.regionais
+           const passes = data.passes
+           const centros = data.centros
+
+
+
+          for (const regional of regionais) {
+            const regionalID = regional.ID
+            const centrosOfRegional = centros.filter(m=>{
+              return m.REGIONAL.NOME_REGIONAL.includes(regional.NOME_REGIONAL)
+            })
+            
+            const centrosOfRegionalIDs = centrosOfRegional.map(n=>{
+              return n.ID 
+            })
+
+            const regionalResponses = []
+            for (const id of centrosOfRegionalIDs) {
+              const response = responses.find(m=>{
+                return m.CENTRO_ID.includes(id)
+              });
+
+              if(response){
+                regionalResponses.push(response)
+              }
+            }
             let regionalDiv = addRegional(div,  regional);
-            callGetSituacao(regionalDiv, regional.NOME_REGIONAL)
+            setRegionalInfo(regionalDiv,{
+              centros:centrosOfRegional,
+              summary:regionalResponses
+            })
+
           }
 
+          setGeneralInfo(passes.length, responses.length)
+
+            
         }).catch(err => {
           console.log("---ERROR---", err)
           // Do something for an error here

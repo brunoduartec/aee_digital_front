@@ -545,6 +545,21 @@ app.get("/bff/regionais", async function(req, res){
   res.json(regionaisInfo)
 })
 
+app.get("/bff/generalinfo", async function(req, res){
+  const passes = await trabalhoscontroller.getPasses();
+  const responses = await trabalhoscontroller.getSummaries();
+  const regionais = await regionalcontroller.getRegionais();
+  const centros = await regionalcontroller.getCentros();
+
+  res.json({
+    passes: passes,
+    responses:responses,
+    regionais: regionais,
+    centros: centros
+  })
+
+})
+
 app.get("/bff/situacao", async function(req, res){
   const nomeRegional = req.query.regionalName;
 

@@ -216,6 +216,20 @@ module.exports = class trabalhosController {
     }
   }
 
+  async getSummaries(){
+    try {
+      const quiz_response = await request.get(
+        "aee_digital_trabalhos",
+        `/atividade_generic_quiz_summary`
+      );
+
+      logger.info("getSummaries", quiz_response);
+      return quiz_response;
+    } catch (error) {
+      logger.error("trabalhos.controller.getSummaries: Error=>", error);
+    }
+  }
+
   async getPassByParams(params) {
     try {
       const passes = await request.get(
