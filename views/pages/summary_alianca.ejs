@@ -147,6 +147,8 @@
 
           for (const regional of regionais) {
             const regionalID = regional.ID
+            console.log("REGIONAL", centros);
+
             const centrosOfRegional = centros.filter(m=>{
               return m.REGIONAL.NOME_REGIONAL.includes(regional.NOME_REGIONAL)
             })
