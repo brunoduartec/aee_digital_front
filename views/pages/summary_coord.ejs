@@ -23,12 +23,22 @@
       <br />
     </div>
     <%
-    totalRespostas = Object.keys(responses).length
+    totalRespostas = 0
     totalCentros = centros.length
     porcentagemRespostas = 100*totalRespostas/totalCentros
     porcentagemRespostasFaltantes = 100 - porcentagemRespostas
+    const defaultResponse = {
+            ANSWER_ID:"",
+            _id:"",
+            ANSWER:""
+          }
 
-    
+    const defaultOptionResponse = {
+            ANSWER_ID:"",
+            _id:"",
+            ANSWER:"",
+            PRESET_VALUES:["Integrada", "Inscrita"]
+          }
     %>
     <div class="validacao-coord-dados">
       <div class="form row">
@@ -165,11 +175,7 @@
       <% centros.forEach(function(centro) { 
         
         %>
-        <%if(responses[centro.NOME_CENTRO]){%>
-          <div class="form row " style="background-color:rgb(71, 255, 126);">
-            <%}else{%>
-              <div class="form row " style="background-color:Tomato;">
-          <%}%>
+              <div class="form row " style="background-color:Tomato;" name="centro" id="<%=centro.ID%>">
         <span class="border col-md-4"
           ><div class="form-group"><p><%=centro.NOME_CENTRO%></p></div></span
         >
@@ -183,25 +189,21 @@
         <span class="border col-md-2"
           ><div class="form-group" name="prop_0">
             <%
-            questionInfo = templates[centro.NOME_CENTRO][0]
+            questionInfo = defaultOptionResponse
             %>
             <%- include('../partials/sub_quiz_option', {question:questionInfo});%>
           </div>
         </span>
         <span class="border col-md-2"
-          ><div class="form-group" name="prop_1"><p>
+          ><div class="form-group" name="prop_1">
             <%
-            questionInfo = templates[centro.NOME_CENTRO][1]
+            questionInfo = defaultResponse
             %>
-            <%- include('../partials/sub_quiz_input', {question:questionInfo});%></p></div></span
+            <%- include('../partials/sub_quiz_input', {question:questionInfo});%></div></span
         >
         <span class="border col-md-2"
           ><div class="form-group"><p>
-            <%if(responses[centro.NOME_CENTRO]){%>
-                <%=new Date(responses[centro.NOME_CENTRO][0].LASTMODIFIED).toLocaleString()%>
-              <%}else{%>
                 Não Finalizado
-              <%}%>
           </p></div></span>
       </div>
 
@@ -212,6 +214,11 @@
     <br />
 
       <script>
+
+        $(document).ready(function(){
+          var centros = <%- JSON.stringify(centros) %> 
+          setCentroResponses(centros)
+        });
 
         function setSummaryInfo(data){
           let integradas = document.getElementById("Integradas");
@@ -236,10 +243,6 @@
           const prop_0 = document.getElementsByName("prop_0")
           const prop_1 = document.getElementsByName("prop_1")
 
-          console.log(prop_0.length)
-          console.log(prop_0[0].children[0])
-          console.log(prop_0[0].children[0].value)
-
           let data = {
             Integradas:[{}],
             Inscritas:[{}]
@@ -253,6 +256,77 @@
           
           setSummaryInfo(data)
         }
+
+
+          async function getCentroSummary(centroId){
+            var apiUrl = `bff/summary?centroID=${centroId}`;
+            let responseInfo = await fetch(apiUrl,{
+              headers: {
+                "Content-Type": "application/json"
+              },
+              method: "GET"
+            });
+
+            responseInfo = await responseInfo.json();
+
+            return responseInfo
+          }
+
+          async function getCentroResponses(centroId){
+            var coord_quiz = '<%- JSON.stringify(coord_quiz) %>'
+            var apiUrl = `bff/coord_responses?centroID=${centroId}`;
+            let responseInfo = await fetch(apiUrl,{
+              headers: {
+                "Content-Type": "application/json"
+              },
+              method: "POST",
+              body: coord_quiz
+            });
+
+            responseInfo = await responseInfo.json();
+
+            return responseInfo
+          }
+
+
+        async function setCentroInfo(centro){
+          
+
+          const centroDiv = document.getElementById(centro.ID)
+
+          const situacao = centroDiv.children[3].children[0].children[0]
+          const participacao = centroDiv.children[4].children[0].children[0]
+          const avaliacao = centroDiv.children[5].children[0].children[0]
+
+          let responseInfo = await getCentroResponses(centro.ID);
+          let centroSummary = await getCentroSummary(centro.ID)
+
+          situacao.setAttribute("id", responseInfo[0].ANSWER_ID)
+          situacao.setAttribute("name", responseInfo[0].ANSWER_ID)
+          situacao.setAttribute("questionid", responseInfo[0]._id)
+          situacao.setAttribute("value", responseInfo[0].ANSWER)
+          
+          participacao.setAttribute("id", responseInfo[1].ANSWER_ID)
+          participacao.setAttribute("name", responseInfo[1].ANSWER_ID)
+          participacao.setAttribute("questionid", responseInfo[1]._id)
+          participacao.setAttribute("value", responseInfo[1].ANSWER)
+          
+          if(centroSummary.length>0){
+            const lastSummary = centroSummary[centroSummary.length - 1]
+            avaliacao.innerHTML = lastSummary.LASTMODIFIED;
+            centroDiv.setAttribute("style", "background-color:rgb(34, 124, 39);")
+          }
+        }
+
+
+        async function setCentroResponses(centros){
+          for (const centro of centros) {
+            setCentroInfo(centro)  
+          }
+        }
+
+
+
 
         var intervalId = window.setInterval(function(){
           /// call your function here

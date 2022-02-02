@@ -253,38 +253,47 @@ app.get("/cadastro_alianca", requireAuth, async function (req, res) {
   quiz_actions.open(res, { centro_id, form_alias, page });
 });
 
+async function setQuizResponse(centroID, quizID, questionID,ANSWER){
+  let answewrInfo = {
+    CENTRO_ID: centroID,
+    QUIZ_ID: quizID,
+    QUESTION_ID: questionID,
+    ANSWER: ANSWER,
+  };
+  response = await trabalhoscontroller.postQuizResponse(answewrInfo);
+  response = response[0];
+}
+
 async function getCentroCoordResponses(centroId, quizInfo){
-  templates = []
+  const templates = []
 
-  quizInfo = quizInfo[0]
-
-  for (const question of quizInfo.QUESTIONS[0].GROUP) {
-    let response = await trabalhoscontroller.getQuizResponseByParams(parser.getParamsParsed({
-      CENTRO_ID: centroId,
-      QUESTION_ID: question._id
-    }))
-
-    response = response[0]
+  if(quizInfo)
+  {
+    quizInfo = quizInfo[0]
   
-    if(!response){
-      let answewrInfo = {
+    console.log("---")
+    for (const question of quizInfo.QUESTIONS[0].GROUP) {
+      console.log("*")
+      let response = await trabalhoscontroller.getQuizResponseByParams(parser.getParamsParsed({
         CENTRO_ID: centroId,
-        QUIZ_ID: quizInfo.ID,
-        QUESTION_ID: question._id,
-        ANSWER: " ",
-      };
-      response = await trabalhoscontroller.postQuizResponse(answewrInfo);
-      response = response[0];
+        QUESTION_ID: question._id
+      }))
+  
+      response = response[0]
+    
+      if(!response){
+        response = await setQuizResponse(centroId, quizInfo.ID, question._id, " ")
+        response = response[0];
+      }
+  
+      templates.push({
+        ANSWER_ID: response.ID,
+        ANSWER: response.ANSWER,
+        _id: response.QUESTION_ID,
+        PRESET_VALUES: question.PRESET_VALUES
+      });
       
     }
-
-    templates.push({
-      ANSWER_ID: response.ID,
-      ANSWER: response.ANSWER,
-      _id: response.QUESTION_ID,
-      PRESET_VALUES: question.PRESET_VALUES
-    });
-    
   }
 
   return templates;
@@ -308,23 +317,6 @@ app.get("/summary_coord", requireAuth, async function (req, res) {
     CATEGORY: "Coordenador"
   }))
 
-  const responses = {}
-  const coord_responses = {}
-
-  for (let index = 0; index < centros.length; index++) {
-    const centro = centros[index];
-
-    response = await trabalhoscontroller.getQuizSummaryByParams(parser.getParamsParsed({
-      CENTRO_ID: centro.ID
-    }))
-
-    if(response.length>0){
-      responses[centro.NOME_CENTRO] = response
-    }
-
-    coord_responses[centro.NOME_CENTRO] = await getCentroCoordResponses(centro.ID,coord_quiz);
-  }
-
   let coordenador = await trabalhoscontroller.getPessoaByParams(parser.getParamsParsed({
     "_id": regionalInfo.COORDENADOR_ID
   }))
@@ -336,36 +328,12 @@ app.get("/summary_coord", requireAuth, async function (req, res) {
   res.render("pages/summary_coord", {
     regionalInfo: regionalInfo,
     centros: centros,
-    responses: responses,
     coordenador: coordenador,
-    templates: coord_responses
+    coord_quiz:coord_quiz
   });
 });
 
 app.get("/summary_alianca", requireAuth, async function (req, res) {
-  // const regionaisInfo = await regionalcontroller.getRegionais();
-  // const answers ={}
-
-  // for (let index = 0; index < regionaisInfo.length; index++) {
-  //   const regional = regionaisInfo[index];
-
-  //   answers[regional.NOME_REGIONAL] = {}
-
-  //   const centros = await regionalcontroller.getCentrosByRegional( regional.NOME_REGIONAL);
-
-  //   for (let j = 0; j < centros.length; j++) {
-  //     const centro = centros[j];
-
-  //     const answer = await trabalhoscontroller.getQuizResponseByParams(parser.getParamsParsed({
-  //       CENTRO_ID: centro.ID
-  //     }))
-  //     answers[regional.NOME_REGIONAL][centro.NOME_CENTRO] = answer;
-  //   }
-    
-  // }
-
- 
-
   res.render("pages/summary_alianca", {
   });
 });
@@ -540,8 +508,41 @@ app.post("/pesquisa", requireAuth, async function (req, res) {
 
 //BFF
 
-app.get("/bff/regionais", async function(req, res){
-  const regionaisInfo = await regionalcontroller.getRegionais();
+app.post("/bff/coord_responses", async function(req,res){
+  const centroID = req.query.centroID;
+  const coord_quiz = req?.body;
+  const coord_responses = await getCentroCoordResponses(centroID,coord_quiz)
+  res.json(coord_responses)
+})
+
+app.get("/bff/centros", async function(req,res){
+  const regionalName = req.query.regionalName;
+
+  let centros;
+  if(regionalName){
+    centros = await regionalcontroller.getCentrosByRegional(regionalName)
+  }
+  else{
+    centros = await regionalcontroller.getCentros();
+  }
+
+  res.json(centros);
+})
+
+app.get("/bff/regional", async function(req, res){
+  const regionalName = req.query.regionalName;
+
+  let regionaisInfo
+  if(regionalName){
+    regionaisInfo = await regionalcontroller.getRegionais();
+  }
+  else{
+    const paramsParsed = parser.getParamsParsed({
+      NOME_REGIONAL: regionalName,
+    });
+    regionaisInfo = await regionalcontroller.getRegionalByParams(paramsParsed);
+  }
+
   res.json(regionaisInfo)
 })
 
@@ -559,6 +560,33 @@ app.get("/bff/generalinfo", async function(req, res){
   })
 
 })
+
+app.get("/bff/coord_info", async function(req, res){
+
+  const regional_id = req.query.ID;
+
+  const paramsParsed = parser.getParamsParsed({
+    _id: regional_id,
+  });
+
+  const regionalInfo = await regionalcontroller.getRegionalByParams(
+    paramsParsed
+  );
+
+  let coord_quiz = await trabalhoscontroller.getQuizTemplateByParams(parser.getParamsParsed({
+    CATEGORY: "Coordenador"
+  }))
+
+  let coordenador = await trabalhoscontroller.getPessoaByParams(parser.getParamsParsed({
+    "_id": regionalInfo.COORDENADOR_ID
+  }))
+
+  res.json({
+    regional:regionalInfo,
+    coordenador: coordenador,
+    coord_quiz: coord_quiz
+  });
+});
 
 app.get("/bff/situacao", async function(req, res){
   const nomeRegional = req.query.regionalName;
@@ -616,6 +644,16 @@ app.get("/bff/situacao", async function(req, res){
 
   res.json(situacoes)
 });
+
+app.get("/bff/summary", async function(req,res){
+  const centroID = req.query.centroID;
+
+  response = await trabalhoscontroller.getQuizSummaryByParams(parser.getParamsParsed({
+    CENTRO_ID: centroID
+  }))
+
+  res.json(response)
+})
 
 // about page
 app.get("/about", function (req, res) {
