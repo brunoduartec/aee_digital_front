@@ -125,6 +125,7 @@ module.exports = class UserInfoController {
       }else{
         const paramsParsed = this.parser.getParamsParsed({
           NOME_CENTRO: decodeURIComponent(info.centro),
+          "REGIONAL.NOME_REGIONAL": decodeURIComponent(info.regional)
         });
         const centro = await this.regionalcontroller.getCentroByParam(paramsParsed);
         const centroInfo = await this.centroinfocontroller.getCentroInfo(
