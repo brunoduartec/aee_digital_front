@@ -35,6 +35,7 @@ module.exports = class authController {
       const centro = row.centro;
 
       this.cache[centro.user] = {
+        curto: centro.curto,
         centro: centro.nome,
         regional: centro.regional,
       };
