@@ -655,6 +655,28 @@ app.get("/bff/summary", async function(req,res){
   res.json(response)
 })
 
+
+app.get("/bff/initializeuserinfo", async function(req, res){
+  const centro = req.query.centro
+  const regional = req.query.regional
+  const curto = req.query.curto
+
+  const info = {
+    centro: centro,
+    regional, regional,
+    curto: curto
+  }
+
+  try {
+    let response = await userinfocontroller.initializeUserInfo(info)
+    res.json(response)
+    
+  } catch (error) {
+    console.log(error)
+    res.json(error)
+  }
+})
+
 // about page
 app.get("/about", function (req, res) {
   res.render("pages/about");

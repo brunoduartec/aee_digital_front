@@ -14,7 +14,12 @@
     <%quiz.QUESTIONS.forEach(questionGroup => {
       const group = questionGroup.GROUP;
       const itemSize = 12/group.length;
-      const answers_length = group[0].ANSWER.length;
+
+      let answers_length = 1
+      if(questionGroup.IS_MULTIPLE){
+        answers_length = group[0].ANSWER.length;
+      }
+
       %>
       <%for (let index = 0; index < answers_length; index++) {%>
       <%
