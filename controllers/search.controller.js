@@ -161,6 +161,15 @@ module.exports = class SearchController {
           finalized = await this.trabalhocontroller.checkFormCompletion(name, centro_id);
         }
 
+        paramsParsed = this.parser.getParamsParsed({
+          CENTRO_ID: centro_id,
+        });
+
+        const quiz_responses =
+        await this.trabalhocontroller.getQuizResponseByParams(
+          paramsParsed
+        );
+
         for (let index = 0; index < pages.length; index++) {
           const page = pages[index];
 
@@ -168,15 +177,8 @@ module.exports = class SearchController {
           for (let index = 0; index < quizes.length; index++) {
             const quiz = quizes[index];
 
-            paramsParsed = this.parser.getParamsParsed({
-              CENTRO_ID: centro_id,
-              QUIZ_ID: quiz._id,
-            });
+          
 
-            const quiz_responses =
-              await this.trabalhocontroller.getQuizResponseByParams(
-                paramsParsed
-              );
 
             let groups = quiz.QUESTIONS;
 
