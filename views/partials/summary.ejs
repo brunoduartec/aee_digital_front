@@ -12,19 +12,22 @@
   </div>
   <div class="form row">
     <%quiz.QUESTIONS.forEach(questionGroup => {
-      const group = questionGroup.GROUP;
+       const group = questionGroup.GROUP;
       const itemSize = 12/group.length;
 
       let answers_length = 1
       if(questionGroup.IS_MULTIPLE){
+        if(group[0].ANSWER)
         answers_length = group[0].ANSWER.length;
+        else
+        answer_length=0;
       }
 
       %>
       <%for (let index = 0; index < answers_length; index++) {%>
-      <%
+        <%
       group.forEach(question => {
-        const answer = question.ANSWER[index]
+        const answer =question.ANSWER ? question.ANSWER[index] : " "
       %>
       <div class="form-group col-md-<%=itemSize%>">
         <%if(question.IS_REQUIRED && (!answer || answer == " ") ){%>
@@ -43,9 +46,9 @@
           <%}%>
           </p>
       </div>
-      <%});%>
+      <%});%>  
       <%}%>
-      <%});%>
+        <%});%>
   </div>
   <%});%> <%});%>
 </div>
