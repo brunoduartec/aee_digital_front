@@ -21,7 +21,7 @@
       });
 
       var xValues = ["Total","Iniciaram", "Terminaram"];
-      var yValues = [100,55, 0,0];
+      var yValues = [0,0, 0,0];
       var barColors = ["yellow", "green"];
       
       var myChart = new Chart("myChart", {
@@ -61,7 +61,7 @@
         divCard.appendChild(divBody);
 
         let h5 = document.createElement("h5");
-        h5.innerText = regionalInfo.NOME_REGIONAL
+        h5.innerText = `${regionalInfo.NOME_REGIONAL} : ${regionalInfo.PAIS}`
 
         divBody.appendChild(h5)
 
