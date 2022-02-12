@@ -4,6 +4,7 @@ var session = require("express-session");
 var bodyParser = require("body-parser");
 
 const Logger = require("./helpers/logger");
+const readXlsxFile = require("read-excel-file/node");
 const logger = new Logger();
 
 const crypto = require("crypto");
@@ -14,11 +15,11 @@ const parser = require("./helpers/parser");
 
 const regionalController = require("./controllers/regional.controller");
 const regionalcontroller = new regionalController();
+regionalcontroller.generateInfoByCache(readXlsxFile);
 
 const trabalhosController = require("./controllers/trabalhos.controller");
 const trabalhoscontroller = new trabalhosController(parser);
 
-const readXlsxFile = require("read-excel-file/node");
 
 const CentroInfoController = require("./controllers/centroInfo.controller");
 
@@ -550,7 +551,7 @@ app.get("/bff/generalinfo", async function(req, res){
   const passes = await trabalhoscontroller.getPasses();
   const responses = await trabalhoscontroller.getSummaries();
   const regionais = await regionalcontroller.getRegionais();
-  const centros = await regionalcontroller.getCentros();
+  const centros = await regionalcontroller.getCentrosByCache();
 
   res.json({
     passes: passes,
