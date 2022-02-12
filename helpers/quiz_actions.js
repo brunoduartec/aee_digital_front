@@ -144,6 +144,7 @@ module.exports = class QuizActions {
       
     } catch (error) {
       this.logger.error(error)
+      throw(error)
     }
   }
 };

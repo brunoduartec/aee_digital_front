@@ -177,9 +177,6 @@ module.exports = class SearchController {
           for (let index = 0; index < quizes.length; index++) {
             const quiz = quizes[index];
 
-          
-
-
             let groups = quiz.QUESTIONS;
 
             for (let j = 0; j < groups.length; j++) {

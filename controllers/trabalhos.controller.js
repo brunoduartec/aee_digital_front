@@ -355,16 +355,18 @@ module.exports = class trabalhosController {
 
     form = form[0];
 
+    let responses = await this.getQuizResponseByParams(this.parser.getParamsParsed({
+      CENTRO_ID: centroId
+    }));
+
     for (const page of form.PAGES) {
       for (const quiz of page.QUIZES) {
         for (const groupQuestions of quiz.QUESTIONS) {
           for (const question of groupQuestions.GROUP) {
             if(question.IS_REQUIRED){
-                 let response = await this.getQuizResponseByParams(this.parser.getParamsParsed({
-                  CENTRO_ID: centroId,
-                  QUIZ_ID: quiz._id,
-                  QUESTION_ID:question._id
-                }));
+                let response = responses.filter(m=>{
+                  return m.CENTRO_ID === centroId && m.QUIZ_ID === quiz._id && m.QUESTION_ID === question._id
+                })
 
                 if(response.length==0 ){
                   return false
