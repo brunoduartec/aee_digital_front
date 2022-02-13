@@ -21,22 +21,29 @@ module.exports = class regionalController {
     });
     let objects = excel.rows;
 
+    objects = objects.filter(m=>{
+      return m.centro.nome != "*"
+    })
+
     let centros = await this.getCentros();
     this.cache.centros = [];
 
     for (const object of objects) {
       const centro = object.centro;
       let centroInfo = centros.find(m=>{
-        return m.NOME_CENTRO === centro.nome && m.NOME_CURTO === centro.curto && m.REGIONAL.NOME_REGIONAL === centro.regional;
+        return  m.NOME_CURTO === centro.curto && m.REGIONAL.NOME_REGIONAL === centro.regional;
       })
    
       if(centroInfo){
         this.cache.centros.push(centroInfo)
       }
+      else{
+        console.log("NAO TEM", centroInfo)
+      }
    
     }
 
-    console.log("Centros cached")
+    console.log("Centros cached-----------------", JSON.stringify(this.cache.centros))
   }
 
   getCentrosByCache(){
