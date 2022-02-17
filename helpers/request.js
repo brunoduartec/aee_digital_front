@@ -20,7 +20,7 @@ module.exports = class Request {
 
   async get(instanceName, route) {
     try {
-      const response = await axios.get(decodeURIComponent(`${this.instances[instanceName]}${this.base}${route}`)
+      const response = await axios.get(encodeURI(`${this.instances[instanceName]}${this.base}${route}`)
       );
       this.logger.info("request:get", response.data);
       return response.data;
@@ -32,7 +32,7 @@ module.exports = class Request {
 
   async post(instanceName, route, body) {
     try {
-      const response = await axios.post(decodeURIComponent(`${this.instances[instanceName]}${this.base}${route}`),
+      const response = await axios.post(encodeURI(`${this.instances[instanceName]}${this.base}${route}`),
         body
       );
       this.logger.info("request:post", response.data);
