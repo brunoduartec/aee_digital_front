@@ -73,9 +73,6 @@ const QuizActions = require("./helpers/quiz_actions");
 const quiz_actions = new QuizActions(
   searchcontroller,
   trabalhoscontroller,
-  regionalcontroller,
-  userinfocontroller,
-  authcontroller,
   logger,
   parser
 );
