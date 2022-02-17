@@ -27,6 +27,7 @@
             const responseInfo = data[0];
           }).catch(err => {
             console.log("---ERROR---", err)
+            throw error
             // Do something for an error here
           });
     }
@@ -61,6 +62,7 @@
           console.log("----ITEM ADDED", data)
         }).catch(err => {
           console.log("---ERROR---", err)
+          throw error
           // Do something for an error here
         });
       }
@@ -77,6 +79,7 @@
           console.log("--ITEM REMOVED--")
         }).catch(err => {
           console.log("---ERROR---", err)
+          throw error
           // Do something for an error here
         });
       }

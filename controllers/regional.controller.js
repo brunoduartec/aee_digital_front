@@ -1,15 +1,7 @@
-const env = process.env.NODE_ENV ? process.env.NODE_ENV : "local";
-
-const config = require("../env.json")[env];
-
-const Request = require("../helpers/request");
-const request = new Request();
-
-const Logger = require("../helpers/logger");
-const logger = new Logger();
-
 module.exports = class regionalController {
-  constructor() {
+  constructor(logger, request) {
+    this.logger = logger;
+    this.request = request;
     this.cache = {}
   }
 
@@ -27,6 +19,7 @@ module.exports = class regionalController {
 
     let centros = await this.getCentros();
     this.cache.centros = [];
+    this.naoencontrado = []
 
     for (const object of objects) {
       const centro = object.centro;
@@ -38,12 +31,13 @@ module.exports = class regionalController {
         this.cache.centros.push(centroInfo)
       }
       else{
-        console.log("NAO TEM", centroInfo)
+        this.naoencontrado.push(centro)
+        this.logger.info("generateInfoByCache-> Não encontrado", centro)
       }
    
     }
 
-    console.log("Centros cached-----------------", JSON.stringify(this.cache.centros))
+    this.logger.info("Centros cached", JSON.stringify(this.cache.centros))
   }
 
   getCentrosByCache(){
@@ -51,96 +45,103 @@ module.exports = class regionalController {
   }
 
   getCentroByCacheByRegional(regionalName){
-    return this.cache.centro.filter(m=>{
-      return m.regional === regionalName
+    let centros = this.cache.centros.filter(m=>{
+      return m.REGIONAL.NOME_REGIONAL === regionalName
     })
+    return centros;
   }
 
   async getRegionais() {
     try {
+      if(this.cache.regionais){
+        return this.cache.getRegionais
+      }else{
+        const regionals = await this.request.get(
+          "aee_digital_regionais",
+          `/regionais`
+        );
+        this.logger.info("getRegionais", regionals);
+  
+        this.cache.getRegionais = regionals
+        return regionals;
 
-      const regionals = await request.get(
-        "aee_digital_regionais",
-        `/regionais`
-      );
-      logger.info("getRegionais", regionals);
-
-      return regionals;
+      }
     } catch (error) {
-      logger.error("regional.controller.getRegionais: Error=>", error);
+      this.logger.error("regional.controller.getRegionais: Error=>", error);
+      throw error
     }
   }
 
   async getRegionalByParams(params) {
     try {
-      const regional = await request.get(
+      const regional = await this.request.get(
         "aee_digital_regionais",
         `/regionais?${params}`
       );
-      logger.info("getRegionalByParams", regional[0]);
+      this.logger.info("getRegionalByParams", regional[0]);
 
       return regional[0];
 
     } catch (error) {
-      logger.error("regional.controller.getRegionalByParams: Error=>", error);
-      return null;
+      this.logger.error("regional.controller.getRegionalByParams: Error=>", error);
+      throw error;
     }
   }
 
   async getCentrosByRegional(regionalName) {
     try {
-      const centros = await request.get(
+      const centros = await this.request.get(
         "aee_digital_regionais",
         `/centros?REGIONAL.NOME_REGIONAL=${regionalName}`
       );
-      logger.info("getCentrosByRegional", centros);
+      this.logger.info("getCentrosByRegional", centros);
 
       return centros;
     } catch (error) {
-      logger.error("regional.controller.getCentrosByRegional: Error=>", error);
-      return null;
+      this.logger.error("regional.controller.getCentrosByRegional: Error=>", error);
+      throw error
     }
   }
 
   async getCentros() {
     try {
-      const centros = await request.get("aee_digital_regionais", `/centros`);
-      logger.info("getCentros", centros);
+      const centros = await this.request.get("aee_digital_regionais", `/centros`);
+      this.logger.info("getCentros", centros);
       return centros;
     } catch (error) {
-      logger.error("regional.controller.getCentros: Error=>", error);
-      return null;
+      this.logger.error("regional.controller.getCentros: Error=>", error);
+      throw error
     }
   }
 
   async getCentroByParam(params) {
     try {
-      const centro = await request.get(
+      const centro = await this.request.get(
         "aee_digital_regionais",
         `/centros?${params}`
       );
-      logger.info("getCentroByParam", centro[0]);
+      this.logger.info("getCentroByParam", centro[0]);
 
       return centro[0];
     } catch (error) {
-      logger.error("regional.controller.getCentros: Error=>", error);
-      return null;
+      this.logger.error("regional.controller.getCentros: Error=>", error);
+      throw error
     }
   }
 
   async updateCentro(centroInfo) {
     try {
       const nome_curto = centroInfo.NOME_CURTO;
-      const centros = await request.get(
+      const centros = await this.request.get(
         "aee_digital_regionais",
         `/centros?NOME_CURTO=${nome_curto}`,
         centroInfo
       );
-      logger.info("updateCentro", centros);
+      this.logger.info("updateCentro", centros);
       return centros;
     } catch (error) {
-      logger.error("regional.controller.updateCentro: Error=>", error);
-      return null;
+      this.logger.error("regional.controller.updateCentro: Error=>", error);
+      throw error
     }
   }
 };

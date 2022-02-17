@@ -35,6 +35,8 @@ module.exports = class authController {
       const centro = row.centro;
 
       this.cache[centro.user] = {
+        user: centro.user,
+        pass: centro.pass,
         curto: centro.curto,
         centro: centro.nome,
         regional: centro.regional,
@@ -92,8 +94,24 @@ module.exports = class authController {
     };
   }
 
-  getPassInfoByScope(user, pass, userInfo){
+  getPassInfoByCache(user, pass){
+    if(this.cache[user].pass === pass){
+      return this.cache[user]
+    }
+    return 
+  }
 
+  getPassInfoByCentroCurtoRegional(centro, curto, regional){
+    const values = Object.values(this.cache)
+
+    let info = values.find(m=>{
+      return m.curto === curto && m.regional ===regional
+    })
+
+    return this.cache[info.user];
+  }
+
+  getPassInfoByScope(user, pass, userInfo){
     let params;
     if(userInfo.centro_id){
       params = {
@@ -131,7 +149,7 @@ module.exports = class authController {
 
   async initUserInfo(loginInfo) {
     let { user, pass } = loginInfo;
-    const cache = this.cache[user];
+    const cache = this.getPassInfoByCache(user,pass);
     let userInfo;
 
     if (cache) {
@@ -142,7 +160,7 @@ module.exports = class authController {
         const passInfo = await this.trabalhocontroller.postPass(params);
         return passInfo[0];
       } catch (error) {
-        return;
+        throw error;
       }
     }
   }

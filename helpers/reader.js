@@ -1,9 +1,10 @@
 module.exports = class Reader{
 
-    constructor(xlsReader, fileName,schema){
+    constructor(xlsReader, fileName,schema, logger){
         this.schema = schema;
         this.xlsReader = xlsReader;
         this.fileName = fileName;
+        this.logger = logger
     }
 
     parseFuncionamento(centro){
@@ -45,7 +46,8 @@ module.exports = class Reader{
             }
             
         } catch (error) {
-            console.log(error)
+            this.logger.error("parseFuncionamento", error)
+            throw error
         }
     }
 

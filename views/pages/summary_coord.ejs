@@ -37,7 +37,7 @@
             ANSWER_ID:"",
             _id:"",
             ANSWER:"",
-            PRESET_VALUES:["Integrada", "Inscrita"]
+            PRESET_VALUES:["Integrada", "Inscrita", "Desfiliada", "Encerrada"]
           }
     %>
     <div class="validacao-coord-dados">
@@ -175,9 +175,13 @@
       <% centros.forEach(function(centro) { 
         
         %>
-              <div class="form row " style="background-color:Tomato;" name="centro" id="<%=centro.ID%>">
+        <div class="form row " style="background-color:rgb(222, 49, 99);" name="centro" id="<%=centro.ID%>">
         <span class="border col-md-4"
-          ><div class="form-group"><p><%=centro.NOME_CENTRO%></p></div></span
+          ><div class="form-group"><p>
+            <a href="/cadastro_alianca?ID=<%=centro.ID%>&page=0">
+            <%=centro.NOME_CENTRO%>
+            </a>
+            </p></div></span
         >
         <span class="border col-md-1"
           ><div class="form-group"><p><%=centro.NOME_CURTO%></p></div></span
@@ -217,7 +221,7 @@
 
         $(document).ready(function(){
           var centros = <%- JSON.stringify(centros) %> 
-          setCentroResponses(centros)
+          setCentrosResponses(centros)
         });
 
         function setSummaryInfo(data){
@@ -257,49 +261,42 @@
           setSummaryInfo(data)
         }
 
-
-          async function getCentroSummary(centroId){
-            var apiUrl = `bff/summary?centroID=${centroId}`;
-            let responseInfo = await fetch(apiUrl,{
-              headers: {
-                "Content-Type": "application/json"
-              },
-              method: "GET"
-            });
-
-            responseInfo = await responseInfo.json();
-
-            return responseInfo
+          function getCentroSummary(summaries, centroId){
+           return summaries.find(m=> {
+             return m.CENTRO_ID === centroId
+           })
           }
 
           async function getCentroResponses(centroId){
-            var coord_quiz = '<%- JSON.stringify(coord_quiz) %>'
-            var apiUrl = `bff/coord_responses?centroID=${centroId}`;
-            let responseInfo = await fetch(apiUrl,{
-              headers: {
-                "Content-Type": "application/json"
-              },
-              method: "POST",
-              body: coord_quiz
-            });
 
-            responseInfo = await responseInfo.json();
+            console
+            try {
+              var coord_quiz = '<%- JSON.stringify(coord_quiz) %>'
+              var apiUrl = `bff/coord_responses?centroID=${centroId}`;
+              let responseInfo = await fetch(apiUrl,{
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                method: "POST",
+                body: coord_quiz
+              });
+  
+              responseInfo = await responseInfo.json();
 
-            return responseInfo
+              return responseInfo
+              
+            } catch (error) {
+              console.log(`Error at getCentroResponses ${centroId}`, error)
+              throw(error)
+            }
           }
 
-
-        async function setCentroInfo(centro){
-          
-
-          const centroDiv = document.getElementById(centro.ID)
+        async function setCentroResponse(centroDiv, centro){
+          let responseInfo = await getCentroResponses(centro.ID);
 
           const situacao = centroDiv.children[3].children[0].children[0]
           const participacao = centroDiv.children[4].children[0].children[0]
-          const avaliacao = centroDiv.children[5].children[0].children[0]
-
-          let responseInfo = await getCentroResponses(centro.ID);
-          let centroSummary = await getCentroSummary(centro.ID)
+          
 
           situacao.setAttribute("id", responseInfo[0].ANSWER_ID)
           situacao.setAttribute("name", responseInfo[0].ANSWER_ID)
@@ -310,23 +307,53 @@
           participacao.setAttribute("name", responseInfo[1].ANSWER_ID)
           participacao.setAttribute("questionid", responseInfo[1]._id)
           participacao.setAttribute("value", responseInfo[1].ANSWER)
-          
-          if(centroSummary.length>0){
-            const lastSummary = centroSummary[centroSummary.length - 1]
-            avaliacao.innerHTML = lastSummary.LASTMODIFIED;
-            centroDiv.setAttribute("style", "background-color:rgb(34, 124, 39);")
-          }
+
+
         }
 
+        async function setCentroSummary(centroDiv, summaries, centro){
+            let centroSummary = await getCentroSummary(summaries, centro.ID)
+           
+            const avaliacao = centroDiv.children[5].children[0].children[0]
 
-        async function setCentroResponses(centros){
+            console.log("SUMARY", centroSummary)
+            
+            if(centroSummary && centroSummary.ANSWERS.length>0){
+              console.log("ENTROU")
+              const lastSummary = centroSummary[centroSummary.length - 1]
+              // avaliacao.innerHTML = lastSummary.LASTMODIFIED;
+              centroDiv.setAttribute("style", "background-color:rgb(159, 226, 191);")
+            }
+        }
+
+        async function setCentroInfo(summaries, centro){
+          const centroDiv = document.getElementById(centro.ID)
+
+          const situacao = centroDiv.children[3].children[0].children[0]
+
+          try {
+
+            setCentroResponse(centroDiv, centro)
+            setCentroSummary(centroDiv, summaries, centro)
+           
+          } catch (error) {
+            console.log(`Error setCentroInfo ${centro.NOME_CENTRO}`, error)
+            throw(error)
+          }
+
+
+        }
+
+        async function setCentrosResponses(centros){
+          console.log("Started")
+          let summaries = <%- JSON.stringify(summaries) %> 
+
+          console.log("Summaries", summaries)
           for (const centro of centros) {
-            setCentroInfo(centro)  
+            console.log(`CENTRO : ${centro.ID}` )
+            setCentroInfo(summaries, centro)  
           }
         }
-
-
-
 
         var intervalId = window.setInterval(function(){
           /// call your function here

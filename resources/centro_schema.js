@@ -29,7 +29,7 @@ function parseTime(element) {
       return null;
     }
   } catch (error) {
-    return null;
+    throw error;
   }
 }
 
@@ -74,7 +74,7 @@ function funcionamentoParser(funcionamento) {
 
     return timeFunction;
   } catch (error) {
-    return null;
+    throw error
   }
 }
 

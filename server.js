@@ -1,6 +1,10 @@
 const express = require("express");
 const app = express();
 var session = require("express-session");
+var compression = require('compression')
+app.use(compression())
+
+
 var bodyParser = require("body-parser");
 
 const Logger = require("./helpers/logger");
@@ -13,13 +17,15 @@ const env = process.env.NODE_ENV ? process.env.NODE_ENV : "local";
 const config = require("./env.json")[env];
 const parser = require("./helpers/parser");
 
+const Request = require("./helpers/request")
+const request = new Request(logger);
+
 const regionalController = require("./controllers/regional.controller");
-const regionalcontroller = new regionalController();
+const regionalcontroller = new regionalController(logger, request);
 regionalcontroller.generateInfoByCache(readXlsxFile);
 
 const trabalhosController = require("./controllers/trabalhos.controller");
-const trabalhoscontroller = new trabalhosController(parser);
-
+const trabalhoscontroller = new trabalhosController(parser, logger, request);
 
 const CentroInfoController = require("./controllers/centroInfo.controller");
 
@@ -67,14 +73,15 @@ const QuizActions = require("./helpers/quiz_actions");
 const quiz_actions = new QuizActions(
   searchcontroller,
   trabalhoscontroller,
+  regionalcontroller,
+  userinfocontroller,
+  authcontroller,
   logger,
   parser
 );
 
 // This will hold the users and authToken related to users
 const authTokens = {};
-const Request = require("./helpers/request");
-const request = new Request();
 request.addInstance("aee_digital_regionais", config.aee_digital_regionais);
 request.addInstance("aee_digital_trabalhos", config.aee_digital_trabalhos);
 
@@ -255,49 +262,71 @@ app.get("/cadastro_alianca", requireAuth, async function (req, res) {
 });
 
 async function setQuizResponse(centroID, quizID, questionID,ANSWER){
-  let answewrInfo = {
-    CENTRO_ID: centroID,
-    QUIZ_ID: quizID,
-    QUESTION_ID: questionID,
-    ANSWER: ANSWER,
-  };
-  response = await trabalhoscontroller.postQuizResponse(answewrInfo);
-  response = response[0];
+  try {
+    let answewrInfo = {
+      CENTRO_ID: centroID,
+      QUIZ_ID: quizID,
+      QUESTION_ID: questionID,
+      ANSWER: ANSWER,
+    };
+    response = await trabalhoscontroller.postQuizResponse(answewrInfo);
+    response = response[0];
+    
+  } catch (error) {
+    logger.error("setQuizResponse", error)
+    throw error
+  }
+  
 }
 
 async function getCentroCoordResponses(centroId, quizInfo){
-  const templates = []
+  
+  try {
 
-  if(quizInfo)
-  {
-    quizInfo = quizInfo[0]
-  
-    console.log("---")
-    for (const question of quizInfo.QUESTIONS[0].GROUP) {
-      console.log("*")
-      let response = await trabalhoscontroller.getQuizResponseByParams(parser.getParamsParsed({
-        CENTRO_ID: centroId,
-        QUESTION_ID: question._id
-      }))
-  
-      response = response[0]
     
-      if(!response){
-        response = await setQuizResponse(centroId, quizInfo.ID, question._id, " ")
-        response = response[0];
-      }
-  
-      templates.push({
-        ANSWER_ID: response.ID,
-        ANSWER: response.ANSWER,
-        _id: response.QUESTION_ID,
-        PRESET_VALUES: question.PRESET_VALUES
-      });
-      
+    const templates = []
+    if(!centroId){
+      return templates
     }
-  }
+  
+    if(quizInfo)
+    {
+      quizInfo = quizInfo[0]
+  
+      for (const question of quizInfo.QUESTIONS[0].GROUP) {
+        let response = await trabalhoscontroller.getQuizResponseByParams(parser.getParamsParsed({
+          CENTRO_ID: centroId,
+          QUESTION_ID: question._id
+        }))
+    
+        response = response[0]
+      
+        if(!response){
+          response = await setQuizResponse(centroId, quizInfo.ID, question._id, " ")
+          if(response){
+            response = response[0]
+          }
+        }
 
-  return templates;
+        if(response){
+          templates.push({
+            ANSWER_ID: response.ID,
+            ANSWER: response.ANSWER,
+            _id: response.QUESTION_ID,
+            PRESET_VALUES: question.PRESET_VALUES
+          });
+        }
+    
+        
+      }
+    }
+  
+    return templates;
+    
+  } catch (error) {
+    logger.error("getCentroCoordResponses",error)
+    throw error
+  }
 }
 
 app.get("/summary_coord", requireAuth, async function (req, res) {
@@ -310,7 +339,7 @@ app.get("/summary_coord", requireAuth, async function (req, res) {
     paramsParsed
   );
 
-  const centros = await regionalcontroller.getCentrosByRegional(
+  const centros = await regionalcontroller.getCentroByCacheByRegional(
     regionalInfo.NOME_REGIONAL
   );
 
@@ -322,6 +351,8 @@ app.get("/summary_coord", requireAuth, async function (req, res) {
     "_id": regionalInfo.COORDENADOR_ID
   }))
 
+  const summaries = await trabalhoscontroller.getSummaries();
+
   coordenador = coordenador[0];
 
   coordenador = coordenador || { NOME:" "}
@@ -330,7 +361,8 @@ app.get("/summary_coord", requireAuth, async function (req, res) {
     regionalInfo: regionalInfo,
     centros: centros,
     coordenador: coordenador,
-    coord_quiz:coord_quiz
+    coord_quiz:coord_quiz,
+    summaries: summaries
   });
 });
 
@@ -502,18 +534,26 @@ app.post("/pesquisa", requireAuth, async function (req, res) {
         result: null,
       });
     }
-  } catch (error) {}
-  logger.error("post:pesquisa", centro);
+  } catch (error) {
+    logger.error("post:pesquisa", centro);
+    throw error
+  }
 });
 
 
 //BFF
 
 app.post("/bff/coord_responses", async function(req,res){
-  const centroID = req.query.centroID;
-  const coord_quiz = req?.body;
-  const coord_responses = await getCentroCoordResponses(centroID,coord_quiz)
-  res.json(coord_responses)
+ try {
+   const centroID = req.query.centroID;
+   const coord_quiz = req?.body;
+   const coord_responses = await getCentroCoordResponses(centroID,coord_quiz)
+   res.json(coord_responses)
+   
+ } catch (error) {
+  logger.error(`post:coord_responses ${centroID}`, error)
+  throw(error)   
+ }
 })
 
 app.get("/bff/centros", async function(req,res){
@@ -646,6 +686,12 @@ app.get("/bff/situacao", async function(req, res){
   res.json(situacoes)
 });
 
+app.get("/bff/summaries", async function(req, res){
+  response = await trabalhoscontroller.getSummaries()
+
+  res.json(response)
+})
+
 app.get("/bff/summary", async function(req,res){
   const centroID = req.query.centroID;
 
@@ -673,8 +719,8 @@ app.get("/bff/initializeuserinfo", async function(req, res){
     res.json(response)
     
   } catch (error) {
-    console.log(error)
-    res.json(error)
+    logger.error("/bff/initializeuserinfo", error)
+    throw error
   }
 })
 

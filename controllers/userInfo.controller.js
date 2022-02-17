@@ -56,6 +56,8 @@ module.exports = class UserInfoController {
       }
       let form = await this.trabalhocontroller.getFormByParams(this.parser.getParamsParsed(params))
       form = form[0];
+
+      let answersToAdd = []
   
       for (let index = 0; index < form.PAGES.length; index++) {
         const page = form.PAGES[index];
@@ -87,13 +89,14 @@ module.exports = class UserInfoController {
               }
   
               for (const answ of answers) {
-                let answewrInfo = {
+                let answerInfo = {
                   CENTRO_ID: centro_id,
                   QUIZ_ID: quiz._id,
                   QUESTION_ID: question._id,
                   ANSWER: answ,
                 };
-                await this.trabalhocontroller.postQuizResponse(answewrInfo);
+                answersToAdd.push(answerInfo)
+                
                 
               }
             }
@@ -102,15 +105,17 @@ module.exports = class UserInfoController {
         }
         
       }
+
+      await this.trabalhocontroller.postQuizResponse(answersToAdd);
       
     } catch (error) {
       this.logger.error(error)
+      throw error
     }
 
   }
 
   async initializeUserInfo(info) {
-
     try {
       if(info.centro == "*"){
         if(info.regional == "*"){
@@ -146,6 +151,7 @@ module.exports = class UserInfoController {
       
     } catch (error) {
       this.logger.error(error)
+      throw error
     }
   }
 };

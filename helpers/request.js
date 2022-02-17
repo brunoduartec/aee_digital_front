@@ -1,14 +1,8 @@
 const axios = require("axios");
 
-const env = process.env.NODE_ENV ? process.env.NODE_ENV : "local";
-
-const config = require("../env.json")[env];
-
-const Logger = require("./logger");
-const logger = new Logger();
-
 module.exports = class Request {
-  constructor() {
+  constructor(logger) {
+    this.logger = logger
     const instance = this.constructor.instance;
     if (instance) {
       return instance;
@@ -28,10 +22,10 @@ module.exports = class Request {
     try {
       const response = await axios.get(decodeURIComponent(`${this.instances[instanceName]}${this.base}${route}`)
       );
-      logger.info("request:get", response.data);
+      this.logger.info("request:get", response.data);
       return response.data;
     } catch (error) {
-      logger.error(error);
+      this.logger.error(error);
       throw error;
     }
   }
@@ -41,10 +35,10 @@ module.exports = class Request {
       const response = await axios.post(decodeURIComponent(`${this.instances[instanceName]}${this.base}${route}`),
         body
       );
-      logger.info("request:post", response.data);
+      this.logger.info("request:post", response.data);
       return response.data;
     } catch (error) {
-      logger.error(error);
+      this.logger.error(error);
       throw error;
     }
   }
@@ -55,10 +49,10 @@ module.exports = class Request {
         decodeURIComponent(`${this.instances[instanceName]}${this.base}${route}`),
         body
       );
-      logger.info("request:put", response.data);
+      this.logger.info("request:put", response.data);
       return response.data;
     } catch (error) {
-      logger.error(error);
+      this.logger.error(error);
       throw error;
     }
   }
@@ -68,10 +62,10 @@ module.exports = class Request {
       const response = await axios.delete(
         decodeURIComponent(`${this.instances[instanceName]}${this.base}${route}`)
       );
-      logger.info("request:delete", response.data);
+      this.logger.info("request:delete", response.data);
       return response.data;
     } catch (error) {
-      logger.error(error);
+      this.logger.error(error);
       throw error;
     }
   }

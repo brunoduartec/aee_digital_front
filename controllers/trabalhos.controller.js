@@ -1,17 +1,8 @@
-const { default: axios } = require("axios");
-
-const env = process.env.NODE_ENV ? process.env.NODE_ENV : "local";
-const config = require("../env.json")[env];
-
-const Request = require("../helpers/request");
-const request = new Request();
-
-const Logger = require("../helpers/logger");
-const logger = new Logger();
-
 module.exports = class trabalhosController {
-  constructor(parser) {
+  constructor(parser, logger, request) {
     this.parser = parser;
+    this.logger = logger;
+    this.request = request;
     this.cache={}
   }
 
@@ -20,19 +11,20 @@ module.exports = class trabalhosController {
       if(!this.cache.getAtividades){
         return this.cache.getAtividades;
       }else{
-        const atividades = await request.get(
+        const atividades = await this.request.get(
           "aee_digital_trabalhos",
           `/atividade`
         );
   
-        logger.info("getAtividades", atividades);
+        this.logger.info("getAtividades", atividades);
 
         this.cache.atividades = atividades;
         return atividades;
 
       }
     } catch (error) {
-      logger.error("trabalhos.controller.getAtividades: Error=>", error);
+      this.logger.error("trabalhos.controller.getAtividades: Error=>", error);
+      throw error
     }
   }
 
@@ -41,11 +33,11 @@ module.exports = class trabalhosController {
       if(!this.cache.getAtividadesCentroByParams && this.cache.getAtividadesCentroByParams[params]){
         return this.cache.getAtividadesCentroByParams[params];
       }else{
-        const atividades = await request.get(
+        const atividades = await this.request.get(
           "aee_digital_trabalhos",
           `/atividade_centro?${params}`
         );
-        logger.info("getAtividadesCentroByParams", atividades);
+        this.logger.info("getAtividadesCentroByParams", atividades);
 
         if(!this.cache.getAtividadesCentroByParams){
           this.cache.getAtividadesCentroByParams = {}
@@ -55,7 +47,8 @@ module.exports = class trabalhosController {
         return atividades;
       }
     } catch (error) {
-      logger.error("trabalhos.controller.getAtividadesCentroByParams: Error=>", error);
+      this.logger.error("trabalhos.controller.getAtividadesCentroByParams: Error=>", error);
+      throw error
     }
   }
 
@@ -64,7 +57,7 @@ module.exports = class trabalhosController {
       if(!this.cache.getAtividadesCentroSummaryByParams && this.cache.getAtividadesCentroSummaryByParams[params]){
         return this.cache.getAtividadesCentroSummaryByParams[params];
       }else{
-        const atividades = await request.get(
+        const atividades = await this.request.get(
           "aee_digital_trabalhos",
           `/atividade_centro_summary?${params}`
         );
@@ -75,14 +68,15 @@ module.exports = class trabalhosController {
 
         this.cache.getAtividadesCentroSummaryByParams[params] = atividades
 
-        logger.info("getAtividadesCentroSummaryByParams", atividades);
+        this.logger.info("getAtividadesCentroSummaryByParams", atividades);
         return atividades;
       }
     } catch (error) {
-      logger.error(
+      this.logger.error(
         "trabalhos.controller.getAtividadesCentroSummaryByParams: Error=>",
         error
       );
+      throw error
     }
   }
 
@@ -94,18 +88,19 @@ module.exports = class trabalhosController {
       if(this.cache.getFormByParams[params]){
         return this.cache.getFormByParams[params];
       }else{
-        const form = await request.get(
+        const form = await this.request.get(
           "aee_digital_trabalhos",
           `/atividade_generic_form?${params}`
         );
 
         this.cache.getFormByParams[params] = form
 
-        logger.info("getFormByParams", form);
+        this.logger.info("getFormByParams", form);
         return form;
       }
     } catch (error) {
-      logger.error("trabalhos.controller.getFormByParams: Error=>", error);
+      this.logger.error("trabalhos.controller.getFormByParams: Error=>", error);
+      throw error
     }
   }
 
@@ -116,22 +111,23 @@ module.exports = class trabalhosController {
       if(this.cache.getQuizTemplateByParams[params]){
         return this.cache.getQuizTemplateByParams[params];
       }else{
-        const quiz = await request.get(
+        const quiz = await this.request.get(
           "aee_digital_trabalhos",
           `/atividade_generic_quiz?${params}`
         );
 
         this.cache.getQuizTemplateByParams[params] = quiz
   
-        logger.info("getQuizTemplateByParams", quiz);
+        this.logger.info("getQuizTemplateByParams", quiz);
         return quiz;
 
       }
     } catch (error) {
-      logger.error(
+      this.logger.error(
         "trabalhos.controller.getQuizTemplateByParams: Error=>",
         error
       );
+      throw error
     }
   }
 
@@ -143,241 +139,270 @@ module.exports = class trabalhosController {
       if(this.cache.getQuestionByParams[params]){
         return this.cache.getQuestionByParams[params]
       }else{
-        const quiz = await request.get(
+        const quiz = await this.request.get(
           "aee_digital_trabalhos",
           `/atividade_generic_question?${params}`
         );
   
-        logger.info("getQuestionByParams", quiz);
+        this.logger.info("getQuestionByParams", quiz);
         return quiz;
 
       }
     } catch (error) {
-      logger.error("trabalhos.controller.getQuestionByParams: Error=>", error);
+      this.logger.error("trabalhos.controller.getQuestionByParams: Error=>", error);
+      throw error
     }
   }
 
   async getGroupQuestionByParams(params) {
     try {
-      const quiz = await request.get(
+      const quiz = await this.request.get(
         "aee_digital_trabalhos",
         `/atividade_generic_group_question?${params}`
       );
 
-      logger.info("getGroupQuestionByParams", quiz);
+      this.logger.info("getGroupQuestionByParams", quiz);
       return quiz;
     } catch (error) {
-      logger.error("trabalhos.controller.getGroupQuestionByParams: Error=>", error);
+      this.logger.error("trabalhos.controller.getGroupQuestionByParams: Error=>", error);
+      throw error
     }
   }
 
   async getQuizResponseByParams(params) {
     try {
-      const quiz_response = await request.get(
+      const quiz_response = await this.request.get(
         "aee_digital_trabalhos",
         `/atividade_generic_quiz_answer?${params}`
       );
 
-      logger.info("getQuizResponseByParams", quiz_response);
+      this.logger.info("getQuizResponseByParams", quiz_response);
       return quiz_response;
     } catch (error) {
-      logger.error(
+      this.logger.error(
         "trabalhos.controller.getQuizResponseByParams: Error=>",
         error
       );
+      throw error
     }
   }
 
   async deleteQuizResponseByParams(params) {
     try {
-      const quiz_response = await request.delete(
+      const quiz_response = await this.request.delete(
         "aee_digital_trabalhos",
         `/atividade_generic_quiz_answer?${params}`
       );
 
-      logger.info("deleteQuizResponseByParams", quiz_response);
+      this.logger.info("deleteQuizResponseByParams", quiz_response);
       return quiz_response;
     } catch (error) {
-      logger.error(
+      this.logger.error(
         "trabalhos.controller.deleteQuizResponseByParams: Error=>",
         error
       );
+      throw error
     }
   }
 
   async getPasses() {
     try {
-      const atividades = await request.get("aee_digital_trabalhos", `/pass`);
+      const atividades = await this.request.get("aee_digital_trabalhos", `/pass`);
 
-      logger.info("getPasses", atividades);
+      this.logger.info("getPasses", atividades);
       return atividades;
     } catch (error) {
-      logger.error("trabalhos.controller.getPasses: Error=>", error);
+      this.logger.error("trabalhos.controller.getPasses: Error=>", error);
+      throw error
     }
   }
 
   async getSummaries(){
+    
     try {
-      const quiz_response = await request.get(
-        "aee_digital_trabalhos",
-        `/atividade_generic_quiz_summary`
-      );
-
-      logger.info("getSummaries", quiz_response);
-      return quiz_response;
+      if(this.cache.getSummaries){
+        return this.cache.getSummaries;
+      }else{
+        const quiz_response = await this.request.get(
+          "aee_digital_trabalhos",
+          `/atividade_generic_quiz_summary`
+        );
+  
+        this.cache.getSummaries = quiz_response;
+        this.logger.info("getSummaries", quiz_response);
+        return quiz_response;
+      }
     } catch (error) {
-      logger.error("trabalhos.controller.getSummaries: Error=>", error);
+      this.logger.error("trabalhos.controller.getSummaries: Error=>", error);
+      throw error
     }
+
   }
 
   async getPassByParams(params) {
     try {
-      const passes = await request.get(
+      const passes = await this.request.get(
         "aee_digital_trabalhos",
         `/pass?${params}`
       );
 
-      logger.info("getPassByParams", passes);
+      this.logger.info("getPassByParams", passes);
       return passes;
     } catch (error) {
-      logger.error("trabalhos.controller.getPassByParams: Error=>", error);
+      this.logger.error("trabalhos.controller.getPassByParams: Error=>", error);
+      throw error
     }
   }
 
   async postPass(params) {
     try {
-      const pass = await request.post("aee_digital_trabalhos", `/pass`, params);
+      const pass = await this.request.post("aee_digital_trabalhos", `/pass`, params);
 
-      logger.info("postPass", pass);
+      this.logger.info("postPass", pass);
       return pass;
     } catch (error) {
-      logger.error("trabalhos.controller.postPass: Error=>", error);
+      this.logger.error("trabalhos.controller.postPass: Error=>", error);
+      throw error
     }
   }
 
   async putQuizResponse(params, value) {
     try {
-      const quiz_response = await request.put(
+      const quiz_response = await this.request.put(
         "aee_digital_trabalhos",
         `/atividade_generic_quiz_answer?${params}`,
         value
       );
 
-      logger.info("putQuizResponse", quiz_response);
+      this.logger.info("putQuizResponse", quiz_response);
       return quiz_response;
     } catch (error) {
-      logger.error(
+      this.logger.error(
         "trabalhos.controller.putQuizResponse: Error=>",
         error
       );
+      throw error
     }
   }
 
   async postQuizResponse(params) {
     try {
-      const quiz_response = await request.post(
+      const quiz_response = await this.request.post(
         "aee_digital_trabalhos",
         `/atividade_generic_quiz_answer`,
         params
       );
 
-      logger.info("postQuizResponse", quiz_response);
+      this.logger.info("postQuizResponse", quiz_response);
       return quiz_response;
     } catch (error) {
-      logger.error(
+      this.logger.error(
         "trabalhos.controller.postQuizResponse: Error=>",
         error
       );
+      throw error
     }
   }
 
   async getPessoaByParams(params) {
     try {
-      const quiz_response = await request.get(
+      const quiz_response = await this.request.get(
         "aee_digital_trabalhos",
         `/pessoa?${params}`
       );
 
-      logger.info("getPessoaParams", quiz_response);
+      this.logger.info("getPessoaParams", quiz_response);
       return quiz_response;
     } catch (error) {
-      logger.error("trabalhos.controller.getPessoaParams: Error=>", error);
+      this.logger.error("trabalhos.controller.getPessoaParams: Error=>", error);
+      throw error
     }
   }
 
   async getQuizSummaryByParams(params) {
     try {
-      const quiz_response = await request.get(
+      const quiz_response = await this.request.get(
         "aee_digital_trabalhos",
         `/atividade_generic_quiz_summary?${params}`
       );
 
-      logger.info("getQuizSummaryByParams", quiz_response);
+      this.logger.info("getQuizSummaryByParams", quiz_response);
       return quiz_response;
     } catch (error) {
-      logger.error("trabalhos.controller.getQuizSummaryByParams: Error=>", error);
+      this.logger.error("trabalhos.controller.getQuizSummaryByParams: Error=>", error);
+      throw error
     }
   }
   async postQuizSummary(params) {
     try {
-      const quiz_response = await request.post(
+      this.cache.getSummaries = null;
+
+      const quiz_response = await this.request.post(
         "aee_digital_trabalhos",
         `/atividade_generic_quiz_summary`,
         params
       );
 
-      logger.info("postQuizSummary", quiz_response);
+      this.logger.info("postQuizSummary", quiz_response);
       return quiz_response;
     } catch (error) {
-      logger.error("trabalhos.controller.postQuizSummary: Error=>", error);
+      this.logger.error("trabalhos.controller.postQuizSummary: Error=>", error);
+      throw error
     }
   }
 
   async putQuizSummary(params, value) {
     try {
-      const quiz_response = await request.put(
+      const quiz_response = await this.request.put(
         "aee_digital_trabalhos",
         `/atividade_generic_quiz_summary?${params}`,
         value
       );
 
-      logger.info("putQuizSummary", quiz_response);
+      this.logger.info("putQuizSummary", quiz_response);
       return quiz_response;
     } catch (error) {
-      logger.error("trabalhos.controller.putQuizSummary: Error=>", error);
+      this.logger.error("trabalhos.controller.putQuizSummary: Error=>", error);
+      throw error
     }
   }
 
   async checkFormCompletion(formName, centroId){
-    let form = await this.getFormByParams(this.parser.getParamsParsed({
-      NAME: formName
-    }));
-
-    form = form[0];
-
-    let responses = await this.getQuizResponseByParams(this.parser.getParamsParsed({
-      CENTRO_ID: centroId
-    }));
-
-    for (const page of form.PAGES) {
-      for (const quiz of page.QUIZES) {
-        for (const groupQuestions of quiz.QUESTIONS) {
-          for (const question of groupQuestions.GROUP) {
-            if(question.IS_REQUIRED){
-                let response = responses.filter(m=>{
-                  return m.CENTRO_ID === centroId && m.QUIZ_ID === quiz._id && m.QUESTION_ID === question._id
-                })
-
-                if(response.length==0 ){
-                  return false
-                }else if(response[0].ANSWER == " "){
-                  return false;
-                }
+    try {
+      let form = await this.getFormByParams(this.parser.getParamsParsed({
+        NAME: formName
+      }));
+  
+      form = form[0];
+  
+      let responses = await this.getQuizResponseByParams(this.parser.getParamsParsed({
+        CENTRO_ID: centroId
+      }));
+  
+      for (const page of form.PAGES) {
+        for (const quiz of page.QUIZES) {
+          for (const groupQuestions of quiz.QUESTIONS) {
+            for (const question of groupQuestions.GROUP) {
+              if(question.IS_REQUIRED){
+                  let response = responses.filter(m=>{
+                    return m.CENTRO_ID === centroId && m.QUIZ_ID === quiz._id && m.QUESTION_ID === question._id
+                  })
+  
+                  if(response.length==0 ){
+                    return false
+                  }else if(response[0].ANSWER == " "){
+                    return false;
+                  }
+              }
             }
           }
         }
       }
+      return true;
+      
+    } catch (error) {
+      this.logger.error("checkFormCompletion", centroId)
+      throw error
     }
-    return true;
   }
 };
