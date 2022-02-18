@@ -163,7 +163,9 @@
 
           }
 
-          setGeneralInfo(centros.length,passes.length, responses.length)
+          let started  = passes.filter(m=>{ return m.groups.includes("presidente")});
+
+          setGeneralInfo(centros.length,started.length, responses.length)
 
             
         }).catch(err => {

@@ -92,10 +92,10 @@
       </div>
       <div class="form row">
         <span class="border col-md-2"
-          ><div class="form-group"><p><%=totalRespostas%></p></div></span
+          ><div class="form-group"><p id="Atualizadas"><%=totalRespostas%></p></div></span
         >
         <span class="border col-md-2"
-          ><div class="form-group"><p><%=totalCentros - totalRespostas%></p></div></span
+          ><div class="form-group"><p id="Pendentes"><%=totalCentros - totalRespostas%></p></div></span
         >
         <span class="border col-md-2"
           ><div class="form-group"><p id="Integradas">0</p></div></span
@@ -124,10 +124,10 @@
           ><div class="form-group"><p id="Inscritas_percent">0%</p></div></span
         >
         <span class="border col-md-2"
-          ><div class="form-group"><p>0%</p></div></span
+          ><div class="form-group"><p id="Atualizadas_percent">0%</p></div></span
         >
         <span class="border col-md-2"
-          ><div class="form-group"><p>0%</p></div></span
+          ><div class="form-group"><p id="Pendentes_percent">0%</p></div></span
         >
       </div>
       <br />
@@ -219,21 +219,23 @@
 
       <script>
 
-        $(document).ready(function(){
+        $(document).ready( async function(){
           var centros = <%- JSON.stringify(centros) %> 
-          setCentrosResponses(centros)
+          await setCentrosResponses(centros)
+          await checkSituacao("<%=regionalInfo.NOME_REGIONAL %>")
         });
 
         function setSummaryInfo(data){
           let integradas = document.getElementById("Integradas");
             
-            let integradasAmount = data.Integradas.length
-            let inscritasAmount = data.Inscritas.length
+            let integradasAmount = data.Integradas.length -1
+            let inscritasAmount = data.Inscritas.length -1
 
-            integradas.innerText = Math.round(integradasAmount)
+            integradas.innerText = integradasAmount
+            // Math.round(integradasAmount)
             let inscritas =  document.getElementById("Inscritas");
-            inscritas.innerText = Math.round(inscritasAmount)
-            
+            inscritas.innerText = inscritasAmount
+
             
             let  percent = 100* integradasAmount / (integradasAmount + inscritasAmount)
             let Integradas_percent = document.getElementById("Integradas_percent");
@@ -257,6 +259,7 @@
             const value = iterator.children[0].value
             data[`${value}s`].push(iterator.children[0])
           }
+
           
           setSummaryInfo(data)
         }
@@ -315,13 +318,26 @@
             let centroSummary = await getCentroSummary(summaries, centro.ID)
            
             const avaliacao = centroDiv.children[5].children[0].children[0]
-
-            console.log("SUMARY", centroSummary)
             
             if(centroSummary && centroSummary.ANSWERS.length>0){
-              console.log("ENTROU")
+              const Atualizadas = document.getElementById("Atualizadas")
+              let AtualizadasAmount = parseInt(Atualizadas.innerText)
+              AtualizadasAmount = AtualizadasAmount +1
+              Atualizadas.innerText =  AtualizadasAmount
+
+              const Pendentes = document.getElementById("Pendentes")
+               PendentesAmount = parseInt(Pendentes.innerText)
+              PendentesAmount = PendentesAmount -1
+              Pendentes.innerText =  PendentesAmount
+
+              let Atualizadas_percent = document.getElementById("Atuualizadas_percent");
+              let Pendentes_percent = document.getElementById("Pendentes_percent");
+
+              Atualizadas_percent.innerText = (( AtualizadasAmount ) / (AtualizadasAmount + PendentesAmount))
+              Pendentes_percent.innerText = (( PendentesAmount ) / (AtualizadasAmount + PendentesAmount))
+
+
               const lastSummary = centroSummary[centroSummary.length - 1]
-              // avaliacao.innerHTML = lastSummary.LASTMODIFIED;
               centroDiv.setAttribute("style", "background-color:rgb(159, 226, 191);")
             }
         }
@@ -350,15 +366,10 @@
 
           console.log("Summaries", summaries)
           for (const centro of centros) {
-            console.log(`CENTRO : ${centro.ID}` )
             setCentroInfo(summaries, centro)  
           }
         }
-
-        var intervalId = window.setInterval(function(){
-          /// call your function here
-          checkSituacao("<%=regionalInfo.NOME_REGIONAL %>")
-        }, 5000);
+      
         </script>
 
     <footer><%- include('../partials/footer'); %></footer>
