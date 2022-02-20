@@ -6,6 +6,45 @@ module.exports = class trabalhosController {
     this.cache={}
   }
 
+  async generateInfoByCache(){
+    try {
+
+      let paramsParsed  = this.parser.getParamsParsed({
+        CATEGORY: "Coordenador"
+      })
+
+      this.logger.info("Start Caching Trabalho")
+
+      let coord_quiz = await this.getQuizTemplateByParams(paramsParsed);
+
+      paramsParsed = this.parser.getParamsParsed({
+        QUIZ_ID : coord_quiz[0].ID
+      })
+
+      this.cache.coord_responses = await this.getQuizResponseByParams(paramsParsed)
+
+      this.getSummaries();
+
+      this.logger.info("trabalhoscontroller:generateInfoByCache")
+    } catch (error) {
+      this.logger.error("trabalhocontroller error reading cache", error)
+      throw error
+    }
+  }
+
+ 
+  async getCoordResponsesByCentroId(centroid){
+    try {
+      return this.cache.coord_responses.filter(m=>{
+        return m.CENTRO_ID == centroid
+      })
+      
+    } catch (error) {
+      this.logger.error("trabalhocontroller:getCoordResponsesByCentroId", error)
+      throw error
+    }
+  }
+
   async getAtividades() {
     try {
       if(!this.cache.getAtividades){
@@ -171,6 +210,7 @@ module.exports = class trabalhosController {
 
   async getQuizResponseByParams(params) {
     try {
+      
       const quiz_response = await this.request.get(
         "aee_digital_trabalhos",
         `/atividade_generic_quiz_answer?${params}`

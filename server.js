@@ -27,6 +27,7 @@ regionalcontroller.generateInfoByCache(readXlsxFile);
 const trabalhosController = require("./controllers/trabalhos.controller");
 const trabalhoscontroller = new trabalhosController(parser, logger, request);
 
+
 const CentroInfoController = require("./controllers/centroInfo.controller");
 
 const schema = require("./resources/centro_schema")();
@@ -59,7 +60,7 @@ const authcontroller = new authController(
   userinfocontroller,
   parser
 );
-authcontroller.generatePassCache();
+
 
 const SearchController = require("./controllers/search.controller");
 const searchcontroller = new SearchController(
@@ -81,6 +82,9 @@ const quiz_actions = new QuizActions(
 const authTokens = {};
 request.addInstance("aee_digital_regionais", config.aee_digital_regionais);
 request.addInstance("aee_digital_trabalhos", config.aee_digital_trabalhos);
+
+authcontroller.generatePassCache();
+trabalhoscontroller.generateInfoByCache();
 
 app.set("view engine", "ejs");
 app.use(express.static("public"));
@@ -289,12 +293,14 @@ async function getCentroCoordResponses(centroId, quizInfo){
     if(quizInfo)
     {
       quizInfo = quizInfo[0]
+
+      let coordresponse = await trabalhoscontroller.getCoordResponsesByCentroId(centroId)
   
       for (const question of quizInfo.QUESTIONS[0].GROUP) {
-        let response = await trabalhoscontroller.getQuizResponseByParams(parser.getParamsParsed({
-          CENTRO_ID: centroId,
-          QUESTION_ID: question._id
-        }))
+
+        let response = coordresponse.filter(m=>{
+          return m.QUESTION_ID == question._id
+        })
     
         response = response[0]
       

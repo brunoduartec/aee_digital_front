@@ -4,7 +4,7 @@
     <%- include('../partials/head'); %>
   </head>
   <body class="body">
-    <%- include('../partials/quiz_validate');%>
+    
     <header class="cabeçalho"><%- include('../partials/header'); %></header>
     <div class="cadastrar-titulo">
       <h2>Validação de Informações</h2>
@@ -112,10 +112,10 @@
       </div>
       <div class="form row">
         <span class="border col-md-2"
-          ><div class="form-group"><p><%=Math.round(porcentagemRespostas)%>%</p></div></span
+          ><div class="form-group"><p id="Atualizadas_percent">0%</p></div></span
         >
         <span class="border col-md-2"
-          ><div class="form-group"><p><%=100 - Math.round(porcentagemRespostas)%>%</p></div></span
+          ><div class="form-group"><p id="Pendentes_percent">0%</p></div></span
         >
         <span class="border col-md-2"
           ><div class="form-group"><p id="Integradas_percent">0%</p></div></span
@@ -124,10 +124,10 @@
           ><div class="form-group"><p id="Inscritas_percent">0%</p></div></span
         >
         <span class="border col-md-2"
-          ><div class="form-group"><p id="Atualizadas_percent">0%</p></div></span
+          ><div class="form-group"><p id="Coord_Pendentes_percent">0%</p></div></span
         >
         <span class="border col-md-2"
-          ><div class="form-group"><p id="Pendentes_percent">0%</p></div></span
+          ><div class="form-group"><p id="Coord_Desfiliadas_percent">0%</p></div></span
         >
       </div>
       <br />
@@ -189,7 +189,6 @@
         <span class="border col-md-1"
           ><div class="form-group"><p>Antiga/ Nova</p></div></span
         >
-        
         <span class="border col-md-2"
           ><div class="form-group" name="prop_0">
             <%
@@ -221,8 +220,8 @@
 
         $(document).ready( async function(){
           var centros = <%- JSON.stringify(centros) %> 
-          await setCentrosResponses(centros)
-          await checkSituacao("<%=regionalInfo.NOME_REGIONAL %>")
+           setCentrosResponses(centros)
+           checkSituacao("<%=regionalInfo.NOME_REGIONAL %>")
         });
 
         function setSummaryInfo(data){
@@ -299,12 +298,14 @@
 
           const situacao = centroDiv.children[3].children[0].children[0]
           const participacao = centroDiv.children[4].children[0].children[0]
-          
-
+         console.log(participacao) 
           situacao.setAttribute("id", responseInfo[0].ANSWER_ID)
           situacao.setAttribute("name", responseInfo[0].ANSWER_ID)
           situacao.setAttribute("questionid", responseInfo[0]._id)
-          situacao.setAttribute("value", responseInfo[0].ANSWER)
+
+          const $options = Array.from(situacao.options);
+          option = $options.find(item => item.text === responseInfo[0].ANSWER)
+          option.selected = true;
           
           participacao.setAttribute("id", responseInfo[1].ANSWER_ID)
           participacao.setAttribute("name", responseInfo[1].ANSWER_ID)
@@ -330,12 +331,14 @@
               PendentesAmount = PendentesAmount -1
               Pendentes.innerText =  PendentesAmount
 
-              let Atualizadas_percent = document.getElementById("Atuualizadas_percent");
+              let Atualizadas_percent = document.getElementById("Atualizadas_percent");
               let Pendentes_percent = document.getElementById("Pendentes_percent");
 
-              Atualizadas_percent.innerText = (( AtualizadasAmount ) / (AtualizadasAmount + PendentesAmount))
-              Pendentes_percent.innerText = (( PendentesAmount ) / (AtualizadasAmount + PendentesAmount))
+              aPercent = 100* (( AtualizadasAmount ) / (AtualizadasAmount + PendentesAmount))
+              pPercent  = 100* (( PendentesAmount ) / (AtualizadasAmount + PendentesAmount))
 
+              Atualizadas_percent.innerText = aPercent.toFixed() + "%"
+              Pendentes_percent.innerText = pPercent.toFixed() + "%"
 
               const lastSummary = centroSummary[centroSummary.length - 1]
               centroDiv.setAttribute("style", "background-color:rgb(159, 226, 191);")
@@ -373,5 +376,6 @@
         </script>
 
     <footer><%- include('../partials/footer'); %></footer>
+    <%- include('../partials/quiz_validate');%>
   </body>
 </html>

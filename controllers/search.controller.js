@@ -19,7 +19,7 @@ module.exports = class SearchController {
     const searchByOpcao = {
       Centro: async function (s) {
         const paramsParsed = this.parser.getParamsParsed({
-          NOME_CURTO: search,
+          NOME_CURTO: decodeURIComponent(search),
         });
         const centro = await regionalcontroller.getCentroByParam(paramsParsed);
         let centros = {
@@ -33,7 +33,7 @@ module.exports = class SearchController {
       Centro_Summary: async function () {
         let centroInfo = [];
         const paramsParsed = this.parser.getParamsParsed({
-          NOME_CURTO: centro,
+          NOME_CURTO: decodeURIComponent(centro),
         });
 
         centroInfo.push(
