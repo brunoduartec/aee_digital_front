@@ -17,8 +17,17 @@
       }
 
       const answerId = item.id
-      
+      let questionId
+
       var apiUrl = `update_answer?answerId=${answerId}&answer=${itemChanged.value.toString()}`
+      if(itemChanged){
+        questionId = itemChanged.getAttribute("questionId")
+        if(questionId){
+          apiUrl = apiUrl.concat(`&questionId=${questionId}`)
+
+        }
+      }
+
           fetch(apiUrl,{
             method: 'PUT'
           }).then(response => {

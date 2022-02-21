@@ -281,10 +281,7 @@ async function setQuizResponse(centroID, quizID, questionID,ANSWER){
 }
 
 async function getCentroCoordResponses(centroId, quizInfo){
-  
   try {
-
-    
     const templates = []
     if(!centroId){
       return templates
@@ -454,6 +451,10 @@ app.put("/update_answer", requireAuth, async function(req,res){
   const quizResponse = await trabalhoscontroller.putQuizResponse(paramsParsed, {
     ANSWER: paramsFrom.answer,
   });
+
+  if(trabalhoscontroller.checkQuestionInCoordQuiz(paramsFrom.questionId)){
+    trabalhoscontroller.updateCoordResponseByCentroId(paramsFrom.questionId,paramsFrom.answerId, paramsFrom.answer)
+  }
   
 
   res.json(quizResponse)

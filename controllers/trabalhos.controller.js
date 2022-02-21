@@ -17,6 +17,8 @@ module.exports = class trabalhosController {
 
       let coord_quiz = await this.getQuizTemplateByParams(paramsParsed);
 
+      this.cache.coord_quiz = coord_quiz
+
       paramsParsed = this.parser.getParamsParsed({
         QUIZ_ID : coord_quiz[0].ID
       })
@@ -43,6 +45,27 @@ module.exports = class trabalhosController {
       this.logger.error("trabalhocontroller:getCoordResponsesByCentroId", error)
       throw error
     }
+  }
+
+  checkQuestionInCoordQuiz(questionId){
+    let questions = this.cache.coord_quiz[0].QUESTIONS[0].GROUP
+
+    return questions.find(m=>{
+      return m._id === questionId
+    })
+  }
+
+  async updateCoordResponseByCentroId(questionId, answerid, response){
+    let c = this.cache.coord_responses;
+    
+    let questionToUpdate = c.find(m=>{
+      return m.QUESTION_ID === questionId && m.ID === answerid
+    })
+
+    if(questionToUpdate){
+      questionToUpdate.ANSWER = response
+    }
+
   }
 
   async getAtividades() {
@@ -182,6 +205,8 @@ module.exports = class trabalhosController {
           "aee_digital_trabalhos",
           `/atividade_generic_question?${params}`
         );
+
+        this.cache.getQuestionByParams[params] = quiz;
   
         this.logger.info("getQuestionByParams", quiz);
         return quiz;
@@ -195,13 +220,23 @@ module.exports = class trabalhosController {
 
   async getGroupQuestionByParams(params) {
     try {
-      const quiz = await this.request.get(
-        "aee_digital_trabalhos",
-        `/atividade_generic_group_question?${params}`
-      );
+      if(!this.cache.getGroupQuestionByParams ){this.cache.getGroupQuestionByParams={}}
 
-      this.logger.info("getGroupQuestionByParams", quiz);
-      return quiz;
+      if(this.cache.getGroupQuestionByParams[params]){
+        this.logger.info("getGroupQuestionByParams by cache", quiz);
+        return this.cache.getGroupQuestionByParams[params]
+      }else{
+        const quiz = await this.request.get(
+          "aee_digital_trabalhos",
+          `/atividade_generic_group_question?${params}`
+        );
+
+        this.cache.getGroupQuestionByParams[params] = quiz;
+  
+        this.logger.info("getGroupQuestionByParams", quiz);
+        return quiz;
+        
+      }
     } catch (error) {
       this.logger.error("trabalhos.controller.getGroupQuestionByParams: Error=>", error);
       throw error
@@ -361,6 +396,7 @@ module.exports = class trabalhosController {
 
   async getQuizSummaryByParams(params) {
     try {
+      
       const quiz_response = await this.request.get(
         "aee_digital_trabalhos",
         `/atividade_generic_quiz_summary?${params}`
@@ -393,6 +429,8 @@ module.exports = class trabalhosController {
 
   async putQuizSummary(params, value) {
     try {
+      this.cache.getSummaries = null;
+      
       const quiz_response = await this.request.put(
         "aee_digital_trabalhos",
         `/atividade_generic_quiz_summary?${params}`,
