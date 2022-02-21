@@ -11,8 +11,8 @@
     </div>
     <div class="validacao-coord-subtitulo">
       <h3>Regional <%= regionalInfo.NOME_REGIONAL%></h3>
-      <p><b> Coordenador:<%= coordenador.NOME%></b></p>
-      <p><b> Quantidade de Casas:<%=centros.length%></b></p>
+      <p><b> Coordenador: <%= coordenador.NOME%></b></p>
+      <p><b> Quantidade de Casas: <%=centros.length%></b></p>
       <div class="form row">
         <span class="border col-md-12"
           ><div class="form-group">
@@ -47,25 +47,25 @@
             <p><b>Status das Atualizações </b></p>
           </div></span
         >
-        <span class="border col-md-4"
+        <span class="border col-md-2"
           ><div class="form-group" style="color: #0d6efd">
             <p><b>Situação das Casas</b></p>
           </div></span
         >
-        <span class="border col-md-8"
+        <span class="border col-md-10"
           ><div class="form-group" style="color: #0d6efd">
             <p><b>Situação do Coordenador</b></p>
           </div></span
         >
       </div>
       <div class="form row">
-        <span class="border col-md-2"
+        <span class="border col-md-1"
           ><div class="form-group">
             <p><b>Atualizadas</b></p>
           </div></span
         >
-        <span class="border col-md-2"
-          ><div class="form-group" style="color: red">
+        <span class="border col-md-1"
+          ><div class="form-group text-truncate" style="color: red">
             <p><b>Pendentes</b></p>
           </div></span
         >
@@ -89,12 +89,17 @@
             <p><b>Desfiliadas</b></p>
           </div></span
         >
+        <span class="border col-md-2"
+          ><div class="form-group">
+            <p><b>Encerradas</b></p>
+          </div></span
+        >
       </div>
       <div class="form row">
-        <span class="border col-md-2"
+        <span class="border col-md-1"
           ><div class="form-group"><p id="Atualizadas"><%=totalRespostas%></p></div></span
         >
-        <span class="border col-md-2"
+        <span class="border col-md-1"
           ><div class="form-group"><p id="Pendentes"><%=totalCentros - totalRespostas%></p></div></span
         >
         <span class="border col-md-2"
@@ -109,19 +114,23 @@
         <span class="border col-md-2"
           ><div class="form-group"><p id="Desfiliadas">0</p></div></span
         >
+        <span class="border col-md-2"
+          ><div class="form-group"><p id="Encerradas">0</p></div></span
+        >
+      
       </div>
       <div class="form row">
-        <span class="border col-md-2"
+        <span class="border col-md-1"
           ><div class="form-group"><p id="Atualizadas_percent">0%</p></div></span
         >
-        <span class="border col-md-2"
+        <span class="border col-md-1"
           ><div class="form-group"><p id="Pendentes_percent">0%</p></div></span
         >
         <span class="border col-md-2"
-          ><div class="form-group"><p id="Integradas_percent">0%</p></div></span
+          ><div class="form-group"><p id="Coord_Integradas_percent">0%</p></div></span
         >
         <span class="border col-md-2"
-          ><div class="form-group"><p id="Inscritas_percent">0%</p></div></span
+          ><div class="form-group"><p id="Coord_Inscritas_percent">0%</p></div></span
         >
         <span class="border col-md-2"
           ><div class="form-group"><p id="Coord_Pendentes_percent">0%</p></div></span
@@ -129,6 +138,10 @@
         <span class="border col-md-2"
           ><div class="form-group"><p id="Coord_Desfiliadas_percent">0%</p></div></span
         >
+        <span class="border col-md-2"
+        ><div class="form-group"><p id="Coord_Encerradas_percent">0%</p></div></span
+      >
+        
       </div>
       <br />
 
@@ -220,47 +233,19 @@
 
         $(document).ready( async function(){
           var centros = <%- JSON.stringify(centros) %> 
-           setCentrosResponses(centros)
-           checkSituacao("<%=regionalInfo.NOME_REGIONAL %>")
+           await setCentrosResponses(centros)
         });
 
-        function setSummaryInfo(data){
-          let integradas = document.getElementById("Integradas");
-            
-            let integradasAmount = data.Integradas.length -1
-            let inscritasAmount = data.Inscritas.length -1
+        function updateCoordSituationStatus(response, totalAmount){
+          let element = document.getElementById(`${response}s`);
+          let element_percent = document.getElementById(`Coord_${response}s_percent`);
 
-            integradas.innerText = integradasAmount
-            // Math.round(integradasAmount)
-            let inscritas =  document.getElementById("Inscritas");
-            inscritas.innerText = inscritasAmount
+          let amount = parseInt(element.innerText) + 1
 
-            
-            let  percent = 100* integradasAmount / (integradasAmount + inscritasAmount)
-            let Integradas_percent = document.getElementById("Integradas_percent");
-            Integradas_percent.innerText = Math.round(percent).toString().concat("%")
-            let inscritas_percent =  document.getElementById("Inscritas_percent");
-            inscritas_percent.innerText = Math.round(100 - percent).toString().concat("%")
-        }
+          element.innerHTML = amount;
+          let percent = 100*amount/totalAmount
+          element_percent.innerText = Math.round(percent).toString().concat("%")
 
-        function checkSituacao(nomeRegional){
-
-          const prop_0 = document.getElementsByName("prop_0")
-          const prop_1 = document.getElementsByName("prop_1")
-
-          let data = {
-            Integradas:[{}],
-            Inscritas:[{}]
-          }
-
-          
-          for (const iterator of prop_0) {
-            const value = iterator.children[0].value
-            data[`${value}s`].push(iterator.children[0])
-          }
-
-          
-          setSummaryInfo(data)
         }
 
           function getCentroSummary(summaries, centroId){
@@ -291,17 +276,17 @@
             }
           }
 
-        async function setCentroResponse(centroDiv, centro){
+        async function setCentroResponse(centroDiv, centro, totalCentros){
           let responseInfo = await getCentroResponses(centro.ID);
 
           const situacao = centroDiv.children[3].children[0].children[0]
           const participacao = centroDiv.children[4].children[0].children[0]
         
-         
-      
           situacao.setAttribute("id", responseInfo[0].ANSWER_ID)
           situacao.setAttribute("name", responseInfo[0].ANSWER_ID)
           situacao.setAttribute("questionid", responseInfo[0]._id)
+
+          let response = responseInfo[0].ANSWER.length > 3 ? responseInfo[0].ANSWER : "Integrada"
 
           const $options = Array.from(situacao.options);
           let option = $options.find(item => item.text === responseInfo[0].ANSWER)
@@ -319,6 +304,7 @@
           participacao.setAttribute("questionid", responseInfo[1]._id)
           participacao.setAttribute("value", responseInfo[1].ANSWER)
 
+          updateCoordSituationStatus(response, totalCentros)
         }
 
         async function setCentroSummary(centroDiv, summaries, centro){
@@ -351,21 +337,19 @@
 
               const data = centroDiv.children[5].children[0].children[0]
 
-              console.log(centroDiv.children[5])
-
               let date = new Date(lastSummary.LASTMODIFIED).toLocaleString("pt-BR")
               data.innerText = date
             }
         }
 
-        async function setCentroInfo(summaries, centro){
+        async function setCentroInfo(summaries, centro, totalCentrosAmount){
           const centroDiv = document.getElementById(centro.ID)
 
           const situacao = centroDiv.children[3].children[0].children[0]
 
           try {
 
-            setCentroResponse(centroDiv, centro)
+            setCentroResponse(centroDiv, centro, totalCentrosAmount)
             setCentroSummary(centroDiv, summaries, centro)
            
           } catch (error) {
@@ -377,12 +361,10 @@
         }
 
         async function setCentrosResponses(centros){
-          console.log("Started")
           let summaries = <%- JSON.stringify(summaries) %> 
 
-          console.log("Summaries", summaries)
           for (const centro of centros) {
-            setCentroInfo(summaries, centro)  
+            setCentroInfo(summaries, centro, centros.length)  
           }
         }
       
