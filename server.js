@@ -145,7 +145,7 @@ async function TryLogout(req, res) {
   req.session.auth = null;
   req.session = null;
 
-  res.("/");
+  res.redirect("/");
 }
 
 async function TryAuthenticate(req, res, route) {
@@ -156,7 +156,7 @@ async function TryAuthenticate(req, res, route) {
 
   const auth = await authcontroller.authenticate(loginInfo);
   if (!auth) {
-    res.("/login?failedAuth=true");
+    res.redirect("/login?failedAuth=true");
   } else {
     
     const authToken = generateAuthToken();
@@ -167,7 +167,7 @@ async function TryAuthenticate(req, res, route) {
     req.session.auth = auth;
 
     if (req.session.originalUrl) {
-      res.(req.session.originalUrl);
+      res.redirect(req.session.originalUrl);
     } else {
       let info = {
         link: auth.scope_id,
