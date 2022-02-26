@@ -89,7 +89,9 @@ trabalhoscontroller.generateInfoByCache();
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 // app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 app.use(bodyParser.json());
 
 app.use(
@@ -111,7 +113,7 @@ const pageByPermission = {
   coord_regional: function (info) {
     return `/summary_coord?ID=${info.link}`;
   },
-  coord_geral: function(info){
+  coord_geral: function (info) {
     return `/summary_alianca`;
   }
 };
@@ -131,7 +133,9 @@ const requireAuth = (req, res, next) => {
     next();
   } else {
     req.session.originalUrl = req.originalUrl;
-    res.render("pages/login",{message:{}});
+    res.render("pages/login", {
+      message: {}
+    });
   }
 };
 
@@ -141,7 +145,7 @@ async function TryLogout(req, res) {
   req.session.auth = null;
   req.session = null;
 
-  res.redirect("/login");
+  res.("/");
 }
 
 async function TryAuthenticate(req, res, route) {
@@ -152,8 +156,9 @@ async function TryAuthenticate(req, res, route) {
 
   const auth = await authcontroller.authenticate(loginInfo);
   if (!auth) {
-    res.redirect("/login?failedAuth=true");
+    res.("/login?failedAuth=true");
   } else {
+    
     const authToken = generateAuthToken();
     authTokens[authToken] = loginInfo.user;
 
@@ -162,7 +167,7 @@ async function TryAuthenticate(req, res, route) {
     req.session.auth = auth;
 
     if (req.session.originalUrl) {
-      res.redirect(req.session.originalUrl);
+      res.(req.session.originalUrl);
     } else {
       let info = {
         link: auth.scope_id,
@@ -259,10 +264,14 @@ app.get("/cadastro_alianca", requireAuth, async function (req, res) {
   const page = req.query.page || 0;
   const form_alias = "Cadastro de Informações Anual";
 
-  quiz_actions.open(res, { centro_id, form_alias, page });
+  quiz_actions.open(res, {
+    centro_id,
+    form_alias,
+    page
+  });
 });
 
-async function setQuizResponse(centroID, quizID, questionID,ANSWER){
+async function setQuizResponse(centroID, quizID, questionID, ANSWER) {
   try {
     let answewrInfo = {
       CENTRO_ID: centroID,
@@ -272,43 +281,42 @@ async function setQuizResponse(centroID, quizID, questionID,ANSWER){
     };
     response = await trabalhoscontroller.postQuizResponse(answewrInfo);
     response = response[0];
-    
+
   } catch (error) {
     logger.error("setQuizResponse", error)
     throw error
   }
-  
+
 }
 
-async function getCentroCoordResponses(centroId, quizInfo){
+async function getCentroCoordResponses(centroId, quizInfo) {
   try {
     const templates = []
-    if(!centroId){
+    if (!centroId) {
       return templates
     }
-  
-    if(quizInfo)
-    {
+
+    if (quizInfo) {
       quizInfo = quizInfo[0]
 
       let coordresponse = await trabalhoscontroller.getCoordResponsesByCentroId(centroId)
-  
+
       for (const question of quizInfo.QUESTIONS[0].GROUP) {
 
-        let response = coordresponse.filter(m=>{
+        let response = coordresponse.filter(m => {
           return m.QUESTION_ID == question._id
         })
-    
+
         response = response[0]
-      
-        if(!response){
+
+        if (!response) {
           response = await setQuizResponse(centroId, quizInfo.ID, question._id, " ")
-          if(response){
+          if (response) {
             response = response[0]
           }
         }
 
-        if(response){
+        if (response) {
           templates.push({
             ANSWER_ID: response.ID,
             ANSWER: response.ANSWER,
@@ -316,18 +324,43 @@ async function getCentroCoordResponses(centroId, quizInfo){
             PRESET_VALUES: question.PRESET_VALUES
           });
         }
-    
-        
+
+
       }
     }
-  
-    return templates;
-    
+
+    return {
+      templates:templates
+    };
+
   } catch (error) {
-    logger.error("getCentroCoordResponses",error)
+    logger.error("getCentroCoordResponses", error)
     throw error
   }
 }
+
+app.get("/bff/get_required", async function(req,res){
+  const centroId = req.query.centroID;
+
+  const requiredQuestions = await trabalhoscontroller.getRequiredQuestions();
+
+    const not_finished = []
+
+    for (const question of requiredQuestions) {
+      const params = {
+        CENTRO_ID: centroId,
+        QUESTION_ID: question.ID
+      }
+      const paramsParsed = parser.getParamsParsed(params);
+      const response = await trabalhoscontroller.getQuizResponseByParams(paramsParsed);
+
+      if (!response[0] || response[0].ANSWER.trim().length == 0) {
+        not_finished.push(question.QUESTION)
+      }
+    }
+
+    res.json(not_finished)
+})
 
 app.get("/summary_coord", requireAuth, async function (req, res) {
   const regional_id = req.query.ID;
@@ -355,20 +388,22 @@ app.get("/summary_coord", requireAuth, async function (req, res) {
 
   coordenador = coordenador[0];
 
-  coordenador = coordenador || { NOME:" "}
+  coordenador = coordenador || {
+    NOME: " "
+  }
+
 
   res.render("pages/summary_coord", {
     regionalInfo: regionalInfo,
     centros: centros,
     coordenador: coordenador,
-    coord_quiz:coord_quiz,
+    coord_quiz: coord_quiz,
     summaries: summaries
   });
 });
 
 app.get("/summary_alianca", requireAuth, async function (req, res) {
-  res.render("pages/summary_alianca", {
-  });
+  res.render("pages/summary_alianca", {});
 });
 
 app.post("/quiz", requireAuth, async function (req, res) {
@@ -388,9 +423,9 @@ app.post("/quiz", requireAuth, async function (req, res) {
   });
 });
 
-app.delete("/remove_answer", requireAuth, async function(req, res){
+app.delete("/remove_answer", requireAuth, async function (req, res) {
   const answer = req.originalUrl;
-  let paramsFrom =parser.getQueryParamsParsed(answer);
+  let paramsFrom = parser.getQueryParamsParsed(answer);
 
   let paramsParsed = parser.getParamsParsed({
     _id: paramsFrom.answerId,
@@ -400,13 +435,13 @@ app.delete("/remove_answer", requireAuth, async function(req, res){
   res.json(quizResponse)
 })
 
-function getDefaultValue(question){
+function getDefaultValue(question) {
   return question.PRESET_VALUES.length > 0 ? question.PRESET_VALUES[0] : " ";
 }
 
-app.post("/add_answer", requireAuth, async function(req,res){
+app.post("/add_answer", requireAuth, async function (req, res) {
   const answer = req.originalUrl;
-  let paramsFrom =parser.getQueryParamsParsed(answer);
+  let paramsFrom = parser.getQueryParamsParsed(answer);
 
   const paramsParsed = parser.getParamsParsed({
     _id: paramsFrom.groupId
@@ -414,13 +449,13 @@ app.post("/add_answer", requireAuth, async function(req,res){
   const groupQuestion = await trabalhoscontroller.getGroupQuestionByParams(paramsParsed);
 
   const questions = groupQuestion[0].GROUP;
- 
+
 
   let response = []
 
   for (let index = 0; index < questions.length; index++) {
     const question = questions[index]
-    
+
     params = {
       "CENTRO_ID": paramsFrom.centroId,
       "QUIZ_ID": paramsFrom.quizId,
@@ -434,9 +469,9 @@ app.post("/add_answer", requireAuth, async function(req,res){
   res.json(response);
 });
 
-app.put("/update_answer", requireAuth, async function(req,res){
+app.put("/update_answer", requireAuth, async function (req, res) {
   const answer = req.originalUrl;
-  let paramsFrom =parser.getQueryParamsParsed(answer);
+  let paramsFrom = parser.getQueryParamsParsed(answer);
 
   params = {
     "CENTRO_ID": paramsFrom.centroId,
@@ -452,10 +487,10 @@ app.put("/update_answer", requireAuth, async function(req,res){
     ANSWER: paramsFrom.answer,
   });
 
-  if(trabalhoscontroller.checkQuestionInCoordQuiz(paramsFrom.questionId)){
-    trabalhoscontroller.updateCoordResponseByCentroId(paramsFrom.questionId,paramsFrom.answerId, paramsFrom.answer)
+  if (trabalhoscontroller.checkQuestionInCoordQuiz(paramsFrom.questionId)) {
+    trabalhoscontroller.updateCoordResponseByCentroId(paramsFrom.questionId, paramsFrom.answerId, paramsFrom.answer)
   }
-  
+
 
   res.json(quizResponse)
 })
@@ -483,12 +518,14 @@ app.post("/update_centro", requireAuth, async function (req, res) {
 app.get("/login", async function (req, res) {
   const failedAuth = req.query.failedAuth;
   let error
-  if(failedAuth){
+  if (failedAuth) {
     error = "Usuário ou senha incorretos. Favor tentar novamente"
   }
-  res.render("pages/login", {message:{
-    error: error
-  }});
+  res.render("pages/login", {
+    message: {
+      error: error
+    }
+  });
 });
 
 app.post("/login", async function (req, res) {
@@ -547,41 +584,39 @@ app.post("/pesquisa", requireAuth, async function (req, res) {
 
 //BFF
 
-app.post("/bff/coord_responses", async function(req,res){
- try {
-   const centroID = req.query.centroID;
-   const coord_quiz = req?.body;
-   const coord_responses = await getCentroCoordResponses(centroID,coord_quiz)
-   res.json(coord_responses)
-   
- } catch (error) {
-  logger.error(`post:coord_responses ${centroID}`, error)
-  throw(error)   
- }
+app.post("/bff/coord_responses", async function (req, res) {
+  try {
+    const centroID = req.query.centroID;
+    const coord_quiz = req ?.body;
+    const coord_responses = await getCentroCoordResponses(centroID, coord_quiz)
+    res.json(coord_responses)
+
+  } catch (error) {
+    logger.error(`post:coord_responses ${centroID}`, error)
+    throw (error)
+  }
 })
 
-app.get("/bff/centros", async function(req,res){
+app.get("/bff/centros", async function (req, res) {
   const regionalName = req.query.regionalName;
 
   let centros;
-  if(regionalName){
+  if (regionalName) {
     centros = await regionalcontroller.getCentrosByRegional(regionalName)
-  }
-  else{
+  } else {
     centros = await regionalcontroller.getCentros();
   }
 
   res.json(centros);
 })
 
-app.get("/bff/regional", async function(req, res){
+app.get("/bff/regional", async function (req, res) {
   const regionalName = req.query.regionalName;
 
   let regionaisInfo
-  if(regionalName){
+  if (regionalName) {
     regionaisInfo = await regionalcontroller.getRegionais();
-  }
-  else{
+  } else {
     const paramsParsed = parser.getParamsParsed({
       NOME_REGIONAL: regionalName,
     });
@@ -591,7 +626,7 @@ app.get("/bff/regional", async function(req, res){
   res.json(regionaisInfo)
 })
 
-app.get("/bff/generalinfo", async function(req, res){
+app.get("/bff/generalinfo", async function (req, res) {
   const passes = await trabalhoscontroller.getPasses();
   const responses = await trabalhoscontroller.getSummaries();
   const regionais = await regionalcontroller.getRegionais();
@@ -599,14 +634,14 @@ app.get("/bff/generalinfo", async function(req, res){
 
   res.json({
     passes: passes,
-    responses:responses,
+    responses: responses,
     regionais: regionais,
     centros: centros
   })
 
 })
 
-app.get("/bff/coord_info", async function(req, res){
+app.get("/bff/coord_info", async function (req, res) {
 
   const regional_id = req.query.ID;
 
@@ -627,23 +662,23 @@ app.get("/bff/coord_info", async function(req, res){
   }))
 
   res.json({
-    regional:regionalInfo,
+    regional: regionalInfo,
     coordenador: coordenador,
     coord_quiz: coord_quiz
   });
 });
 
-app.get("/bff/situacao", async function(req, res){
+app.get("/bff/situacao", async function (req, res) {
   const nomeRegional = req.query.regionalName;
 
   const centros = await regionalcontroller.getCentrosByRegional(nomeRegional)
 
-  const centroIDs = centros.map(m=>{
+  const centroIDs = centros.map(m => {
     return m.ID
   })
 
   let question = await trabalhoscontroller.getQuestionByParams(parser.getParamsParsed({
-    QUESTION:"Situação"
+    QUESTION: "Situação"
   }))
 
   question = question[0]
@@ -651,8 +686,8 @@ app.get("/bff/situacao", async function(req, res){
   const situacoes = {
     centros: centros,
     summary: [],
-    Integradas : [],
-    Inscritas : []
+    Integradas: [],
+    Inscritas: []
   };
   for (const id of centroIDs) {
 
@@ -661,7 +696,7 @@ app.get("/bff/situacao", async function(req, res){
     }))
     summary = summary[0]
 
-    if(summary){
+    if (summary) {
       situacoes.summary.push(summary);
     }
 
@@ -671,32 +706,32 @@ app.get("/bff/situacao", async function(req, res){
       "QUESTION_ID": question.ID
     }));
     situacao = situacao[0]
-    if(situacao){
-      if(situacao.ANSWER == " "){
+    if (situacao) {
+      if (situacao.ANSWER == " ") {
         situacao.ANSWER = question.PRESET_VALUES[0]
       }
 
 
-      if(situacao.ANSWER == question.PRESET_VALUES[0])
+      if (situacao.ANSWER == question.PRESET_VALUES[0])
         situacoes.Integradas.push(situacao)
-      else{
+      else {
         situacoes.Inscritas.push(situacao)
-        }
-    }    
+      }
+    }
   }
 
-  
+
 
   res.json(situacoes)
 });
 
-app.get("/bff/summaries", async function(req, res){
+app.get("/bff/summaries", async function (req, res) {
   response = await trabalhoscontroller.getSummaries()
 
   res.json(response)
 })
 
-app.get("/bff/summary", async function(req,res){
+app.get("/bff/summary", async function (req, res) {
   const centroID = req.query.centroID;
 
   response = await trabalhoscontroller.getQuizSummaryByParams(parser.getParamsParsed({
@@ -707,21 +742,22 @@ app.get("/bff/summary", async function(req,res){
 })
 
 
-app.get("/bff/initializeuserinfo", async function(req, res){
+app.get("/bff/initializeuserinfo", async function (req, res) {
   const centro = req.query.centro
   const regional = req.query.regional
   const curto = req.query.curto
 
   const info = {
     centro: centro,
-    regional, regional,
+    regional,
+    regional,
     curto: curto
   }
 
   try {
     let response = await userinfocontroller.initializeUserInfo(info)
     res.json(response)
-    
+
   } catch (error) {
     logger.error("/bff/initializeuserinfo", error)
     throw error

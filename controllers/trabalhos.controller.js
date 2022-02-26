@@ -243,6 +243,30 @@ module.exports = class trabalhosController {
     }
   }
 
+  async getRequiredQuestions(){
+
+    try {
+
+      if(this.cache.getRequiredQuestions){
+        return this.cache.getRequiredQuestions;
+      }else{
+        const requiredQuestions = await this.getQuestionByParams(this.parser.getParamsParsed({
+          "IS_REQUIRED": true
+        }))
+
+        this.cache.getRequiredQuestions = requiredQuestions
+        return requiredQuestions
+      }
+      
+    } catch (error) {
+      this.logger.error(
+        "trabalhos.controller.getRequiredQuestions: Error=>",
+        error
+      );
+      throw error
+    }
+  }
+
   async getQuizResponseByParams(params) {
     try {
       

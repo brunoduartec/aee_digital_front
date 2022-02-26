@@ -11,8 +11,8 @@
     </div>
     <div class="validacao-coord-subtitulo">
       <h3>Regional <%= regionalInfo.NOME_REGIONAL%></h3>
-      <p><b> Coordenador: <%= coordenador.NOME%></b></p>
-      <p><b> Quantidade de Casas: <%=centros.length%></b></p>
+      <p><b> Coordenador: </b><%= coordenador.NOME%></p>
+      <p><b> Quantidade de Casas: </b><%=centros.length%></p>
       <div class="form row">
         <span class="border col-md-12"
           ><div class="form-group">
@@ -37,7 +37,7 @@
             ANSWER_ID:"",
             _id:"",
             ANSWER:"",
-            PRESET_VALUES:["Integrada", "Inscrita", "Desfiliada", "Encerrada"]
+            PRESET_VALUES:["Pendente","Integrada", "Inscrita", "Desfiliada", "Encerrada"]
           }
     %>
     <div class="validacao-coord-dados">
@@ -153,7 +153,7 @@
         >
       </div>
       <div class="form row">
-        <span class="border col-md-4"
+        <span class="border col-md-2"
           ><div class="form-group">
             <p><b>Nome da Casa:</b></p>
           </div></span
@@ -179,8 +179,13 @@
           </div></span
         >
         <span class="border col-md-2"
+        ><div class="form-group">
+          <p><b>Data da Avaliação</b></p>
+        </div></span
+        >
+        <span class="border col-md-2"
           ><div class="form-group">
-            <p><b>Data da Avaliação</b></p>
+            <p><b>Perguntas Faltantes</b></p>
           </div></span
         >
       </div>
@@ -189,7 +194,7 @@
         
         %>
         <div class="form row " style="background-color:rgb(222, 49, 99);" name="centro" id="<%=centro.ID%>">
-        <span class="border col-md-4"
+        <span class="border col-md-2"
           ><div class="form-group"><p>
             <a href="/cadastro_alianca?ID=<%=centro.ID%>&page=0">
             <%=centro.NOME_CENTRO%>
@@ -221,6 +226,8 @@
           ><div class="form-group"><p name="data_avaliacao">
                 Não Finalizado
           </p></div></span>
+          <span class="border col-md-2"
+          ><div class="form-group" name="perguntas_faltantes"></div></span>
       </div>
 
       <%});%>
@@ -254,6 +261,26 @@
            })
           }
 
+          async function getCentroRequiredQuestions(centroId){
+            try {
+              var apiUrl = `bff/get_required?centroID=${centroId}`;
+              let responseInfo = await fetch(apiUrl,{
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                method: "GET",
+              });
+  
+              responseInfo = await responseInfo.json();
+
+              return responseInfo
+              
+            } catch (error) {
+              console.log(`Error at getCentroRequiredQuestions ${centroId}`, error)
+              throw(error)
+            }
+          }
+
           async function getCentroResponses(centroId){
             try {
               var coord_quiz = '<%- JSON.stringify(coord_quiz) %>'
@@ -277,7 +304,10 @@
           }
 
         async function setCentroResponse(centroDiv, centro, totalCentros){
-          let responseInfo = await getCentroResponses(centro.ID);
+          let responses = await getCentroResponses(centro.ID);
+
+          let responseInfo = responses.templates
+          let not_finished = responses.not_finished
 
           const situacao = centroDiv.children[3].children[0].children[0]
           const participacao = centroDiv.children[4].children[0].children[0]
@@ -286,13 +316,13 @@
           situacao.setAttribute("name", responseInfo[0].ANSWER_ID)
           situacao.setAttribute("questionid", responseInfo[0]._id)
 
-          let response = responseInfo[0].ANSWER.length > 3 ? responseInfo[0].ANSWER : "Integrada"
+          let response = responseInfo[0].ANSWER.length > 3 ? responseInfo[0].ANSWER : "Pendente"
 
           const $options = Array.from(situacao.options);
           let option = $options.find(item => item.text === responseInfo[0].ANSWER)
 
           if(!option){
-            option = $options.find(item => item.text === "Integrada")
+            option = $options.find(item => item.text === "Pendente")
           }
           
           if(option){
@@ -342,6 +372,28 @@
             }
         }
 
+        async function setPerguntasFaltantes(centroDiv, centro){
+            const requiredQuestions = await getCentroRequiredQuestions(centro.ID);
+
+            console.log("Required",requiredQuestions)
+            
+            const perguntas_faltantes = centroDiv.children[6].children[0]
+
+
+            let ul = document.createElement("ul");
+
+            perguntas_faltantes.appendChild(ul)
+
+            for (const question of requiredQuestions) {
+              let li = document.createElement("li")
+              li.innerText = question
+
+              ul.appendChild(li)
+            }
+
+
+        }
+
         async function setCentroInfo(summaries, centro, totalCentrosAmount){
           const centroDiv = document.getElementById(centro.ID)
 
@@ -351,6 +403,7 @@
 
             setCentroResponse(centroDiv, centro, totalCentrosAmount)
             setCentroSummary(centroDiv, summaries, centro)
+            setPerguntasFaltantes(centroDiv,centro);
            
           } catch (error) {
             console.log(`Error setCentroInfo ${centro.NOME_CENTRO}`, error)

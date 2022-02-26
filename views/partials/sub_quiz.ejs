@@ -42,7 +42,12 @@
        }
        %>
       <div class="form-group col-md-<%= itemSize%>">
-      <label for="<%= answer_id%>"><%= question.QUESTION%></label>
+      <label for="<%= answer_id%>">
+        <%if(question.IS_REQUIRED){%>
+          *
+          <%}%>
+        <%= question.QUESTION%>
+        </label>
        
       <% switch (question.ANSWER_TYPE) {
           case 'Option' : %>
