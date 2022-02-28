@@ -193,7 +193,7 @@
       <% centros.forEach(function(centro) { 
         
         %>
-        <div class="form row " style="background-color:rgb(222, 49, 99);" name="centro" id="<%=centro.ID%>">
+        <div class="form row " style="background-color:rgb(212, 99, 131);" name="centro" id="<%=centro.ID%>">
         <span class="border col-md-2"
           ><div class="form-group"><p>
             <a href="/cadastro_alianca?ID=<%=centro.ID%>&page=0">
@@ -369,6 +369,8 @@
 
               let date = new Date(lastSummary.LASTMODIFIED).toLocaleString("pt-BR")
               data.innerText = date
+            }else{
+              setPerguntasFaltantes(centroDiv,centro);
             }
         }
 
@@ -376,20 +378,29 @@
             const requiredQuestions = await getCentroRequiredQuestions(centro.ID);
 
             console.log("Required",requiredQuestions)
-            
-            const perguntas_faltantes = centroDiv.children[6].children[0]
 
+            if(requiredQuestions.length > 0){
+              const perguntas_faltantes = centroDiv.children[6].children[0]
+  
+  
+              let ul = document.createElement("ul");
+  
+              perguntas_faltantes.appendChild(ul)
+  
+              for (const question of requiredQuestions) {
+                let li = document.createElement("li")
+                li.innerText = question.QUESTION_ID.QUESTION
+  
+                ul.appendChild(li)
+              }
 
-            let ul = document.createElement("ul");
-
-            perguntas_faltantes.appendChild(ul)
-
-            for (const question of requiredQuestions) {
-              let li = document.createElement("li")
-              li.innerText = question
-
-              ul.appendChild(li)
+              centroDiv.setAttribute("style", "background-color:rgb(253, 243, 128);")
             }
+            else{
+              const data = centroDiv.children[5].children[0].children[0]
+              data.innerText = "Não Iniciado"
+            }
+            
 
 
         }
@@ -403,7 +414,7 @@
 
             setCentroResponse(centroDiv, centro, totalCentrosAmount)
             setCentroSummary(centroDiv, summaries, centro)
-            setPerguntasFaltantes(centroDiv,centro);
+            
            
           } catch (error) {
             console.log(`Error setCentroInfo ${centro.NOME_CENTRO}`, error)

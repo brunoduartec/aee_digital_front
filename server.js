@@ -158,7 +158,7 @@ async function TryAuthenticate(req, res, route) {
   if (!auth) {
     res.redirect("/login?failedAuth=true");
   } else {
-    
+
     const authToken = generateAuthToken();
     authTokens[authToken] = loginInfo.user;
 
@@ -304,7 +304,7 @@ async function getCentroCoordResponses(centroId, quizInfo) {
       for (const question of quizInfo.QUESTIONS[0].GROUP) {
 
         let response = coordresponse.filter(m => {
-          return m.QUESTION_ID == question._id
+          return m.QUESTION_ID._id == question._id
         })
 
         response = response[0]
@@ -320,7 +320,7 @@ async function getCentroCoordResponses(centroId, quizInfo) {
           templates.push({
             ANSWER_ID: response.ID,
             ANSWER: response.ANSWER,
-            _id: response.QUESTION_ID,
+            _id: response.QUESTION_ID._id,
             PRESET_VALUES: question.PRESET_VALUES
           });
         }
@@ -330,7 +330,7 @@ async function getCentroCoordResponses(centroId, quizInfo) {
     }
 
     return {
-      templates:templates
+      templates: templates
     };
 
   } catch (error) {
@@ -339,27 +339,21 @@ async function getCentroCoordResponses(centroId, quizInfo) {
   }
 }
 
-app.get("/bff/get_required", async function(req,res){
+app.get("/bff/get_required", async function (req, res) {
   const centroId = req.query.centroID;
 
-  const requiredQuestions = await trabalhoscontroller.getRequiredQuestions();
+  let not_finished
+  const responses = await trabalhoscontroller.getQuizResponseByParams(parser.getParamsParsed({
+    CENTRO_ID: centroId,
+    'QUESTION_ID.IS_REQUIRED': true
+  }))
 
-    const not_finished = []
-
-    for (const question of requiredQuestions) {
-      const params = {
-        CENTRO_ID: centroId,
-        QUESTION_ID: question.ID
-      }
-      const paramsParsed = parser.getParamsParsed(params);
-      const response = await trabalhoscontroller.getQuizResponseByParams(paramsParsed);
-
-      if (!response[0] || response[0].ANSWER.trim().length == 0) {
-        not_finished.push(question.QUESTION)
-      }
-    }
-
-    res.json(not_finished)
+  if (responses) {
+    not_finished = responses.filter(m => {
+      return m.ANSWER.trim().length == 0;
+    })
+  }
+  res.json(not_finished)
 })
 
 app.get("/summary_coord", requireAuth, async function (req, res) {

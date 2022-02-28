@@ -59,7 +59,7 @@ module.exports = class trabalhosController {
     let c = this.cache.coord_responses;
     
     let questionToUpdate = c.find(m=>{
-      return m.QUESTION_ID === questionId && m.ID === answerid
+      return m.QUESTION_ID._id === questionId && m.ID === answerid
     })
 
     if(questionToUpdate){
@@ -322,14 +322,14 @@ module.exports = class trabalhosController {
       if(this.cache.getSummaries){
         return this.cache.getSummaries;
       }else{
-        const quiz_response = await this.request.get(
+        const quiz_summaries = await this.request.get(
           "aee_digital_trabalhos",
           `/atividade_generic_quiz_summary`
         );
   
-        this.cache.getSummaries = quiz_response;
-        this.logger.info("getSummaries", quiz_response);
-        return quiz_response;
+        this.cache.getSummaries = quiz_summaries;
+        this.logger.info("getSummaries", quiz_summaries);
+        return quiz_summaries;
       }
     } catch (error) {
       this.logger.error("trabalhos.controller.getSummaries: Error=>", error);
@@ -405,13 +405,13 @@ module.exports = class trabalhosController {
 
   async getPessoaByParams(params) {
     try {
-      const quiz_response = await this.request.get(
+      const pessoa = await this.request.get(
         "aee_digital_trabalhos",
         `/pessoa?${params}`
       );
 
-      this.logger.info("getPessoaParams", quiz_response);
-      return quiz_response;
+      this.logger.info("getPessoaParams", pessoa);
+      return pessoa;
     } catch (error) {
       this.logger.error("trabalhos.controller.getPessoaParams: Error=>", error);
       throw error
@@ -421,13 +421,13 @@ module.exports = class trabalhosController {
   async getQuizSummaryByParams(params) {
     try {
       
-      const quiz_response = await this.request.get(
+      const quiz_summarie = await this.request.get(
         "aee_digital_trabalhos",
         `/atividade_generic_quiz_summary?${params}`
       );
 
-      this.logger.info("getQuizSummaryByParams", quiz_response);
-      return quiz_response;
+      this.logger.info("getQuizSummaryByParams", quiz_summarie);
+      return quiz_summarie;
     } catch (error) {
       this.logger.error("trabalhos.controller.getQuizSummaryByParams: Error=>", error);
       throw error
@@ -437,14 +437,14 @@ module.exports = class trabalhosController {
     try {
       this.cache.getSummaries = null;
 
-      const quiz_response = await this.request.post(
+      const quiz_summary = await this.request.post(
         "aee_digital_trabalhos",
         `/atividade_generic_quiz_summary`,
         params
       );
 
-      this.logger.info("postQuizSummary", quiz_response);
-      return quiz_response;
+      this.logger.info("postQuizSummary", quiz_summary);
+      return quiz_summary;
     } catch (error) {
       this.logger.error("trabalhos.controller.postQuizSummary: Error=>", error);
       throw error
@@ -455,14 +455,14 @@ module.exports = class trabalhosController {
     try {
       this.cache.getSummaries = null;
       
-      const quiz_response = await this.request.put(
+      const quiz_summary = await this.request.put(
         "aee_digital_trabalhos",
         `/atividade_generic_quiz_summary?${params}`,
         value
       );
 
-      this.logger.info("putQuizSummary", quiz_response);
-      return quiz_response;
+      this.logger.info("putQuizSummary", quiz_summary);
+      return quiz_summary;
     } catch (error) {
       this.logger.error("trabalhos.controller.putQuizSummary: Error=>", error);
       throw error
@@ -487,7 +487,7 @@ module.exports = class trabalhosController {
             for (const question of groupQuestions.GROUP) {
               if(question.IS_REQUIRED){
                   let response = responses.filter(m=>{
-                    return m.CENTRO_ID === centroId && m.QUIZ_ID === quiz._id && m.QUESTION_ID === question._id
+                    return m.CENTRO_ID === centroId && m.QUIZ_ID === quiz._id && m.QUESTION_ID._id === question._id
                   })
   
                   if(response.length==0 ){
