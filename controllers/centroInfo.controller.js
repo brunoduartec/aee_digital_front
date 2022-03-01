@@ -28,11 +28,11 @@ module.exports = class CentroInfoController {
       };
     }
 
-    this.logger.info("End generate centro cache");
+    this.logger.info(`End generate centro cache`);
   }
 
   async getCentroInfo(regional, nome) {
-    this.logger.info(regional, nome);
+    this.logger.info(`getCentroInfo: ${regional} ${nome}`);
     return this.cache[regional][nome];
   }
 };

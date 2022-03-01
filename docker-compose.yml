@@ -13,8 +13,12 @@ services:
       - "4200:4200"
     networks:
       - aee_digital_backend
+      - aee_trabalho_db
     restart: always
 networks:
   aee_digital_backend:
     external: true
     name: aee_digital_backend
+  aee_trabalho_db:
+    name: aee_trabalho_db
+    driver: bridge

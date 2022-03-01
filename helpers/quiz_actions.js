@@ -131,7 +131,7 @@ module.exports = class QuizActions {
     try {
       const form_info = await this._getFormInfo(centro_id, form_alias, page);
   
-      this.logger.info("get:cadastro_alianca", JSON.stringify(form_info));
+      this.logger.info(`get:cadastro_alianca => ${JSON.stringify(form_info)}`);
   
       res.render("pages/quiz", {
         index: page,

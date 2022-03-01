@@ -1,5 +1,4 @@
-const Logger = require("../helpers/logger");
-const logger = new Logger();
+const logger = require("../helpers/logger");
 
 function getNestedObject (nestedObj, pathArr) {
   return pathArr.reduce((obj, key) =>
@@ -20,7 +19,7 @@ function getParamsParsed(params) {
     }
   }
 
-  logger.info("getParamsParsed", paramsParsed.substring(1));
+  logger.info(`getParamsParsed => ${paramsParsed.substring(1)}`);
 
   return paramsParsed.substring(1);
 }

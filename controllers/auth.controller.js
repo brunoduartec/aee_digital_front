@@ -43,7 +43,7 @@ module.exports = class authController {
       };
     }
 
-    this.logger.info("End generate cache");
+    this.logger.info(`End generate cache`);
   }
 
   async checkUserPass(user, pass) {

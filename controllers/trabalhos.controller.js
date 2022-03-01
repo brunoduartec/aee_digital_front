@@ -13,7 +13,7 @@ module.exports = class trabalhosController {
         CATEGORY: "Coordenador"
       })
 
-      this.logger.info("Start Caching Trabalho")
+      this.logger.info(`Start Caching Trabalho`)
 
       let coord_quiz = await this.getQuizTemplateByParams(paramsParsed);
 
@@ -27,9 +27,9 @@ module.exports = class trabalhosController {
 
       this.getSummaries();
 
-      this.logger.info("trabalhoscontroller:generateInfoByCache")
+      this.logger.info(`trabalhoscontroller:generateInfoByCache`)
     } catch (error) {
-      this.logger.error("trabalhocontroller error reading cache", error)
+      this.logger.error(`trabalhocontroller error reading cache: ${error}`)
       throw error
     }
   }
@@ -42,7 +42,7 @@ module.exports = class trabalhosController {
       })
       
     } catch (error) {
-      this.logger.error("trabalhocontroller:getCoordResponsesByCentroId", error)
+      this.logger.error(`trabalhocontroller:getCoordResponsesByCentroId: ${error}`)
       throw error
     }
   }
@@ -78,14 +78,14 @@ module.exports = class trabalhosController {
           `/atividade`
         );
   
-        this.logger.info("getAtividades", atividades);
+        this.logger.info(`getAtividades: ${atividades}`);
 
         this.cache.atividades = atividades;
         return atividades;
 
       }
     } catch (error) {
-      this.logger.error("trabalhos.controller.getAtividades: Error=>", error);
+      this.logger.error(`trabalhos.controller.getAtividades: Error=> ${error}`);
       throw error
     }
   }
@@ -99,7 +99,7 @@ module.exports = class trabalhosController {
           "aee_digital_trabalhos",
           `/atividade_centro?${params}`
         );
-        this.logger.info("getAtividadesCentroByParams", atividades);
+        this.logger.info(`getAtividadesCentroByParams => ${atividades}`);
 
         if(!this.cache.getAtividadesCentroByParams){
           this.cache.getAtividadesCentroByParams = {}
@@ -109,7 +109,7 @@ module.exports = class trabalhosController {
         return atividades;
       }
     } catch (error) {
-      this.logger.error("trabalhos.controller.getAtividadesCentroByParams: Error=>", error);
+      this.logger.error(`trabalhos.controller.getAtividadesCentroByParams: Error=> ${error}`);
       throw error
     }
   }
@@ -130,14 +130,11 @@ module.exports = class trabalhosController {
 
         this.cache.getAtividadesCentroSummaryByParams[params] = atividades
 
-        this.logger.info("getAtividadesCentroSummaryByParams", atividades);
+        this.logger.info(`getAtividadesCentroSummaryByParams", ${atividades}`);
         return atividades;
       }
     } catch (error) {
-      this.logger.error(
-        "trabalhos.controller.getAtividadesCentroSummaryByParams: Error=>",
-        error
-      );
+      this.logger.error( `trabalhos.controller.getAtividadesCentroSummaryByParams: Error=> ${error}` );
       throw error
     }
   }
@@ -157,11 +154,11 @@ module.exports = class trabalhosController {
 
         this.cache.getFormByParams[params] = form
 
-        this.logger.info("getFormByParams", form);
+        this.logger.info(`getFormByParams => ${form}`);
         return form;
       }
     } catch (error) {
-      this.logger.error("trabalhos.controller.getFormByParams: Error=>", error);
+      this.logger.error(`trabalhos.controller.getFormByParams: Error=> ${error}`);
       throw error
     }
   }
@@ -180,15 +177,12 @@ module.exports = class trabalhosController {
 
         this.cache.getQuizTemplateByParams[params] = quiz
   
-        this.logger.info("getQuizTemplateByParams", quiz);
+        this.logger.info(`getQuizTemplateByParams ${quiz}`);
         return quiz;
 
       }
     } catch (error) {
-      this.logger.error(
-        "trabalhos.controller.getQuizTemplateByParams: Error=>",
-        error
-      );
+      this.logger.error( `trabalhos.controller.getQuizTemplateByParams: Error=> ${error}` );
       throw error
     }
   }
@@ -208,12 +202,12 @@ module.exports = class trabalhosController {
 
         this.cache.getQuestionByParams[params] = quiz;
   
-        this.logger.info("getQuestionByParams", quiz);
+        this.logger.info(`getQuestionByParams ${quiz}`);
         return quiz;
 
       }
     } catch (error) {
-      this.logger.error("trabalhos.controller.getQuestionByParams: Error=>", error);
+      this.logger.error(`trabalhos.controller.getQuestionByParams: Error=> ${error}`);
       throw error
     }
   }
@@ -223,7 +217,7 @@ module.exports = class trabalhosController {
       if(!this.cache.getGroupQuestionByParams ){this.cache.getGroupQuestionByParams={}}
 
       if(this.cache.getGroupQuestionByParams[params]){
-        this.logger.info("getGroupQuestionByParams by cache", quiz);
+        this.logger.info(`getGroupQuestionByParams by cache ${quiz}`);
         return this.cache.getGroupQuestionByParams[params]
       }else{
         const quiz = await this.request.get(
@@ -233,12 +227,12 @@ module.exports = class trabalhosController {
 
         this.cache.getGroupQuestionByParams[params] = quiz;
   
-        this.logger.info("getGroupQuestionByParams", quiz);
+        this.logger.info(`getGroupQuestionByParams ${quiz}`);
         return quiz;
         
       }
     } catch (error) {
-      this.logger.error("trabalhos.controller.getGroupQuestionByParams: Error=>", error);
+      this.logger.error(`trabalhos.controller.getGroupQuestionByParams: Error=> ${error}`);
       throw error
     }
   }
@@ -259,10 +253,7 @@ module.exports = class trabalhosController {
       }
       
     } catch (error) {
-      this.logger.error(
-        "trabalhos.controller.getRequiredQuestions: Error=>",
-        error
-      );
+      this.logger.error( `trabalhos.controller.getRequiredQuestions: Error=> ${error}` );
       throw error
     }
   }
@@ -275,13 +266,10 @@ module.exports = class trabalhosController {
         `/atividade_generic_quiz_answer?${params}`
       );
 
-      this.logger.info("getQuizResponseByParams", quiz_response);
+      this.logger.info(`getQuizResponseByParams ${quiz_response}`);
       return quiz_response;
     } catch (error) {
-      this.logger.error(
-        "trabalhos.controller.getQuizResponseByParams: Error=>",
-        error
-      );
+      this.logger.error( `trabalhos.controller.getQuizResponseByParams: Error=> ${error}` );
       throw error
     }
   }
@@ -293,13 +281,10 @@ module.exports = class trabalhosController {
         `/atividade_generic_quiz_answer?${params}`
       );
 
-      this.logger.info("deleteQuizResponseByParams", quiz_response);
+      this.logger.info(`deleteQuizResponseByParams ${quiz_response}`);
       return quiz_response;
     } catch (error) {
-      this.logger.error(
-        "trabalhos.controller.deleteQuizResponseByParams: Error=>",
-        error
-      );
+      this.logger.error( `trabalhos.controller.deleteQuizResponseByParams: Error=> ${error}` );
       throw error
     }
   }
@@ -308,10 +293,10 @@ module.exports = class trabalhosController {
     try {
       const atividades = await this.request.get("aee_digital_trabalhos", `/pass`);
 
-      this.logger.info("getPasses", atividades);
+      this.logger.info(`getPasses ${atividades}`);
       return atividades;
     } catch (error) {
-      this.logger.error("trabalhos.controller.getPasses: Error=>", error);
+      this.logger.error(`trabalhos.controller.getPasses: Error=> ${error}`);
       throw error
     }
   }
@@ -328,11 +313,11 @@ module.exports = class trabalhosController {
         );
   
         this.cache.getSummaries = quiz_summaries;
-        this.logger.info("getSummaries", quiz_summaries);
+        this.logger.info(`getSummaries => ${quiz_summaries}`);
         return quiz_summaries;
       }
     } catch (error) {
-      this.logger.error("trabalhos.controller.getSummaries: Error=>", error);
+      this.logger.error(`trabalhos.controller.getSummaries: Error=> ${error}`);
       throw error
     }
 
@@ -345,10 +330,10 @@ module.exports = class trabalhosController {
         `/pass?${params}`
       );
 
-      this.logger.info("getPassByParams", passes);
+      this.logger.info(`getPassByParams => ${passes}`);
       return passes;
     } catch (error) {
-      this.logger.error("trabalhos.controller.getPassByParams: Error=>", error);
+      this.logger.error(`trabalhos.controller.getPassByParams: Error=> ${error}`);
       throw error
     }
   }
@@ -357,10 +342,10 @@ module.exports = class trabalhosController {
     try {
       const pass = await this.request.post("aee_digital_trabalhos", `/pass`, params);
 
-      this.logger.info("postPass", pass);
+      this.logger.info(`postPass => ${pass}`);
       return pass;
     } catch (error) {
-      this.logger.error("trabalhos.controller.postPass: Error=>", error);
+      this.logger.error(`trabalhos.controller.postPass: Error=> ${error}`);
       throw error
     }
   }
@@ -373,13 +358,10 @@ module.exports = class trabalhosController {
         value
       );
 
-      this.logger.info("putQuizResponse", quiz_response);
+      this.logger.info(`putQuizResponse ${quiz_response}`);
       return quiz_response;
     } catch (error) {
-      this.logger.error(
-        "trabalhos.controller.putQuizResponse: Error=>",
-        error
-      );
+      this.logger.error( `trabalhos.controller.putQuizResponse: Error=> ${error} `);
       throw error
     }
   }
@@ -392,13 +374,10 @@ module.exports = class trabalhosController {
         params
       );
 
-      this.logger.info("postQuizResponse", quiz_response);
+      this.logger.info(`postQuizResponse ${quiz_response}`);
       return quiz_response;
     } catch (error) {
-      this.logger.error(
-        "trabalhos.controller.postQuizResponse: Error=>",
-        error
-      );
+      this.logger.error( `trabalhos.controller.postQuizResponse: Error=> ${error}` );
       throw error
     }
   }
@@ -410,10 +389,10 @@ module.exports = class trabalhosController {
         `/pessoa?${params}`
       );
 
-      this.logger.info("getPessoaParams", pessoa);
+      this.logger.info(`getPessoaParams  ${pessoa}`);
       return pessoa;
     } catch (error) {
-      this.logger.error("trabalhos.controller.getPessoaParams: Error=>", error);
+      this.logger.error(`trabalhos.controller.getPessoaParams: Error=> ${error}`);
       throw error
     }
   }
@@ -426,10 +405,10 @@ module.exports = class trabalhosController {
         `/atividade_generic_quiz_summary?${params}`
       );
 
-      this.logger.info("getQuizSummaryByParams", quiz_summarie);
+      this.logger.info(`getQuizSummaryByParams ${quiz_summarie}`);
       return quiz_summarie;
     } catch (error) {
-      this.logger.error("trabalhos.controller.getQuizSummaryByParams: Error=>", error);
+      this.logger.error(`trabalhos.controller.getQuizSummaryByParams: Error=> ${error}`);
       throw error
     }
   }
@@ -443,10 +422,10 @@ module.exports = class trabalhosController {
         params
       );
 
-      this.logger.info("postQuizSummary", quiz_summary);
+      this.logger.info(`postQuizSummary ${quiz_summary}`);
       return quiz_summary;
     } catch (error) {
-      this.logger.error("trabalhos.controller.postQuizSummary: Error=>", error);
+      this.logger.error(`trabalhos.controller.postQuizSummary: Error=> ${error}`);
       throw error
     }
   }
@@ -461,10 +440,10 @@ module.exports = class trabalhosController {
         value
       );
 
-      this.logger.info("putQuizSummary", quiz_summary);
+      this.logger.info(`putQuizSummary ${quiz_summary}`);
       return quiz_summary;
     } catch (error) {
-      this.logger.error("trabalhos.controller.putQuizSummary: Error=>", error);
+      this.logger.error(`trabalhos.controller.putQuizSummary: Error=> ${error}`);
       throw error
     }
   }
@@ -503,7 +482,7 @@ module.exports = class trabalhosController {
       return true;
       
     } catch (error) {
-      this.logger.error("checkFormCompletion", centroId)
+      this.logger.error(`checkFormCompletion ${centroId}`)
       throw error
     }
   }

@@ -7,9 +7,8 @@ app.use(compression())
 
 var bodyParser = require("body-parser");
 
-const Logger = require("./helpers/logger");
+const logger = require("./helpers/logger");
 const readXlsxFile = require("read-excel-file/node");
-const logger = new Logger();
 
 const crypto = require("crypto");
 
@@ -283,7 +282,7 @@ async function setQuizResponse(centroID, quizID, questionID, ANSWER) {
     response = response[0];
 
   } catch (error) {
-    logger.error("setQuizResponse", error)
+    logger.error(`setQuizResponse ${error}`)
     throw error
   }
 
@@ -334,7 +333,7 @@ async function getCentroCoordResponses(centroId, quizInfo) {
     };
 
   } catch (error) {
-    logger.error("getCentroCoordResponses", error)
+    logger.error(`getCentroCoordResponses ${error}`)
     throw error
   }
 }
@@ -570,7 +569,7 @@ app.post("/pesquisa", requireAuth, async function (req, res) {
       });
     }
   } catch (error) {
-    logger.error("post:pesquisa", centro);
+    logger.error(`post:pesquisa: ${centro}`);
     throw error
   }
 });
@@ -586,7 +585,7 @@ app.post("/bff/coord_responses", async function (req, res) {
     res.json(coord_responses)
 
   } catch (error) {
-    logger.error(`post:coord_responses ${centroID}`, error)
+    logger.error(`post:coord_responses ${centroID}: ${error}`)
     throw (error)
   }
 })
@@ -753,7 +752,7 @@ app.get("/bff/initializeuserinfo", async function (req, res) {
     res.json(response)
 
   } catch (error) {
-    logger.error("/bff/initializeuserinfo", error)
+    logger.error(`/bff/initializeuserinfo: ${error}`)
     throw error
   }
 })
