@@ -143,7 +143,7 @@ module.exports = class QuizActions {
       });
       
     } catch (error) {
-      this.logger.error(error)
+      this.logger.error(`quiz_action: open ${error}`)
       throw(error)
     }
   }

@@ -109,7 +109,7 @@ module.exports = class UserInfoController {
       await this.trabalhocontroller.postQuizResponse(answersToAdd);
       
     } catch (error) {
-      this.logger.error(error)
+      this.logger.error(`Insert Answers ${error}`)
       throw error
     }
 
@@ -150,7 +150,7 @@ module.exports = class UserInfoController {
       return info;
       
     } catch (error) {
-      this.logger.error(error)
+      this.logger.error(`initializeUserInfo ${error}`)
       throw error
     }
   }

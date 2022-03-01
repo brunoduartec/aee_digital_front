@@ -25,7 +25,7 @@ module.exports = class Request {
       this.logger.info(`request:get ${response.data}`);
       return response.data;
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(`request:get => ${error}`);
       throw error;
     }
   }
@@ -38,7 +38,7 @@ module.exports = class Request {
       this.logger.info(`request:post ${response.data}`);
       return response.data;
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(`post ${error}`);
       throw error;
     }
   }
@@ -52,7 +52,7 @@ module.exports = class Request {
       this.logger.info(`request:put  ${response.data}`);
       return response.data;
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(`put ${error}`);
       throw error;
     }
   }
@@ -65,7 +65,7 @@ module.exports = class Request {
       this.logger.info(`request:delete ${response.data}`);
       return response.data;
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(`delete ${error}`);
       throw error;
     }
   }

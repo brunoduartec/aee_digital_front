@@ -46,7 +46,7 @@ module.exports = class Reader{
             }
             
         } catch (error) {
-            this.logger.error("parseFuncionamento", error)
+            this.logger.error(`parseFuncionamento =>${error}`)
             throw error
         }
     }
