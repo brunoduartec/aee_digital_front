@@ -22,7 +22,7 @@ module.exports = class Request {
     try {
       const response = await axios.get(encodeURI(`${this.instances[instanceName]}${this.base}${route}`)
       );
-      this.logger.info(`request:get ${response.data}`);
+      this.logger.info(`request:get ${JSON.stringify(response.data)}`);
       return response.data;
     } catch (error) {
       this.logger.error(`request:get => ${error}`);
@@ -35,7 +35,7 @@ module.exports = class Request {
       const response = await axios.post(encodeURI(`${this.instances[instanceName]}${this.base}${route}`),
         body
       );
-      this.logger.info(`request:post ${response.data}`);
+      this.logger.info(`request:post ${JSON.stringify(response.data)}`);
       return response.data;
     } catch (error) {
       this.logger.error(`post ${error}`);

@@ -32,7 +32,7 @@ module.exports = class regionalController {
       }
       else{
         this.naoencontrado.push(centro)
-        this.logger.info(`generateInfoByCache-> Não encontrado: ${centro}`)
+        this.logger.info(`generateInfoByCache-> Não encontrado: ${JSON.stringify(centro)}`)
       }
    
     }
@@ -108,7 +108,7 @@ module.exports = class regionalController {
   async getCentros() {
     try {
       const centros = await this.request.get("aee_digital_regionais", `/centros`);
-      this.logger.info(`getCentros: ${centros}`);
+      this.logger.info(`getCentros: ${JSON.stringify(centros)}`);
       return centros;
     } catch (error) {
       this.logger.error(`regional.controller.getCentros: Error=> ${error}`);

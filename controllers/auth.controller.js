@@ -95,10 +95,16 @@ module.exports = class authController {
   }
 
   getPassInfoByCache(user, pass){
-    if(this.cache[user].pass === pass){
-      return this.cache[user]
+    try{
+      if(this.cache[user]?.pass === pass){
+        return this.cache[user]
+      }
+      return 
+
+    }catch(error){
+      this.logger.error(`controllers:authcontroller: getPassInfoByCache => ${error}`)
+      throw error
     }
-    return 
   }
 
   getPassInfoByCentroCurtoRegional(centro, curto, regional){

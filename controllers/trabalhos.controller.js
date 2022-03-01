@@ -154,7 +154,7 @@ module.exports = class trabalhosController {
 
         this.cache.getFormByParams[params] = form
 
-        this.logger.info(`getFormByParams => ${form}`);
+        this.logger.info(`getFormByParams => ${JSON.stringify(form)}`);
         return form;
       }
     } catch (error) {
@@ -177,7 +177,7 @@ module.exports = class trabalhosController {
 
         this.cache.getQuizTemplateByParams[params] = quiz
   
-        this.logger.info(`getQuizTemplateByParams ${quiz}`);
+        this.logger.info(`getQuizTemplateByParams ${JSON.stringify(quiz)}`);
         return quiz;
 
       }
@@ -313,7 +313,7 @@ module.exports = class trabalhosController {
         );
   
         this.cache.getSummaries = quiz_summaries;
-        this.logger.info(`getSummaries => ${quiz_summaries}`);
+        this.logger.info(`getSummaries => ${JSON.stringify(quiz_summaries)}`);
         return quiz_summaries;
       }
     } catch (error) {

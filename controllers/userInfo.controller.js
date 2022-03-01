@@ -95,11 +95,7 @@ module.exports = class UserInfoController {
                   QUESTION_ID: question._id,
                   ANSWER: answ,
                 };
-
-                await this.trabalhocontroller.postQuizResponse(answerInfo);
-                // answersToAdd.push(answerInfo)
-                
-                
+                answersToAdd.push(answerInfo)
               }
             }
           }
@@ -108,8 +104,7 @@ module.exports = class UserInfoController {
         
       }
 
-      // await this.trabalhocontroller.postQuizResponse(answersToAdd);
-      
+      await this.trabalhocontroller.postQuizResponse(answersToAdd);
     } catch (error) {
       this.logger.error(`Insert Answers ${error}`)
       throw error
