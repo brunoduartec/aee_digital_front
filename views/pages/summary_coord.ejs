@@ -103,19 +103,19 @@
           ><div class="form-group"><p id="Pendentes"><%=totalCentros - totalRespostas%></p></div></span
         >
         <span class="border col-md-2"
-          ><div class="form-group"><p id="Integradas">0</p></div></span
+          ><div class="form-group"><p id="Coord_Integradas">0</p></div></span
         >
         <span class="border col-md-2"
-          ><div class="form-group"><p id="Inscritas">0</p></div></span
+          ><div class="form-group"><p id="Coord_Inscritas">0</p></div></span
         >
         <span class="border col-md-2"
-          ><div class="form-group"><p id="Pendentes">0</p></div></span
+          ><div class="form-group"><p id="Coord_Pendentes">0</p></div></span
         >
         <span class="border col-md-2"
-          ><div class="form-group"><p id="Desfiliadas">0</p></div></span
+          ><div class="form-group"><p id="Coord_Desfiliadas">0</p></div></span
         >
         <span class="border col-md-2"
-          ><div class="form-group"><p id="Encerradas">0</p></div></span
+          ><div class="form-group"><p id="Coord_Encerradas">0</p></div></span
         >
       
       </div>
@@ -244,8 +244,13 @@
         });
 
         function updateCoordSituationStatus(response, totalAmount){
-          let element = document.getElementById(`${response}s`);
+          let element = document.getElementById(`Coord_${response}s`);
+
+          console.log("TOTAL", totalAmount)
+          
           let element_percent = document.getElementById(`Coord_${response}s_percent`);
+          console.log("A----", element)
+          console.log("B----", element_percent)
 
           let amount = parseInt(element.innerText) + 1
 
