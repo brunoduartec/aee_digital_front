@@ -266,7 +266,7 @@ module.exports = class trabalhosController {
         `/atividade_generic_quiz_answer?${params}`
       );
 
-      this.logger.info(`getQuizResponseByParams ${quiz_response}`);
+      this.logger.info(`getQuizResponseByParams ${JSON.stringify(quiz_response)}`);
       return quiz_response;
     } catch (error) {
       this.logger.error( `trabalhos.controller.getQuizResponseByParams: Error=> ${error}` );
@@ -330,7 +330,7 @@ module.exports = class trabalhosController {
         `/pass?${params}`
       );
 
-      this.logger.info(`getPassByParams => ${passes}`);
+      this.logger.info(`getPassByParams => ${JSON.stringify(passes)}`);
       return passes;
     } catch (error) {
       this.logger.error(`trabalhos.controller.getPassByParams: Error=> ${error}`);

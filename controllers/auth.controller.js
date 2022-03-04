@@ -59,6 +59,8 @@ module.exports = class authController {
   }
 
   async getUserPermissions(auth) {
+
+    this.logger.info(`authcontroller:getUserPermissions: ${JSON.stringify(auth)}`)
     //pegar outros depois
     const userGroups = this.groups[auth.groups[0]];
 
@@ -154,6 +156,7 @@ module.exports = class authController {
   }
 
   async initUserInfo(loginInfo) {
+    this.logger.info(`Init User Info: ${JSON.stringify(loginInfo)}`)
     let { user, pass } = loginInfo;
     const cache = this.getPassInfoByCache(user,pass);
     let userInfo;
@@ -172,6 +175,7 @@ module.exports = class authController {
   }
 
   async authenticate(loginInfo) {
+    this.logger.info(`Start auth: ${JSON.stringify(loginInfo)}`)
     let auth = await this.checkUserPass(loginInfo.user, loginInfo.pass);
     let permissions;
 
