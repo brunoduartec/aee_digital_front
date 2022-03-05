@@ -77,6 +77,9 @@ const quiz_actions = new QuizActions(
   parser
 );
 
+const excelExporterController = require("./controllers/excelexporter.controller")
+const excelexportercontroller = new excelExporterController();
+
 // This will hold the users and authToken related to users
 const authTokens = {};
 request.addInstance("aee_digital_regionais", config.aee_digital_regionais);
@@ -377,6 +380,13 @@ app.get("/summary_coord", requireAuth, async function (req, res) {
     "_id": regionalInfo.COORDENADOR_ID
   }))
 
+  let autoavaliacao = await trabalhoscontroller.getQuizTemplateByParams(parser.getParamsParsed({
+    CATEGORY: "Auto Avaliação"
+  }));
+
+  let autoavaliacaoQuestion = autoavaliacao[0].QUESTIONS[0].GROUP[0];
+  let avaliacaoQuestionId = autoavaliacaoQuestion._id;
+
   const summaries = await trabalhoscontroller.getSummaries();
 
   coordenador = coordenador[0];
@@ -391,7 +401,8 @@ app.get("/summary_coord", requireAuth, async function (req, res) {
     centros: centros,
     coordenador: coordenador,
     coord_quiz: coord_quiz,
-    summaries: summaries
+    summaries: summaries,
+    avaliacaoQuestionId: avaliacaoQuestionId
   });
 });
 
@@ -399,7 +410,7 @@ app.get("/summary_alianca", requireAuth, async function (req, res) {
   res.render("pages/summary_alianca", {});
 });
 
-app.post("/quiz", requireAuth, async function (req, res) {
+app.post("/quiz", async function (req, res) {
   let responses = req.body;
   const form_alias = responses.form_alias;
   const centro_id = responses.centro_id;
@@ -734,22 +745,116 @@ app.get("/bff/summary", async function (req, res) {
   res.json(response)
 })
 
+app.get("/bff/answerbyregional", async function (req, res) {
+  const questionId = req.query.questionId
+  const regionalName = req.query.regionalName
 
-app.get("/bff/initializeuserinfo", async function (req, res) {
-  const centro = req.query.centro
-  const regional = req.query.regional
-  const curto = req.query.curto
+  const questionAnswers = await trabalhoscontroller.getQuizResponseByParams(parser.getParamsParsed({
+    "QUESTION_ID._id": questionId
+  }));
 
-  const info = {
-    centro: centro,
-    regional,
-    regional,
-    curto: curto
+  const centros = await regionalcontroller.getCentrosByRegional(regionalName);
+
+  questionResponses = {}
+
+  for (const centro of centros) {
+    questionResponses[centro.ID] = questionAnswers.find(m => {
+      return m.CENTRO_ID === centro.ID
+    })
   }
 
+  res.json(questionResponses)
+
+})
+
+app.get("/bff/exportcentrosummary", async function(req, res){
   try {
-    let response = await userinfocontroller.initializeUserInfo(info)
-    res.json(response)
+    const centroId = req.query.centroId;
+    paramsParsed = parser.getParamsParsed({
+      _id: centroId
+    })
+    centroInfo = await regionalcontroller.getCentroByParam(paramsParsed);
+  
+    const timeStamp = new Date().getTime();
+  
+    const summary = await trabalhoscontroller.getQuizSummaryByParams(parser.getParamsParsed({
+      CENTRO_ID: centroId
+    }));
+  
+  
+    excelinfo = [
+      {
+        "header":"QUESTÃO",
+        "key":"question"
+      },
+      {
+        "header":"OBRIGATÓRIO",
+        "key":"required"
+      },
+      {
+        "header":"RESPOSTA",
+        "key":"answer"
+      },
+    ]
+    let fileSaved = await excelexportercontroller.export(`${centroInfo.NOME_CENTRO}_${timeStamp}`,excelinfo, summary )
+  
+    // res.sendFile(fileSaved)
+    res.send({
+      status: "success",
+      message: "file successfully downloaded",
+      path: `${fileSaved}`,
+     });
+    
+  } catch (error) {
+    logger.error(`/bff/exportcentrosummary: ${error}`)
+    res.json({
+      status: 500,
+      message: error.message
+    })
+  }
+})
+
+
+app.get("/bff/initializeuserinfo", async function (req, res) {
+  try {
+    const centroId = req.query.centroId;
+
+    let centroInfo
+    let centro, curto, regional
+
+    let paramsParsed
+    if (centroId) {
+      paramsParsed = parser.getParamsParsed({
+        ID: centroId
+      })
+    } else {
+      paramsParsed = parser.getParamsParsed({
+        NOME_CENTRO: req.query.centro,
+        NOME_CURTO: req.query.curto,
+        "REGIONAL.NOME_REGIONAL": req.query.regionalName
+      })
+    }
+
+    centroInfo = await regionalcontroller.getCentroByParam(paramsParsed);
+
+    centro = centroInfo.NOME_CENTRO,
+      regional = centroInfo.REGIONAL.NOME_REGIONAL,
+      curto = centroInfo.NOME_CURTO
+
+    let responses = await trabalhoscontroller.getQuizResponseByParams({
+      CENTRO_ID: centroInfo.ID
+    });
+
+    if (responses[0].length == 0) {
+      const info = {
+        centro: centro,
+        regional: regional,
+        curto: curto
+      }
+
+      let response = await userinfocontroller.initializeUserInfo(info)
+      res.json(response)
+    }
 
   } catch (error) {
     logger.error(`/bff/initializeuserinfo: ${error}`)

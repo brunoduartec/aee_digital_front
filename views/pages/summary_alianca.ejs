@@ -128,14 +128,22 @@
           return response.json();
         }).then(data => {
 
-           const responses = data.responses
+          const responses = data.responses
+
+          let uniqueresponses = {}
+
+          for (const response of responses) {
+            if(!uniqueresponses[response.CENTRO_ID]){
+              uniqueresponses[response.CENTRO_ID] = response
+            }
+          }
+
            const regionais = data.regionais
            const passes = data.passes
            const centros = data.centros
 
           for (const regional of regionais) {
             const regionalID = regional.ID
-            console.log("REGIONAL", centros);
 
             const centrosOfRegional = centros.filter(m=>{
               return m.REGIONAL.NOME_REGIONAL.includes(regional.NOME_REGIONAL)
@@ -165,12 +173,14 @@
 
           let started  = passes.filter(m=>{ return m.groups.includes("presidente")});
 
-          setGeneralInfo(centros.length,started.length, responses.length)
+          let responseslength = Object.keys(uniqueresponses)
+
+          setGeneralInfo(centros.length,started.length, responseslength.length)
 
             
         }).catch(err => {
           console.log("---ERROR---", err)
-          throw error
+          throw err
           // Do something for an error here
         });
       }

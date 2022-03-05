@@ -165,7 +165,7 @@
         >
         <span class="border col-md-1"
           ><div class="form-group">
-            <p><b>Tipo </b></p>
+            <p><b>Auto Avaliação </b></p>
           </div></span
         >
         <span class="border col-md-2"
@@ -205,7 +205,7 @@
           ><div class="form-group"><p><%=centro.NOME_CURTO%></p></div></span
         >
         <span class="border col-md-1"
-          ><div class="form-group"><p>Antiga/ Nova</p></div></span
+          ><div class="form-group"><p id="auto_avaliacao"></p></div></span
         >
         <span class="border col-md-2"
           ><div class="form-group" name="prop_0">
@@ -240,17 +240,14 @@
 
         $(document).ready( async function(){
           var centros = <%- JSON.stringify(centros) %> 
+
            await setCentrosResponses(centros)
         });
 
         function updateCoordSituationStatus(response, totalAmount){
           let element = document.getElementById(`Coord_${response}s`);
 
-          console.log("TOTAL", totalAmount)
-          
           let element_percent = document.getElementById(`Coord_${response}s_percent`);
-          console.log("A----", element)
-          console.log("B----", element_percent)
 
           let amount = parseInt(element.innerText) + 1
 
@@ -286,6 +283,29 @@
             }
           }
 
+          async function getAvaliacaoResponses(regionalId){
+            try {
+              var regionalInfo = JSON.parse('<%- JSON.stringify(regionalInfo)%>')
+              var avaliacaoQuestionId = '<%- avaliacaoQuestionId %>'
+
+              var apiUrl = `bff/answerbyregional?questionId=${avaliacaoQuestionId}&regionalName=${regionalInfo.NOME_REGIONAL}`;
+              let responseInfo = await fetch(apiUrl,{
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                method: "GET"
+              });
+  
+              responseInfo = await responseInfo.json();
+
+              return responseInfo
+              
+            } catch (error) {
+              console.log(`Error at getAvaliacaoResponses`, error)
+              throw(error)
+            }
+          }
+
           async function getCentroResponses(centroId){
             try {
               var coord_quiz = '<%- JSON.stringify(coord_quiz) %>'
@@ -308,13 +328,21 @@
             }
           }
 
-        async function setCentroResponse(centroDiv, centro, totalCentros){
+        async function setCentroResponse(centroDiv, centro, totalCentros, avaliacaoResponses){
           let responses = await getCentroResponses(centro.ID);
 
           let responseInfo = responses.templates
           let not_finished = responses.not_finished
 
           const situacao = centroDiv.children[3].children[0].children[0]
+
+          if(avaliacaoResponses[centro.ID]){
+            const auto = centroDiv.children[2].children[0].children[0]
+            auto.innerText = avaliacaoResponses[centro.ID].ANSWER
+            console.log("ENTROU", avaliacaoResponses[centro.ID])
+
+          }
+
           const participacao = centroDiv.children[4].children[0].children[0]
         
           situacao.setAttribute("id", responseInfo[0].ANSWER_ID)
@@ -382,8 +410,6 @@
         async function setPerguntasFaltantes(centroDiv, centro){
             const requiredQuestions = await getCentroRequiredQuestions(centro.ID);
 
-            console.log("Required",requiredQuestions)
-
             if(requiredQuestions.length > 0){
               const perguntas_faltantes = centroDiv.children[6].children[0]
   
@@ -410,14 +436,14 @@
 
         }
 
-        async function setCentroInfo(summaries, centro, totalCentrosAmount){
+        async function setCentroInfo(summaries, centro, totalCentrosAmount, avaliacaoResponses){
           const centroDiv = document.getElementById(centro.ID)
 
           const situacao = centroDiv.children[3].children[0].children[0]
 
           try {
 
-            setCentroResponse(centroDiv, centro, totalCentrosAmount)
+            setCentroResponse(centroDiv, centro, totalCentrosAmount, avaliacaoResponses)
             setCentroSummary(centroDiv, summaries, centro)
             
            
@@ -430,10 +456,12 @@
         }
 
         async function setCentrosResponses(centros){
-          let summaries = <%- JSON.stringify(summaries) %> 
+          let summaries = <%- JSON.stringify(summaries) %>; 
+
+          let avaliacaoResponses = await getAvaliacaoResponses();
 
           for (const centro of centros) {
-            setCentroInfo(summaries, centro, centros.length)  
+            setCentroInfo(summaries, centro, centros.length, avaliacaoResponses)  
           }
         }
       
