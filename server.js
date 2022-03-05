@@ -825,7 +825,7 @@ app.get("/bff/initializeuserinfo", async function (req, res) {
     let paramsParsed
     if (centroId) {
       paramsParsed = parser.getParamsParsed({
-        ID: centroId
+        _id: centroId
       })
     } else {
       paramsParsed = parser.getParamsParsed({
@@ -845,7 +845,7 @@ app.get("/bff/initializeuserinfo", async function (req, res) {
       CENTRO_ID: centroInfo.ID
     });
 
-    if (responses[0].length == 0) {
+    if (!responses[0]) {
       const info = {
         centro: centro,
         regional: regional,
@@ -858,7 +858,10 @@ app.get("/bff/initializeuserinfo", async function (req, res) {
 
   } catch (error) {
     logger.error(`/bff/initializeuserinfo: ${error}`)
-    throw error
+    res.json({
+      status: 500,
+      response: error.message
+    })
   }
 })
 

@@ -132,7 +132,7 @@ module.exports = class UserInfoController {
         });
         const centro = await this.regionalcontroller.getCentroByParam(paramsParsed);
         const centroInfo = await this.centroinfocontroller.getCentroInfo(
-          decodeURIComponent(centro.REGIONAL.NOME_REGIONAL), decodeURIComponent(centro.NOME_CENTRO)
+          decodeURIComponent(centro.REGIONAL.NOME_REGIONAL), decodeURIComponent(centro.NOME_CENTRO), decodeURIComponent(centro.NOME_CURTO)
         );
     
         if(centroInfo && centroInfo.centro){

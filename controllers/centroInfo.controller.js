@@ -23,16 +23,26 @@ module.exports = class CentroInfoController {
         this.cache[centro.regional] = {}
       }
 
-      this.cache[centro.regional][centro.Name] = {
-        centro: centro,
-      };
+      if(!this.cache[centro.regional][centro.Name]){
+        this.cache[centro.regional][centro.Name] = []
+      }
+
+      this.cache[centro.regional][centro.Name].push({
+        centro: centro
+      })
     }
 
     this.logger.info(`End generate centro cache`);
   }
 
-  async getCentroInfo(regional, nome) {
-    this.logger.info(`getCentroInfo: ${regional} ${nome}`);
-    return this.cache[regional][nome];
+  async getCentroInfo(regional, nome, nome_curto) {
+    this.logger.info(`getCentroInfo: ${regional}: ${nome}: ${nome_curto}`);
+    let centroInfoByName = this.cache[regional][nome];
+
+    let centroInfo = centroInfoByName.find(m=>{
+      return m.centro.short === nome_curto
+    })
+
+    return centroInfo;
   }
 };
