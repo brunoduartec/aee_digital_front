@@ -73,6 +73,8 @@ const QuizActions = require("./helpers/quiz_actions");
 const quiz_actions = new QuizActions(
   searchcontroller,
   trabalhoscontroller,
+  userinfocontroller,
+  regionalcontroller,
   logger,
   parser
 );
@@ -132,6 +134,7 @@ app.use((req, res, next) => {
 
 const requireAuth = (req, res, next) => {
   if (req.user) {
+
     next();
   } else {
     req.session.originalUrl = req.originalUrl;
@@ -156,10 +159,25 @@ async function TryAuthenticate(req, res, route) {
     pass: req.body.pass,
   };
 
-  const auth = await authcontroller.authenticate(loginInfo);
+  let auth = await authcontroller.authenticate(loginInfo);
   if (!auth) {
     res.redirect("/login?failedAuth=true");
   } else {
+
+    let mustInitialize = auth.scope_id == null;
+
+    const userInfo = await userinfocontroller.initializeUserInfo(auth);
+
+    if (mustInitialize) {
+      const appendInfo = {
+        scope_id: userInfo.scope_id
+      }
+      const paramsParsed = parser.getParamsParsed({
+        user: loginInfo.user,
+        pass: loginInfo.pass
+      });
+      await trabalhoscontroller.updatePass(paramsParsed, appendInfo)
+    }
 
     const authToken = generateAuthToken();
     authTokens[authToken] = loginInfo.user;
@@ -168,14 +186,10 @@ async function TryAuthenticate(req, res, route) {
 
     req.session.auth = auth;
 
-    if (req.session.originalUrl) {
-      res.redirect(req.session.originalUrl);
-    } else {
-      let info = {
-        link: auth.scope_id,
-      };
-      res.redirect(pageByPermission[auth.groups[0]](info));
-    }
+    let info = {
+      link: userInfo.scope_id
+    };
+    res.redirect(pageByPermission[auth.groups[0]](info));
   }
 }
 
@@ -186,6 +200,39 @@ app.get("/", requireAuth, async function (req, res) {
   };
   res.redirect(pageByPermission[auth.groups[0]](info));
 });
+
+app.get("/centros", requireAuth, async function (req, res) {
+  const regionalName = req.query.regionalName
+  let centros
+  let regionals
+
+  if (regionalName != null) {
+    centros = await regionalcontroller.getCentroByCacheByRegional(
+      regionalName
+    );
+    regionals = [{
+      NOME_REGIONAL: regionalName
+    }]
+  } else {
+    centros = await regionalcontroller.getCentrosByCache();
+    regionals = await regionalcontroller.getRegionais();
+
+    regionals = regionals.sort(function (a, b) {
+      if (a.NOME_REGIONAL > b.NOME_REGIONAL) {
+        return 1;
+      }
+      if (a.NOME_REGIONAL < b.NOME_REGIONAL) {
+        return -1;
+      }
+    });
+  }
+
+
+  res.render("pages/centros", {
+    centros: centros,
+    regionais: regionals
+  })
+})
 
 app.get("/centro", requireAuth, async function (req, res) {
   const centro = req.query.nome;
@@ -266,7 +313,7 @@ app.get("/cadastro_alianca", requireAuth, async function (req, res) {
   const page = req.query.page || 0;
   const form_alias = "Cadastro de Informações Anual";
 
-  quiz_actions.open(res, {
+  quiz_actions.open(req, res, {
     centro_id,
     form_alias,
     page
@@ -359,10 +406,10 @@ app.get("/bff/get_required", async function (req, res) {
 })
 
 app.get("/summary_coord", requireAuth, async function (req, res) {
-  const regional_id = req.query.ID;
+  const regionalName = req.query.regionalName;
 
   const paramsParsed = parser.getParamsParsed({
-    _id: regional_id,
+    NOME_REGIONAL: regionalName
   });
   const regionalInfo = await regionalcontroller.getRegionalByParams(
     paramsParsed
@@ -418,7 +465,7 @@ app.post("/quiz", async function (req, res) {
   const page_redirect = responses.redirect;
   const action = responses.action;
 
-  await quiz_actions[action](res, {
+  await quiz_actions[action](req, res, {
     centro_id,
     form_alias,
     page_index,
@@ -767,44 +814,43 @@ app.get("/bff/answerbyregional", async function (req, res) {
 
 })
 
-app.get("/bff/exportcentrosummary", async function(req, res){
+app.get("/bff/exportcentrosummary", async function (req, res) {
   try {
     const centroId = req.query.centroId;
     paramsParsed = parser.getParamsParsed({
       _id: centroId
     })
     centroInfo = await regionalcontroller.getCentroByParam(paramsParsed);
-  
+
     const timeStamp = new Date().getTime();
-  
+
     const summary = await trabalhoscontroller.getQuizSummaryByParams(parser.getParamsParsed({
       CENTRO_ID: centroId
     }));
-  
-  
-    excelinfo = [
-      {
-        "header":"QUESTÃO",
-        "key":"question"
+
+
+    excelinfo = [{
+        "header": "QUESTÃO",
+        "key": "question"
       },
       {
-        "header":"OBRIGATÓRIO",
-        "key":"required"
+        "header": "OBRIGATÓRIO",
+        "key": "required"
       },
       {
-        "header":"RESPOSTA",
-        "key":"answer"
+        "header": "RESPOSTA",
+        "key": "answer"
       },
     ]
-    let fileSaved = await excelexportercontroller.export(`${centroInfo.NOME_CENTRO}_${timeStamp}`,excelinfo, summary )
-  
+    let fileSaved = await excelexportercontroller.export(`${centroInfo.NOME_CENTRO}_${timeStamp}`, excelinfo, summary)
+
     // res.sendFile(fileSaved)
     res.send({
       status: "success",
       message: "file successfully downloaded",
       path: `${fileSaved}`,
-     });
-    
+    });
+
   } catch (error) {
     logger.error(`/bff/exportcentrosummary: ${error}`)
     res.json({
@@ -852,7 +898,7 @@ app.get("/bff/initializeuserinfo", async function (req, res) {
         curto: curto
       }
 
-      let response = await userinfocontroller.initializeUserInfo(info)
+      let response = await userinfocontroller.initializeUserInfo(info, centroInfo)
       res.json(response)
     }
 

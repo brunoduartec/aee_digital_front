@@ -228,6 +228,22 @@ module.exports = class trabalhosController {
     }
   }
 
+  async updatePass(params, value){
+    try {
+      const pass = await this.request.put(
+        "aee_digital_trabalhos",
+        `/pass?${params}`,
+        value
+      );
+
+      this.logger.info(`updatePass => ${JSON.stringify(pass)}`);
+      return pass;
+    } catch (error) {
+      this.logger.error(`trabalhos.controller.updatePass: Error=> ${error}`);
+      throw error
+    }
+  }
+
   async getPasses() {
     try {
       const atividades = await this.request.get("aee_digital_trabalhos", `/pass`);

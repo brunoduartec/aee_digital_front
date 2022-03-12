@@ -55,7 +55,13 @@ module.exports = class authController {
     const paramsParsed = this.parser.getParamsParsed(params);
     const auth = await this.trabalhocontroller.getPassByParams(paramsParsed);
 
-    return auth[0];
+    let userPass = auth[0];
+
+    if(!auth[0]){
+      userPass = this.getPassInfoByCache(user,pass);
+    }
+
+    return userPass;
   }
 
   async getUserPermissions(auth) {
@@ -119,73 +125,99 @@ module.exports = class authController {
     return this.cache[info.user];
   }
 
-  getPassInfoByScope(user, pass, userInfo){
-    let params;
-    if(userInfo.centro_id){
-      params = {
-        user: user,
-        pass: pass,
-        groups: ["presidente"],
-        scope_id: userInfo.centro_id,
-      };
+  getPassGroupByPattern(userInfo){
+    let groups = []
+    let {centro, regional} = userInfo
+    if(centro === "*"){
+      if(regional ==="*"){
+        groups.push("coord_geral")  
+      }else{
+        group.push("coord_regional")
+      }
+    }else{
+      groups.push("presidente")
     }
-    else if( userInfo.regional_id){
-      params = {
-        user: user,
-        pass: pass,
-        groups: ["coord_regional"],
-        scope_id: userInfo.regional_id,
-      };
-    }else if(userInfo.admin){
-      params = {
-        user: user,
-        pass: pass,
-        groups: ["admin"],
-        scope_id: "*",
-      };
-    }else if(userInfo.alianca){
-      params = {
-        user: user,
-        pass: pass,
-        groups: ["coord_geral"],
-        scope_id: "*",
-      };
+    return groups
+  }
+
+  getScopeIdByPattern(userInfo){
+    let {centro_id, regional_id, admin, alianca} = userInfo
+    let scope_id
+    if(centro_id){
+      return centro_id
+    }
+    else if(regional_id){
+      return regional_id
+    }
+    else if(admin){
+      return "*"
+    }
+    else if(alianca){
+      return "*"
+    }
+
+    return scope_id;
+  }
+
+  getPassInfoByScope(userInfo){
+    let params = {
+      user : userInfo?.user,
+      pass : userInfo?.pass,
+      groups: this.getPassGroupByPattern(userInfo),
+      scope_id: this.getScopeIdByPattern(userInfo)
     }
 
     return params;
   }
 
   async initUserInfo(loginInfo) {
-    this.logger.info(`Init User Info: ${JSON.stringify(loginInfo)}`)
-    let { user, pass } = loginInfo;
-    const cache = this.getPassInfoByCache(user,pass);
-    let userInfo;
-
-    if (cache) {
-      try {
-        userInfo = await this.userinfocontroller.initializeUserInfo(cache);
-        let params = this.getPassInfoByScope(user, pass, userInfo);
+    try {
+      this.logger.info(`Init User Info: ${JSON.stringify(loginInfo)}`)
       
-        const passInfo = await this.trabalhocontroller.postPass(params);
-        return passInfo[0];
-      } catch (error) {
-        throw error;
+      let passInfo = await this.trabalhocontroller.getPassByParams(this.parser.getParamsParsed({
+        user: loginInfo?.user,
+        pass: loginInfo?.pass
+      }))
+
+      if(passInfo.length == 0){
+        let params = this.getPassInfoByScope(loginInfo);
+        passInfo = await this.trabalhocontroller.postPass(params);
       }
+      return passInfo[0];
+    } catch (error) {
+      this.logger.error(`Error Init User Info: ${error}`)
+      throw error;
     }
   }
 
+  async getLoginHint(info){
+
+   let loginHint = {
+      centro: info.centro,
+      regional: info.regional,
+      curto: info.curto
+    }
+
+    return loginHint;
+  }
+
   async authenticate(loginInfo) {
-    this.logger.info(`Start auth: ${JSON.stringify(loginInfo)}`)
-    let auth = await this.checkUserPass(loginInfo.user, loginInfo.pass);
-    let permissions;
-
-    if (!auth) {
-      auth = await this.initUserInfo(loginInfo);
+    try {
+      this.logger.info(`Start auth: ${JSON.stringify(loginInfo)}`)
+      let auth = await this.checkUserPass(loginInfo.user, loginInfo.pass);
+  
+      if (auth) {
+        let loginHint = await this.getLoginHint(auth);
+        auth = await this.initUserInfo(auth);
+        auth = await this.getUserPermissions(auth);
+        auth.loginHint = loginHint
+      }
+  
+      return auth;
+      
+    } catch (error) {
+      this.logger.error(`Error Authenticating: ${error}`)
+      throw error;
     }
-
-    if (auth) {
-      permissions = await this.getUserPermissions(auth);
-    }
-    return permissions;
   }
 };
