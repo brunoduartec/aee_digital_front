@@ -2,23 +2,9 @@ const excelJS = require("exceljs");
 
 
 module.exports = class ExcelExporter{
-    formatInfo(data){
-        try {
-            let item = {
-                "question": data.QUESTION_ID.QUESTION ||" ",
-                "required": data.QUESTION_ID.IS_REQUIRED || " ",
-                "answer": data.ANSWER
-            }
-    
-            return item;
-            
-        } catch (error) {
-            throw error
-        }
+   
 
-    }
-
-    async export(fileName,info, data){
+    async export(fileName, info, data, formatInfo){
       try {
           const workbook = new excelJS.Workbook();  // Create a new workbook
           const worksheet = workbook.addWorksheet("tab"); // New Worksheet
@@ -38,8 +24,8 @@ module.exports = class ExcelExporter{
           
         // Looping through User data
         let counter = 1;
-        data[0].ANSWERS.forEach((item) => {
-          let itemformated = this.formatInfo(item)
+        data.forEach((item) => {
+          let itemformated = formatInfo(item)
           itemformated.s_no = counter;
           worksheet.addRow(itemformated); // Add data in worksheet
 

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+
+  <body class="body">
+    <header class="cabeçalho"><%- include('../partials/header'); %></header>
+
+    <div class="container">
+      <div class="tela-inicio">
+        <div class="container">
+          <div class="row justify-content-center">
+
+            <%
+                regionais.forEach(regional=>{%>
+                <h1><%= regional.NOME_REGIONAL%></h1>
+
+                <%
+                    let centrosByRegional = centros.filter(m=>{
+                        return m.REGIONAL.NOME_REGIONAL === regional.NOME_REGIONAL
+                    })
+                %>
+
+
+                <%- include("../partials/centros", {centros:centrosByRegional})%>
+            <%})%>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer><%- include('../partials/footer'); %></footer>
+  </body>
+</html>

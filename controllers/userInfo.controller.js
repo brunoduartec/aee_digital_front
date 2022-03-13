@@ -3,12 +3,14 @@ module.exports = class UserInfoController {
     regionalcontroller,
     centroinfocontroller,
     trabalhocontroller,
+    searchcontroller,
     logger,
     parser
   ) {
     this.regionalcontroller = regionalcontroller;
     this.centroinfocontroller = centroinfocontroller;
     this.trabalhocontroller = trabalhocontroller;
+    this.searchcontroller = searchcontroller;
 
     this.depara = require("../resources/de-para.json");
 
@@ -49,8 +51,12 @@ module.exports = class UserInfoController {
     }
   }
 
-  async insertAnswers(centroInfo, centro_id) {
+  async insertAnswers(centro) {
     try {
+      const centroInfo = await this.centroinfocontroller.getCentroInfo(
+        decodeURIComponent(centro.REGIONAL.NOME_REGIONAL), decodeURIComponent(centro.NOME_CENTRO), decodeURIComponent(centro.NOME_CURTO)
+      );
+
       const params = {
         NAME:"Cadastro de Informações Anual"
       }
@@ -90,7 +96,7 @@ module.exports = class UserInfoController {
   
               for (const answ of answers) {
                 let answerInfo = {
-                  CENTRO_ID: centro_id,
+                  CENTRO_ID: centro.ID,
                   QUIZ_ID: quiz._id,
                   QUESTION_ID: question._id,
                   ANSWER: answ,
@@ -112,7 +118,65 @@ module.exports = class UserInfoController {
 
   }
 
-  async initializeUserInfo(info) {
+  async checkUserWasInitialized(info){
+    let { centro_id } = info
+
+    let form = await this.trabalhocontroller.getFormByParams(this.parser.getParamsParsed({
+      NAME: "Cadastro de Informações Anual"
+    }));
+
+    let firstQuestionId = form[0].PAGES[0].QUIZES[0].QUESTIONS[0].GROUP[0]._id
+
+    let answers = await this.trabalhocontroller.getQuizResponseByParams(this.parser.getParamsParsed({
+      CENTRO_ID: centro_id,
+      "QUESTION_ID._id": firstQuestionId
+    }));
+
+
+    return answers.length > 0;
+  }
+
+
+  async getFormInfo(centro_id, form_alias, page) {
+    let option = "Centro";
+
+    let pesquisaInfo = {
+      search: centro_id,
+      option: option,
+    };
+
+    option = "Quiz";
+
+    pesquisaInfo = {
+      search: {
+        id: centro_id,
+        name: form_alias,
+        page: page,
+      },
+      option: option,
+    };
+    const result = await this.searchcontroller.getPesquisaResult(pesquisaInfo);
+    return result;
+  }
+
+  async initializeUserInfo(auth) {
+    try {
+
+      if(auth.scope_id){
+        return auth;
+      }
+
+      let userInfo = await this.getUserInfo(auth.loginHint);
+
+      return userInfo;
+      
+    } catch (error) {
+      this.logger.error(`initializeUserInfo ${error}`)
+      throw error
+    }
+  }
+
+  async getUserInfo(info){
     try {
       if(info.centro == "*"){
         if(info.regional == "*"){
@@ -122,7 +186,7 @@ module.exports = class UserInfoController {
             NOME_REGIONAL: decodeURIComponent(info.regional),
           });
           const regional = await this.regionalcontroller.getRegionalByParams(paramsParsed);
-          info.regional_id= regional.ID;
+          info.scope_id= regional.ID;
         }
       }else{
         const paramsParsed = this.parser.getParamsParsed({
@@ -130,25 +194,16 @@ module.exports = class UserInfoController {
           NOME_CURTO: decodeURIComponent(info.curto),
           "REGIONAL.NOME_REGIONAL": decodeURIComponent(info.regional)
         });
-        const centro = await this.regionalcontroller.getCentroByParam(paramsParsed);
-        const centroInfo = await this.centroinfocontroller.getCentroInfo(
-          decodeURIComponent(centro.REGIONAL.NOME_REGIONAL), decodeURIComponent(centro.NOME_CENTRO), decodeURIComponent(centro.NOME_CURTO)
-        );
-    
-        if(centroInfo && centroInfo.centro){
-          await this.insertAnswers(centroInfo.centro, centro.ID);
-        }else{
-          await this.insertAnswers({}, centro.ID);
-        }
-    
-        info.centro_id = centro.ID;
+        
+        let centro = await this.regionalcontroller.getCentroByParam(paramsParsed);
+        
+        info.scope_id = centro.ID;
       }
-  
       return info;
       
     } catch (error) {
-      this.logger.error(`initializeUserInfo ${error}`)
-      throw error
+      this.logger.error(`Error get user info ${error}`)
+      throw error;
     }
   }
 };

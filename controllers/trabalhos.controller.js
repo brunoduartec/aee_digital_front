@@ -140,6 +140,21 @@ module.exports = class trabalhosController {
     }
   }
 
+  async getQuizTemplates() {
+    try {
+        const quiz = await this.request.get(
+          "aee_digital_trabalhos",
+          `/atividade_generic_quiz`
+        );
+
+        this.logger.info(`getQuizTemplates ${JSON.stringify(quiz)}`);
+        return quiz;
+    } catch (error) {
+      this.logger.error( `trabalhos.controller.getQuizTemplates: Error=> ${error}` );
+      throw error
+    }
+  }
+
   async getQuizTemplateByParams(params) {
     try {
         const quiz = await this.request.get(
@@ -224,6 +239,22 @@ module.exports = class trabalhosController {
       return quiz_response;
     } catch (error) {
       this.logger.error( `trabalhos.controller.deleteQuizResponseByParams: Error=> ${error}` );
+      throw error
+    }
+  }
+
+  async updatePass(params, value){
+    try {
+      const pass = await this.request.put(
+        "aee_digital_trabalhos",
+        `/pass?${params}`,
+        value
+      );
+
+      this.logger.info(`updatePass => ${JSON.stringify(pass)}`);
+      return pass;
+    } catch (error) {
+      this.logger.error(`trabalhos.controller.updatePass: Error=> ${error}`);
       throw error
     }
   }
