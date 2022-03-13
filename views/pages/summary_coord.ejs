@@ -173,7 +173,7 @@
             <p><b>Situação</b></p>
           </div></span
         >
-        <span class="border col-md-2"
+        <span class="border col-md-1"
           ><div class="form-group">
             <p><b> Part. Reuniões (%)</b></p>
           </div></span
@@ -186,6 +186,12 @@
         <span class="border col-md-2"
           ><div class="form-group">
             <p><b>Perguntas Faltantes</b></p>
+          </div></span
+        >
+
+        <span class="border col-md-1"
+          ><div class="form-group">
+            <p><b>Baixar</b></p>
           </div></span
         >
       </div>
@@ -215,7 +221,7 @@
             <%- include('../partials/sub_quiz_option', {question:questionInfo});%>
           </div>
         </span>
-        <span class="border col-md-2"
+        <span class="border col-md-1"
           ><div class="form-group" name="prop_1">
             <%
             questionInfo = defaultResponse
@@ -226,8 +232,17 @@
           ><div class="form-group"><p name="data_avaliacao">
                 Não Finalizado
           </p></div></span>
-          <span class="border col-md-2"
-          ><div class="form-group" name="perguntas_faltantes"></div></span>
+
+
+          <span class="border col-md-2"><div class="form-group" name="perguntas_faltantes"></div></span>
+
+          <span class="border col-md-1"><div class="form-group" name="download">
+            <button type="button" class="btn btn-success" style="vertical-align: bottom" onclick="DownloadResponses('<%= centro.ID%>')">
+                <img src="/img/download.svg" alt="Bootstrap">
+              </button>
+            </div></span>
+
+          
       </div>
 
       <%});%>
@@ -243,6 +258,31 @@
 
            await setCentrosResponses(centros)
         });
+
+
+        async function DownloadResponses(centroId){
+          try {
+              var apiUrl = `bff/exportcentroresponses?centroId=${centroId}`;
+              let responseInfo = await fetch(apiUrl,{
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                method: "GET",
+              });
+  
+              responseInfo = await responseInfo.json();
+              if(responseInfo.fileName){
+                window.open(responseInfo.fileName);
+              }
+              console.log("VOLTOU", responseInfo)
+
+              return responseInfo
+              
+            } catch (error) {
+              console.log(`Error at Download ${centroId}`, error)
+              throw(error)
+            }
+        }
 
         function updateCoordSituationStatus(response, totalAmount){
           let element = document.getElementById(`Coord_${response}s`);

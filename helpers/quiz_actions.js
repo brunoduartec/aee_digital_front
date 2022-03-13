@@ -1,6 +1,5 @@
 module.exports = class QuizActions {
-  constructor(searchcontroller, trabalhocontroller, userinfocontroller, regionalcontroller, logger, parser) {
-    this.searchcontroller = searchcontroller;
+  constructor(trabalhocontroller, userinfocontroller, regionalcontroller, logger, parser) {
     this.trabalhocontroller = trabalhocontroller;
     this.userinfocontroller = userinfocontroller
     this.regionalcontroller = regionalcontroller
@@ -8,31 +7,7 @@ module.exports = class QuizActions {
     this.parser = parser;
   }
 
-  async _getFormInfo(centro_id, form_alias, page) {
-    let option = "Centro";
-
-    let pesquisaInfo = {
-      search: centro_id,
-      option: option,
-    };
-
-    option = "Quiz";
-
-    pesquisaInfo = {
-      search: {
-        id: centro_id,
-        name: form_alias,
-        page: page,
-      },
-      option: option,
-    };
-    const result = await this.searchcontroller.getPesquisaResult(pesquisaInfo);
-    return result;
-  }
-
   async _move(req, res, action_info) {
-    // await this.save(res, action_info);
-
     let { page_redirect, page_index, direction } = action_info;
 
     let page_to = parseInt(page_index, 10) + direction;
@@ -41,7 +16,7 @@ module.exports = class QuizActions {
 
   async next(req, res, action_info) {
     action_info.direction = 1;
-    this._move(res, action_info);
+    this._move(req, res, action_info);
   }
 
   async previous(req, res, action_info) {
@@ -51,7 +26,7 @@ module.exports = class QuizActions {
 
   async save(req, res, action_info) {
     let { centro_id, form_alias, page_index, responses } = action_info;
-    const form_info = await this._getFormInfo(
+    const form_info = await this.userinfocontroller.getFormInfo(
       centro_id,
       form_alias,
       page_index
@@ -133,15 +108,13 @@ module.exports = class QuizActions {
     try {
       let checkWasInitialized = await this.userinfocontroller.checkUserWasInitialized(action_info);
 
-      let centro = await this.regionalcontroller.getCentroByParam(this.parser.getParamsParsed({
-        _id: centro_id
-      }));
+      let centro = await this.regionalcontroller.getCentroByCacheByID(centro_id);
       
       if(!checkWasInitialized){
         await this.userinfocontroller.insertAnswers(centro);
       }
 
-      const form_info = await this._getFormInfo(centro_id, form_alias, page);
+      const form_info = await this.userinfocontroller.getFormInfo(centro_id, form_alias, page);
   
       this.logger.info(`get:cadastro_alianca => ${JSON.stringify(form_info)}`);
   

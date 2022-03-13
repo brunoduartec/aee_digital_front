@@ -24,7 +24,7 @@ module.exports = class regionalController {
     for (const object of objects) {
       const centro = object.centro;
       let centroInfo = centros.find(m=>{
-        return  m.NOME_CURTO === centro.curto && m.REGIONAL.NOME_REGIONAL === centro.regional;
+        return  m.NOME_CURTO === centro.curto && m.REGIONAL.NOME_REGIONAL === centro.regional && m.NOME_CENTRO === centro.nome;
       })
    
       if(centroInfo){
@@ -51,6 +51,15 @@ module.exports = class regionalController {
       return m.REGIONAL.NOME_REGIONAL === regionalName
     })
     return centros;
+  }
+
+  getCentroByCacheByID(centroId){
+    const centros = this.getCentrosByCache();
+    const centro = centros.find(m=>{
+      return m.ID === centroId
+    })
+
+    return centro;
   }
 
   async getRegionais() {

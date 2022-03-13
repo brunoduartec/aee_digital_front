@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const path = require('path');
 var session = require("express-session");
 var compression = require('compression')
 app.use(compression())
@@ -41,11 +42,20 @@ const centroinfocontroller = new CentroInfoController(
 );
 centroinfocontroller.generatePassCache();
 
+const SearchController = require("./controllers/search.controller");
+const searchcontroller = new SearchController(
+  regionalcontroller,
+  trabalhoscontroller,
+  logger,
+  parser
+);
+
 const userInfoController = require("./controllers/userInfo.controller");
 const userinfocontroller = new userInfoController(
   regionalcontroller,
   centroinfocontroller,
   trabalhoscontroller,
+  searchcontroller,
   logger,
   parser
 );
@@ -61,17 +71,10 @@ const authcontroller = new authController(
 );
 
 
-const SearchController = require("./controllers/search.controller");
-const searchcontroller = new SearchController(
-  regionalcontroller,
-  trabalhoscontroller,
-  logger,
-  parser
-);
+
 
 const QuizActions = require("./helpers/quiz_actions");
 const quiz_actions = new QuizActions(
-  searchcontroller,
   trabalhoscontroller,
   userinfocontroller,
   regionalcontroller,
@@ -167,6 +170,7 @@ async function TryAuthenticate(req, res, route) {
     let mustInitialize = auth.scope_id == null;
 
     const userInfo = await userinfocontroller.initializeUserInfo(auth);
+    auth.scope_id = userInfo.scope_id
 
     if (mustInitialize) {
       const appendInfo = {
@@ -184,11 +188,12 @@ async function TryAuthenticate(req, res, route) {
 
     req.session.authToken = authToken;
 
-    req.session.auth = auth;
 
     let info = {
       link: userInfo.scope_id
     };
+
+    req.session.auth = auth;
     res.redirect(pageByPermission[auth.groups[0]](info));
   }
 }
@@ -309,15 +314,21 @@ app.get("/cadastro", requireAuth, async function (req, res) {
 });
 
 app.get("/cadastro_alianca", requireAuth, async function (req, res) {
-  const centro_id = req.query.ID;
-  const page = req.query.page || 0;
-  const form_alias = "Cadastro de Informações Anual";
+  try {
+    const centro_id = req.query.ID;
+    const page = req.query.page || 0;
+    const form_alias = "Cadastro de Informações Anual";
 
-  quiz_actions.open(req, res, {
-    centro_id,
-    form_alias,
-    page
-  });
+    quiz_actions.open(req, res, {
+      centro_id,
+      form_alias,
+      page
+    });
+
+  } catch (error) {
+    logger.error(`Error Loading summary_alianca: ${error}`)
+    res.render("pages/notfound")
+  }
 });
 
 async function setQuizResponse(centroID, quizID, questionID, ANSWER) {
@@ -814,22 +825,43 @@ app.get("/bff/answerbyregional", async function (req, res) {
 
 })
 
-app.get("/bff/exportcentrosummary", async function (req, res) {
+
+app.get("/bff/exportcentroresponses", async function (req, res) {
   try {
+    
     const centroId = req.query.centroId;
+  
     paramsParsed = parser.getParamsParsed({
       _id: centroId
     })
     centroInfo = await regionalcontroller.getCentroByParam(paramsParsed);
-
-    const timeStamp = new Date().getTime();
-
-    const summary = await trabalhoscontroller.getQuizSummaryByParams(parser.getParamsParsed({
+  
+    let centroAnswers = await trabalhoscontroller.getQuizResponseByParams(parser.getParamsParsed({
       CENTRO_ID: centroId
-    }));
+    }))
 
+    let centroanswersPopulared = []
 
-    excelinfo = [{
+    let quizes = await trabalhoscontroller.getQuizTemplates();
+
+    for (const answer of centroAnswers) {
+      const quizinfo = quizes.find(m=>{
+        return m.ID === answer.QUIZ_ID
+      })
+
+      let populatedAnswer = answer
+      populatedAnswer.QUIZ_CATEGORY = quizinfo.CATEGORY
+      centroanswersPopulared.push(populatedAnswer)
+
+    }
+  
+    const timeStamp = new Date().getTime();
+    excelinfo = [
+      {
+        "header": "CATEGORIA",
+        "key": "category"
+      },
+      {
         "header": "QUESTÃO",
         "key": "question"
       },
@@ -842,24 +874,41 @@ app.get("/bff/exportcentrosummary", async function (req, res) {
         "key": "answer"
       },
     ]
-    let fileSaved = await excelexportercontroller.export(`${centroInfo.NOME_CENTRO}_${timeStamp}`, excelinfo, summary)
 
-    // res.sendFile(fileSaved)
+    let formatInfo = function(data){
+      try {
+          let item = {
+              "category": data.QUIZ_CATEGORY || " ",
+              "question": data.QUESTION_ID.QUESTION ||" ",
+              "required": data.QUESTION_ID.IS_REQUIRED || " ",
+              "answer": data.ANSWER
+          }
+  
+          return item;
+          
+      } catch (error) {
+          throw error
+      }
+
+  }
+    let fileSaved = await excelexportercontroller.export(`${centroInfo.NOME_CENTRO}_${timeStamp}`, excelinfo, centroanswersPopulared, formatInfo)
+  
+    const fileToSend = fileSaved.substring(8)
+
     res.send({
       status: "success",
       message: "file successfully downloaded",
-      path: `${fileSaved}`,
+      fileName: `${fileToSend}`,
     });
-
+  
   } catch (error) {
-    logger.error(`/bff/exportcentrosummary: ${error}`)
+    logger.error(`/bff/exportcentroresponses: ${error}`)
     res.json({
       status: 500,
       message: error.message
     })
   }
 })
-
 
 app.get("/bff/initializeuserinfo", async function (req, res) {
   try {

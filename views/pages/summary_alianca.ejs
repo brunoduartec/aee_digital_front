@@ -194,7 +194,8 @@
             const hasStarted = passes.find(m => {
               return m.scope_id === centroInfo.ID
             })
-
+            
+            console.log("CENTRO",hasStarted, centroInfo)
             if (hasStarted) {
               started++
             }

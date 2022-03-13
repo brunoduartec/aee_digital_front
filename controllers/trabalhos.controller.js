@@ -140,6 +140,21 @@ module.exports = class trabalhosController {
     }
   }
 
+  async getQuizTemplates() {
+    try {
+        const quiz = await this.request.get(
+          "aee_digital_trabalhos",
+          `/atividade_generic_quiz`
+        );
+
+        this.logger.info(`getQuizTemplates ${JSON.stringify(quiz)}`);
+        return quiz;
+    } catch (error) {
+      this.logger.error( `trabalhos.controller.getQuizTemplates: Error=> ${error}` );
+      throw error
+    }
+  }
+
   async getQuizTemplateByParams(params) {
     try {
         const quiz = await this.request.get(

@@ -3,12 +3,14 @@ module.exports = class UserInfoController {
     regionalcontroller,
     centroinfocontroller,
     trabalhocontroller,
+    searchcontroller,
     logger,
     parser
   ) {
     this.regionalcontroller = regionalcontroller;
     this.centroinfocontroller = centroinfocontroller;
     this.trabalhocontroller = trabalhocontroller;
+    this.searchcontroller = searchcontroller;
 
     this.depara = require("../resources/de-para.json");
 
@@ -132,6 +134,29 @@ module.exports = class UserInfoController {
 
 
     return answers.length > 0;
+  }
+
+
+  async getFormInfo(centro_id, form_alias, page) {
+    let option = "Centro";
+
+    let pesquisaInfo = {
+      search: centro_id,
+      option: option,
+    };
+
+    option = "Quiz";
+
+    pesquisaInfo = {
+      search: {
+        id: centro_id,
+        name: form_alias,
+        page: page,
+      },
+      option: option,
+    };
+    const result = await this.searchcontroller.getPesquisaResult(pesquisaInfo);
+    return result;
   }
 
   async initializeUserInfo(auth) {
