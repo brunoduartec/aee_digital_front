@@ -417,11 +417,21 @@ app.get("/bff/get_required", async function (req, res) {
 })
 
 app.get("/summary_coord", requireAuth, async function (req, res) {
-  const regionalName = req.query.regionalName;
+  const {ID, regionalName} = req.query;
 
-  const paramsParsed = parser.getParamsParsed({
-    NOME_REGIONAL: regionalName
-  });
+  let paramsParsed
+
+  if(!regionalName){
+    paramsParsed = parser.getParamsParsed({
+      _id: ID
+    });
+  }
+  else{
+    paramsParsed = parser.getParamsParsed({
+      NOME_REGIONAL: regionalName
+    });
+
+  }
   const regionalInfo = await regionalcontroller.getRegionalByParams(
     paramsParsed
   );
@@ -804,24 +814,30 @@ app.get("/bff/summary", async function (req, res) {
 })
 
 app.get("/bff/answerbyregional", async function (req, res) {
-  const questionId = req.query.questionId
-  const regionalName = req.query.regionalName
-
-  const questionAnswers = await trabalhoscontroller.getQuizResponseByParams(parser.getParamsParsed({
-    "QUESTION_ID._id": questionId
-  }));
-
-  const centros = await regionalcontroller.getCentrosByRegional(regionalName);
-
-  questionResponses = {}
-
-  for (const centro of centros) {
-    questionResponses[centro.ID] = questionAnswers.find(m => {
-      return m.CENTRO_ID === centro.ID
-    })
+  try {
+    const questionId = req.query.questionId
+    const regionalName = req.query.regionalName
+  
+    const questionAnswers = await trabalhoscontroller.getQuizResponseByParams(parser.getParamsParsed({
+      "QUESTION_ID._id": questionId
+    }));
+  
+    const centros = await regionalcontroller.getCentrosByRegional(regionalName);
+  
+    questionResponses = {}
+  
+    for (const centro of centros) {
+      questionResponses[centro.ID] = questionAnswers.find(m => {
+        return m.CENTRO_ID === centro.ID
+      })
+    }
+  
+    res.json(questionResponses)
+    
+  } catch (error) {
+    this.logger.error(`/bff/answerbyregional: ${error}`)
+    throw error
   }
-
-  res.json(questionResponses)
 
 })
 
