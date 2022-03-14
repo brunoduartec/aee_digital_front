@@ -22,7 +22,7 @@ transports:[
 
 // MongoDB transport
     new transports.MongoDB({
-        // level: 'error',
+        level: 'error',
         //mongo database connection link
         db : connection,
         options: {
