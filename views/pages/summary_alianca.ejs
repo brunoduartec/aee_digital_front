@@ -8,7 +8,16 @@
 <body class="body">
   <header class="cabeçalho"><%- include('../partials/header'); %></header>
 
-  <canvas id="myChart" style="width:100%;max-width:600px"></canvas>
+  <div class="container" >
+    <div class= "row">
+      <div class="col-xs-6">
+        <canvas id="myChart" style="width:100%;max-width:600px;"></canvas>
+      </div>
+      <div class="col-xs-6">
+        <a class="btn btn-info" href="http://162.214.123.133:30101/db/aee/expCsv/atividade_generic_quiz_answers?key=&value=&type=&query=&projection=">Backup</a>
+      </div>
+    </div>
+  </div>
 
   <div class="container-fluid">
     <div id="regionais" class="row">
