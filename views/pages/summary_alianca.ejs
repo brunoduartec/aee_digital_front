@@ -19,6 +19,12 @@
     </div>
   </div>
 
+  <div class="overlay"></div>
+<div class="spanner">
+  <div class="loader"></div>
+  <p>Buscando informações, por favor aguarde</p>
+</div>
+
   <div class="container-fluid">
     <div id="regionais" class="row">
 
@@ -29,6 +35,7 @@
     $(document).ready(function () {
       console.log('Ready disparado');
       myFunction()
+      showOverlay();
     });
 
     var xValues = ["Total", "Iniciaram", "Terminaram"];
@@ -194,11 +201,12 @@
           }
 
           let centrosOfRegional = centros.filter(m => {
-            return m.REGIONAL.NOME_REGIONAL.includes(regional)
+            return m.REGIONAL.NOME_REGIONAL == regional
           })
 
           let started = 0
           //augment with started info
+          console.log("REGIONAL", regional)
           for (const centroInfo of centrosOfRegional) {
             const hasStarted = passes.find(m => {
               return m.scope_id === centroInfo.ID
@@ -241,6 +249,7 @@
 
         setGeneralInfo(centros.length, started.length, responseslength.length)
 
+        hideOverlay()
 
       }).catch(err => {
         console.log("---ERROR---", err)

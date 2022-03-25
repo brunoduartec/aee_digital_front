@@ -53,9 +53,11 @@ module.exports = class UserInfoController {
 
   async insertAnswers(centro) {
     try {
-      const centroInfo = await this.centroinfocontroller.getCentroInfo(
+      let centroInfo = await this.centroinfocontroller.getCentroInfo(
         decodeURIComponent(centro.REGIONAL.NOME_REGIONAL), decodeURIComponent(centro.NOME_CENTRO), decodeURIComponent(centro.NOME_CURTO)
       );
+
+      centroInfo = centroInfo.centro;
 
       const params = {
         NAME:"Cadastro de Informações Anual"

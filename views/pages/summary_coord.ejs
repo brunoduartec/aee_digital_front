@@ -9,6 +9,13 @@
     <div class="cadastrar-titulo">
       <h2>Validação de Informações</h2>
     </div>
+
+    <div class="overlay"></div>
+    <div class="spanner">
+      <div class="loader"></div>
+      <p>Buscando informações, por favor aguarde</p>
+    </div>
+
     <div class="validacao-coord-subtitulo">
       <h3>Regional <%= regionalInfo.NOME_REGIONAL%></h3>
       <p><b> Coordenador: </b><%= coordenador.NOME%></p>
@@ -258,8 +265,9 @@
 
         $(document).ready( async function(){
           var centros = <%- JSON.stringify(centros) %> 
-
+          showOverlay();
            await setCentrosResponses(centros)
+           hideOverlay();
         });
 
 
