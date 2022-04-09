@@ -1,9 +1,20 @@
 module.exports = class trabalhosController {
-  constructor(parser, logger, request) {
+  constructor() {
+    const instance = this.constructor.instance;
+    if (instance) {
+      return instance;
+    }
+
+    this.constructor.instance = this;
+  }
+  
+  
+  async initialize(parser, logger, request){
     this.parser = parser;
     this.logger = logger;
     this.request = request;
     this.cache={}
+    await this.generateInfoByCache();
   }
 
   async generateInfoByCache(){

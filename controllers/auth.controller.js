@@ -6,14 +6,18 @@ module.exports = class authController {
     logger,
     reader,
     trabalhocontroller,
-    regionalcontroller,
-    userinfocontroller,
     parser
   ) {
+
+    const instance = this.constructor.instance;
+    if (instance) {
+      return instance;
+    }
+
+    this.constructor.instance = this;
+
     this.logger = logger;
     this.trabalhocontroller = trabalhocontroller;
-    this.regionalcontroller = regionalcontroller;
-    this.userinfocontroller = userinfocontroller;
 
     this.xlsReader = reader;
     this.groups = require("../resources/groups.json");
@@ -23,6 +27,8 @@ module.exports = class authController {
 
     this.cache = {};
   }
+
+
 
   async generatePassCache() {
     const schema = require("../resources/schema")();
