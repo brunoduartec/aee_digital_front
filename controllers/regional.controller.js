@@ -1,8 +1,21 @@
 module.exports = class regionalController {
-  constructor(logger, request) {
+  constructor() {
+    const instance = this.constructor.instance;
+    if (instance) {
+      return instance;
+    }
+
+    this.constructor.instance = this;
+    
+  }
+  
+  async initialize(logger, request, xlsReader){
     this.logger = logger;
     this.request = request;
     this.cache = {}
+
+    await this.generateInfoByCache(xlsReader)
+    
   }
 
   async generateInfoByCache(xlsReader) {

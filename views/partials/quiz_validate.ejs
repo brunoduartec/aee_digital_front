@@ -19,7 +19,7 @@
       const answerId = item.id
       let questionId
 
-      var apiUrl = `update_answer?answerId=${answerId}&answer=${itemChanged.value.toString()}`
+      var apiUrl = `/bff/update_answer?answerId=${answerId}&answer=${itemChanged.value.toString()}`
       if(itemChanged){
         questionId = itemChanged.getAttribute("questionId")
         if(questionId){
@@ -42,7 +42,7 @@
     }
 
     function callCreateRoute(table, clone, groupId, quizId, centroId){
-        var apiUrl = `add_answer?groupId=${groupId}&quizId=${quizId}&centroId=${centroId}`
+        var apiUrl = `/bff/add_answer?groupId=${groupId}&quizId=${quizId}&centroId=${centroId}`
         fetch(apiUrl,{
           method: 'POST'
         }).then(response => {
@@ -77,7 +77,7 @@
       }
 
     function callDeleteRoute(item, table_id, answerId){
-        var apiUrl = `remove_answer?answerId=${answerId}`
+        var apiUrl = `/bff/remove_answer?answerId=${answerId}`
         fetch(apiUrl,{
           method:'DELETE'
         }).then(response => {

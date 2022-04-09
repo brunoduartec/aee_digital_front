@@ -1,5 +1,18 @@
 module.exports = class CentroInfoController {
-  constructor(logger, reader, parser) {
+  constructor() {
+
+    const instance = this.constructor.instance;
+    if (instance) {
+      return instance;
+    }
+
+    this.constructor.instance = this;
+
+  }
+
+  
+
+  async initialize(logger, reader,parser){
     this.logger = logger;
 
     this.reader = reader;
@@ -9,6 +22,8 @@ module.exports = class CentroInfoController {
     this.parser = parser;
 
     this.cache = {};
+
+    await this.generatePassCache();
   }
 
   async generatePassCache() {

@@ -107,10 +107,9 @@ module.exports = class QuizActions {
     let { centro_id, form_alias, page } = action_info;
     try {
       let checkWasInitialized = await this.userinfocontroller.checkUserWasInitialized(action_info);
-
-      let centro = await this.regionalcontroller.getCentroByCacheByID(centro_id);
       
       if(!checkWasInitialized){
+        let centro = await this.regionalcontroller.getCentroByCacheByID(centro_id);
         await this.userinfocontroller.insertAnswers(centro);
       }
 

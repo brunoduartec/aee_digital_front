@@ -14,8 +14,6 @@ module.exports = class UserInfoController {
 
     this.depara = require("../resources/de-para.json");
 
-    this.quiz_cache = [];
-
     this.logger = logger;
     this.parser = parser;
   }
