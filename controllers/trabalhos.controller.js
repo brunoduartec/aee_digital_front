@@ -362,6 +362,21 @@ module.exports = class trabalhosController {
     }
   }
 
+  async getQuizResponses() {
+    try {
+      const quiz_response = await this.request.get(
+        "aee_digital_trabalhos",
+        `/atividade_generic_quiz_answer`
+      );
+
+      this.logger.info(`getQuizResponses ${quiz_response}`);
+      return quiz_response;
+    } catch (error) {
+      this.logger.error( `trabalhos.controller.getQuizResponses: Error=> ${error}` );
+      throw error
+    }
+  }
+
   async getPessoaByParams(params) {
     try {
       const pessoa = await this.request.get(
