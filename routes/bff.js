@@ -10,8 +10,31 @@ const regionalcontroller = new regionalController();
 const trabalhosController = require("../controllers/trabalhos.controller");
 const trabalhoscontroller = new trabalhosController();
 
+const ExcelExportResponses = require("../controllers/excelexportresponses.controller");
 const excelExporterController = require("../controllers/excelexporter.controller");
 const excelexportercontroller = new excelExporterController();
+
+const ReportInfo = require("../controllers/reportinfo.controller");
+const reportinfo = new ReportInfo(
+  excelexportercontroller,
+  logger,
+  trabalhoscontroller,
+  regionalcontroller
+);
+
+const excelexporteresponses = new ExcelExportResponses(
+  excelexportercontroller,
+  reportinfo,
+  trabalhoscontroller,
+  logger,
+  parser
+);
+
+(async () => {
+  await reportinfo.refresh();
+  await excelexporteresponses.init();
+  console.log("INITED");
+})();
 
 const { requireAuth } = require("../helpers/auth.helpers");
 
@@ -245,81 +268,53 @@ router.get("/bff/exportcentroresponses", async function (req, res) {
   try {
     const centroId = req.query.centroId;
 
-    paramsParsed = parser.getParamsParsed({
-      _id: centroId,
-    });
-    centroInfo = await regionalcontroller.getCentroByParam(paramsParsed);
-
-    let centroAnswers = await trabalhoscontroller.getQuizResponseByParams(
-      parser.getParamsParsed({
-        CENTRO_ID: centroId,
-      })
-    );
-
-    let centroanswersPopulared = [];
-
-    let quizes = await trabalhoscontroller.getQuizTemplates();
-
-    for (const answer of centroAnswers) {
-      const quizinfo = quizes.find((m) => {
-        return m.ID === answer.QUIZ_ID;
-      });
-
-      let populatedAnswer = answer;
-      populatedAnswer.QUIZ_CATEGORY = quizinfo.CATEGORY;
-      centroanswersPopulared.push(populatedAnswer);
-    }
-
-    const timeStamp = new Date().getTime();
-    excelinfo = [
-      {
-        header: "CATEGORIA",
-        key: "category",
-      },
-      {
-        header: "QUESTÃO",
-        key: "question",
-      },
-      {
-        header: "OBRIGATÓRIO",
-        key: "required",
-      },
-      {
-        header: "RESPOSTA",
-        key: "answer",
-      },
-    ];
-
-    let formatInfo = function (data) {
-      try {
-        let item = {
-          category: data.QUIZ_CATEGORY || " ",
-          question: data.QUESTION_ID.QUESTION || " ",
-          required: data.QUESTION_ID.IS_REQUIRED || " ",
-          answer: data.ANSWER,
-        };
-
-        return item;
-      } catch (error) {
-        throw error;
-      }
-    };
-    let fileSaved = await excelexportercontroller.export(
-      `${centroInfo.NOME_CENTRO}_${timeStamp}`,
-      excelinfo,
-      centroanswersPopulared,
-      formatInfo
-    );
-
-    const fileToSend = fileSaved.substring(8);
+    const fileSaved = await excelexporteresponses.exportCentro(centroId);
 
     res.send({
       status: "success",
       message: "file successfully downloaded",
-      fileName: `${fileToSend}`,
+      fileName: `${fileSaved}`,
     });
   } catch (error) {
     logger.error(`/bff/exportcentroresponses: ${error}`);
+    res.json({
+      status: 500,
+      message: error.message,
+    });
+  }
+});
+
+router.get("/bff/exportregionalresponses", async function (req, res) {
+  try {
+    const regionalName = req.query.regionalName;
+
+    const fileSaved = await excelexporteresponses.exportRegional(regionalName);
+
+    res.send({
+      status: "success",
+      message: "file successfully downloaded",
+      fileName: `${fileSaved}`,
+    });
+  } catch (error) {
+    logger.error(`/bff/exportregionalresponses: ${error}`);
+    res.json({
+      status: 500,
+      message: error.message,
+    });
+  }
+});
+
+router.get("/bff/exportrgeneralresponses", async function (req, res) {
+  try {
+    const fileSaved = await excelexporteresponses.exportAll();
+
+    res.send({
+      status: "success",
+      message: "file successfully downloaded",
+      fileName: `${fileSaved}`,
+    });
+  } catch (error) {
+    logger.error(`/bff/exportrgeneralresponses: ${error}`);
     res.json({
       status: 500,
       message: error.message,
