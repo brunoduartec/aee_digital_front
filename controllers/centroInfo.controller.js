@@ -1,25 +1,30 @@
+const env = process.env.NODE_ENV ? process.env.NODE_ENV : "local";
+const config = require("../env.json")[env];
 module.exports = class CentroInfoController {
-  constructor() {
-
+  constructor(
+    logger = require("../helpers/logger"),
+    Reader = require("../helpers/reader"),
+    parser = require("../helpers/parser"),
+    readXlsxFile = require("read-excel-file/node"),
+    schema = require("../resources/centro_schema")()
+  ) {
     const instance = this.constructor.instance;
     if (instance) {
       return instance;
     }
 
-    this.constructor.instance = this;
+    this.logger = logger;
+    this.parser = parser;
 
+    let fileName = `./resources/${config.centros.base}.xlsx`;
+    this.reader = new Reader(readXlsxFile, fileName, schema);
+
+    this.constructor.instance = this;
   }
 
-  
-
-  async initialize(logger, reader,parser){
-    this.logger = logger;
-
-    this.reader = reader;
+  async initialize() {
     this.groups = require("../resources/groups.json");
     this.permissions = require("../resources/permissions.json");
-    
-    this.parser = parser;
 
     this.cache = {};
 
@@ -34,17 +39,17 @@ module.exports = class CentroInfoController {
 
       const centro = row.centro;
 
-      if(!this.cache[centro.regional]){
-        this.cache[centro.regional] = {}
+      if (!this.cache[centro.regional]) {
+        this.cache[centro.regional] = {};
       }
 
-      if(!this.cache[centro.regional][centro.Name]){
-        this.cache[centro.regional][centro.Name] = []
+      if (!this.cache[centro.regional][centro.Name]) {
+        this.cache[centro.regional][centro.Name] = [];
       }
 
       this.cache[centro.regional][centro.Name].push({
-        centro: centro
-      })
+        centro: centro,
+      });
     }
 
     this.logger.info(`End generate centro cache`);
@@ -53,19 +58,17 @@ module.exports = class CentroInfoController {
   async getCentroInfo(regional, nome, nome_curto) {
     try {
       this.logger.info(`getCentroInfo: ${regional}: ${nome}: ${nome_curto}`);
-  
+
       let centroInfoByName = this.cache[regional][nome];
-  
-      let centroInfo = centroInfoByName.find(m=>{
-        return m.centro.short === nome_curto
-      })
-  
+
+      let centroInfo = centroInfoByName.find((m) => {
+        return m.centro.short === nome_curto;
+      });
+
       return centroInfo;
-      
     } catch (error) {
-      this.logger.error(`Error getCentroInfo: ${error}`)
-      throw error
+      this.logger.error(`Error getCentroInfo: ${error}`);
+      throw error;
     }
-  
   }
 };
