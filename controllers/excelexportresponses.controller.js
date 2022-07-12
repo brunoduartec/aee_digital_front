@@ -1,21 +1,25 @@
 module.exports = class ExcelExportReportsController {
   constructor(
     exporter,
-    exportresponses,
+    reportinfo,
     trabalhoscontroller,
     logger,
     parser = require("../helpers/parser")
   ) {
     this.exporter = exporter;
-    this.exportresponses = exportresponses;
+    this.reportinfo = reportinfo;
     this.trabalhoscontroller = trabalhoscontroller;
     this.logger = logger;
     this.parser = parser;
     this.headers = [];
   }
 
-  async init() {
+  async init(size) {
     try {
+      if (!this.reportinfo.hasInitialized()) {
+        await this.reportinfo.refresh(size);
+      }
+
       const params = {
         NAME: "Cadastro de Informações Anual",
       };
@@ -25,6 +29,8 @@ module.exports = class ExcelExportReportsController {
         paramsParsed
       );
       const form = forms[0];
+
+      this.headers = [];
 
       for (let index = 0; index < form.PAGES.length; index++) {
         const page = form.PAGES[index];
@@ -63,7 +69,9 @@ module.exports = class ExcelExportReportsController {
 
       for (let index = 0; index < data.length; index++) {
         const element = data[index];
-        item[`id_${index}`] = element.ANSWER || " ";
+        if (!item[element.QUESTION_ID]) {
+          item[element.QUESTION_ID] = element.ANSWER || " ";
+        }
       }
 
       return item;
@@ -108,8 +116,23 @@ module.exports = class ExcelExportReportsController {
     }
   }
 
+  async exportCentrosByRegional(regionalName) {
+    const files = [];
+    const centros = await this.reportinfo.getCentrosInRegionalInfo(
+      regionalName
+    );
+
+    for (let index = 0; index < centros.length; index++) {
+      const centro = centros[index];
+      let centroFile = await this.exportCentro(centro.ID);
+      files.push(centroFile);
+    }
+
+    return files;
+  }
+
   async exportRegional(regionalName) {
-    const centros = await this.exportresponses.getCentrosInRegionalInfo(
+    const centros = await this.reportinfo.getCentrosInRegionalInfo(
       regionalName
     );
     const fileName = this.getRegionalFileName(regionalName);
@@ -117,8 +140,20 @@ module.exports = class ExcelExportReportsController {
     return await this.exportBatch(fileName, centros);
   }
 
+  async exportRegionais() {
+    const files = [];
+    const regionais = await this.reportinfo.getRegionaisInfo();
+    for (let index = 0; index < regionais.length; index++) {
+      const regional = regionais[index];
+      let regionalFile = await this.exportRegional(regional.NOME_REGIONAL);
+      files.push(regionalFile);
+    }
+
+    return files;
+  }
+
   async exportAll() {
-    const centros = await this.exportresponses.getCentrosInfo();
+    const centros = await this.reportinfo.getCentrosInfo();
     const fileName = this.getAllFileName();
 
     return await this.exportBatch(fileName, centros);
@@ -148,12 +183,12 @@ module.exports = class ExcelExportReportsController {
 
   async formatCentroToExport(centroId) {
     try {
-      const centroInfo = await this.exportresponses.getCentroInfo(centroId);
+      const centroInfo = await this.reportinfo.getCentroInfo(centroId);
 
       const centroName = centroInfo.NOME_CENTRO;
       const regionalName = centroInfo.REGIONAL.NOME_REGIONAL;
 
-      const centroReportInfo = await this.getCentroReportInfo(
+      const centroReportInfo = await this.reportinfo.getCentroReportInfo(
         regionalName,
         centroId
       );

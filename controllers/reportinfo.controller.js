@@ -1,4 +1,4 @@
-module.exports = class ExportResponses {
+module.exports = class ReportInfo {
   constructor(
     exporter,
     logger,
@@ -21,8 +21,13 @@ module.exports = class ExportResponses {
     this.summaries = {};
     this.reports = {};
 
+    this.initialized = false;
     this.halted = false;
     this.count = 3;
+  }
+
+  hasInitialized() {
+    return this.initialized;
   }
 
   async getCentroInfo(centroId) {
@@ -35,6 +40,10 @@ module.exports = class ExportResponses {
 
   async getCentrosInfo() {
     return this.centros;
+  }
+
+  async getRegionaisInfo() {
+    return this.regionais;
   }
 
   async getCentrosInRegionalInfo(regionalName) {
@@ -77,6 +86,7 @@ module.exports = class ExportResponses {
 
   async refreshBaseInfo() {
     this.centros = await this.regionalcontroller.getCentros();
+    this.regionais = await this.regionalcontroller.getRegionais();
     this.summaries = await this.trabalhoscontroller.getSummaries();
     this.responses = await this.trabalhoscontroller.getQuizResponses();
   }
@@ -96,7 +106,6 @@ module.exports = class ExportResponses {
       for (let index = 0; index < size; index++) {
         try {
           const centro = this.centros[index];
-          console.log("Salvando", centro.NOME_CENTRO);
           const centroID = centro.ID;
           const regionalName = centro.REGIONAL.NOME_REGIONAL;
           let regional = this.reports[regionalName];
@@ -105,45 +114,67 @@ module.exports = class ExportResponses {
             regional = this.reports[regionalName];
           }
 
-          const summary = await this.getCentroSummary(centroID);
+          // const summary = await this.getCentroSummary(centroID);
 
-          if (summary) {
-            let centroInfo = await this.getCentroInfo(centroID);
+          // if (summary) {
+          let centroInfo = await this.getCentroInfo(centroID);
 
-            let centroReport = {
-              NOME_CENTRO: centroInfo.NOME_CENTRO,
-              NOME_CURTO: centroInfo.NOME_CURTO,
-              ID: centroID,
-              RESPONSES: [],
-            };
+          let centroReport = {
+            NOME_CENTRO: centroInfo.NOME_CENTRO,
+            NOME_CURTO: centroInfo.NOME_CURTO,
+            ID: centroID,
+            RESPONSES: [],
+          };
 
-            summary.ANSWERS.forEach((question) => {
-              let answer = this.responses.find((m) => {
-                return m.ID == question;
-              });
+          const centroResponses = this.responses.filter((m) => {
+            return m.CENTRO_ID == centroID;
+          });
 
-              let centroAnswer;
-              try {
-                centroAnswer = {
-                  QUESTION: answer.QUESTION_ID.QUESTION,
-                  ANSWER: answer.ANSWER,
-                  QUESTION_ID: answer.QUESTION_ID._id,
-                };
-              } catch (error) {
-                centroAnswer = {
-                  QUESTION: "BANANA",
-                  ANSWER: answer.ANSWER,
-                };
-              }
+          centroResponses.forEach((answer) => {
+            let centroAnswer;
+            try {
+              centroAnswer = {
+                QUESTION: answer.QUESTION_ID.QUESTION,
+                ANSWER: answer.ANSWER,
+                QUESTION_ID: answer.QUESTION_ID._id,
+              };
+            } catch (error) {
+              centroAnswer = {
+                QUESTION: "BANANA",
+                ANSWER: answer.ANSWER,
+              };
+            }
 
-              centroReport.RESPONSES.push(centroAnswer);
-            });
+            centroReport.RESPONSES.push(centroAnswer);
+          });
 
-            regional.centros.push(centroReport);
-            status.success.push({
-              centro,
-            });
-          }
+          // summary.ANSWERS.forEach((question) => {
+          //   let answer = this.responses.find((m) => {
+          //     return m.ID == question;
+          //   });
+
+          //   let centroAnswer;
+          //   try {
+          //     centroAnswer = {
+          //       QUESTION: answer.QUESTION_ID.QUESTION,
+          //       ANSWER: answer.ANSWER,
+          //       QUESTION_ID: answer.QUESTION_ID._id,
+          //     };
+          //   } catch (error) {
+          //     centroAnswer = {
+          //       QUESTION: "BANANA",
+          //       ANSWER: answer.ANSWER,
+          //     };
+          //   }
+
+          //   centroReport.RESPONSES.push(centroAnswer);
+          // });
+
+          regional.centros.push(centroReport);
+          status.success.push({
+            centro,
+          });
+          //  }
         } catch (error) {
           status.errors.push({
             error,
@@ -151,6 +182,7 @@ module.exports = class ExportResponses {
         }
       }
 
+      this.initialized = true;
       return {
         info: this.reports,
         status,
