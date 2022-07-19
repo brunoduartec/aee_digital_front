@@ -69,8 +69,12 @@ module.exports = class ExcelExportReportsController {
 
       for (let index = 0; index < data.length; index++) {
         const element = data[index];
-        if (!item[element.QUESTION_ID]) {
-          item[element.QUESTION_ID] = element.ANSWER || " ";
+        try {
+          if (!item[element.QUESTION_ID]) {
+            item[element.QUESTION_ID] = element.ANSWER || " ";
+          }
+        } catch (error) {
+          console.log("PACIENCIA");
         }
       }
 
@@ -98,22 +102,28 @@ module.exports = class ExcelExportReportsController {
     return `General_Report`;
   }
 
-  async exportCentro(centroId) {
-    try {
-      const infoFormated = await this.formatCentroToExport(centroId);
-      let fileSaved = await this.exporter.export(
-        this.getCentroFileName(
-          infoFormated.centroName,
-          infoFormated.regionalName
-        ),
-        this.getHeaders(),
-        infoFormated.infoFormated,
-        this.getFormatInfo
-      );
-      return fileSaved.substring(8);
-    } catch (error) {
-      console.log("É a vida");
-    }
+  exportCentro(centroId) {
+    return new Promise((resolve, reject) => {
+      (async () => {
+        try {
+          const infoFormated = await this.formatCentroToExport(centroId);
+          let fileSaved = await this.exporter.export(
+            this.getCentroFileName(
+              infoFormated.centroName,
+              infoFormated.regionalName
+            ),
+            this.getHeaders(),
+            infoFormated.infoFormated,
+            this.getFormatInfo
+          );
+
+          resolve(fileSaved.substring(8));
+        } catch (error) {
+          console.log("É a vida");
+          reject(error);
+        }
+      })();
+    });
   }
 
   async exportCentrosByRegional(regionalName) {
@@ -122,11 +132,16 @@ module.exports = class ExcelExportReportsController {
       regionalName
     );
 
+    const promises = [];
+
     for (let index = 0; index < centros.length; index++) {
       const centro = centros[index];
-      let centroFile = await this.exportCentro(centro.ID);
-      files.push(centroFile);
+      promises.push(this.exportCentro(centro.ID));
     }
+
+    await Promise.all(promises).then((files) => {
+      files = files;
+    });
 
     return files;
   }

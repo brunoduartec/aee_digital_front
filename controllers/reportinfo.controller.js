@@ -1,16 +1,16 @@
 module.exports = class ReportInfo {
   constructor(
     exporter,
-    logger,
+    logger = require("../helpers/logger"),
     trabalhoscontroller,
     regionalcontroller,
-    refreshTimeInMinutes = 5
+    refreshTimeInMinutes = 1
   ) {
     const Repeater = require("../helpers/repeater.helper");
     this.exporter = exporter;
     this.repeater = new Repeater(logger);
     this.logger = logger;
-    this.refreshTimeInMinutes = 5;
+    this.refreshTimeInMinutes = refreshTimeInMinutes;
     this.lastRefresh;
 
     this.trabalhoscontroller = trabalhoscontroller;
@@ -91,10 +91,64 @@ module.exports = class ReportInfo {
     this.responses = await this.trabalhoscontroller.getQuizResponses();
   }
 
+  refreshCentro(centro) {
+    const instance = this;
+    return new Promise((resolve, reject) => {
+      (async () => {
+        try {
+          const centroID = centro.ID;
+          const regionalName = centro.REGIONAL.NOME_REGIONAL;
+          let regional = instance.reports[regionalName];
+          if (!instance.reports[regionalName]) {
+            instance.reports[regionalName] = { centros: [] };
+            regional = instance.reports[regionalName];
+          }
+
+          let centroInfo = await instance.getCentroInfo(centroID);
+          let centroReport = {
+            NOME_CENTRO: centroInfo.NOME_CENTRO,
+            NOME_CURTO: centroInfo.NOME_CURTO,
+            ID: centroID,
+            RESPONSES: [],
+          };
+          const centroResponses = instance.responses.filter((m) => {
+            return m.CENTRO_ID == centroID;
+          });
+          centroReport.RESPONSES = centroResponses.map((m) => {
+            try {
+              const centroAnswer = {
+                QUESTION: m.QUESTION_ID.QUESTION,
+                ANSWER: m.ANSWER,
+                QUESTION_ID: m.QUESTION_ID._id,
+              };
+              return centroAnswer;
+            } catch (error) {
+              this.logger.error("Error loading centroReport", error);
+            }
+          });
+          regional.centros.push(centroReport);
+          resolve(centro);
+        } catch (error) {
+          reject(error);
+        }
+      })();
+    });
+  }
+
+  haltFunction() {
+    return false;
+  }
+
+  async repeatedRefresh(size) {
+    let instance = this;
+    await instance.refresh(size);
+    this.repeater.repeat(async function () {
+      await instance.refresh(size);
+    }, this.refreshTimeInMinutes);
+  }
+
   async refresh(size) {
     try {
-      this.logger.info("CHAMOU");
-
       await this.refreshBaseInfo();
 
       let status = {
@@ -103,84 +157,20 @@ module.exports = class ReportInfo {
       };
 
       size = size || this.centros.length;
+
+      let promises = [];
       for (let index = 0; index < size; index++) {
-        try {
-          const centro = this.centros[index];
-          const centroID = centro.ID;
-          const regionalName = centro.REGIONAL.NOME_REGIONAL;
-          let regional = this.reports[regionalName];
-          if (!this.reports[regionalName]) {
-            this.reports[regionalName] = { centros: [] };
-            regional = this.reports[regionalName];
-          }
-
-          // const summary = await this.getCentroSummary(centroID);
-
-          // if (summary) {
-          let centroInfo = await this.getCentroInfo(centroID);
-
-          let centroReport = {
-            NOME_CENTRO: centroInfo.NOME_CENTRO,
-            NOME_CURTO: centroInfo.NOME_CURTO,
-            ID: centroID,
-            RESPONSES: [],
-          };
-
-          const centroResponses = this.responses.filter((m) => {
-            return m.CENTRO_ID == centroID;
-          });
-
-          centroResponses.forEach((answer) => {
-            let centroAnswer;
-            try {
-              centroAnswer = {
-                QUESTION: answer.QUESTION_ID.QUESTION,
-                ANSWER: answer.ANSWER,
-                QUESTION_ID: answer.QUESTION_ID._id,
-              };
-            } catch (error) {
-              centroAnswer = {
-                QUESTION: "BANANA",
-                ANSWER: answer.ANSWER,
-              };
-            }
-
-            centroReport.RESPONSES.push(centroAnswer);
-          });
-
-          // summary.ANSWERS.forEach((question) => {
-          //   let answer = this.responses.find((m) => {
-          //     return m.ID == question;
-          //   });
-
-          //   let centroAnswer;
-          //   try {
-          //     centroAnswer = {
-          //       QUESTION: answer.QUESTION_ID.QUESTION,
-          //       ANSWER: answer.ANSWER,
-          //       QUESTION_ID: answer.QUESTION_ID._id,
-          //     };
-          //   } catch (error) {
-          //     centroAnswer = {
-          //       QUESTION: "BANANA",
-          //       ANSWER: answer.ANSWER,
-          //     };
-          //   }
-
-          //   centroReport.RESPONSES.push(centroAnswer);
-          // });
-
-          regional.centros.push(centroReport);
-          status.success.push({
-            centro,
-          });
-          //  }
-        } catch (error) {
-          status.errors.push({
-            error,
-          });
-        }
+        const centro = this.centros[index];
+        promises.push(this.refreshCentro(centro));
       }
+
+      await Promise.all(promises)
+        .then((centros) => {
+          status.success = centros;
+        })
+        .catch((errors) => {
+          status.errors = errors;
+        });
 
       this.initialized = true;
       return {

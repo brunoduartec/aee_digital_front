@@ -52,4 +52,18 @@ describe("controllers:exporterresponses", () => {
 
     expect(reports.info["ABC"].centros.length).toBe(size);
   });
+
+  it("should validade refresh repeated", async () => {
+    const instance = new ReportInfo(
+      exporter,
+      logger,
+      trabalhocontroller,
+      regionalcontroller,
+      0.1
+    );
+    const size = 3;
+    const reports = await instance.repeatedRefresh();
+
+    expect(reports.info["ABC"].centros.length).toBe(size);
+  });
 });

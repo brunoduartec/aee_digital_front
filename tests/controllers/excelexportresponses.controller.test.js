@@ -8,12 +8,12 @@ const summaries_mock = require("../summaries.mock.json");
 const response_mock = require("../responses.mock.json");
 
 const excelExporterController = require("../../controllers/excelexporter.controller");
-// const excelexportercontroller = new excelExporterController();
-const excelexportercontroller = {
-  export: function () {
-    return "arquivomaneiro.xls";
-  },
-};
+const excelexportercontroller = new excelExporterController();
+// const excelexportercontroller = {
+//   export: function () {
+//     return "arquivomaneiro.xls";
+//   },
+// };
 
 const trabalhocontroller = {
   getSummaries: async function () {

@@ -1,23 +1,15 @@
-const {setTimeout} = require("timers/promises") ;
+const cron = require("node-cron");
 
+module.exports = class Repeater {
+  constructor(logger = require("../helpers/logger")) {
+    this.logger = logger;
+  }
 
-module.exports = class Repeater{
-    constructor(logger){
-        this.logger = logger
-    }
-
-    async delay(elapsetime) {
-        this.logger.info(`helpers:repeater:delay Will wait ${elapsetime}`);
-        await setTimeout(5000);
-        this.logger.info(`helpers:repeater:delay Returned`);
-
-    }
-
-    async repeat(callback, elapsetime, condition){
-        while(!condition()){
-            this.logger.info(`helpers:repeater:repeat Will execute`);
-            await callback();
-            await this.delay(elapsetime)
-        }
-    }
-}
+  async repeat(callback, elapsetime) {
+    const task = cron.schedule(`${elapsetime} * * * * *`, async () => {
+      console.log(`running a task every ${elapsetime} minute`);
+      await callback();
+    });
+    return task;
+  }
+};

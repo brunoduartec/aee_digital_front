@@ -31,7 +31,7 @@ const excelexporteresponses = new ExcelExportResponses(
 );
 
 (async () => {
-  await reportinfo.refresh();
+  await reportinfo.repeatedRefresh();
   await excelexporteresponses.init();
   console.log("INITED");
 })();

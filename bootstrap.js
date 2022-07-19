@@ -18,13 +18,31 @@ const trabalhoscontroller = new trabalhosController();
 request.addInstance("aee_digital_regionais", config.aee_digital_regionais);
 request.addInstance("aee_digital_trabalhos", config.aee_digital_trabalhos);
 
+function initcontroller(controller) {
+  return new Promise((resolve, reject) => {
+    try {
+      controller.initialize();
+      resolve();
+    } catch (error) {
+      reject();
+    }
+  });
+}
+
+const promises = [];
+
+promises.push(initcontroller(regionalcontroller));
+promises.push(initcontroller(centroinfocontroller));
+promises.push(initcontroller(trabalhoscontroller));
+
 async function initialize() {
-  await regionalcontroller.initialize();
-  logger.info("Started regionalcontroller");
-  await centroinfocontroller.initialize();
-  logger.info("Started centroinfocontroller");
-  await trabalhoscontroller.initialize();
-  logger.info("Started trabalhoscontroller");
+  await Promise.all(promises)
+    .then((m) => {
+      logger.info(`Bootstrap: ${m}`);
+    })
+    .catch((error) => {
+      logger.error(`Bootstrap: ${error}`);
+    });
 }
 
 module.exports = {
