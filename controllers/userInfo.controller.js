@@ -20,31 +20,32 @@ module.exports = class UserInfoController {
 
   getInfo(item, param) {
     let sub_params = param.split(".");
-    let sub
+    let sub;
 
-    if(sub_params.includes("*")){
-      sub=[];
+    if (sub_params.includes("*")) {
+      sub = [];
       let index = sub_params.indexOf("*");
       let sub_sub_param = [];
       for (let i = 0; i < index; i++) {
-         sub_sub_param.push(sub_params[i]);
+        sub_sub_param.push(sub_params[i]);
       }
-      let sub_item = this.parser.getNestedObject(item, sub_sub_param)
-      
-      if(sub_item){
+      let sub_item = this.parser.getNestedObject(item, sub_sub_param);
+
+      if (sub_item) {
         for (let i = 0; i < sub_item.length; i++) {
           const it = sub_item[i];
-          const subToPush = this.parser.getNestedObject(it,[sub_params[index+1]])
-          sub.push(subToPush)
+          const subToPush = this.parser.getNestedObject(it, [
+            sub_params[index + 1],
+          ]);
+          sub.push(subToPush);
         }
-      }
-      else{
-        sub.push(" ")
+      } else {
+        sub.push(" ");
       }
 
       return sub;
-    }else{
-      sub = this.parser.getNestedObject(item, sub_params)
+    } else {
+      sub = this.parser.getNestedObject(item, sub_params);
       return sub;
     }
   }
@@ -52,90 +53,89 @@ module.exports = class UserInfoController {
   async insertAnswers(centro) {
     try {
       let centroInfo = await this.centroinfocontroller.getCentroInfo(
-        decodeURIComponent(centro.REGIONAL.NOME_REGIONAL), decodeURIComponent(centro.NOME_CENTRO), decodeURIComponent(centro.NOME_CURTO)
+        decodeURIComponent(centro.REGIONAL.NOME_REGIONAL),
+        decodeURIComponent(centro.NOME_CENTRO),
+        decodeURIComponent(centro.NOME_CURTO)
       );
 
       centroInfo = centroInfo.centro;
 
+      const cadastroFormName = "Cadastro de Informações Anual";
       const params = {
-        NAME:"Cadastro de Informações Anual"
-      }
-      let form = await this.trabalhocontroller.getFormByParams(this.parser.getParamsParsed(params))
+        NAME: cadastroFormName,
+      };
+      let form = await this.trabalhocontroller.getFormByParams(
+        this.parser.getParamsParsed(params)
+      );
       form = form[0];
 
-      let answersToAdd = []
-  
-      for (let index = 0; index < form.PAGES.length; index++) {
-        const page = form.PAGES[index];
-        let QUIZES = page.QUIZES;
-        for (let j = 0; j < QUIZES.length; j++) {
-          const quiz = QUIZES[j];
-          let QUESTIONS = quiz.QUESTIONS;
-          for (let k = 0; k < QUESTIONS.length; k++) {
-            const groupQuestions = QUESTIONS[k];
-            let GROUP = groupQuestions.GROUP
-            for (let l = 0; l < GROUP.length; l++) {
-              const question = GROUP[l];
-              
-              let match = this.depara.find(m=>{
-                return (m.QUIZ == quiz.CATEGORY && m.QUESTION == question.QUESTION)
-              });
-  
-              let answer=" "
-              
-              if(match){
-                answer = this.getInfo(centroInfo, match.FROM) || " ";
-              }
-  
-              let answers = []
-              answers = answers.concat(answer);
+      let questionsPage = await this.trabalhocontroller.getFormQuestions(
+        cadastroFormName
+      );
+      let answersToAdd = [];
 
-              if(answers.length == 0){
-                answers.push(" ")
-              }
-  
-              for (const answ of answers) {
-                let answerInfo = {
-                  CENTRO_ID: centro.ID,
-                  QUIZ_ID: quiz._id,
-                  QUESTION_ID: question._id,
-                  ANSWER: answ,
-                };
-                answersToAdd.push(answerInfo)
-              }
-            }
+      for (let index = 0; index < questionsPage.length; index++) {
+        const questions = questionsPage[index];
+
+        for (let l = 0; l < questions.length; l++) {
+          const question = questions[l];
+
+          let match = this.depara.find((m) => {
+            return m.QUIZ == quiz.CATEGORY && m.QUESTION == question.QUESTION;
+          });
+
+          let answer = " ";
+
+          if (match) {
+            answer = this.getInfo(centroInfo, match.FROM) || " ";
           }
-          
+
+          let answers = [];
+          answers = answers.concat(answer);
+
+          if (answers.length == 0) {
+            answers.push(" ");
+          }
+
+          for (const answ of answers) {
+            let answerInfo = {
+              CENTRO_ID: centro.ID,
+              QUIZ_ID: quiz._id,
+              QUESTION_ID: question._id,
+              ANSWER: answ,
+            };
+            answersToAdd.push(answerInfo);
+          }
         }
-        
       }
 
       await this.trabalhocontroller.postQuizResponse(answersToAdd);
     } catch (error) {
-      this.logger.error(`Insert Answers ${error}`)
-      throw error
+      this.logger.error(`Insert Answers ${error}`);
+      throw error;
     }
-
   }
 
-  async checkUserWasInitialized(info){
-    let { centro_id } = info
+  async checkUserWasInitialized(info) {
+    let { centro_id } = info;
 
-    let form = await this.trabalhocontroller.getFormByParams(this.parser.getParamsParsed({
-      NAME: "Cadastro de Informações Anual"
-    }));
+    let form = await this.trabalhocontroller.getFormByParams(
+      this.parser.getParamsParsed({
+        NAME: "Cadastro de Informações Anual",
+      })
+    );
 
-    let firstQuestionId = form[0].PAGES[0].QUIZES[0].QUESTIONS[0].GROUP[0]._id
+    let firstQuestionId = form[0].PAGES[0].QUIZES[0].QUESTIONS[0].GROUP[0]._id;
 
-    let answers = await this.trabalhocontroller.getQuizResponseByParams(this.parser.getParamsParsed({
-      CENTRO_ID: centro_id,
-      "QUESTION_ID._id": firstQuestionId
-    }));
-
+    let answers = await this.trabalhocontroller.getQuizResponseByParams(
+      this.parser.getParamsParsed({
+        CENTRO_ID: centro_id,
+        "QUESTION_ID._id": firstQuestionId,
+      })
+    );
 
     return answers.length > 0;
   }
-
 
   async getFormInfo(centro_id, form_alias, page) {
     let option = "Centro";
@@ -161,48 +161,49 @@ module.exports = class UserInfoController {
 
   async initializeUserInfo(auth) {
     try {
-
-      if(auth.scope_id){
+      if (auth.scope_id) {
         return auth;
       }
 
       let userInfo = await this.getUserInfo(auth.loginHint);
 
       return userInfo;
-      
     } catch (error) {
-      this.logger.error(`initializeUserInfo ${error}`)
-      throw error
+      this.logger.error(`initializeUserInfo ${error}`);
+      throw error;
     }
   }
 
-  async getUserInfo(info){
+  async getUserInfo(info) {
     try {
-      if(info.centro == "*"){
-        if(info.regional == "*"){
+      if (info.centro == "*") {
+        if (info.regional == "*") {
           info.alianca = true;
-        }else{
+        } else {
           const paramsParsed = this.parser.getParamsParsed({
             NOME_REGIONAL: decodeURIComponent(info.regional),
           });
-          const regional = await this.regionalcontroller.getRegionalByParams(paramsParsed);
-          info.scope_id= regional.ID;
+          const regional = await this.regionalcontroller.getRegionalByParams(
+            paramsParsed
+          );
+          info.scope_id = regional.ID;
         }
-      }else{
+      } else {
         const paramsParsed = this.parser.getParamsParsed({
           NOME_CENTRO: decodeURIComponent(info.centro),
           NOME_CURTO: decodeURIComponent(info.curto),
-          "REGIONAL.NOME_REGIONAL": decodeURIComponent(info.regional)
+          "REGIONAL.NOME_REGIONAL": decodeURIComponent(info.regional),
         });
-        
-        let centro = await this.regionalcontroller.getCentroByParam(paramsParsed);
-        
+
+        let centro = await this.regionalcontroller.getCentroByParam(
+          paramsParsed
+        );
+
         info.scope_id = centro.ID;
       }
       return info;
-      
     } catch (error) {
-      this.logger.error(`Error get user info ${error}`)
+      this.logger.error(`Error get user info ${error}`);
       throw error;
     }
   }

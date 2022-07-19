@@ -21,6 +21,43 @@ module.exports = class trabalhosController {
     await this.generateInfoByCache();
   }
 
+  async getFormQuestions(questionName) {
+    return this.cache.form ? this.cache.form[questionName] : null;
+  }
+
+  async setFormQuestions(formTemplate, questionName) {
+    const formTemplateInfo = formTemplate[0];
+    let pages = formTemplateInfo.PAGES;
+    if (!this.cache.form) {
+      this.cache.form = {};
+    }
+    this.cache.form[questionName] = [];
+
+    for (let index = 0; index < pages.length; index++) {
+      let pageInfo = [];
+
+      const page = pages[index];
+
+      let quizes = page.QUIZES;
+      for (let index = 0; index < quizes.length; index++) {
+        const quiz = quizes[index];
+
+        let groups = quiz.QUESTIONS;
+
+        for (let j = 0; j < groups.length; j++) {
+          const group = groups[j].GROUP;
+
+          for (let k = 0; k < group.length; k++) {
+            const question = group[k];
+            pageInfo.push(question);
+          }
+        }
+      }
+
+      this.cache.form[questionName].push(pageInfo);
+    }
+  }
+
   async generateInfoByCache() {
     try {
       let paramsParsed = this.parser.getParamsParsed({
@@ -43,6 +80,15 @@ module.exports = class trabalhosController {
 
       this.getSummaries();
 
+      const cadastroFormName = "Cadastro de Informações Anual";
+      const params = {
+        NAME: cadastroFormName,
+      };
+      let form = await this.getFormByParams(
+        this.parser.getParamsParsed(params)
+      );
+
+      await this.setFormQuestions(form, cadastroFormName);
       this.logger.info(`trabalhoscontroller:generateInfoByCache`);
     } catch (error) {
       this.logger.error(`trabalhocontroller error reading cache: ${error}`);
