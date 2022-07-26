@@ -48,7 +48,9 @@ module.exports = class trabalhosController {
           const group = groups[j].GROUP;
 
           for (let k = 0; k < group.length; k++) {
-            const question = group[k];
+            let question = group[k];
+            question.CATEGORY = quiz.CATEGORY;
+            question.QUIZ_ID = quiz._id;
             pageInfo.push(question);
           }
         }

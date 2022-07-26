@@ -81,7 +81,9 @@ module.exports = class UserInfoController {
           const question = questions[l];
 
           let match = this.depara.find((m) => {
-            return m.QUIZ == quiz.CATEGORY && m.QUESTION == question.QUESTION;
+            return (
+              m.QUIZ == question.CATEGORY && m.QUESTION == question.QUESTION
+            );
           });
 
           let answer = " ";
@@ -100,7 +102,7 @@ module.exports = class UserInfoController {
           for (const answ of answers) {
             let answerInfo = {
               CENTRO_ID: centro.ID,
-              QUIZ_ID: quiz._id,
+              QUIZ_ID: question.QUIZ_ID,
               QUESTION_ID: question._id,
               ANSWER: answ,
             };
