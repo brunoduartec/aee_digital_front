@@ -4,8 +4,8 @@ module.exports = class UserInfoController {
     centroinfocontroller,
     trabalhocontroller,
     searchcontroller,
-    logger,
-    parser
+    logger = require("../helpers/logger"),
+    parser = require("../helpers/parser")
   ) {
     this.regionalcontroller = regionalcontroller;
     this.centroinfocontroller = centroinfocontroller;
@@ -61,13 +61,6 @@ module.exports = class UserInfoController {
       centroInfo = centroInfo.centro;
 
       const cadastroFormName = "Cadastro de Informações Anual";
-      const params = {
-        NAME: cadastroFormName,
-      };
-      let form = await this.trabalhocontroller.getFormByParams(
-        this.parser.getParamsParsed(params)
-      );
-      form = form[0];
 
       let questionsPage = await this.trabalhocontroller.getFormQuestions(
         cadastroFormName

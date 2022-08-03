@@ -1,23 +1,34 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
 
-const {requireAuth} = require("../helpers/auth.helpers")
+const { requireAuth } = require("../helpers/auth.helpers");
 
 const regionalController = require("../controllers/regional.controller");
 const regionalcontroller = new regionalController();
 
+const TrabalhoController = require("../controllers/regional.controller");
+const trabalhocontroller = new TrabalhoController();
+
+const SearchController = require("../controllers/search.controller");
+const searchcontroller = new SearchController(
+  regionalcontroller,
+  trabalhocontroller
+);
+
+const logger = require("../helpers/logger");
+
 router.get("/centros", requireAuth, async function (req, res) {
-  const regionalName = req.query.regionalName
-  let centros
-  let regionals
+  const regionalName = req.query.regionalName;
+  let centros;
+  let regionals;
 
   if (regionalName != null) {
-    centros = await regionalcontroller.getCentroByCacheByRegional(
-      regionalName
-    );
-    regionals = [{
-      NOME_REGIONAL: regionalName
-    }]
+    centros = await regionalcontroller.getCentroByCacheByRegional(regionalName);
+    regionals = [
+      {
+        NOME_REGIONAL: regionalName,
+      },
+    ];
   } else {
     centros = await regionalcontroller.getCentrosByCache();
     regionals = await regionalcontroller.getRegionais();
@@ -32,12 +43,11 @@ router.get("/centros", requireAuth, async function (req, res) {
     });
   }
 
-
   res.render("pages/centros", {
     centros: centros,
-    regionais: regionals
-  })
-})
+    regionais: regionals,
+  });
+});
 
 router.get("/centro", requireAuth, async function (req, res) {
   const centro = req.query.nome;
@@ -88,7 +98,6 @@ router.get("/trabalho_centro", requireAuth, async function (req, res) {
   }
 });
 
-
 router.get("/cadastro", requireAuth, async function (req, res) {
   const centro = req.query.nome;
   const edit = req.query.edit;
@@ -115,33 +124,27 @@ router.get("/cadastro", requireAuth, async function (req, res) {
 });
 
 router.post("/update_centro", requireAuth, async function (req, res) {
-  const centroInfo = {
-    NOME_CENTRO: req.body.nome,
-    NOME_CURTO: req.body.NOME_CURTO,
-    CNPJ_CENTRO: req.body.cnpj,
-    DATA_FUNDACAO: req.body.fundacao,
-    ENDERECO: req.body.endereco,
-    CEP: req.body.cep,
-    BAIRRO: req.body.bairro,
-    CIDADE: req.body.cidade,
-    ESTADO: req.body.estado,
-    PAIS: req.body.pais,
-  };
+  // const centroInfo = {
+  //   NOME_CENTRO: req.body.nome,
+  //   NOME_CURTO: req.body.NOME_CURTO,
+  //   CNPJ_CENTRO: req.body.cnpj,
+  //   DATA_FUNDACAO: req.body.fundacao,
+  //   ENDERECO: req.body.endereco,
+  //   CEP: req.body.cep,
+  //   BAIRRO: req.body.bairro,
+  //   CIDADE: req.body.cidade,
+  //   ESTADO: req.body.estado,
+  //   PAIS: req.body.pais,
+  // };
 
-  res.render("pages/detalhe", {
-    opcao: option,
-    result: result,
-  });
+  res.render("pages/detalhe", {});
 });
-
 
 router.get("/pesquisar", requireAuth, async function (req, res) {
   const regionais = await regionalcontroller.getRegionais();
-  const atividades = await trabalhoscontroller.getAtividades();
 
   res.render("pages/pesquisar", {
     regionais: regionais,
-    atividades: atividades,
   });
 });
 
@@ -176,7 +179,7 @@ router.post("/pesquisa", requireAuth, async function (req, res) {
     }
   } catch (error) {
     logger.error(`post:pesquisa: ${centro}`);
-    throw error
+    throw error;
   }
 });
 

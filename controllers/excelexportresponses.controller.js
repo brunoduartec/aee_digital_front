@@ -3,8 +3,8 @@ module.exports = class ExcelExportReportsController {
     exporter,
     reportinfo,
     trabalhoscontroller,
-    logger,
-    parser = require("../helpers/parser")
+    parser = require("../helpers/parser"),
+    logger = require("../helpers/logger")
   ) {
     this.exporter = exporter;
     this.reportinfo = reportinfo;
@@ -69,17 +69,14 @@ module.exports = class ExcelExportReportsController {
 
       for (let index = 0; index < data.length; index++) {
         const element = data[index];
-        try {
-          if (!item[element.QUESTION_ID]) {
-            item[element.QUESTION_ID] = element.ANSWER || " ";
-          }
-        } catch (error) {
-          console.log("PACIENCIA");
+        if (element?.QUESTION_ID && !item[element.QUESTION_ID]) {
+          item[element.QUESTION_ID] = element.ANSWER || " ";
         }
       }
 
       return item;
     } catch (error) {
+      this.logger.error(`getFormatInfo ${data}`);
       throw error;
     }
   }
@@ -89,12 +86,10 @@ module.exports = class ExcelExportReportsController {
   }
 
   getCentroFileName(centroName, regionalName) {
-    const timeStamp = new Date().getTime();
     return `${regionalName}_${centroName}`;
   }
 
   getRegionalFileName(regionalName) {
-    const timeStamp = new Date().getTime();
     return `${regionalName}`;
   }
 
@@ -140,7 +135,7 @@ module.exports = class ExcelExportReportsController {
     }
 
     await Promise.all(promises).then((files) => {
-      files = files;
+      this.logger.info(`exported ${files}`);
     });
 
     return files;

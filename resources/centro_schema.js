@@ -13,22 +13,24 @@ function getDayByShort(short) {
 }
 
 function parseTime(element) {
+  if (!element) {
+    return;
+  }
+  let time = element.split("h");
+  let hours = time[0];
   try {
-    let time = element.split("h");
-    let hours = time[0];
-    let minutes = time[1].trim().length > 0 ? time[1].trim() : "00";
-    let timeOut = "";
-
-    if (hours != "-") {
-
-      hours = String(hours).padStart(2, '0');
-      minutes = String(minutes).padStart(2, '0');
+    if (hours != "-" && time.length > 1) {
+      let minutes = time[1].trim().length > 0 ? time[1].trim() : "00";
+      let timeOut = "";
+      hours = String(hours).padStart(2, "0");
+      minutes = String(minutes).padStart(2, "0");
       timeOut = `${hours}:${minutes}`;
       return timeOut;
     } else {
       return null;
     }
   } catch (error) {
+    console.log("Error parsing", error);
     throw error;
   }
 }
@@ -74,7 +76,8 @@ function funcionamentoParser(funcionamento) {
 
     return timeFunction;
   } catch (error) {
-    throw error
+    console.log("Error parsing funcionamentoParser", funcionamento);
+    throw error;
   }
 }
 
@@ -253,10 +256,10 @@ function getSchema() {
                 return parseBoolean(answer);
               },
             },
-            "Conte-nos sobre outros trabalhos realizados pela casa espírita:":{
+            "Conte-nos sobre outros trabalhos realizados pela casa espírita:": {
               prop: "outros_trabalhos",
               type: String,
-            }
+            },
           },
         },
         Funcionamento: {
@@ -396,7 +399,7 @@ function getSchema() {
                 }
                 return dateTime;
               },
-            }
+            },
           },
         },
         "Projeto André Luiz": {
@@ -411,7 +414,7 @@ function getSchema() {
                 }
                 return dateTime;
               },
-            }
+            },
           },
         },
         "Projeto Paulo de Tarso": {
@@ -426,7 +429,7 @@ function getSchema() {
                 }
                 return dateTime;
               },
-            }
+            },
           },
         },
         "Escola de Aprendizes do Evangelho": {
@@ -462,7 +465,7 @@ function getSchema() {
             "Quantidade de dirigentes que estarão dirigindo turmas em 2021": {
               prop: "dirigentes",
               type: Number,
-            }
+            },
           },
         },
         "Curso de Médiuns": {
@@ -547,16 +550,18 @@ function getSchema() {
               prop: "evangelizadores_advindos_mocidade",
               type: Number,
             },
-            "Quantos evangelizadores fizeram o Curso de Preparação para Evangelizador Infanto-Juvenil?": {
-              prop: "fizeram_curso",
-              type: Number,
-            },
-            "Os evangelizadores utilizam o material de apoio da Evangelização Infantil da AEE?": {
-              prop: "fizeram_curso",
-              type: (answer) => {
-                return parseBoolean(answer);
+            "Quantos evangelizadores fizeram o Curso de Preparação para Evangelizador Infanto-Juvenil?":
+              {
+                prop: "fizeram_curso",
+                type: Number,
               },
-            }
+            "Os evangelizadores utilizam o material de apoio da Evangelização Infantil da AEE?":
+              {
+                prop: "fizeram_curso",
+                type: (answer) => {
+                  return parseBoolean(answer);
+                },
+              },
           },
         },
         "Pré-Mocidade": {
@@ -580,14 +585,16 @@ function getSchema() {
               prop: "dirigentes_aptos",
               type: Number,
             },
-            "Quantidade de dirigentes que estarão dirigindo turmas em 2021 - Pré-Mocidade": {
-              prop: "dirigentes",
-              type: Number,
-            },
-            "Na sua casa, a Pré-Mocidade está mais vinculada à Evangelização Infantil ou à Mocidade?":{
-              prop: "vinculados",
-              type: String
-            },
+            "Quantidade de dirigentes que estarão dirigindo turmas em 2021 - Pré-Mocidade":
+              {
+                prop: "dirigentes",
+                type: Number,
+              },
+            "Na sua casa, a Pré-Mocidade está mais vinculada à Evangelização Infantil ou à Mocidade?":
+              {
+                prop: "vinculados",
+                type: String,
+              },
           },
         },
         Mocidade: {
@@ -615,10 +622,11 @@ function getSchema() {
               prop: "dirigentes_aptos",
               type: Number,
             },
-            "Quantidade de dirigentes que estarão dirigindo turmas em 2021 - Mocidade": {
-              prop: "dirigentes",
-              type: Number,
-            },
+            "Quantidade de dirigentes que estarão dirigindo turmas em 2021 - Mocidade":
+              {
+                prop: "dirigentes",
+                type: Number,
+              },
           },
         },
         FDJ: {
@@ -631,18 +639,19 @@ function getSchema() {
             "Total de pessoas que já ingressaram na FDJ desde sua fundação": {
               prop: "ingressantes_total",
               type: Number,
-            }
+            },
           },
         },
         EAED: {
           prop: "EAED",
           type: {
-            "Você conhece o trabalho de EAED - Escola de Aprendizes do Evangelho à Distância?": {
-              prop: "conhece",
-              type: (answer) => {
-                return parseBoolean(answer);
+            "Você conhece o trabalho de EAED - Escola de Aprendizes do Evangelho à Distância?":
+              {
+                prop: "conhece",
+                type: (answer) => {
+                  return parseBoolean(answer);
+                },
               },
-            },
             "Gostaria de receber informações sobre o trabalho de EAED?": {
               prop: "quer_informacoes",
               type: (answer) => {
@@ -653,21 +662,23 @@ function getSchema() {
               prop: "alunos",
               type: Number,
             },
-            "Quantidade de dirigentes que estarão dirigindo turmas de EAED em 2021":{
-              prop: "dirigentes",
-              type: Number,
-            },
+            "Quantidade de dirigentes que estarão dirigindo turmas de EAED em 2021":
+              {
+                prop: "dirigentes",
+                type: Number,
+              },
           },
         },
         EAEgD: {
           prop: "EAEgD",
           type: {
-            "Você conhece o trabalho de EAEgD - Escola de Aprendizes Grupo à Distância?": {
-              prop: "conhece",
-              type: (answer) => {
-                return parseBoolean(answer);
+            "Você conhece o trabalho de EAEgD - Escola de Aprendizes Grupo à Distância?":
+              {
+                prop: "conhece",
+                type: (answer) => {
+                  return parseBoolean(answer);
+                },
               },
-            },
             "Gostaria de receber informações sobre o trabalho de EAEgD?": {
               prop: "quer_informacoes",
               type: (answer) => {
@@ -678,13 +689,13 @@ function getSchema() {
               prop: "alunos",
               type: Number,
             },
-            "Quantidade de dirigentes que estarão dirigindo turmas de EAEgD em 2021":{
-              prop: "dirigentes",
-              type: Number,
-            },
+            "Quantidade de dirigentes que estarão dirigindo turmas de EAEgD em 2021":
+              {
+                prop: "dirigentes",
+                type: Number,
+              },
           },
         },
-
       },
     },
   };

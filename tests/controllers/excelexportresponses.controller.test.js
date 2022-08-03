@@ -7,13 +7,11 @@ const regionais_mock = require("../regionais.mock.json");
 const summaries_mock = require("../summaries.mock.json");
 const response_mock = require("../responses.mock.json");
 
-const excelExporterController = require("../../controllers/excelexporter.controller");
-const excelexportercontroller = new excelExporterController();
-// const excelexportercontroller = {
-//   export: function () {
-//     return "arquivomaneiro.xls";
-//   },
-// };
+const excelexportercontroller = {
+  export: function () {
+    return "arquivomaneiro.xls";
+  },
+};
 
 const trabalhocontroller = {
   getSummaries: async function () {
@@ -49,28 +47,28 @@ const excelexporter_mock = {
   },
 };
 
-const parser = {
-  getParamsParsed: function (params) {
-    let paramsParsed = "";
+// const parser = {
+//   getParamsParsed: function (params) {
+//     let paramsParsed = "";
 
-    let keys = Object.keys(params);
+//     let keys = Object.keys(params);
 
-    for (let index = 0; index < keys.length; index++) {
-      const key = keys[index];
-      const value = params[key];
+//     for (let index = 0; index < keys.length; index++) {
+//       const key = keys[index];
+//       const value = params[key];
 
-      if (value) {
-        paramsParsed = paramsParsed.concat(
-          `&${key}=${decodeURIComponent(value)}`
-        );
-      }
-    }
+//       if (value) {
+//         paramsParsed = paramsParsed.concat(
+//           `&${key}=${decodeURIComponent(value)}`
+//         );
+//       }
+//     }
 
-    logger.info(`getParamsParsed => ${paramsParsed.substring(1)}`);
+//     logger.info(`getParamsParsed => ${paramsParsed.substring(1)}`);
 
-    return paramsParsed.substring(1);
-  },
-};
+//     return paramsParsed.substring(1);
+//   },
+// };
 
 const exporter = new ReportInfo(
   excelexporter_mock,
@@ -82,18 +80,14 @@ const exporter = new ReportInfo(
 const excelexporter = new ExcelExportResponses(
   excelexportercontroller,
   exporter,
-  trabalhocontroller,
-  logger,
-  parser
+  trabalhocontroller
 );
 
 (async () => {
-  const init = await excelexporter.init();
+  await excelexporter.init();
 })();
 
 describe("controllers:exportexcelresponses", () => {
-  beforeAll(async () => {});
-
   it("should validade init", async () => {
     const init = await excelexporter.init();
 
@@ -119,41 +113,41 @@ describe("controllers:exportexcelresponses", () => {
   });
 
   it("should validade headers", async () => {
-    const init = await excelexporter.init(3);
+    await excelexporter.init(3);
     const headers = await excelexporter.getHeaders();
 
     expect(headers.length).toBe(130);
   });
 
   it("should validade centro reports", async () => {
-    const init = await excelexporter.init(3);
+    await excelexporter.init(3);
 
     const centroId = "61b0ba7e71572500128b85df";
     await excelexporter.exportCentro(centroId);
   });
 
   it("should validade centro of a regional reports", async () => {
-    const init = await excelexporter.init(3);
+    await excelexporter.init(3);
 
     const regional = "ABC";
     await excelexporter.exportCentrosByRegional(regional);
   });
 
   it("should validade regional reports", async () => {
-    const init = await excelexporter.init();
+    await excelexporter.init();
 
     const regional = "NORDESTE";
     await excelexporter.exportRegional(regional);
   });
 
   it("should validade regionais reports", async () => {
-    const init = await excelexporter.init();
+    await excelexporter.init();
 
     await excelexporter.exportRegionais();
   });
 
   it("should validade general reports", async () => {
-    const init = await excelexporter.init();
+    await excelexporter.init();
 
     await excelexporter.exportAll();
   });

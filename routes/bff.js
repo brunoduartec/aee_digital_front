@@ -14,10 +14,26 @@ const ExcelExportResponses = require("../controllers/excelexportresponses.contro
 const excelExporterController = require("../controllers/excelexporter.controller");
 const excelexportercontroller = new excelExporterController();
 
+const CentroInfoController = require("../controllers/centroInfo.controller");
+const centroinfocontroller = new CentroInfoController();
+
+const SearchController = require("../controllers/search.controller");
+const searchcontroller = new SearchController(
+  regionalcontroller,
+  trabalhoscontroller
+);
+
+const userInfoController = require("../controllers/userInfo.controller");
+const userinfocontroller = new userInfoController(
+  regionalcontroller,
+  centroinfocontroller,
+  trabalhoscontroller,
+  searchcontroller
+);
+
 const ReportInfo = require("../controllers/reportinfo.controller");
 const reportinfo = new ReportInfo(
   excelexportercontroller,
-  logger,
   trabalhoscontroller,
   regionalcontroller
 );
@@ -25,9 +41,7 @@ const reportinfo = new ReportInfo(
 const excelexporteresponses = new ExcelExportResponses(
   excelexportercontroller,
   reportinfo,
-  trabalhoscontroller,
-  logger,
-  parser
+  trabalhoscontroller
 );
 
 (async () => {
@@ -39,10 +53,9 @@ const excelexporteresponses = new ExcelExportResponses(
 const { requireAuth } = require("../helpers/auth.helpers");
 
 router.post("/bff/coord_responses", async function (req, res) {
+  const centroID = req.query.centroID;
+  const coord_quiz = req ? req.body : null;
   try {
-    const centroID = req.query.centroID;
-    const coord_quiz = req ? req.body : null;
-
     const coord_responses = await getCentroCoordResponses(centroID, coord_quiz);
     res.json(coord_responses);
   } catch (error) {
@@ -171,7 +184,7 @@ router.get("/bff/situacao", async function (req, res) {
       Inscritas: [],
     };
     for (const id of centroIDs) {
-      summary = await trabalhoscontroller.getQuizSummaryByParams(
+      let summary = await trabalhoscontroller.getQuizSummaryByParams(
         parser.getParamsParsed({
           CENTRO_ID: id,
         })
@@ -211,7 +224,7 @@ router.get("/bff/situacao", async function (req, res) {
 
 router.get("/bff/summaries", async function (req, res) {
   try {
-    response = await trabalhoscontroller.getSummaries();
+    const response = await trabalhoscontroller.getSummaries();
     res.json(response);
   } catch (error) {
     this.logger.error(`/bff/summaries: ${error}`);
@@ -223,7 +236,7 @@ router.get("/bff/summary", async function (req, res) {
   try {
     const centroID = req.query.centroID;
 
-    response = await trabalhoscontroller.getQuizSummaryByParams(
+    const response = await trabalhoscontroller.getQuizSummaryByParams(
       parser.getParamsParsed({
         CENTRO_ID: centroID,
       })
@@ -249,7 +262,7 @@ router.get("/bff/answerbyregional", async function (req, res) {
 
     const centros = await regionalcontroller.getCentrosByRegional(regionalName);
 
-    questionResponses = {};
+    let questionResponses = {};
 
     for (const centro of centros) {
       questionResponses[centro.ID] = questionAnswers.find((m) => {
@@ -421,7 +434,7 @@ function getDefaultValue(question) {
   return question.PRESET_VALUES.length > 0 ? question.PRESET_VALUES[0] : " ";
 }
 
-router.post("/bff//add_answer", requireAuth, async function (req, res) {
+router.post("/bff/add_answer", requireAuth, async function (req, res) {
   try {
     const answer = req.originalUrl;
     let paramsFrom = parser.getQueryParamsParsed(answer);
@@ -440,13 +453,13 @@ router.post("/bff//add_answer", requireAuth, async function (req, res) {
     for (let index = 0; index < questions.length; index++) {
       const question = questions[index];
 
-      params = {
+      const params = {
         CENTRO_ID: paramsFrom.centroId,
         QUIZ_ID: paramsFrom.quizId,
         QUESTION_ID: question._id,
         ANSWER: getDefaultValue(question),
       };
-      quizResponse = await trabalhoscontroller.postQuizResponse(params);
+      const quizResponse = await trabalhoscontroller.postQuizResponse(params);
       response.push(quizResponse[0]);
     }
 
@@ -461,13 +474,6 @@ router.put("/bff/update_answer", requireAuth, async function (req, res) {
   try {
     const answer = req.originalUrl;
     let paramsFrom = parser.getQueryParamsParsed(answer);
-
-    params = {
-      CENTRO_ID: paramsFrom.centroId,
-      QUIZ_ID: paramsFrom.quizId,
-      QUESTION_ID: paramsFrom.questionId,
-      ANSWER: decodeURIComponent(paramsFrom.answer),
-    };
 
     let paramsParsed = parser.getParamsParsed({
       _id: paramsFrom.answerId,
@@ -555,8 +561,9 @@ async function setQuizResponse(centroID, quizID, questionID, ANSWER) {
       QUESTION_ID: questionID,
       ANSWER: ANSWER,
     };
-    response = await trabalhoscontroller.postQuizResponse(answewrInfo);
+    let response = await trabalhoscontroller.postQuizResponse(answewrInfo);
     response = response[0];
+    return response;
   } catch (error) {
     logger.error(`setQuizResponse ${error}`);
     throw error;

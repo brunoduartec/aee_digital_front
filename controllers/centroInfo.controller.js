@@ -1,5 +1,5 @@
-const env = process.env.NODE_ENV ? process.env.NODE_ENV : "local";
-const config = require("../env.json")[env];
+const config = require("../helpers/config");
+
 module.exports = class CentroInfoController {
   constructor(
     logger = require("../helpers/logger"),

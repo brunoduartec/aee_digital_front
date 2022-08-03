@@ -1,14 +1,12 @@
-const env = process.env.NODE_ENV ? process.env.NODE_ENV : "local";
-const config = require("../env.json")[env];
+const config = require("../helpers/config");
 
 module.exports = class authController {
   constructor(
-    logger,
     reader,
     trabalhocontroller,
-    parser
+    logger = require("../helpers/logger"),
+    parser = require("../helpers/parser")
   ) {
-
     const instance = this.constructor.instance;
     if (instance) {
       return instance;
@@ -27,8 +25,6 @@ module.exports = class authController {
 
     this.cache = {};
   }
-
-
 
   async generatePassCache() {
     const schema = require("../resources/schema")();
@@ -63,16 +59,17 @@ module.exports = class authController {
 
     let userPass = auth[0];
 
-    if(!auth[0]){
-      userPass = this.getPassInfoByCache(user,pass);
+    if (!auth[0]) {
+      userPass = this.getPassInfoByCache(user, pass);
     }
 
     return userPass;
   }
 
   async getUserPermissions(auth) {
-
-    this.logger.info(`authcontroller:getUserPermissions: ${JSON.stringify(auth)}`)
+    this.logger.info(
+      `authcontroller:getUserPermissions: ${JSON.stringify(auth)}`
+    );
     //pegar outros depois
     const userGroups = this.groups[auth.groups[0]];
 
@@ -108,121 +105,119 @@ module.exports = class authController {
     };
   }
 
-  getPassInfoByCache(user, pass){
-    try{
-      if(this.cache[user]?.pass === pass){
-        return this.cache[user]
+  getPassInfoByCache(user, pass) {
+    try {
+      if (this.cache[user]?.pass === pass) {
+        return this.cache[user];
       }
-      return 
-
-    }catch(error){
-      this.logger.error(`controllers:authcontroller: getPassInfoByCache => ${error}`)
-      throw error
+      return;
+    } catch (error) {
+      this.logger.error(
+        `controllers:authcontroller: getPassInfoByCache => ${error}`
+      );
+      throw error;
     }
   }
 
-  getPassInfoByCentroCurtoRegional(centro, curto, regional){
-    const values = Object.values(this.cache)
+  getPassInfoByCentroCurtoRegional(centro, curto, regional) {
+    const values = Object.values(this.cache);
 
-    let info = values.find(m=>{
-      return m.curto === curto && m.regional ===regional
-    })
+    let info = values.find((m) => {
+      return m.curto === curto && m.regional === regional;
+    });
 
     return this.cache[info.user];
   }
 
-  getPassGroupByPattern(userInfo){
-    let groups = []
-    let {centro, regional} = userInfo
-    if(centro === "*"){
-      if(regional ==="*"){
-        groups.push("coord_geral")  
-      }else{
-        group.push("coord_regional")
+  getPassGroupByPattern(userInfo) {
+    let groups = [];
+    let { centro, regional } = userInfo;
+    if (centro === "*") {
+      if (regional === "*") {
+        groups.push("coord_geral");
+      } else {
+        groups.push("coord_regional");
       }
-    }else{
-      groups.push("presidente")
+    } else {
+      groups.push("presidente");
     }
-    return groups
+    return groups;
   }
 
-  getScopeIdByPattern(userInfo){
-    let {centro_id, regional_id, admin, alianca} = userInfo
-    let scope_id
-    if(centro_id){
-      return centro_id
-    }
-    else if(regional_id){
-      return regional_id
-    }
-    else if(admin){
-      return "*"
-    }
-    else if(alianca){
-      return "*"
+  getScopeIdByPattern(userInfo) {
+    let { centro_id, regional_id, admin, alianca } = userInfo;
+    let scope_id;
+    if (centro_id) {
+      return centro_id;
+    } else if (regional_id) {
+      return regional_id;
+    } else if (admin) {
+      return "*";
+    } else if (alianca) {
+      return "*";
     }
 
     return scope_id;
   }
 
-  getPassInfoByScope(userInfo){
+  getPassInfoByScope(userInfo) {
     let params = {
-      user : userInfo?.user,
-      pass : userInfo?.pass,
+      user: userInfo?.user,
+      pass: userInfo?.pass,
       groups: this.getPassGroupByPattern(userInfo),
-      scope_id: this.getScopeIdByPattern(userInfo)
-    }
+      scope_id: this.getScopeIdByPattern(userInfo),
+    };
 
     return params;
   }
 
   async initUserInfo(loginInfo) {
     try {
-      this.logger.info(`Init User Info: ${JSON.stringify(loginInfo)}`)
-      
-      let passInfo = await this.trabalhocontroller.getPassByParams(this.parser.getParamsParsed({
-        user: loginInfo?.user,
-        pass: loginInfo?.pass
-      }))
+      this.logger.info(`Init User Info: ${JSON.stringify(loginInfo)}`);
 
-      if(passInfo.length == 0){
+      let passInfo = await this.trabalhocontroller.getPassByParams(
+        this.parser.getParamsParsed({
+          user: loginInfo?.user,
+          pass: loginInfo?.pass,
+        })
+      );
+
+      if (passInfo.length == 0) {
         let params = this.getPassInfoByScope(loginInfo);
         passInfo = await this.trabalhocontroller.postPass(params);
       }
       return passInfo[0];
     } catch (error) {
-      this.logger.error(`Error Init User Info: ${error}`)
+      this.logger.error(`Error Init User Info: ${error}`);
       throw error;
     }
   }
 
-  async getLoginHint(info){
-
-   let loginHint = {
+  async getLoginHint(info) {
+    let loginHint = {
       centro: info.centro,
       regional: info.regional,
-      curto: info.curto
-    }
+      curto: info.curto,
+    };
 
     return loginHint;
   }
 
   async authenticate(loginInfo) {
     try {
-      this.logger.info(`Start auth: ${JSON.stringify(loginInfo)}`)
+      this.logger.info(`Start auth: ${JSON.stringify(loginInfo)}`);
       let auth = await this.checkUserPass(loginInfo.user, loginInfo.pass);
-  
+
       if (auth) {
         let loginHint = await this.getLoginHint(auth);
         auth = await this.initUserInfo(auth);
         auth = await this.getUserPermissions(auth);
-        auth.loginHint = loginHint
+        auth.loginHint = loginHint;
       }
-  
+
       return auth;
-      
     } catch (error) {
-      this.logger.error(`Error Authenticating: ${error}`)
+      this.logger.error(`Error Authenticating: ${error}`);
       throw error;
     }
   }

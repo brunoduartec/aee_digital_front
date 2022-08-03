@@ -1,5 +1,10 @@
 module.exports = class SearchController {
-  constructor(regionalcontroller, trabalhocontroller, logger, parser) {
+  constructor(
+    regionalcontroller,
+    trabalhocontroller,
+    logger = require("../helpers/logger"),
+    parser = require("../helpers/parser")
+  ) {
     this.regionalcontroller = regionalcontroller;
     this.trabalhocontroller = trabalhocontroller;
     this.logger = logger;
@@ -8,7 +13,6 @@ module.exports = class SearchController {
 
   async getPesquisaResult(pesquisaInfo) {
     const regionalcontroller = this.regionalcontroller;
-    const trabalhocontroller = this.trabalhocontroller;
 
     const regional = pesquisaInfo.regional;
     const centro = pesquisaInfo.centro;
@@ -17,7 +21,7 @@ module.exports = class SearchController {
     const opcao = pesquisaInfo.option;
 
     const searchByOpcao = {
-      Centro: async function (s) {
+      Centro: async function () {
         const paramsParsed = this.parser.getParamsParsed({
           NOME_CURTO: decodeURIComponent(search),
         });
@@ -32,7 +36,7 @@ module.exports = class SearchController {
       },
       Centro_Summary: async function () {
         let centroInfo = [];
-        const paramsParsed = this.parser.getParamsParsed({
+        let paramsParsed = this.parser.getParamsParsed({
           NOME_CURTO: decodeURIComponent(centro),
         });
 
@@ -77,7 +81,7 @@ module.exports = class SearchController {
         return centroSummary;
       },
 
-      Trabalho: async function (s) {
+      Trabalho: async function () {
         let centros;
 
         if (regional != "Todos") {
@@ -119,7 +123,7 @@ module.exports = class SearchController {
         this.logger.info(`getPesquisaResult:Trabalhos: ${atividades}`);
         return atividades;
       },
-      Regional: async function (s) {
+      Regional: async function () {
         const centros = await regionalcontroller.getCentros();
         let regional = {
           amount: centros.length,
@@ -129,7 +133,7 @@ module.exports = class SearchController {
         return regional;
       },
 
-      Quiz: async function (s) {
+      Quiz: async function () {
         let name = search.name;
         let centro_id = search.id;
         const page = search.page;

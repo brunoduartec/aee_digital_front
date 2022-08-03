@@ -1,10 +1,13 @@
+//refreshTimeInMinutes
+const config = require("../helpers/config");
 module.exports = class ReportInfo {
   constructor(
     exporter,
-    logger = require("../helpers/logger"),
     trabalhoscontroller,
     regionalcontroller,
-    refreshTimeInMinutes = 1
+    refreshTimeInMinutes = config?.controllers?.reportinfo
+      ?.refreshTimeInMinutes,
+    logger = require("../helpers/logger")
   ) {
     const Repeater = require("../helpers/repeater.helper");
     this.exporter = exporter;
@@ -141,10 +144,12 @@ module.exports = class ReportInfo {
 
   async repeatedRefresh(size) {
     let instance = this;
-    await instance.refresh(size);
+    const report = await instance.refresh(size);
     this.repeater.repeat(async function () {
       await instance.refresh(size);
     }, this.refreshTimeInMinutes);
+
+    return report;
   }
 
   async refresh(size) {
