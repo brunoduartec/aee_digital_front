@@ -249,7 +249,8 @@
               
               </a>
             
-            
+              <input id="clickMe" type="button" value="clickme" onclick="DownloadResponses('<%=centro.ID%>');" />
+
             </div></span>
 
           
@@ -281,7 +282,9 @@
                 method: "GET",
               });
   
+
               responseInfo = await responseInfo.json();
+              console.log("AAAAAAAQUIIII", responseInfo)
               if(responseInfo.fileName){
                 window.open(responseInfo.fileName);
               }

@@ -1,5 +1,10 @@
 module.exports = class SearchController {
-  constructor(regionalcontroller, trabalhocontroller, logger, parser) {
+  constructor(
+    regionalcontroller,
+    trabalhocontroller,
+    logger = require("../helpers/logger"),
+    parser = require("../helpers/parser")
+  ) {
     this.regionalcontroller = regionalcontroller;
     this.trabalhocontroller = trabalhocontroller;
     this.logger = logger;
@@ -8,7 +13,6 @@ module.exports = class SearchController {
 
   async getPesquisaResult(pesquisaInfo) {
     const regionalcontroller = this.regionalcontroller;
-    const trabalhocontroller = this.trabalhocontroller;
 
     const regional = pesquisaInfo.regional;
     const centro = pesquisaInfo.centro;
@@ -17,7 +21,7 @@ module.exports = class SearchController {
     const opcao = pesquisaInfo.option;
 
     const searchByOpcao = {
-      Centro: async function (s) {
+      Centro: async function () {
         const paramsParsed = this.parser.getParamsParsed({
           NOME_CURTO: decodeURIComponent(search),
         });
@@ -32,7 +36,7 @@ module.exports = class SearchController {
       },
       Centro_Summary: async function () {
         let centroInfo = [];
-        const paramsParsed = this.parser.getParamsParsed({
+        let paramsParsed = this.parser.getParamsParsed({
           NOME_CURTO: decodeURIComponent(centro),
         });
 
@@ -77,7 +81,7 @@ module.exports = class SearchController {
         return centroSummary;
       },
 
-      Trabalho: async function (s) {
+      Trabalho: async function () {
         let centros;
 
         if (regional != "Todos") {
@@ -119,7 +123,7 @@ module.exports = class SearchController {
         this.logger.info(`getPesquisaResult:Trabalhos: ${atividades}`);
         return atividades;
       },
-      Regional: async function (s) {
+      Regional: async function () {
         const centros = await regionalcontroller.getCentros();
         let regional = {
           amount: centros.length,
@@ -129,7 +133,7 @@ module.exports = class SearchController {
         return regional;
       },
 
-      Quiz: async function (s) {
+      Quiz: async function () {
         let name = search.name;
         let centro_id = search.id;
         const page = search.page;
@@ -157,8 +161,11 @@ module.exports = class SearchController {
           let page_info = pages[page];
           pages = [];
           pages.push(page_info);
-        }else{
-          finalized = await this.trabalhocontroller.checkFormCompletion(name, centro_id);
+        } else {
+          finalized = await this.trabalhocontroller.checkFormCompletion(
+            name,
+            centro_id
+          );
         }
 
         paramsParsed = this.parser.getParamsParsed({
@@ -166,9 +173,7 @@ module.exports = class SearchController {
         });
 
         const quiz_responses =
-        await this.trabalhocontroller.getQuizResponseByParams(
-          paramsParsed
-        );
+          await this.trabalhocontroller.getQuizResponseByParams(paramsParsed);
 
         for (let index = 0; index < pages.length; index++) {
           const page = pages[index];
@@ -184,16 +189,33 @@ module.exports = class SearchController {
 
               for (let k = 0; k < group.length; k++) {
                 const question = group[k];
-                
-                let answer = quiz_responses.filter(
-                  (m) => m.QUESTION_ID._id == question._id
-                );
+
+                let answer;
+                answer = quiz_responses.filter((m) => {
+                  try {
+                    return m.QUESTION_ID._id == question._id;
+                  } catch (error) {
+                    answer = "";
+                  }
+                });
+
                 if (answer.length > 0) {
-                  question.ANSWER = JSON.parse(JSON.stringify(answer.map(m=>{return m.ANSWER})));
-                  question.ANSWER_ID = JSON.parse(JSON.stringify(answer.map(m=>{return m.ID})))
+                  question.ANSWER = JSON.parse(
+                    JSON.stringify(
+                      answer.map((m) => {
+                        return m.ANSWER;
+                      })
+                    )
+                  );
+                  question.ANSWER_ID = JSON.parse(
+                    JSON.stringify(
+                      answer.map((m) => {
+                        return m.ID;
+                      })
+                    )
+                  );
                 }
               }
-
             }
           }
         }
@@ -201,7 +223,7 @@ module.exports = class SearchController {
         let quiz = {
           templates: form_template,
           titles: page_titles,
-          finalized: finalized
+          finalized: finalized,
         };
 
         this.logger.info(`getPesquisaResult:Quiz: ${quiz}`);

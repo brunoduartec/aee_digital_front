@@ -1,0 +1,175 @@
+[
+  {
+    "NOME_REGIONAL": "ABC",
+    "PAIS": "Brasil",
+    "COORDENADOR_ID": "61e2dde9b5d3a100130515c2",
+    "ID": "61b0ba7a71572500128b85dc"
+  },
+  {
+    "NOME_REGIONAL": "ARARAQUARA",
+    "PAIS": "Brasil",
+    "COORDENADOR_ID": "61e2dde9b5d3a100130515c3",
+    "ID": "61b0bab571572500128b85fe"
+  },
+  {
+    "NOME_REGIONAL": "NORDESTE 1",
+    "PAIS": "Brasil",
+    "COORDENADOR_ID": "61e2dde9b5d3a100130515c4",
+    "ID": "61b0badc71572500128b8610"
+  },
+  {
+    "NOME_REGIONAL": "CAMPINAS",
+    "PAIS": "Brasil",
+    "COORDENADOR_ID": "61e2dde9b5d3a100130515c5",
+    "ID": "61b0bb0471572500128b8622"
+  },
+  {
+    "NOME_REGIONAL": "CENTRO-OESTE",
+    "PAIS": "Brasil",
+    "COORDENADOR_ID": "61e2dde9b5d3a100130515c6",
+    "ID": "61b0bb3471572500128b8638"
+  },
+  {
+    "NOME_REGIONAL": "EXTERIOR",
+    "PAIS": "Canadá",
+    "COORDENADOR_ID": "622cb6c206466b000738fd1a",
+    "ID": "61b0bb4671572500128b8640"
+  },
+  {
+    "NOME_REGIONAL": "EXTERIOR",
+    "PAIS": "Cuba",
+    "COORDENADOR_ID": "622cb6c206466b000738fd1a",
+    "ID": "61b0bb4971572500128b8642"
+  },
+  {
+    "NOME_REGIONAL": "EXTERIOR",
+    "PAIS": "Austrália",
+    "COORDENADOR_ID": "622cb6c206466b000738fd1a",
+    "ID": "61b0bb4c71572500128b8644"
+  },
+  {
+    "NOME_REGIONAL": "EXTERIOR",
+    "PAIS": "Bélgica",
+    "COORDENADOR_ID": "622cb6c206466b000738fd1a",
+    "ID": "61b0bb5071572500128b8647"
+  },
+  {
+    "NOME_REGIONAL": "EXTERIOR",
+    "PAIS": "Argentina",
+    "COORDENADOR_ID": "622cb6c206466b000738fd1a",
+    "ID": "61b0bb5471572500128b864a"
+  },
+  {
+    "NOME_REGIONAL": "EXTERIOR",
+    "PAIS": "Portugal",
+    "COORDENADOR_ID": "622cb6c206466b000738fd1a",
+    "ID": "61b0bb5b71572500128b864e"
+  },
+  {
+    "NOME_REGIONAL": "EXTERIOR",
+    "PAIS": "Alemanha",
+    "COORDENADOR_ID": "622cb6c206466b000738fd1a",
+    "ID": "61b0bb5d71572500128b8650"
+  },
+  {
+    "NOME_REGIONAL": "EXTERIOR",
+    "PAIS": "França",
+    "COORDENADOR_ID": "622cb6c206466b000738fd1a",
+    "ID": "61b0bb6371572500128b8654"
+  },
+  {
+    "NOME_REGIONAL": "EXTREMO SUL",
+    "PAIS": "Brasil",
+    "COORDENADOR_ID": "61e2dde9b5d3a100130515c7",
+    "ID": "61b0bb7271572500128b865b"
+  },
+  {
+    "NOME_REGIONAL": "LITORAL CENTRO",
+    "PAIS": "Brasil",
+    "COORDENADOR_ID": "61e2dde9b5d3a100130515c8",
+    "ID": "61b0bb7c71572500128b8660"
+  },
+  {
+    "NOME_REGIONAL": "LITORAL SUL",
+    "PAIS": "Brasil",
+    "COORDENADOR_ID": "61e2dde9b5d3a100130515c9",
+    "ID": "61b0bb9f71572500128b8670"
+  },
+  {
+    "NOME_REGIONAL": "MINAS GERAIS",
+    "PAIS": "Brasil",
+    "COORDENADOR_ID": "61e2dde9b5d3a100130515ca",
+    "ID": "61b0bbb471572500128b867c"
+  },
+  {
+    "NOME_REGIONAL": "NORDESTE",
+    "PAIS": "Brasil",
+    "COORDENADOR_ID": "61e2dde9b5d3a100130515cb",
+    "ID": "61b0bbd971572500128b868c"
+  },
+  {
+    "NOME_REGIONAL": "PIRACICABA",
+    "PAIS": "Brasil",
+    "COORDENADOR_ID": "61e2dde9b5d3a100130515cc",
+    "ID": "61b0bbf771572500128b869a"
+  },
+  {
+    "NOME_REGIONAL": "RIBEIRÃO PRETO",
+    "PAIS": "Brasil",
+    "COORDENADOR_ID": "61e2dde9b5d3a100130515cd",
+    "ID": "61b0bc0371572500128b86a0"
+  },
+  {
+    "NOME_REGIONAL": "SOROCABA",
+    "PAIS": "Brasil",
+    "COORDENADOR_ID": "61e2dde9b5d3a100130515d3",
+    "ID": "61b0bc2e71572500128b86b4"
+  },
+  {
+    "NOME_REGIONAL": "SP LESTE",
+    "PAIS": "Brasil",
+    "COORDENADOR_ID": "61e2dde9b5d3a100130515cf",
+    "ID": "61b0bc6471572500128b86ce"
+  },
+  {
+    "NOME_REGIONAL": "SP NORTE",
+    "PAIS": "Brasil",
+    "COORDENADOR_ID": "61e2dde9b5d3a100130515d0",
+    "ID": "61b0bc9771572500128b86e7"
+  },
+  {
+    "NOME_REGIONAL": "SP OESTE",
+    "PAIS": "Brasil",
+    "COORDENADOR_ID": "61e2dde9b5d3a100130515d1",
+    "ID": "61b0bcbb71572500128b86fd"
+  },
+  {
+    "NOME_REGIONAL": "SP SUL",
+    "PAIS": "Brasil",
+    "COORDENADOR_ID": "61e2dde9b5d3a100130515d2",
+    "ID": "61b0bcd671572500128b870e"
+  },
+  {
+    "NOME_REGIONAL": "VALE DO PARAÍBA",
+    "PAIS": "Brasil",
+    "COORDENADOR_ID": "61e2e627b5d3a10013051813",
+    "ID": "61b0bce871572500128b8718"
+  },
+  {
+    "NOME_REGIONAL": "EXTERIOR",
+    "PAIS": "Estados Unidos",
+    "COORDENADOR_ID": "622cb6c206466b000738fd1a",
+    "ID": "61b0bd2971572500128b873d"
+  },
+  {
+    "NOME_REGIONAL": "CAMPINAS",
+    "PAIS": "Espanha",
+    "ID": "61b0bd2b71572500128b873f"
+  },
+  {
+    "NOME_REGIONAL": "SP CENTRO",
+    "PAIS": "Brasil",
+    "COORDENADOR_ID": "61e2dde9b5d3a100130515ce",
+    "ID": "61b0bc3b71572500128b86ba"
+  }
+]

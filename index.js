@@ -1,12 +1,15 @@
+/* eslint-disable no-undef */
+const bootstrap = require("./bootstrap");
+(async () => {
+  await bootstrap.initialize();
+})();
+
 const http = require("http");
 
 const server = require("./server")();
 const logger = require("./helpers/logger");
 
-const env = process.env.NODE_ENV ? process.env.NODE_ENV : "local";
-logger.info(`ENVIRONMENT=> ${env}`);
-
-const config = require("./env.json")[env];
+const config = require("./helpers/config");
 
 const port = process.env.PORT || config.port;
 

@@ -1,8 +1,14 @@
 module.exports = class QuizActions {
-  constructor(trabalhocontroller, userinfocontroller, regionalcontroller, logger, parser) {
+  constructor(
+    trabalhocontroller,
+    userinfocontroller,
+    regionalcontroller,
+    logger,
+    parser
+  ) {
     this.trabalhocontroller = trabalhocontroller;
-    this.userinfocontroller = userinfocontroller
-    this.regionalcontroller = regionalcontroller
+    this.userinfocontroller = userinfocontroller;
+    this.regionalcontroller = regionalcontroller;
     this.logger = logger;
     this.parser = parser;
   }
@@ -52,10 +58,10 @@ module.exports = class QuizActions {
           let answer = responses[question.ANSWER_ID];
 
           if (responses[question.ANSWER_ID] == "on") answer = "true";
-  
+
           if (responses[question.ANSWER_ID]) {
             if (!question.ANSWER) {
-              const response = await this.trabalhocontroller.postQuizResponse({
+              await this.trabalhocontroller.postQuizResponse({
                 CENTRO_ID: centro_id,
                 QUIZ_ID: quiz._id,
                 QUESTION_ID: question._id,
@@ -87,14 +93,11 @@ module.exports = class QuizActions {
     let params = {
       CENTRO_ID: centro_id,
       ANSWERS: responses,
-      LASTMODIFIED : new Date()
+      LASTMODIFIED: new Date(),
     };
-    const summary = await this.trabalhocontroller.postQuizSummary(params);
-  
-    res.render("pages/thanks", {
-      
-    });
+    await this.trabalhocontroller.postQuizSummary(params);
 
+    res.render("pages/thanks", {});
   }
 
   async pdf(req, res, action_info) {
@@ -106,29 +109,35 @@ module.exports = class QuizActions {
   async open(req, res, action_info) {
     let { centro_id, form_alias, page } = action_info;
     try {
-      let checkWasInitialized = await this.userinfocontroller.checkUserWasInitialized(action_info);
-      
-      if(!checkWasInitialized){
-        let centro = await this.regionalcontroller.getCentroByCacheByID(centro_id);
+      let checkWasInitialized =
+        await this.userinfocontroller.checkUserWasInitialized(action_info);
+
+      if (!checkWasInitialized) {
+        let centro = await this.regionalcontroller.getCentroByCacheByID(
+          centro_id
+        );
         await this.userinfocontroller.insertAnswers(centro);
       }
 
-      const form_info = await this.userinfocontroller.getFormInfo(centro_id, form_alias, page);
-  
+      const form_info = await this.userinfocontroller.getFormInfo(
+        centro_id,
+        form_alias,
+        page
+      );
+
       this.logger.info(`get:cadastro_alianca => ${JSON.stringify(form_info)}`);
-  
+
       res.render("pages/quiz", {
         index: page,
         form_alias: form_alias,
         centro_id: centro_id,
         results: form_info.templates,
         titles: form_info.titles,
-        canSend: form_info.finalized
+        canSend: form_info.finalized,
       });
-      
     } catch (error) {
-      this.logger.error(`quiz_action: open ${error}`)
-      throw(error)
+      this.logger.error(`quiz_action: open ${error}`);
+      throw error;
     }
   }
 };
