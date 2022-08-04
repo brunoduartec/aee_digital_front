@@ -47,34 +47,12 @@ const excelexporter_mock = {
   },
 };
 
-// const parser = {
-//   getParamsParsed: function (params) {
-//     let paramsParsed = "";
-
-//     let keys = Object.keys(params);
-
-//     for (let index = 0; index < keys.length; index++) {
-//       const key = keys[index];
-//       const value = params[key];
-
-//       if (value) {
-//         paramsParsed = paramsParsed.concat(
-//           `&${key}=${decodeURIComponent(value)}`
-//         );
-//       }
-//     }
-
-//     logger.info(`getParamsParsed => ${paramsParsed.substring(1)}`);
-
-//     return paramsParsed.substring(1);
-//   },
-// };
-
 const exporter = new ReportInfo(
   excelexporter_mock,
-  logger,
   trabalhocontroller,
-  regionalcontroller
+  regionalcontroller,
+  0,
+  logger
 );
 
 const excelexporter = new ExcelExportResponses(
@@ -123,32 +101,37 @@ describe("controllers:exportexcelresponses", () => {
     await excelexporter.init(3);
 
     const centroId = "61b0ba7e71572500128b85df";
-    await excelexporter.exportCentro(centroId);
+    const response = await excelexporter.exportCentro(centroId);
+    expect(response.length).toBeGreaterThan(1);
   });
 
   it("should validade centro of a regional reports", async () => {
     await excelexporter.init(3);
 
     const regional = "ABC";
-    await excelexporter.exportCentrosByRegional(regional);
+    const response = await excelexporter.exportCentrosByRegional(regional);
+    expect(response.length).toBeGreaterThan(1);
   });
 
   it("should validade regional reports", async () => {
     await excelexporter.init();
 
     const regional = "NORDESTE";
-    await excelexporter.exportRegional(regional);
+    const response = await excelexporter.exportRegional(regional);
+    expect(response[0].length).toBeGreaterThan(1);
   });
 
   it("should validade regionais reports", async () => {
     await excelexporter.init();
 
-    await excelexporter.exportRegionais();
+    const response = await excelexporter.exportRegionais();
+    expect(response.length).toBeGreaterThan(1);
   });
 
   it("should validade general reports", async () => {
     await excelexporter.init();
 
-    await excelexporter.exportAll();
+    const response = await excelexporter.exportAll();
+    expect(response.length).toBeGreaterThan(1);
   });
 });
