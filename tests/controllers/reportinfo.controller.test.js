@@ -39,9 +39,10 @@ describe("controllers:exporterresponses", () => {
   it("should validade refresh", async () => {
     const instance = new ReportInfo(
       exporter,
-      logger,
       trabalhocontroller,
-      regionalcontroller
+      regionalcontroller,
+      0.1,
+      logger
     );
     const size = 3;
     const reports = await instance.refresh(size);
@@ -52,10 +53,10 @@ describe("controllers:exporterresponses", () => {
   it("should validade refresh repeated", async () => {
     const instance = new ReportInfo(
       exporter,
-      logger,
       trabalhocontroller,
       regionalcontroller,
-      0.1
+      0.1,
+      logger
     );
     const reports = await instance.repeatedRefresh();
 

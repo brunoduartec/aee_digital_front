@@ -59,6 +59,7 @@ module.exports = class ExcelExportReportsController {
       }
       return true;
     } catch (error) {
+      this.logger.error(`controllers:excelexporterresponses:init: ${error}`);
       return false;
     }
   }
@@ -76,7 +77,7 @@ module.exports = class ExcelExportReportsController {
 
       return item;
     } catch (error) {
-      this.logger.error(`getFormatInfo ${data}`);
+      this.logger.error(`getFormatInfo ${data}: ${error}`);
       throw error;
     }
   }
@@ -114,7 +115,7 @@ module.exports = class ExcelExportReportsController {
 
           resolve(fileSaved.substring(8));
         } catch (error) {
-          console.log("É a vida");
+          this.logger.error(`ExportingCentro :${centroId}: ${error}`);
           reject(error);
         }
       })();
@@ -122,7 +123,7 @@ module.exports = class ExcelExportReportsController {
   }
 
   async exportCentrosByRegional(regionalName) {
-    const files = [];
+    let files = [];
     const centros = await this.reportinfo.getCentrosInRegionalInfo(
       regionalName
     );
@@ -134,8 +135,9 @@ module.exports = class ExcelExportReportsController {
       promises.push(this.exportCentro(centro.ID));
     }
 
-    await Promise.all(promises).then((files) => {
-      this.logger.info(`exported ${files}`);
+    await Promise.all(promises).then((f) => {
+      this.logger.info(`exported ${f}`);
+      files = files.concat(f);
     });
 
     return files;
@@ -213,6 +215,7 @@ module.exports = class ExcelExportReportsController {
         infoFormated,
       };
     } catch (error) {
+      this.logger.error(`formatCentroToExport: ${centroId}: ${error}`);
       throw { error };
     }
   }
