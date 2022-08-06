@@ -125,7 +125,9 @@ module.exports = class QuizActions {
         page
       );
 
-      this.logger.info(`get:cadastro_alianca => ${JSON.stringify(form_info)}`);
+      this.logger.info(
+        `helpers:quiz_actions:open => ${JSON.stringify(form_info)}`
+      );
 
       res.render("pages/quiz", {
         index: page,
@@ -136,7 +138,7 @@ module.exports = class QuizActions {
         canSend: form_info.finalized,
       });
     } catch (error) {
-      this.logger.error(`quiz_action: open ${error}`);
+      this.logger.error(`helpers:quiz_actions: open ${error}`);
       throw error;
     }
   }

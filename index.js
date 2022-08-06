@@ -15,5 +15,5 @@ const port = process.env.PORT || config.port;
 
 let server_http = http.Server(server);
 server_http.listen(port, "0.0.0.0", function () {
-  logger.info(`server is running on port: ${port}`);
+  logger.info(`index:server is running on port: ${port}`);
 });

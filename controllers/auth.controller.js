@@ -45,7 +45,9 @@ module.exports = class authController {
       };
     }
 
-    this.logger.info(`End generate cache`);
+    this.logger.info(
+      `controller:auth.controller:generatePassCache => End generate cache`
+    );
   }
 
   async checkUserPass(user, pass) {
@@ -68,7 +70,7 @@ module.exports = class authController {
 
   async getUserPermissions(auth) {
     this.logger.info(
-      `authcontroller:getUserPermissions: ${JSON.stringify(auth)}`
+      `controller:auth.controller:getUserPermissions: ${JSON.stringify(auth)}`
     );
     //pegar outros depois
     const userGroups = this.groups[auth.groups[0]];
@@ -173,7 +175,11 @@ module.exports = class authController {
 
   async initUserInfo(loginInfo) {
     try {
-      this.logger.info(`Init User Info: ${JSON.stringify(loginInfo)}`);
+      this.logger.info(
+        `controller:auth.controller:initUserInfo: Init User Info: ${JSON.stringify(
+          loginInfo
+        )}`
+      );
 
       let passInfo = await this.trabalhocontroller.getPassByParams(
         this.parser.getParamsParsed({
@@ -205,7 +211,11 @@ module.exports = class authController {
 
   async authenticate(loginInfo) {
     try {
-      this.logger.info(`Start auth: ${JSON.stringify(loginInfo)}`);
+      this.logger.info(
+        `controller:auth.controller:authenticate: Start auth: ${JSON.stringify(
+          loginInfo
+        )}`
+      );
       let auth = await this.checkUserPass(loginInfo.user, loginInfo.pass);
 
       if (auth) {
@@ -217,7 +227,9 @@ module.exports = class authController {
 
       return auth;
     } catch (error) {
-      this.logger.error(`Error Authenticating: ${error}`);
+      this.logger.error(
+        `controller:auth.controller:authenticate: Error Authenticating: ${error}`
+      );
       throw error;
     }
   }

@@ -6,8 +6,10 @@ module.exports = class Repeater {
   }
 
   async repeat(callback, elapsetime) {
-    const task = cron.schedule(`${elapsetime} * * * * *`, async () => {
-      console.log(`running a task every ${elapsetime} minute`);
+    const task = cron.schedule(`*/${elapsetime} * * * *`, async () => {
+      console.log(
+        `running a task every ${elapsetime} minute: ${new Date().toLocaleString()}`
+      );
       await callback();
     });
     return task;

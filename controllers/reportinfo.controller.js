@@ -120,13 +120,16 @@ module.exports = class ReportInfo {
           centroReport.RESPONSES = centroResponses.map((m) => {
             try {
               const centroAnswer = {
-                QUESTION: m.QUESTION_ID.QUESTION,
-                ANSWER: m.ANSWER,
-                QUESTION_ID: m.QUESTION_ID._id,
+                QUESTION: m?.QUESTION_ID?.QUESTION,
+                ANSWER: m?.ANSWER,
+                QUESTION_ID: m?.QUESTION_ID?._id,
               };
               return centroAnswer;
             } catch (error) {
-              this.logger.error("Error loading centroReport", error);
+              this.logger.error(
+                `controller:reportinfo.controller:${centroInfo.NOME_CENTRO}`,
+                error
+              );
             }
           });
           regional.centros.push(centroReport);
