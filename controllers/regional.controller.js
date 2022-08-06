@@ -52,14 +52,23 @@ module.exports = class regionalController {
       } else {
         this.naoencontrado.push(centro);
         this.logger.info(
-          `generateInfoByCache-> Não encontrado: ${JSON.stringify(centro)}`
+          `controller:regional.controller:generateInfoByCache-> Não encontrado: ${JSON.stringify(
+            centro
+          )}`
         );
       }
     }
 
-    this.logger.info(`Centros cached: ${JSON.stringify(this.cache.centros)}`);
     this.logger.info(
-      `Centros nao encontrados: ${JSON.stringify(this.naoencontrado)}`
+      `controller:regional.controller:generateInfoByCache: Centros cached: ${JSON.stringify(
+        this.cache.centros
+      )}`
+    );
+
+    this.logger.info(
+      `controller:regional.controller:generateInfoByCache: Centros nao encontrados: ${JSON.stringify(
+        this.naoencontrado
+      )}`
     );
   }
 
@@ -92,7 +101,9 @@ module.exports = class regionalController {
           "aee_digital_regionais",
           `/regionais`
         );
-        this.logger.info(`getRegionais: ${regionals}`);
+        this.logger.info(
+          `controller:regional.controller:getRegionais: ${regionals}`
+        );
 
         this.cache.getRegionais = regionals;
         return regionals;
@@ -109,7 +120,9 @@ module.exports = class regionalController {
         "aee_digital_regionais",
         `/regionais?${params}`
       );
-      this.logger.info(`getRegionalByParams: ${regional[0]}`);
+      this.logger.info(
+        `controller:regional.controller:getRegionalByParams: ${regional[0]}`
+      );
 
       return regional[0];
     } catch (error) {
@@ -126,7 +139,9 @@ module.exports = class regionalController {
         "aee_digital_regionais",
         `/centros?REGIONAL.NOME_REGIONAL=${regionalName}`
       );
-      this.logger.info(`getCentrosByRegional: ${centros}`);
+      this.logger.info(
+        `controller:regional.controller:getCentrosByRegional: ${centros}`
+      );
 
       return centros;
     } catch (error) {
@@ -143,7 +158,9 @@ module.exports = class regionalController {
         "aee_digital_regionais",
         `/centros`
       );
-      this.logger.info(`getCentros: ${JSON.stringify(centros)}`);
+      this.logger.info(
+        `controller:regional.controller:getCentros: ${JSON.stringify(centros)}`
+      );
       return centros;
     } catch (error) {
       this.logger.error(`regional.controller.getCentros: Error=> ${error}`);
@@ -157,11 +174,15 @@ module.exports = class regionalController {
         "aee_digital_regionais",
         `/centros?${params}`
       );
-      this.logger.info(`getCentroByParam ${centro[0]}`);
+      this.logger.info(
+        `controller:regional.controller:getCentroByParam ${centro[0]}`
+      );
 
       return centro[0];
     } catch (error) {
-      this.logger.error(`regional.controller.getCentros: Error=> ${error}`);
+      this.logger.error(
+        `controller:regional.controller:getCentroByParam: Error=> ${error}`
+      );
       throw error;
     }
   }
@@ -174,10 +195,14 @@ module.exports = class regionalController {
         `/centros?NOME_CURTO=${nome_curto}`,
         centroInfo
       );
-      this.logger.info(`updateCentro: ${centros}`);
+      this.logger.info(
+        `controller:regional.controller:updateCentro: ${centros}`
+      );
       return centros;
     } catch (error) {
-      this.logger.error(`regional.controller.updateCentro: Error=> ${error}`);
+      this.logger.error(
+        `controller:regional.controller:updateCentro: Error=> ${error}`
+      );
       throw error;
     }
   }

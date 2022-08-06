@@ -37,10 +37,10 @@ promises.push(initcontroller(trabalhoscontroller));
 async function initialize() {
   await Promise.all(promises)
     .then((m) => {
-      logger.info(`Bootstrap: ${m}`);
+      logger.info(`bootstrap:initialize ${m}`);
     })
     .catch((error) => {
-      logger.error(`Bootstrap: ${error}`);
+      logger.error(`bootstrap:initialize ${error}`);
     });
 }
 

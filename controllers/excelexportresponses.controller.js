@@ -135,10 +135,19 @@ module.exports = class ExcelExportReportsController {
       promises.push(this.exportCentro(centro.ID));
     }
 
-    await Promise.all(promises).then((f) => {
-      this.logger.info(`exported ${f}`);
-      files = files.concat(f);
-    });
+    await Promise.all(promises)
+      .then((f) => {
+        this.logger.info(
+          `controller:excelexportresponses.controller:exportCentrosByRegional ${f}`
+        );
+        files = files.concat(f);
+      })
+      .catch((error) => {
+        this.logger.error(
+          `controller:excelexportresponses.controller:exportCentrosByRegional ${error}`
+        );
+        throw new Error(error);
+      });
 
     return files;
   }

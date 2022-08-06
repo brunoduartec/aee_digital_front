@@ -52,12 +52,16 @@ module.exports = class CentroInfoController {
       });
     }
 
-    this.logger.info(`End generate centro cache`);
+    this.logger.info(
+      `controller:centroinfo.controller:generatePassCache: End generate centro cache`
+    );
   }
 
   async getCentroInfo(regional, nome, nome_curto) {
     try {
-      this.logger.info(`getCentroInfo: ${regional}: ${nome}: ${nome_curto}`);
+      this.logger.info(
+        `controller:centroinfo.controller:getCentroInfo: ${regional}: ${nome}: ${nome_curto}`
+      );
 
       let centroInfoByName = this.cache[regional][nome];
 
@@ -67,7 +71,9 @@ module.exports = class CentroInfoController {
 
       return centroInfo;
     } catch (error) {
-      this.logger.error(`Error getCentroInfo: ${error}`);
+      this.logger.error(
+        `controller:centroinfo.controller:getCentroInfo: Error getCentroInfo: ${error}`
+      );
       throw error;
     }
   }

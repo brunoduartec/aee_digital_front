@@ -31,7 +31,9 @@ module.exports = class SearchController {
           items: centro,
         };
 
-        this.logger.info(`getPesquisaResult:Centro ${centros}`);
+        this.logger.info(
+          `controller:search.controller:getPesquisaResult:Centro ${centros}`
+        );
         return centros;
       },
       Centro_Summary: async function () {
@@ -77,7 +79,9 @@ module.exports = class SearchController {
           }
         });
 
-        this.logger.info(`getPesquisaResult:Centro_Summary: ${centroSummary}`);
+        this.logger.info(
+          `controller:search.controller:getPesquisaResult:Centro_Summary: ${centroSummary}`
+        );
         return centroSummary;
       },
 
@@ -120,7 +124,9 @@ module.exports = class SearchController {
           }
         }
 
-        this.logger.info(`getPesquisaResult:Trabalhos: ${atividades}`);
+        this.logger.info(
+          `controller:search.controller:getPesquisaResult:Trabalhos: ${atividades}`
+        );
         return atividades;
       },
       Regional: async function () {
@@ -129,7 +135,9 @@ module.exports = class SearchController {
           amount: centros.length,
           items: centros,
         };
-        this.logger.info(`getPesquisaResult:Regional: ${regional}`);
+        this.logger.info(
+          `controller:search.controller:getPesquisaResult:Regional: ${regional}`
+        );
         return regional;
       },
 
@@ -226,7 +234,9 @@ module.exports = class SearchController {
           finalized: finalized,
         };
 
-        this.logger.info(`getPesquisaResult:Quiz: ${quiz}`);
+        this.logger.info(
+          `controller:search.controller:getPesquisaResult:Quiz: ${quiz}`
+        );
         return quiz;
       },
     };
