@@ -23,7 +23,7 @@ function getParamsParsed(params) {
     }
   }
 
-  logger.info(`helpers:parser:getParamsParsed => ${paramsParsed.substring(1)}`);
+  // logger.info(`helpers:parser:getParamsParsed => ${paramsParsed.substring(1)}`);
 
   return paramsParsed.substring(1);
 }

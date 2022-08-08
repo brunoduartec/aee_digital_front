@@ -23,7 +23,7 @@ module.exports = class Request {
       const response = await axios.get(
         encodeURI(`${this.instances[instanceName]}${this.base}${route}`)
       );
-      this.logger.info(`helpers:request:get ${JSON.stringify(response.data)}`);
+      // this.logger.info(`helpers:request:get ${JSON.stringify(response.data)}`);
       return response.data;
     } catch (error) {
       this.logger.error(`helpers:request:get => ${error}`);
@@ -37,7 +37,7 @@ module.exports = class Request {
         encodeURI(`${this.instances[instanceName]}${this.base}${route}`),
         body
       );
-      this.logger.info(`helpers:request:post ${JSON.stringify(response.data)}`);
+      // this.logger.info(`helpers:request:post ${JSON.stringify(response.data)}`);
       return response.data;
     } catch (error) {
       this.logger.error(`helpers:request:post ${error}`);
@@ -53,7 +53,7 @@ module.exports = class Request {
         ),
         body
       );
-      this.logger.info(`helpers:request:put  ${response.data}`);
+      // this.logger.info(`helpers:request:put  ${response.data}`);
       return response.data;
     } catch (error) {
       this.logger.error(`helpers:request:put ${error}`);
@@ -68,7 +68,7 @@ module.exports = class Request {
           `${this.instances[instanceName]}${this.base}${route}`
         )
       );
-      this.logger.info(`helpers:request:delete ${response.data}`);
+      // this.logger.info(`helpers:request:delete ${response.data}`);
       return response.data;
     } catch (error) {
       this.logger.error(`helpers:request:delete ${error}`);

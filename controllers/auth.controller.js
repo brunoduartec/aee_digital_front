@@ -69,9 +69,9 @@ module.exports = class authController {
   }
 
   async getUserPermissions(auth) {
-    this.logger.info(
-      `controller:auth.controller:getUserPermissions: ${JSON.stringify(auth)}`
-    );
+    // this.logger.info(
+    //   `controller:auth.controller:getUserPermissions: ${JSON.stringify(auth)}`
+    // );
     //pegar outros depois
     const userGroups = this.groups[auth.groups[0]];
 
@@ -175,11 +175,11 @@ module.exports = class authController {
 
   async initUserInfo(loginInfo) {
     try {
-      this.logger.info(
-        `controller:auth.controller:initUserInfo: Init User Info: ${JSON.stringify(
-          loginInfo
-        )}`
-      );
+      // this.logger.info(
+      //   `controller:auth.controller:initUserInfo: Init User Info: ${JSON.stringify(
+      //     loginInfo
+      //   )}`
+      // );
 
       let passInfo = await this.trabalhocontroller.getPassByParams(
         this.parser.getParamsParsed({

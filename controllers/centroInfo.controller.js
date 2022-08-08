@@ -59,9 +59,9 @@ module.exports = class CentroInfoController {
 
   async getCentroInfo(regional, nome, nome_curto) {
     try {
-      this.logger.info(
-        `controller:centroinfo.controller:getCentroInfo: ${regional}: ${nome}: ${nome_curto}`
-      );
+      // this.logger.info(
+      //   `controller:centroinfo.controller:getCentroInfo: ${regional}: ${nome}: ${nome_curto}`
+      // );
 
       let centroInfoByName = this.cache[regional][nome];
 
