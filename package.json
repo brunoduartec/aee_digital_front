@@ -35,7 +35,7 @@
     "node-cron": "^3.0.1",
     "read-excel-file": "^5.1.0",
     "winston": "^3.6.0",
-    "winston-mongodb": "^5.0.7"
+    "winston-daily-rotate-file": "^4.7.1"
   },
   "devDependencies": {
     "eslint": "*",

@@ -142,9 +142,9 @@ module.exports = class trabalhosController {
         `/atividade`
       );
 
-      this.logger.info(
-        `controller:trabalhos.controller:getAtividades: ${atividades}`
-      );
+      // this.logger.info(
+      //   `controller:trabalhos.controller:getAtividades: ${atividades}`
+      // );
 
       return atividades;
     } catch (error) {
@@ -161,9 +161,9 @@ module.exports = class trabalhosController {
         "aee_digital_trabalhos",
         `/atividade_centro?${params}`
       );
-      this.logger.info(
-        `controller:trabalhos.controller:getAtividadesCentroByParams => ${atividades}`
-      );
+      // this.logger.info(
+      //   `controller:trabalhos.controller:getAtividadesCentroByParams => ${atividades}`
+      // );
 
       return atividades;
     } catch (error) {
@@ -193,9 +193,9 @@ module.exports = class trabalhosController {
 
         this.cache.getAtividadesCentroSummaryByParams[params] = atividades;
 
-        this.logger.info(
-          `controller:trabalhos.controller:getAtividadesCentroSummaryByParams", ${atividades}`
-        );
+        // this.logger.info(
+        //   `controller:trabalhos.controller:getAtividadesCentroSummaryByParams", ${atividades}`
+        // );
         return atividades;
       }
     } catch (error) {
@@ -213,11 +213,11 @@ module.exports = class trabalhosController {
         `/atividade_generic_form?${params}`
       );
 
-      this.logger.info(
-        `controller:trabalhos.controller:getFormByParams => ${JSON.stringify(
-          form
-        )}`
-      );
+      // this.logger.info(
+      //   `controller:trabalhos.controller:getFormByParams => ${JSON.stringify(
+      //     form
+      //   )}`
+      // );
       return form;
     } catch (error) {
       this.logger.error(
@@ -234,11 +234,11 @@ module.exports = class trabalhosController {
         `/atividade_generic_quiz`
       );
 
-      this.logger.info(
-        `controller:trabalhos.controller:getQuizTemplates ${JSON.stringify(
-          quiz
-        )}`
-      );
+      // this.logger.info(
+      //   `controller:trabalhos.controller:getQuizTemplates ${JSON.stringify(
+      //     quiz
+      //   )}`
+      // );
       return quiz;
     } catch (error) {
       this.logger.error(
@@ -255,11 +255,11 @@ module.exports = class trabalhosController {
         `/atividade_generic_quiz?${params}`
       );
 
-      this.logger.info(
-        `controller:trabalhos.controller:getQuizTemplateByParams ${JSON.stringify(
-          quiz
-        )}`
-      );
+      // this.logger.info(
+      //   `controller:trabalhos.controller:getQuizTemplateByParams ${JSON.stringify(
+      //     quiz
+      //   )}`
+      // );
       return quiz;
     } catch (error) {
       this.logger.error(
@@ -276,9 +276,9 @@ module.exports = class trabalhosController {
         `/atividade_generic_question?${params}`
       );
 
-      this.logger.info(
-        `controller:trabalhos.controller:getQuestionByParams ${quiz}`
-      );
+      // this.logger.info(
+      //   `controller:trabalhos.controller:getQuestionByParams ${quiz}`
+      // );
       return quiz;
     } catch (error) {
       this.logger.error(
@@ -295,9 +295,9 @@ module.exports = class trabalhosController {
         `/atividade_generic_group_question?${params}`
       );
 
-      this.logger.info(
-        `controller:trabalhos.controller:getGroupQuestionByParams ${quiz}`
-      );
+      // this.logger.info(
+      //   `controller:trabalhos.controller:getGroupQuestionByParams ${quiz}`
+      // );
       return quiz;
     } catch (error) {
       this.logger.error(
@@ -331,11 +331,11 @@ module.exports = class trabalhosController {
         `/atividade_generic_quiz_answer?${params}`
       );
 
-      this.logger.info(
-        `controller:trabalhos.controller:getQuizResponseByParams ${JSON.stringify(
-          quiz_response
-        )}`
-      );
+      // this.logger.info(
+      //   `controller:trabalhos.controller:getQuizResponseByParams ${JSON.stringify(
+      //     quiz_response
+      //   )}`
+      // );
       return quiz_response;
     } catch (error) {
       this.logger.error(
@@ -352,9 +352,9 @@ module.exports = class trabalhosController {
         `/atividade_generic_quiz_answer?${params}`
       );
 
-      this.logger.info(
-        `controller:trabalhos.controller:deleteQuizResponseByParams ${quiz_response}`
-      );
+      // this.logger.info(
+      //   `controller:trabalhos.controller:deleteQuizResponseByParams ${quiz_response}`
+      // );
       return quiz_response;
     } catch (error) {
       this.logger.error(
@@ -391,9 +391,9 @@ module.exports = class trabalhosController {
         `/pass`
       );
 
-      this.logger.info(
-        `controller:trabalhos.controller:getPasses ${atividades}`
-      );
+      // this.logger.info(
+      //   `controller:trabalhos.controller:getPasses ${atividades}`
+      // );
       return atividades;
     } catch (error) {
       this.logger.error(
@@ -414,11 +414,11 @@ module.exports = class trabalhosController {
         );
 
         this.cache.getSummaries = quiz_summaries;
-        this.logger.info(
-          `controller:trabalhos.controller:getSummaries => ${JSON.stringify(
-            quiz_summaries
-          )}`
-        );
+        // this.logger.info(
+        //   `controller:trabalhos.controller:getSummaries => ${JSON.stringify(
+        //     quiz_summaries
+        //   )}`
+        // );
         return quiz_summaries;
       }
     } catch (error) {
@@ -436,11 +436,11 @@ module.exports = class trabalhosController {
         `/pass?${params}`
       );
 
-      this.logger.info(
-        `controller:trabalhos.controller:getPassByParams => ${JSON.stringify(
-          passes
-        )}`
-      );
+      // this.logger.info(
+      //   `controller:trabalhos.controller:getPassByParams => ${JSON.stringify(
+      //     passes
+      //   )}`
+      // );
       return passes;
     } catch (error) {
       this.logger.error(
@@ -458,7 +458,7 @@ module.exports = class trabalhosController {
         params
       );
 
-      this.logger.info(`controller:trabalhos.controller:postPass => ${pass}`);
+      // this.logger.info(`controller:trabalhos.controller:postPass => ${pass}`);
       return pass;
     } catch (error) {
       this.logger.error(
@@ -476,9 +476,9 @@ module.exports = class trabalhosController {
         value
       );
 
-      this.logger.info(
-        `controller:trabalhos.controller:putQuizResponse ${quiz_response}`
-      );
+      // this.logger.info(
+      //   `controller:trabalhos.controller:putQuizResponse ${quiz_response}`
+      // );
       return quiz_response;
     } catch (error) {
       this.logger.error(
@@ -496,9 +496,9 @@ module.exports = class trabalhosController {
         params
       );
 
-      this.logger.info(
-        `controller:trabalhos.controller:postQuizResponse ${quiz_response}`
-      );
+      // this.logger.info(
+      //   `controller:trabalhos.controller:postQuizResponse ${quiz_response}`
+      // );
       return quiz_response;
     } catch (error) {
       this.logger.error(
@@ -515,9 +515,9 @@ module.exports = class trabalhosController {
         `/atividade_generic_quiz_answer`
       );
 
-      this.logger.info(
-        `controller:trabalhos.controller:getQuizResponses ${quiz_response}`
-      );
+      // this.logger.info(
+      //   `controller:trabalhos.controller:getQuizResponses ${quiz_response}`
+      // );
       return quiz_response;
     } catch (error) {
       this.logger.error(
@@ -534,9 +534,9 @@ module.exports = class trabalhosController {
         `/pessoa?${params}`
       );
 
-      this.logger.info(
-        `controller:trabalhos.controller:getPessoaParams  ${pessoa}`
-      );
+      // this.logger.info(
+      //   `controller:trabalhos.controller:getPessoaParams  ${pessoa}`
+      // );
       return pessoa;
     } catch (error) {
       this.logger.error(
@@ -553,9 +553,9 @@ module.exports = class trabalhosController {
         `/atividade_generic_quiz_summary?${params}`
       );
 
-      this.logger.info(
-        `controller:trabalhos.controller:getQuizSummaryByParams ${quiz_summarie}`
-      );
+      // this.logger.info(
+      //   `controller:trabalhos.controller:getQuizSummaryByParams ${quiz_summarie}`
+      // );
       return quiz_summarie;
     } catch (error) {
       this.logger.error(
@@ -574,9 +574,9 @@ module.exports = class trabalhosController {
         params
       );
 
-      this.logger.info(
-        `controller:trabalhos.controller:postQuizSummary ${quiz_summary}`
-      );
+      // this.logger.info(
+      //   `controller:trabalhos.controller:postQuizSummary ${quiz_summary}`
+      // );
       return quiz_summary;
     } catch (error) {
       this.logger.error(
@@ -596,9 +596,9 @@ module.exports = class trabalhosController {
         value
       );
 
-      this.logger.info(
-        `controller:trabalhos.controller:putQuizSummary ${quiz_summary}`
-      );
+      // this.logger.info(
+      //   `controller:trabalhos.controller:putQuizSummary ${quiz_summary}`
+      // );
       return quiz_summary;
     } catch (error) {
       this.logger.error(
