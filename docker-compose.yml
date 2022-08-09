@@ -14,6 +14,8 @@ services:
     networks:
       - aee_digital_backend
       - aee_trabalho_db
+    volumes:
+      - ./logs:/app/logs
     restart: always
 networks:
   aee_digital_backend:
