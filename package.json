@@ -28,7 +28,7 @@
     "crypto": "*",
     "ejs": "^3.1.7",
     "exceljs": "^4.3.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-session": "^1.17.2",
     "http": "0.0.1-security",
     "jquery": "^3.6.0",
