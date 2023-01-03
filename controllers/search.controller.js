@@ -1,3 +1,7 @@
+const Cache = require("../helpers/cache");
+const cache = new Cache();
+
+
 module.exports = class SearchController {
   constructor(
     regionalcontroller,
@@ -180,9 +184,15 @@ module.exports = class SearchController {
           CENTRO_ID: centro_id,
         });
 
+        const start = Date.now();
+        console.time(`responses:${centro_id}:${start}`)
+        
         const quiz_responses =
           await this.trabalhocontroller.getQuizResponseByParams(paramsParsed);
 
+          console.timeEnd(`responses:${centro_id}:${start}`)
+
+          console.time(`formatResponses:${start}`)
         for (let index = 0; index < pages.length; index++) {
           const page = pages[index];
 
@@ -199,6 +209,7 @@ module.exports = class SearchController {
                 const question = group[k];
 
                 let answer;
+                // answer = "";
                 answer = quiz_responses.filter((m) => {
                   try {
                     return m.QUESTION_ID._id == question._id;
@@ -227,7 +238,7 @@ module.exports = class SearchController {
             }
           }
         }
-
+        console.timeEnd(`formatResponses:${start}`)
         let quiz = {
           templates: form_template,
           titles: page_titles,

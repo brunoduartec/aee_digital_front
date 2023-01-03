@@ -90,7 +90,7 @@ router.get("/summary_coord", requireAuth, async function (req, res) {
     paramsParsed
   );
 
-  const centros = await regionalcontroller.getCentroByCacheByRegional(
+  const centros = await regionalcontroller.getCentrosByRegional(
     regionalInfo.NOME_REGIONAL
   );
 
@@ -133,8 +133,141 @@ router.get("/summary_coord", requireAuth, async function (req, res) {
   });
 });
 
+async function getCentroCoordResponses(centroId, quizInfo) {
+  try {
+    const templates = [];
+    if (!centroId) {
+      return templates;
+    }
+
+    if (quizInfo) {
+      quizInfo = quizInfo[0];
+
+      let coordresponse = await trabalhoscontroller.getCoordResponsesByCentroId(
+        centroId
+      );
+
+      for (const question of quizInfo.QUESTIONS[0].GROUP) {
+        let response = coordresponse.filter((m) => {
+          return m.QUESTION_ID._id == question._id;
+        });
+
+        response = response[0];
+
+        if (!response) {
+          response = await setQuizResponse(
+            centroId,
+            quizInfo.ID,
+            question._id,
+            " "
+          );
+          if (response) {
+            response = response[0];
+          }
+        }
+
+        if (response) {
+          templates.push({
+            ANSWER_ID: response.ID,
+            ANSWER: response.ANSWER,
+            _id: response.QUESTION_ID._id,
+            PRESET_VALUES: question.PRESET_VALUES,
+          });
+        }
+      }
+    }
+
+    return {
+      templates: templates,
+    };
+  } catch (error) {
+    logger.error(`getCentroCoordResponses ${error}`);
+    throw error;
+  }
+}
+
 router.get("/summary_alianca", requireAuth, async function (req, res) {
-  res.render("pages/summary_alianca", {});
+  const centros = await regionalcontroller.getCentros()
+  const summaries = await trabalhoscontroller.getSummaries();
+  const coordresponses = await trabalhoscontroller.getCoordResponses()
+
+  const start = req.query.start
+  const end = req.query.end
+
+  let startDate, endDate
+
+  const useDate = start && end
+
+  if(useDate){
+    startDate = new Date(start)
+    endDate = new Date(end)
+  }
+
+
+  let passes = await trabalhoscontroller.getPasses();
+  passes = passes.map((p)=>{
+    if(p.groups[0].includes("presidente"))
+    {
+      return {
+        scope_id: p.scope_id
+      }
+    }
+    
+  })
+
+  const regionaisInfo = {}
+  centros.forEach(centro => {
+    const regionalName = centro.REGIONAL.NOME_REGIONAL
+    
+    if (!regionaisInfo[regionalName]) {
+      regionaisInfo[regionalName] = {
+        centros: [],
+        summaries:[],
+        started: 0,
+        NOME_REGIONAL: regionalName
+      }
+    }
+
+    const coord_responses = coordresponses.filter((c) => {
+      return c.CENTRO_ID == centro.ID;
+    })
+
+    const question = coord_responses.find((q) => {
+      return q.QUESTION_ID.PRESET_VALUES.includes("Encerrada")
+    })
+
+    const encerrada = question?.ANSWER == "Encerrada" || question?.ANSWER == "Desfiliada"
+
+    if(!encerrada){
+      regionaisInfo[regionalName].centros.push(centro)
+        const hasStarted = passes.find((p) => {
+          return p?.scope_id == centro.ID
+        })
+        if (hasStarted) {
+          regionaisInfo[regionalName].started++
+        }
+
+        const summary = summaries.find((s) => {
+          const centroMatch = s.CENTRO_ID == centro.ID
+          const lastModifiedParsed = new Date(s.LASTMODIFIED)
+          let dateMatch = true
+
+          if(useDate){
+            dateMatch = lastModifiedParsed > startDate && lastModifiedParsed < endDate
+          }
+
+          return centroMatch && dateMatch
+        })
+
+        if (summary) {
+          regionaisInfo[regionalName].summaries.push(summary)
+        }
+    }
+
+  });
+
+
+  res.render("pages/summary_alianca", {regionaisInfo, summaries});
 });
 
 module.exports = router;

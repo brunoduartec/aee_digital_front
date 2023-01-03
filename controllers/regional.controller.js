@@ -1,101 +1,39 @@
-module.exports = class regionalController {
+const IController = require("./icontroller");
+
+module.exports = class regionalController extends IController {
   constructor(
-    logger = require("../helpers/logger"),
     Request = require("../helpers/request"),
     xlsReader = require("read-excel-file/node")
   ) {
-    const instance = this.constructor.instance;
-    if (instance) {
-      return instance;
-    }
+    super("regionais")
 
-    this.logger = logger;
     this.request = new Request();
     this.xlsReader = xlsReader;
-    this.cache = {};
-
-    this.constructor.instance = this;
   }
 
   async initialize() {
-    await this.generateInfoByCache(this.xlsReader);
+    try {
+      const formatedKey = this.getKeyFormated(`initialized`)
+      const initialized = await this.cache.get(formatedKey)
+      if(!initialized){
+        await this.generateInfoByCache(this.xlsReader);
+      }
+    } catch (error) {
+      throw new Error(error)
+    }
+
   }
 
   async generateInfoByCache(xlsReader) {
-    const schema = require("../resources/schema")();
-    const fileName = `./resources/Senhas_v2.xlsx`;
-    let excel = await xlsReader(fileName, {
-      schema,
-    });
-    let objects = excel.rows;
-
-    objects = objects.filter((m) => {
-      return m.centro.nome != "*";
-    });
-
-    let centros = await this.getCentros();
-    this.cache.centros = [];
-    this.naoencontrado = [];
-
-    for (const object of objects) {
-      const centro = object.centro;
-      let centroInfo = centros.find((m) => {
-        return (
-          m.NOME_CURTO === centro.curto &&
-          m.REGIONAL.NOME_REGIONAL === centro.regional &&
-          m.NOME_CENTRO === centro.nome
-        );
-      });
-
-      if (centroInfo) {
-        this.cache.centros.push(centroInfo);
-      } else {
-        this.naoencontrado.push(centro);
-        this.logger.error(
-          `controller:regional.controller:generateInfoByCache-> Não encontrado: ${JSON.stringify(
-            centro
-          )}`
-        );
-      }
-    }
-
-    // this.logger.info(
-    //   `controller:regional.controller:generateInfoByCache: Centros cached: ${JSON.stringify(
-    //     this.cache.centros
-    //   )}`
-    // );
-
-    this.logger.error(
-      `controller:regional.controller:generateInfoByCache: Centros nao encontrados: ${JSON.stringify(
-        this.naoencontrado
-      )}`
-    );
-  }
-
-  getCentrosByCache() {
-    return this.cache.centros;
-  }
-
-  getCentroByCacheByRegional(regionalName) {
-    let centros = this.cache.centros.filter((m) => {
-      return m.REGIONAL.NOME_REGIONAL === regionalName;
-    });
-    return centros;
-  }
-
-  getCentroByCacheByID(centroId) {
-    const centros = this.getCentrosByCache();
-    const centro = centros.find((m) => {
-      return m.ID === centroId;
-    });
-
-    return centro;
+    await this.getCentros();
   }
 
   async getRegionais() {
     try {
-      if (this.cache.regionais) {
-        return this.cache.getRegionais;
+      const formatedKey = this.getKeyFormated(`regionais`)
+      const regionais = await this.cache.get(formatedKey)
+      if (regionais) {
+        return regionais;
       } else {
         const regionals = await this.request.get(
           "aee_digital_regionais",
@@ -105,7 +43,7 @@ module.exports = class regionalController {
         //   `controller:regional.controller:getRegionais: ${regionals}`
         // );
 
-        this.cache.getRegionais = regionals;
+        this.cache.set(formatedKey, regionais)
         return regionals;
       }
     } catch (error) {
@@ -116,7 +54,11 @@ module.exports = class regionalController {
 
   async getRegionalByParams(params) {
     try {
-      const regional = await this.request.get(
+      const formatedKey = this.getKeyFormated(`regionais:${params}`)
+    const regional = await this.cache.get(formatedKey)
+    if(regional) {return regional}
+    else{
+      let regional = await this.request.get(
         "aee_digital_regionais",
         `/regionais?${params}`
       );
@@ -124,7 +66,11 @@ module.exports = class regionalController {
       //   `controller:regional.controller:getRegionalByParams: ${regional[0]}`
       // );
 
-      return regional[0];
+      regional = regional[0];
+      this.cache.set(formatedKey, regional)
+
+      return regional;
+    }
     } catch (error) {
       this.logger.error(
         `regional.controller.getRegionalByParams: Error=> ${error}`
@@ -135,15 +81,27 @@ module.exports = class regionalController {
 
   async getCentrosByRegional(regionalName) {
     try {
-      const centros = await this.request.get(
-        "aee_digital_regionais",
-        `/centros?REGIONAL.NOME_REGIONAL=${regionalName}`
-      );
-      // this.logger.info(
-      //   `controller:regional.controller:getCentrosByRegional: ${centros}`
-      // );
+      const formatedKey = this.getKeyFormated(`centros:${regionalName}`)
+      const centros = await this.cache.get(formatedKey)
 
-      return centros;
+      if(centros){
+        return centros
+      }else{
+        const centros = await this.request.get(
+          "aee_digital_regionais",
+          `/centros?REGIONAL.NOME_REGIONAL=${regionalName}`
+        );
+        // this.logger.info(
+        //   `controller:regional.controller:getCentrosByRegional: ${centros}`
+        // );
+
+        this.cache.set(formatedKey, centros)
+  
+        return centros;
+
+      }
+
+
     } catch (error) {
       this.logger.error(
         `regional.controller.getCentrosByRegional: Error=>${error}`
@@ -154,14 +112,25 @@ module.exports = class regionalController {
 
   async getCentros() {
     try {
-      const centros = await this.request.get(
-        "aee_digital_regionais",
-        `/centros`
-      );
-      // this.logger.info(
-      //   `controller:regional.controller:getCentros: ${JSON.stringify(centros)}`
-      // );
-      return centros;
+      const formatedKey = this.getKeyFormated(`centros`)
+      const centros = await this.cache.get(formatedKey)
+  
+      if(centros){
+        return centros
+      }else{
+        const centros = await this.request.get(
+          "aee_digital_regionais",
+          `/centros`
+        );
+        // this.logger.info(
+        //   `controller:regional.controller:getCentros: ${JSON.stringify(centros)}`
+        // );
+
+        this.cache.set(formatedKey,centros)
+        return centros;
+
+      }
+      
     } catch (error) {
       this.logger.error(`regional.controller.getCentros: Error=> ${error}`);
       throw error;
@@ -170,15 +139,26 @@ module.exports = class regionalController {
 
   async getCentroByParam(params) {
     try {
-      const centro = await this.request.get(
-        "aee_digital_regionais",
-        `/centros?${params}`
-      );
-      // this.logger.info(
-      //   `controller:regional.controller:getCentroByParam ${centro[0]}`
-      // );
+      const formatedKey = this.getKeyFormated(`centros:${params}`)
+      const centro = await this.cache.get(formatedKey)
 
-      return centro[0];
+      if(centro){
+        return centro
+      }
+      else{
+        let centro = await this.request.get(
+          "aee_digital_regionais",
+          `/centros?${params}`
+        );
+        
+        centro = centro[0];
+
+        this.cache.set(formatedKey, centro)
+  
+        return centro;
+
+      }
+
     } catch (error) {
       this.logger.error(
         `controller:regional.controller:getCentroByParam: Error=> ${error}`
@@ -186,24 +166,5 @@ module.exports = class regionalController {
       throw error;
     }
   }
-
-  async updateCentro(centroInfo) {
-    try {
-      const nome_curto = centroInfo.NOME_CURTO;
-      const centros = await this.request.get(
-        "aee_digital_regionais",
-        `/centros?NOME_CURTO=${nome_curto}`,
-        centroInfo
-      );
-      // this.logger.info(
-      //   `controller:regional.controller:updateCentro: ${centros}`
-      // );
-      return centros;
-    } catch (error) {
-      this.logger.error(
-        `controller:regional.controller:updateCentro: Error=> ${error}`
-      );
-      throw error;
-    }
-  }
+ 
 };

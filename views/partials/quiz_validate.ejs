@@ -1,10 +1,12 @@
 <script>
-  function updateFormItem(item) {
-    const subId = item.id.split("_");
+  
 
-    id = subId[0];
+  function updateFormItem(item, centroId) {
+    const answerId = item.ANSWER_ID;
 
-    var itemsChanged = document.getElementsByName(id);
+    // id = subId[0];
+
+    var itemsChanged = document.getElementsByName(answerId);
     var itemChanged;
 
     for (let index = 0; index < itemsChanged.length; index++) {
@@ -15,10 +17,9 @@
       }
     }
 
-    const answerId = item.id;
     let questionId;
 
-    var apiUrl = `/bff/update_answer?answerId=${answerId}&answer=${itemChanged.value.toString()}`;
+    var apiUrl = `/bff/update_answer?centroId=${centroId}&answerId=${answerId}&answer=${itemChanged.value.toString()}`;
     if (itemChanged) {
       questionId = itemChanged.getAttribute("questionId");
       if (questionId) {

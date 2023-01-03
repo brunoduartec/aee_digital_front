@@ -1,10 +1,12 @@
 const logger = require("../helpers/logger");
 
 function getNestedObject(nestedObj, pathArr) {
-  return pathArr.reduce(
+  const response = pathArr.reduce(
     (obj, key) => (obj && obj[key] !== "undefined" ? obj[key] : undefined),
     nestedObj
   );
+  
+  return response
 }
 
 function getParamsParsed(params) {
@@ -29,7 +31,15 @@ function getParamsParsed(params) {
 }
 
 function getQueryParamsParsed(query) {
-  const info = query.split("?")[1].split("&");
+  let removeInterrogation = query.split("?")
+  let info
+
+  if(removeInterrogation.length>1){
+    info = removeInterrogation[1].split("&");
+  }else{
+    info = query.split("&")
+  }
+  
   let paramsParsed = {};
 
   for (let i = 0; i < info.length; i++) {

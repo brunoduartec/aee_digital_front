@@ -2,10 +2,9 @@ const config = require("../helpers/config");
 
 module.exports = class authController {
   constructor(
-    reader,
-    trabalhocontroller,
     logger = require("../helpers/logger"),
-    parser = require("../helpers/parser")
+    parser = require("../helpers/parser"),
+    Request = require("../helpers/request")
   ) {
     const instance = this.constructor.instance;
     if (instance) {
@@ -14,40 +13,48 @@ module.exports = class authController {
 
     this.constructor.instance = this;
 
+    this.request = new Request();
     this.logger = logger;
-    this.trabalhocontroller = trabalhocontroller;
 
-    this.xlsReader = reader;
     this.groups = require("../resources/groups.json");
     this.permissions = require("../resources/permissions.json");
-    this.fileName = `./resources/${config.users.pass}.xlsx`;
     this.parser = parser;
 
-    this.cache = {};
   }
 
-  async generatePassCache() {
-    const schema = require("../resources/schema")();
-    let excel = await this.xlsReader(this.fileName, { schema });
-    let objects = excel.rows;
+  async postPass(params) {
+    try {
 
-    for (let index = 0; index < objects.length; index++) {
-      const row = objects[index];
+      const pass = await this.request.post(
+        "aee_digital_trabalhos",
+        `/pass`,
+        params
+      );
 
-      const centro = row.centro;
-
-      this.cache[centro.user] = {
-        user: centro.user,
-        pass: centro.pass,
-        curto: centro.curto,
-        centro: centro.nome,
-        regional: centro.regional,
-      };
+      return pass;
+    } catch (error) {
+      this.logger.error(
+        `controller:auth.controller:postPass: Error=> ${error}`
+      );
+      throw error;
     }
+  }
 
-    this.logger.info(
-      `controller:auth.controller:generatePassCache => End generate cache`
-    );
+  async getPassByParams(params) {
+    try {
+     
+        const pass = await this.request.get(
+          "aee_digital_trabalhos",
+          `/pass?${params}`
+        );
+  
+        return pass[0];
+    } catch (error) {
+      this.logger.error(
+        `controller:auth.controller:getPassByParams: Error=> ${error}`
+      );
+      throw error;
+    }
   }
 
   async checkUserPass(user, pass) {
@@ -57,22 +64,12 @@ module.exports = class authController {
     };
 
     const paramsParsed = this.parser.getParamsParsed(params);
-    const auth = await this.trabalhocontroller.getPassByParams(paramsParsed);
-
-    let userPass = auth[0];
-
-    if (!auth[0]) {
-      userPass = this.getPassInfoByCache(user, pass);
-    }
-
+    const userPass = await this.getPassByParams(paramsParsed);
     return userPass;
   }
 
   async getUserPermissions(auth) {
-    // this.logger.info(
-    //   `controller:auth.controller:getUserPermissions: ${JSON.stringify(auth)}`
-    // );
-    //pegar outros depois
+   
     const userGroups = this.groups[auth.groups[0]];
 
     let edit = false;
@@ -105,30 +102,6 @@ module.exports = class authController {
       },
       groups: auth.groups,
     };
-  }
-
-  getPassInfoByCache(user, pass) {
-    try {
-      if (this.cache[user]?.pass === pass) {
-        return this.cache[user];
-      }
-      return;
-    } catch (error) {
-      this.logger.error(
-        `controllers:authcontroller: getPassInfoByCache => ${error}`
-      );
-      throw error;
-    }
-  }
-
-  getPassInfoByCentroCurtoRegional(centro, curto, regional) {
-    const values = Object.values(this.cache);
-
-    let info = values.find((m) => {
-      return m.curto === curto && m.regional === regional;
-    });
-
-    return this.cache[info.user];
   }
 
   getPassGroupByPattern(userInfo) {
@@ -175,24 +148,15 @@ module.exports = class authController {
 
   async initUserInfo(loginInfo) {
     try {
-      // this.logger.info(
-      //   `controller:auth.controller:initUserInfo: Init User Info: ${JSON.stringify(
-      //     loginInfo
-      //   )}`
-      // );
 
-      let passInfo = await this.trabalhocontroller.getPassByParams(
+      let passInfo = await this.getPassByParams(
         this.parser.getParamsParsed({
           user: loginInfo?.user,
           pass: loginInfo?.pass,
         })
       );
 
-      if (passInfo.length == 0) {
-        let params = this.getPassInfoByScope(loginInfo);
-        passInfo = await this.trabalhocontroller.postPass(params);
-      }
-      return passInfo[0];
+      return passInfo;
     } catch (error) {
       this.logger.error(`Error Init User Info: ${error}`);
       throw error;

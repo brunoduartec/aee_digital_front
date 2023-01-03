@@ -9,7 +9,7 @@ const trabalhosController = require("../controllers/trabalhos.controller");
 const trabalhoscontroller = new trabalhosController();
 
 const authController = require("../controllers/auth.controller");
-const authcontroller = new authController(readXlsxFile, trabalhoscontroller);
+const authcontroller = new authController();
 
 const SearchController = require("../controllers/search.controller");
 const searchcontroller = new SearchController(

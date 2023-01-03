@@ -23,14 +23,14 @@ router.get("/centros", requireAuth, async function (req, res) {
   let regionals;
 
   if (regionalName != null) {
-    centros = await regionalcontroller.getCentroByCacheByRegional(regionalName);
+    centros = await regionalcontroller.getCentrosByRegional(regionalName);
     regionals = [
       {
         NOME_REGIONAL: regionalName,
       },
     ];
   } else {
-    centros = await regionalcontroller.getCentrosByCache();
+    centros = await regionalcontroller.getCentros();
     regionals = await regionalcontroller.getRegionais();
 
     regionals = regionals.sort(function (a, b) {

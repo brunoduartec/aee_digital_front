@@ -1,11 +1,86 @@
 <div class="col-sm">
-  <div
-    id="card_<%{regionalInfo.NOME_REGIONAL%>"
-    class="card"
-    style="width: 18rem"
-  >
+  <div id="card_<%=regionalInfo.NOME_REGIONAL%>" class="card" style="width: 18rem;">
     <div class="card-body">
-      <h5><%regionalInfo.NOME_REGIONAL : regionalInfo.PAIS %></h5>
+      <h5><%=regionalInfo.NOME_REGIONAL%> : <%=regionalInfo.NOME_PAIS%></h5>
+      <p class="card-text">Recuperando Info</p>
+      <a class="btn btn-primary" href="/summary_coord?regionalName=<%=regionalInfo.NOME_REGIONAL%>">Ver detalhes</a>
+      <a class="btn btn-primary" onclick="DownloadRegionalResponses('<%=regionalInfo.NOME_REGIONAL%>')">Baixar Respostas</a>
     </div>
   </div>
 </div>
+
+
+<script>
+  $(document).ready(function () {
+    const regionalInfo = <%- JSON.stringify(regionalInfo) %>
+    const summaries = <%- JSON.stringify(summaries) %>
+
+    let div = document.getElementById("card_<%=regionalInfo.NOME_REGIONAL%>");
+    getRegionalInfo(regionalInfo,summaries, function(info){
+      setInfo(div,{
+        centros: info.centros,
+        summary: info.responses,
+        started: info.started
+      })
+    })
+
+  });
+
+ function getRegionalInfo(regionalInfo,summaries, callback){
+      const centros = regionalInfo.centros
+      const responses = regionalInfo.summaries;
+
+      const info = {
+        centros,
+        responses,
+        started: regionalInfo.started,
+      }
+
+      callback(info)
+}
+
+  function setInfo(div, {centros, summary, started}) {
+    let divclass = div.getAttribute("class");
+
+    let children = div.children[0].children[1];
+
+    let total = centros.length;
+    let respondido = summary.length;
+
+    const startedPercent = Math.round(100 * (started / total));
+    const finishedPercent = Math.round(100 * (respondido / total));
+
+    let color = "bg-warning";
+    if (finishedPercent < 50) {
+      color = "bg-danger";
+    } else if (finishedPercent == 100) {
+      color = "bg-success";
+    }
+
+    div.setAttribute("class", divclass.concat(" ").concat(color));
+    children.innerText =
+      `Iniciado: ${started} (${startedPercent}%)\nFinalizado: ${respondido} (${finishedPercent}%)\nTotal: ${total}`;
+  }
+
+  async function DownloadRegionalResponses(regionalName) {
+      try {
+        console.log(regionalName);
+        var apiUrl = `bff/exportregionalresponses?regionalName=${regionalName}`;
+        let responseInfo = await fetch(apiUrl, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "GET",
+        });
+
+        responseInfo = await responseInfo.json();
+        if (responseInfo.fileName) {
+          window.open(responseInfo.fileName);
+        }
+        return responseInfo;
+      } catch (error) {
+        console.log(`Error at Download ${regionalName}`, error);
+        throw error;
+      }
+    }
+</script>

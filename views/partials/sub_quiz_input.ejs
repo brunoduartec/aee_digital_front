@@ -5,5 +5,35 @@
   name="<%= question.ANSWER_ID%>"
   value="<%=question.ANSWER%>"
   questionId="<%=question._id%>"
-  onfocusout="updateFormItem(this)"
+  onfocusout="updateFormItem(<%= JSON.stringify(question)%>, <%= JSON.stringify(centroId)%>)"
+  
 />
+<!-- <script>
+  function loadInput(item){
+    item = JSON.parse(item)
+    var itemsChanged = document.getElementsByName(item.ANSWER_ID);
+    console.log("ITEM", itemsChanged.value)
+  
+    var apiUrl = `/bff/get_answer?answerId=${item.ANSWER_ID}`;
+   
+
+    fetch(apiUrl, {
+      method: "GET",
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        const responseInfo = data[0];
+
+        console.log(responseInfo)
+      })
+      .catch((err) => {
+        console.log("---ERROR---", err);
+        throw error;
+        // Do something for an error here
+      });
+  }
+  
+  loadInput("<%= question%>")
+</script> -->

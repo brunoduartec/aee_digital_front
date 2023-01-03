@@ -1,323 +1,203 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <%- include('../partials/head'); %>
-  </head>
 
-  <body class="body">
-    <header class="cabeçalho"><%- include('../partials/header'); %></header>
+<head>
+  <%- include('../partials/head'); %>
+</head>
 
-    <div class="container">
-      <div class="row">
-        <div class="col-xs-6">
-          <canvas id="myChart" style="width: 100%; max-width: 600px"></canvas>
+<body class="body">
+  <header class="cabeçalho"><%- include('../partials/header'); %></header>
+
+  <div class="container">
+    <form>
+      <div class="row w-50">
+        <div class="w-10 col-sm datepicker">
+          <label for="example">Início</label>
+          <input placeholder="Select date" type="date" id="start_date" class="form-control">
         </div>
-        <div class="col-xs-6">
-          <input
-            id="clickMe"
-            type="button"
-            value="Backup"
-            onclick="DownloadResponses();"
-          />
+        <div class="w-10 col-sm datepicker">
+          <label for="example">Fim</label>
+          <input placeholder="Select date" type="date" id="end_date" class="form-control">
         </div>
+        <div class="w-10 col-sm ">
+          <button>A</button>
+          
+        </div>
+
+    </form>
+      
+    </div>
+    <div class="row">
+      <div class="col-sm">
+        <canvas id="myChart" style="width: 50%; max-width: 600px"></canvas>
+      </div>
+      <div class="col-sm">
+        <canvas id="myChart_2" style="width: 50%; max-width: 600px"></canvas>
+      </div>
+      <div class="col-xs-6">
+        <input id="clickMe" type="button" value="Backup" onclick="DownloadResponses();" />
       </div>
     </div>
+  </div>
 
-    <div class="overlay"></div>
-    <div class="spanner">
-      <div class="loader"></div>
-      <p>Buscando informações, por favor aguarde</p>
+  <div class="overlay"></div>
+  <div class="spanner">
+    <div class="loader"></div>
+    <p>Buscando informações, por favor aguarde</p>
+  </div>
+
+  <div class="container-fluid">
+    <div id="regionais" class="row">
+      
+      <%
+      const regionaisInfoArray = Object.values(regionaisInfo)
+      for(i=0;i<regionaisInfoArray.length;i++){%>
+
+
+        <%
+        const regionalInfo = regionaisInfoArray[i]
+        %>
+
+        <%- include('../partials/symmary_alianca_regional',{regionalInfo, summaries}); %>
+        
+        <%}%>
+      
     </div>
+  </div>
 
-    <div class="container-fluid">
-      <div id="regionais" class="row"></div>
-    </div>
+  <script>
 
-    <script>
-      $(document).ready(function () {
-        console.log("Ready disparado");
-        myFunction();
-        showOverlay();
+    
+
+    summaries = <%- JSON.stringify(summaries) %>
+    regionaisInfo = <%- JSON.stringify(regionaisInfo) %>
+    const regionaisInfoArray = Object.values(regionaisInfo)
+    $(document).ready(function () {
+      console.log("Ready disparado");
+
+      console.log(regionaisInfoArray)
+      myFunction();
+      // showOverlay();
+    });
+
+    var xValues = ["Total", "Iniciaram", "Terminaram"];
+    var yValues = [0, 0, 0, 0];
+    var barColors = ["yellow", "green"];
+
+    var myChart = new Chart("myChart", {
+      type: "bar",
+      data: {
+        labels: xValues,
+        datasets: [{
+          backgroundColor: barColors,
+          data: yValues,
+        }, ],
+      },
+      options: {
+        legend: {
+          display: false,
+        },
+        title: {
+          display: true,
+          text: "Cadastros",
+        },
+      },
+    });
+
+       
+    
+    const MONTHS = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ];
+
+    function months(config) {
+      var cfg = config || {};
+      var count = cfg.count || 12;
+      var section = cfg.section;
+      var values = [];
+      var i, value;
+
+      for (i = 0; i < count; ++i) {
+        value = MONTHS[Math.ceil(i) % 12];
+        values.push(value.substring(0, section));
+      }
+
+      return values;
+    }
+    
+    const labels = months({count: 20});
+
+    var myChart_2 = new Chart("myChart_2", {
+      type: "line",
+      data: {
+      labels: labels,
+      datasets: [{
+        label: 'Registros no tempo',
+        data: [65, 59, 80, 81, 56, 55, 40],
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1
+      }]
+    }
+      
+    });
+
+    function myFunction() {
+      var div = document.getElementById("regionais");
+      // callGetRegionais(div)
+      callGetGeneralInfo(div);
+    }
+
+    function addData(chart, label, data) {
+      chart.data.labels.push(label);
+      chart.data.datasets[0].data.push(data);
+      chart.update();
+    }
+
+    function setGeneralInfo(total, started, finished) {
+      console.log(myChart);
+
+      console.log(myChart.data);
+      myChart.data.datasets[0].data[0] = total;
+      myChart.data.datasets[0].data[1] = started;
+      myChart.data.datasets[0].data[2] = finished;
+
+      myChart.update();
+    }
+
+    function callGetGeneralInfo(div) {
+      let total = 0;
+      let started = 0;
+      let finished = 0;
+
+      regionaisInfoArray.forEach((regionalInfo) => {
+        total+=regionalInfo.centros.length
+        started+=regionalInfo.started
+        finished+=regionalInfo.summaries.length
       });
 
-      var xValues = ["Total", "Iniciaram", "Terminaram"];
-      var yValues = [0, 0, 0, 0];
-      var barColors = ["yellow", "green"];
+          setGeneralInfo(
+            total,started,finished
+          );
 
-      var myChart = new Chart("myChart", {
-        type: "bar",
-        data: {
-          labels: xValues,
-          datasets: [
-            {
-              backgroundColor: barColors,
-              data: yValues,
-            },
-          ],
-        },
-        options: {
-          legend: {
-            display: false,
-          },
-          title: {
-            display: true,
-            text: "Cadastros",
-          },
-        },
-      });
+          hideOverlay();
+       
+    }
+  </script>
 
-      function myFunction() {
-        var div = document.getElementById("regionais");
-        // callGetRegionais(div)
-        callGetGeneralInfo(div);
-      }
+  <br />
+  <footer><%- include('../partials/footer'); %></footer>
+</body>
 
-      function getDownloadButton(regionalName) {
-        let a = document.createElement("a");
-        a.setAttribute("class", "btn btn-primary");
-
-        a.setAttribute(
-          "onclick",
-          `DownloadRegionalResponses('${regionalName}')`
-        );
-        a.innerText = "Baixar Respostas";
-        return a;
-      }
-
-      function addCard(regionalInfo) {
-        let divCard = document.createElement("div");
-        divCard.setAttribute("id", `card_${regionalInfo.NOME_REGIONAL}`);
-        divCard.setAttribute("class", "card");
-        divCard.setAttribute("style", "width: 18rem;");
-
-        let divBody = document.createElement("div");
-        divBody.setAttribute("class", "card-body");
-
-        divCard.appendChild(divBody);
-
-        let h5 = document.createElement("h5");
-        h5.innerText = `${regionalInfo.NOME_REGIONAL} : ${regionalInfo.PAIS}`;
-
-        divBody.appendChild(h5);
-
-        let p = document.createElement("p");
-        p.setAttribute("class", "card-text");
-        p.innerText = "Recuperando Info";
-        divBody.appendChild(p);
-
-        let a = document.createElement("a");
-        a.setAttribute("class", "btn btn-primary");
-        a.setAttribute(
-          "href",
-          `/summary_coord?regionalName=${regionalInfo.NOME_REGIONAL}`
-        );
-        a.innerText = "Ver detalhes";
-        divBody.appendChild(a);
-
-        let downloadButton = getDownloadButton(regionalInfo.NOME_REGIONAL);
-        divBody.appendChild(downloadButton);
-
-        return divCard;
-      }
-
-      function addRegional(div, regionalInfo) {
-        let divCol = document.createElement("div");
-        divCol.setAttribute("class", "col-sm");
-
-        let regionalDiv = addCard(regionalInfo);
-        divCol.appendChild(regionalDiv);
-
-        div.appendChild(divCol);
-
-        return regionalDiv;
-      }
-
-      async function DownloadResponses() {
-        try {
-          var apiUrl = `bff/exportrgeneralresponses`;
-          let responseInfo = await fetch(apiUrl, {
-            headers: {
-              "Content-Type": "application/json",
-            },
-            method: "GET",
-          });
-
-          responseInfo = await responseInfo.json();
-          if (responseInfo.fileName) {
-            window.open(responseInfo.fileName);
-          }
-          return responseInfo;
-        } catch (error) {
-          console.log(`Error at Download General Report`, error);
-          throw error;
-        }
-      }
-
-      async function DownloadRegionalResponses(regionalName) {
-        try {
-          console.log(regionalName);
-          var apiUrl = `bff/exportregionalresponses?regionalName=${regionalName}`;
-          let responseInfo = await fetch(apiUrl, {
-            headers: {
-              "Content-Type": "application/json",
-            },
-            method: "GET",
-          });
-
-          responseInfo = await responseInfo.json();
-          if (responseInfo.fileName) {
-            window.open(responseInfo.fileName);
-          }
-          return responseInfo;
-        } catch (error) {
-          console.log(`Error at Download ${regionalName}`, error);
-          throw error;
-        }
-      }
-
-      function setRegionalInfo(div, data) {
-        console.log("DIVINFO", div);
-        let divclass = div.getAttribute("class");
-        console.log("Class", divclass);
-
-        let children = div.children[0].children[1];
-
-        let total = data.centros.length;
-        let respondido = data.summary.length;
-        let started = data.started;
-
-        const startedPercent = Math.round(100 * (started / total));
-        const finishedPercent = Math.round(100 * (respondido / total));
-
-        let color = "bg-warning";
-        if (finishedPercent < 50) {
-          color = "bg-danger";
-        } else if (finishedPercent == 100) {
-          color = "bg-success";
-        }
-
-        div.setAttribute("class", divclass.concat(" ").concat(color));
-        children.innerText = `Iniciado: ${started} (${startedPercent}%)\nFinalizado: ${respondido} (${finishedPercent}%)\nTotal: ${total}`;
-      }
-
-      function addData(chart, label, data) {
-        chart.data.labels.push(label);
-        chart.data.datasets[0].data.push(data);
-        chart.update();
-      }
-
-      function setGeneralInfo(total, started, finished) {
-        console.log(myChart);
-
-        console.log(myChart.data);
-        myChart.data.datasets[0].data[0] = total;
-        myChart.data.datasets[0].data[1] = started;
-        myChart.data.datasets[0].data[2] = finished;
-
-        myChart.update();
-      }
-
-      function callGetGeneralInfo(div) {
-        var apiUrl = `/bff/generalinfo`;
-        fetch(apiUrl, {
-          method: "GET",
-        })
-          .then((response) => {
-            return response.json();
-          })
-          .then((data) => {
-            const responses = data.responses;
-
-            let uniqueresponses = {};
-
-            for (const response of responses) {
-              if (!uniqueresponses[response.CENTRO_ID]) {
-                uniqueresponses[response.CENTRO_ID] = response;
-              }
-            }
-
-            const regionais = data.regionais;
-            const passes = data.passes;
-            const centros = data.centros;
-
-            let uniqueregionals = {};
-            for (const regional of regionais) {
-              if (!uniqueregionals.NOME_REGIONAL) {
-                uniqueregionals[regional.NOME_REGIONAL] = true;
-              }
-            }
-
-            let unique = Object.keys(uniqueregionals);
-
-            for (const regional of unique) {
-              const regionalInfo = {
-                NOME_REGIONAL: regional,
-                PAIS: " ",
-              };
-
-              let centrosOfRegional = centros.filter((m) => {
-                return m.REGIONAL.NOME_REGIONAL == regional;
-              });
-
-              let started = 0;
-              //augment with started info
-              console.log("REGIONAL", regional);
-              for (const centroInfo of centrosOfRegional) {
-                const hasStarted = passes.find((m) => {
-                  return m.scope_id === centroInfo.ID;
-                });
-
-                console.log("CENTRO", hasStarted, centroInfo);
-                if (hasStarted) {
-                  started++;
-                }
-              }
-
-              const centrosOfRegionalIDs = centrosOfRegional.map((n) => {
-                return n.ID;
-              });
-
-              const regionalResponses = [];
-              for (const id of centrosOfRegionalIDs) {
-                const response = responses.find((m) => {
-                  return m.CENTRO_ID.includes(id);
-                });
-
-                if (response) {
-                  regionalResponses.push(response);
-                }
-              }
-              let regionalDiv = addRegional(div, regionalInfo);
-              setRegionalInfo(regionalDiv, {
-                started: started,
-                centros: centrosOfRegional,
-                summary: regionalResponses,
-              });
-            }
-
-            let started = passes.filter((m) => {
-              return m.groups.includes("presidente");
-            });
-
-            let responseslength = Object.keys(uniqueresponses);
-
-            setGeneralInfo(
-              centros.length,
-              started.length,
-              responseslength.length
-            );
-
-            hideOverlay();
-          })
-          .catch((err) => {
-            console.log("---ERROR---", err);
-            throw err;
-            // Do something for an error here
-          });
-      }
-    </script>
-
-    <br />
-    <footer><%- include('../partials/footer'); %></footer>
-  </body>
 </html>

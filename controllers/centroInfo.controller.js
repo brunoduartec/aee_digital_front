@@ -1,3 +1,4 @@
+const { isArray } = require("jquery");
 const config = require("../helpers/config");
 
 module.exports = class CentroInfoController {
@@ -59,15 +60,14 @@ module.exports = class CentroInfoController {
 
   async getCentroInfo(regional, nome, nome_curto) {
     try {
-      // this.logger.info(
-      //   `controller:centroinfo.controller:getCentroInfo: ${regional}: ${nome}: ${nome_curto}`
-      // );
-
+      let centroInfo
       let centroInfoByName = this.cache[regional][nome];
 
-      let centroInfo = centroInfoByName.find((m) => {
-        return m.centro.short === nome_curto;
-      });
+      if(Array.isArray(centroInfoByName)){
+        centroInfo = centroInfoByName.find((m) => {
+          return m.centro.short === nome_curto;
+        });
+      }
 
       return centroInfo;
     } catch (error) {

@@ -1,37 +1,53 @@
-module.exports = class trabalhosController {
+const IController = require("./icontroller")
+
+module.exports = class trabalhosController extends IController {
   constructor(
     parser = require("../helpers/parser"),
-    logger = require("../helpers/logger"),
     Request = require("../helpers/request")
   ) {
-    const instance = this.constructor.instance;
-    if (instance) {
-      return instance;
-    }
+    
+    super("trabalhos")
 
     this.parser = parser;
-    this.logger = logger;
     this.request = new Request();
 
-    this.cache = {};
-    this.constructor.instance = this;
   }
 
   async initialize() {
-    await this.generateInfoByCache();
+    try {
+      const formatedKey = this.getKeyFormated(`initialized`)
+      const initialized = await this.cache.get(formatedKey)
+      if(!initialized){
+        await this.generateInfoByCache();
+        await this.cache.set(formatedKey,true)
+      }
+      
+    } catch (error) {
+      throw new Error(error)
+    }
   }
 
   async getFormQuestions(questionName) {
-    return this.cache.form ? this.cache.form[questionName] : null;
+    const formatedKey = this.getKeyFormated(`form:${questionName}`)
+    const formCached = await this.cache.get(formatedKey)
+
+    return formCached[questionName]
   }
 
-  async setFormQuestions(formTemplate, questionName) {
-    const formTemplateInfo = formTemplate[0];
+  async generateFormQuestionCache() {
+    const cadastroFormName = "Cadastro de Informações Anual";
+      const params = {
+        NAME: cadastroFormName,
+      };
+      let form = await this.getFormByParams(
+        this.parser.getParamsParsed(params)
+      );
+
+    const formTemplateInfo = form[0];
     let pages = formTemplateInfo.PAGES;
-    if (!this.cache.form) {
-      this.cache.form = {};
-    }
-    this.cache.form[questionName] = [];
+    
+    const formatedKey = this.getKeyFormated(`form:${questionName}`)
+    await this.cache.remove(formatedKey)
 
     for (let index = 0; index < pages.length; index++) {
       let pageInfo = [];
@@ -56,44 +72,40 @@ module.exports = class trabalhosController {
         }
       }
 
-      this.cache.form[questionName].push(pageInfo);
+      await this.cache.set(formatedKey,pageInfo)
     }
+  }
+
+  async generateCoordQuizCache(){
+    let paramsParsed = this.parser.getParamsParsed({
+      CATEGORY: "Coordenador",
+    });
+    let coord_quiz = await this.getQuizTemplateByParams(paramsParsed);
+    let formatedKey = this.getKeyFormated(`coord_quiz`)
+    await this.cache.set(formatedKey,coord_quiz) 
+
+    paramsParsed = this.parser.getParamsParsed({
+        QUIZ_ID: coord_quiz[0].ID,
+      });
+    const coord_responses = await this.getQuizResponseByParams(
+      paramsParsed
+    );
+
+    formatedKey = this.getKeyFormated(`coord_responses`)
+    await this.cache.set(formatedKey, coord_responses)
   }
 
   async generateInfoByCache() {
     try {
-      let paramsParsed = this.parser.getParamsParsed({
-        CATEGORY: "Coordenador",
-      });
-
       this.logger.info(
         `controller:trabalhos.controller:Start Caching Trabalho`
       );
 
-      let coord_quiz = await this.getQuizTemplateByParams(paramsParsed);
-
-      this.cache.coord_quiz = coord_quiz;
-
-      paramsParsed = this.parser.getParamsParsed({
-        QUIZ_ID: coord_quiz[0].ID,
-      });
-
-      this.cache.coord_responses = await this.getQuizResponseByParams(
-        paramsParsed
-      );
+      await this.generateCoordQuizCache()
 
       this.getSummaries();
 
-      const cadastroFormName = "Cadastro de Informações Anual";
-      const params = {
-        NAME: cadastroFormName,
-      };
-      let form = await this.getFormByParams(
-        this.parser.getParamsParsed(params)
-      );
-
-      await this.setFormQuestions(form, cadastroFormName);
-      this.logger.info(`controller:trabalhos.controller:generateInfoByCache`);
+      await this.generateFormQuestionCache();
     } catch (error) {
       this.logger.error(
         `controller:trabalhos.controller: error reading cache: ${error}`
@@ -102,11 +114,23 @@ module.exports = class trabalhosController {
     }
   }
 
+  async getCoordResponses(){
+    const formatedKey = this.getKeyFormated(`coord_responses`)
+    const coord_responses = await this.cache.get(formatedKey)
+    return coord_responses
+  }
+
   async getCoordResponsesByCentroId(centroid) {
     try {
-      return this.cache.coord_responses.filter((m) => {
-        return m.CENTRO_ID == centroid;
-      });
+      const formatedKey = this.getKeyFormated(`coord_responses`)
+      const coord_responses = await this.cache.get(formatedKey)
+
+      if(coord_responses){
+        return coord_responses.filter((m) => {
+          return m.CENTRO_ID == centroid;
+        });
+      }
+
     } catch (error) {
       this.logger.error(
         `trabalhocontroller:getCoordResponsesByCentroId: ${error}`
@@ -115,8 +139,12 @@ module.exports = class trabalhosController {
     }
   }
 
-  checkQuestionInCoordQuiz(questionId) {
-    let questions = this.cache.coord_quiz[0].QUESTIONS[0].GROUP;
+  async checkQuestionInCoordQuiz(questionId) {
+
+    const formatedKey = this.getKeyFormated(`coord_quiz`)
+    const coord_quiz = await this.cache.get(formatedKey)
+    
+    let questions =coord_quiz[0].QUESTIONS[0].GROUP;
 
     return questions.find((m) => {
       return m._id === questionId;
@@ -124,7 +152,9 @@ module.exports = class trabalhosController {
   }
 
   async updateCoordResponseByCentroId(questionId, answerid, response) {
-    let c = this.cache.coord_responses;
+    // let c = this.cache.coord_responses;
+    const formatedKey = this.getKeyFormated(`coord_responses`)
+    let c = await this.cache.get(formatedKey)
 
     let questionToUpdate = c.find((m) => {
       return m.QUESTION_ID._id === questionId && m.ID === answerid;
@@ -176,26 +206,21 @@ module.exports = class trabalhosController {
 
   async getAtividadesCentroSummaryByParams(params) {
     try {
-      if (
-        !this.cache.getAtividadesCentroSummaryByParams &&
-        this.cache.getAtividadesCentroSummaryByParams[params]
-      ) {
-        return this.cache.getAtividadesCentroSummaryByParams[params];
+
+      const formatedKey = this.getKeyFormated(`atividade_centro_summary:${params}`)
+      const getAtividadesCentroSummaryByParams = await this.cache.get(formatedKey)
+      
+      if(getAtividadesCentroSummaryByParams)
+      {
+        return getAtividadesCentroSummaryByParams;
       } else {
         const atividades = await this.request.get(
           "aee_digital_trabalhos",
           `/atividade_centro_summary?${params}`
         );
 
-        if (!this.cache.getAtividadesCentroSummaryByParams) {
-          this.cache.getAtividadesCentroSummaryByParams = {};
-        }
+        await this.cache.set(formatedKey, atividades)
 
-        this.cache.getAtividadesCentroSummaryByParams[params] = atividades;
-
-        // this.logger.info(
-        //   `controller:trabalhos.controller:getAtividadesCentroSummaryByParams", ${atividades}`
-        // );
         return atividades;
       }
     } catch (error) {
@@ -208,17 +233,28 @@ module.exports = class trabalhosController {
 
   async getFormByParams(params) {
     try {
-      const form = await this.request.get(
-        "aee_digital_trabalhos",
-        `/atividade_generic_form?${params}`
-      );
+      const formatedKey = this.getKeyFormated(`atividade_generic_form:${params}`)
+      let form = await this.cache.get(formatedKey)
 
-      // this.logger.info(
-      //   `controller:trabalhos.controller:getFormByParams => ${JSON.stringify(
-      //     form
-      //   )}`
-      // );
-      return form;
+      if(form){
+        return form
+      }else{
+        const form = await this.request.get(
+          "aee_digital_trabalhos",
+          `/atividade_generic_form?${params}`
+        );
+  
+        // this.logger.info(
+        //   `controller:trabalhos.controller:getFormByParams => ${JSON.stringify(
+        //     form
+        //   )}`
+        // );
+        await this.cache.set(formatedKey,form)
+        return form;
+      }
+
+
+      
     } catch (error) {
       this.logger.error(
         `controller:trabalhos.controller:getFormByParams: Error=> ${error}`
@@ -229,17 +265,29 @@ module.exports = class trabalhosController {
 
   async getQuizTemplates() {
     try {
-      const quiz = await this.request.get(
-        "aee_digital_trabalhos",
-        `/atividade_generic_quiz`
-      );
 
-      // this.logger.info(
-      //   `controller:trabalhos.controller:getQuizTemplates ${JSON.stringify(
-      //     quiz
-      //   )}`
-      // );
-      return quiz;
+      const formatedKey = this.getKeyFormated(`atividade_generic_quiz`)
+      let quiz = awaitthis.cache.get(formatedKey)
+
+      if(quiz){
+        return quiz
+      }else{
+        quiz = await this.request.get(
+          "aee_digital_trabalhos",
+          `/atividade_generic_quiz`
+        );
+  
+        // this.logger.info(
+        //   `controller:trabalhos.controller:getQuizTemplates ${JSON.stringify(
+        //     quiz
+        //   )}`
+        // );
+
+        await this.cache.set(formatedKey,quiz)
+        return quiz;
+      }
+
+      
     } catch (error) {
       this.logger.error(
         `controller:trabalhos.controller:getQuizTemplates: Error=> ${error}`
@@ -250,17 +298,29 @@ module.exports = class trabalhosController {
 
   async getQuizTemplateByParams(params) {
     try {
-      const quiz = await this.request.get(
-        "aee_digital_trabalhos",
-        `/atividade_generic_quiz?${params}`
-      );
 
-      // this.logger.info(
-      //   `controller:trabalhos.controller:getQuizTemplateByParams ${JSON.stringify(
-      //     quiz
-      //   )}`
-      // );
-      return quiz;
+      const formatedKey = this.getKeyFormated(`atividade_generic_quiz:${params}`)
+      let quiz = await this.cache.get(formatedKey)
+
+      if(quiz){
+        return quiz
+      }
+      else{
+        quiz = await this.request.get(
+          "aee_digital_trabalhos",
+          `/atividade_generic_quiz?${params}`
+        );
+  
+        // this.logger.info(
+        //   `controller:trabalhos.controller:getQuizTemplateByParams ${JSON.stringify(
+        //     quiz
+        //   )}`
+        // );
+        await this.cache.set(formatedKey,quiz)
+        return quiz;
+
+      }
+      
     } catch (error) {
       this.logger.error(
         `trabalhos.controller.getQuizTemplateByParams: Error=> ${error}`
@@ -271,15 +331,29 @@ module.exports = class trabalhosController {
 
   async getQuestionByParams(params) {
     try {
-      const quiz = await this.request.get(
-        "aee_digital_trabalhos",
-        `/atividade_generic_question?${params}`
-      );
 
-      // this.logger.info(
-      //   `controller:trabalhos.controller:getQuestionByParams ${quiz}`
-      // );
-      return quiz;
+      const formatedKey = this.getKeyFormated(`atividade_generic_question:${params}`)
+      let question = await this.cache.get(formatedKey)
+
+      if(question){
+        return question
+      }
+      else{
+        question = await this.request.get(
+          "aee_digital_trabalhos",
+          `/atividade_generic_question?${params}`
+        );
+  
+        // this.logger.info(
+        //   `controller:trabalhos.controller:getQuestionByParams ${quiz}`
+        // );
+
+        await this.cache.set(formatedKey,question)
+        return question;
+      }
+
+
+     
     } catch (error) {
       this.logger.error(
         `controller:trabalhos.controller:getQuestionByParams: Error=> ${error}`
@@ -290,15 +364,27 @@ module.exports = class trabalhosController {
 
   async getGroupQuestionByParams(params) {
     try {
-      const quiz = await this.request.get(
-        "aee_digital_trabalhos",
-        `/atividade_generic_group_question?${params}`
-      );
 
-      // this.logger.info(
-      //   `controller:trabalhos.controller:getGroupQuestionByParams ${quiz}`
-      // );
-      return quiz;
+      const formatedKey = this.getKeyFormated(`atividade_generic_group_question:${params}`)
+      let group = await this.cache.get(formatedKey)
+
+      if(group){
+        return group
+      }
+      else{
+        group = await this.request.get(
+          "aee_digital_trabalhos",
+          `/atividade_generic_group_question?${params}`
+        );
+  
+        // this.logger.info(
+        //   `controller:trabalhos.controller:getGroupQuestionByParams ${quiz}`
+        // );
+        await thi.cache.set(formatedKey,group)
+        return group;
+      }
+
+      
     } catch (error) {
       this.logger.error(
         `controller:trabalhos.controller:getGroupQuestionByParams: Error=> ${error}`
@@ -309,13 +395,25 @@ module.exports = class trabalhosController {
 
   async getRequiredQuestions() {
     try {
-      const requiredQuestions = await this.getQuestionByParams(
-        this.parser.getParamsParsed({
-          IS_REQUIRED: true,
-        })
-      );
+      const formatedKey = this.getKeyFormated(`getRequiredQuestions`)
+      const questions = await this.cache.get(formatedKey)
 
-      return requiredQuestions;
+      if(questions){
+        return questions
+      }
+      else{
+        questions = await this.getQuestionByParams(
+          this.parser.getParamsParsed({
+            IS_REQUIRED: true,
+          })
+        );
+
+        await this.cache.set(formatedKey,questions)
+  
+        return questions;
+      }
+
+    
     } catch (error) {
       this.logger.error(
         `controller:trabalhos.controller:getRequiredQuestions: Error=> ${error}`
@@ -326,17 +424,53 @@ module.exports = class trabalhosController {
 
   async getQuizResponseByParams(params) {
     try {
-      const quiz_response = await this.request.get(
-        "aee_digital_trabalhos",
-        `/atividade_generic_quiz_answer?${params}`
-      );
+      const unparsedParams = this.parser.getQueryParamsParsed(params)
+      let formatedKey = this.getKeyFormated(`atividade_generic_quiz_answer`)
 
-      // this.logger.info(
-      //   `controller:trabalhos.controller:getQuizResponseByParams ${JSON.stringify(
-      //     quiz_response
-      //   )}`
-      // );
-      return quiz_response;
+      if(unparsedParams.CENTRO_ID){
+        formatedKey = formatedKey.concat(`:CENTROID:${unparsedParams.CENTRO_ID}`)
+      }
+      
+      if(unparsedParams["QUESTION_ID._id"]){
+        formatedKey = formatedKey.concat(`:QUESTION_ID._id:${unparsedParams["QUESTION_ID._id"]}`)
+      }
+
+
+      if(unparsedParams["QUESTION_ID.IS_REQUIRED"]){
+        formatedKey = formatedKey.concat(`:QUESTION_ID.IS_REQUIRED:${unparsedParams["QUESTION_ID.IS_REQUIRED"]}`)
+      }
+      
+
+      if(unparsedParams["_id"]){
+        formatedKey = formatedKey.concat(`:_id:${unparsedParams["_id"]}`)
+      }
+
+      if(unparsedParams["QUIZ_ID"]){
+        formatedKey = formatedKey.concat(`:QUIZ_ID:${unparsedParams["QUIZ_ID"]}`)
+      }
+
+      if(unparsedParams["QUESTION_ID._id"]){
+        formatedKey = formatedKey.concat(`:QUESTION_ID._id:${unparsedParams["QUESTION_ID._id"]}`)
+      }
+
+
+      // const formatedKey = this.getKeyFormated(`atividade_generic_quiz_answer:${params}`)
+      let quiz_response = await this.cache.get(`${formatedKey}`)
+
+      if(quiz_response){
+        return quiz_response
+      }
+      else{
+        let quiz_response = await this.request.get(
+          "aee_digital_trabalhos",
+          `/atividade_generic_quiz_answer?${params}`
+        );
+  
+        await this.cache.set(formatedKey,quiz_response)
+        return quiz_response;
+      }
+
+    
     } catch (error) {
       this.logger.error(
         `controller:trabalhos.controller:getQuizResponseByParams: Error=> ${error}`
@@ -355,6 +489,10 @@ module.exports = class trabalhosController {
       // this.logger.info(
       //   `controller:trabalhos.controller:deleteQuizResponseByParams ${quiz_response}`
       // );
+
+      const formatedKey = this.getKeyFormated(`atividade_generic_quiz_answer:${params}`)
+      await await this.cache.remove(formatedKey)
+
       return quiz_response;
     } catch (error) {
       this.logger.error(
@@ -375,6 +513,12 @@ module.exports = class trabalhosController {
       this.logger.info(
         `controller:trabalhos.controller:updatePass => ${JSON.stringify(pass)}`
       );
+
+      const formatedKey = this.getKeyFormated(`pass:${params}`)
+      
+      await this.cache.remove( this.getKeyFormated("pass"))
+      await this.cache.set(formatedKey, pass)
+
       return pass;
     } catch (error) {
       this.logger.error(
@@ -386,15 +530,25 @@ module.exports = class trabalhosController {
 
   async getPasses() {
     try {
-      const atividades = await this.request.get(
-        "aee_digital_trabalhos",
-        `/pass`
-      );
+      const formatedKey = this.getKeyFormated(`pass`)
+      const passes = await this.cache.get(formatedKey)
 
-      // this.logger.info(
-      //   `controller:trabalhos.controller:getPasses ${atividades}`
-      // );
-      return atividades;
+      if(passes){
+        return passes
+      }else{
+        const passes = await this.request.get(
+          "aee_digital_trabalhos",
+          `/pass`
+        );
+  
+        // this.logger.info(
+        //   `controller:trabalhos.controller:getPasses ${atividades}`
+        // );
+        await this.cache.set(formatedKey,passes)
+        return passes;
+      }
+
+      
     } catch (error) {
       this.logger.error(
         `controller:trabalhos.controller:getPasses: Error=> ${error}`
@@ -405,21 +559,28 @@ module.exports = class trabalhosController {
 
   async getSummaries() {
     try {
-      if (this.cache.getSummaries) {
-        return this.cache.getSummaries;
-      } else {
+      const formatedKey = this.getKeyFormated(`atividade_generic_quiz_summary`)
+      let summaries = await this.cache.get(formatedKey)
+      // let summaries = this.localcache.getSummaries
+      if(summaries){return summaries}
+      else{
         const quiz_summaries = await this.request.get(
           "aee_digital_trabalhos",
           `/atividade_generic_quiz_summary`
         );
 
-        this.cache.getSummaries = quiz_summaries;
-        // this.logger.info(
-        //   `controller:trabalhos.controller:getSummaries => ${JSON.stringify(
-        //     quiz_summaries
-        //   )}`
-        // );
-        return quiz_summaries;
+        let summariesFormated = quiz_summaries.map((s)=>{
+          return {
+            CENTRO_ID:s.CENTRO_ID,
+            LASTMODIFIED: s.LASTMODIFIED,
+            ID: s.ID
+          }
+        })
+
+        await this.cache.set(formatedKey, summariesFormated)
+        // this.localcache.getSummaries = summariesFormated;
+        
+        return summariesFormated;
       }
     } catch (error) {
       this.logger.error(
@@ -429,56 +590,22 @@ module.exports = class trabalhosController {
     }
   }
 
-  async getPassByParams(params) {
-    try {
-      const passes = await this.request.get(
-        "aee_digital_trabalhos",
-        `/pass?${params}`
-      );
-
-      // this.logger.info(
-      //   `controller:trabalhos.controller:getPassByParams => ${JSON.stringify(
-      //     passes
-      //   )}`
-      // );
-      return passes;
-    } catch (error) {
-      this.logger.error(
-        `controller:trabalhos.controller:getPassByParams: Error=> ${error}`
-      );
-      throw error;
-    }
-  }
-
-  async postPass(params) {
-    try {
-      const pass = await this.request.post(
-        "aee_digital_trabalhos",
-        `/pass`,
-        params
-      );
-
-      // this.logger.info(`controller:trabalhos.controller:postPass => ${pass}`);
-      return pass;
-    } catch (error) {
-      this.logger.error(
-        `controller:trabalhos.controller:postPass: Error=> ${error}`
-      );
-      throw error;
-    }
-  }
-
   async putQuizResponse(params, value) {
     try {
+      const unparsedParams = this.parser.getQueryParamsParsed(params)
+
       const quiz_response = await this.request.put(
         "aee_digital_trabalhos",
         `/atividade_generic_quiz_answer?${params}`,
         value
       );
 
-      // this.logger.info(
-      //   `controller:trabalhos.controller:putQuizResponse ${quiz_response}`
-      // );
+      // const centro_id;
+
+      const formatedKey = this.getKeyFormated(`atividade_generic_quiz_answer`)
+      await this.cache.remove(`${formatedKey}:${unparsedParams.CENTRO_ID}` );
+      await this.cache.set(`${formatedKey}:${unparsedParams.CENTRO_ID}:${unparsedParams.answerId}`, quiz_response)
+
       return quiz_response;
     } catch (error) {
       this.logger.error(
@@ -490,6 +617,8 @@ module.exports = class trabalhosController {
 
   async postQuizResponse(params) {
     try {
+      const unparsedParams = this.parser.getQueryParamsParsed(params)
+
       const quiz_response = await this.request.post(
         "aee_digital_trabalhos",
         `/atividade_generic_quiz_answer`,
@@ -499,6 +628,11 @@ module.exports = class trabalhosController {
       // this.logger.info(
       //   `controller:trabalhos.controller:postQuizResponse ${quiz_response}`
       // );
+
+      const formatedKey = this.getKeyFormated(`atividade_generic_quiz_answer`)
+       await this.cache.remove(`${formatedKey}:${unparsedParams.CENTRO_ID}` );
+       await this.cache.set(`${formatedKey}:${unparsedParams.CENTRO_ID}:${unparsedParams.answerId}`, quiz_response)
+
       return quiz_response;
     } catch (error) {
       this.logger.error(
@@ -510,15 +644,29 @@ module.exports = class trabalhosController {
 
   async getQuizResponses() {
     try {
-      const quiz_response = await this.request.get(
-        "aee_digital_trabalhos",
-        `/atividade_generic_quiz_answer`
-      );
 
-      // this.logger.info(
-      //   `controller:trabalhos.controller:getQuizResponses ${quiz_response}`
-      // );
-      return quiz_response;
+      const formatedKey = this.getKeyFormated(`atividade_generic_quiz_answer`)
+      
+      let quiz_response = await this.cache.get(`${formatedKey}`)
+
+      if(quiz_response){
+        return quiz_response
+      }else{
+        quiz_response = await this.request.get(
+          "aee_digital_trabalhos",
+          `/atividade_generic_quiz_answer`
+        );
+  
+        // this.logger.info(
+        //   `controller:trabalhos.controller:getQuizResponses ${quiz_response}`
+        // );
+
+        await this.cache.set(formatedKey, quiz_response)
+
+        return quiz_response;
+      }
+
+      
     } catch (error) {
       this.logger.error(
         `controller:trabalhos.controller:getQuizResponses: Error=> ${error}`
@@ -529,15 +677,27 @@ module.exports = class trabalhosController {
 
   async getPessoaByParams(params) {
     try {
-      const pessoa = await this.request.get(
-        "aee_digital_trabalhos",
-        `/pessoa?${params}`
-      );
+      const formatedKey = this.getKeyFormated(`pessoa:${params}`)
+      let pessoa = await this.cache.get(formatedKey)
 
-      // this.logger.info(
-      //   `controller:trabalhos.controller:getPessoaParams  ${pessoa}`
-      // );
-      return pessoa;
+      if(pessoa){
+        return pessoa
+      }
+      else{
+        pessoa = await this.request.get(
+          "aee_digital_trabalhos",
+          `/pessoa?${params}`
+        );
+  
+
+        await this.cache.set(`${formatedKey}`, pessoa)
+        // this.logger.info(
+        //   `controller:trabalhos.controller:getPessoaParams  ${pessoa}`
+        // );
+        return pessoa;
+      }
+
+    
     } catch (error) {
       this.logger.error(
         `controller:trabalhos.controller:getPessoaParams: Error=> ${error}`
@@ -548,15 +708,29 @@ module.exports = class trabalhosController {
 
   async getQuizSummaryByParams(params) {
     try {
-      const quiz_summarie = await this.request.get(
-        "aee_digital_trabalhos",
-        `/atividade_generic_quiz_summary?${params}`
-      );
 
-      // this.logger.info(
-      //   `controller:trabalhos.controller:getQuizSummaryByParams ${quiz_summarie}`
-      // );
-      return quiz_summarie;
+      const formatedKey = this.getKeyFormated(`atividade_generic_quiz_summary:${params}`)
+      let quiz_summary = await this.cache.get(formatedKey)
+
+      if(quiz_summary){
+        return quiz_summary
+      }
+      else{
+        quiz_summary = await this.request.get(
+          "aee_digital_trabalhos",
+          `/atividade_generic_quiz_summary?${params}`
+        );
+  
+        // this.logger.info(
+        //   `controller:trabalhos.controller:getQuizSummaryByParams ${quiz_summarie}`
+        // );
+
+          await this.cache.set(formatedKey, quiz_summary)
+
+        return quiz_summary;
+      }
+
+      
     } catch (error) {
       this.logger.error(
         `controller:trabalhos.controller:getQuizSummaryByParams: Error=> ${error}`
@@ -566,13 +740,17 @@ module.exports = class trabalhosController {
   }
   async postQuizSummary(params) {
     try {
-      this.cache.getSummaries = null;
+      const formatedKey = this.getKeyFormated(`atividade_generic_quiz_summary`)
+
+      await this.cache.remove(formatedKey)
 
       const quiz_summary = await this.request.post(
         "aee_digital_trabalhos",
         `/atividade_generic_quiz_summary`,
         params
       );
+
+      await this.cache.set(formatedKey, quiz_summary)
 
       // this.logger.info(
       //   `controller:trabalhos.controller:postQuizSummary ${quiz_summary}`
@@ -588,7 +766,9 @@ module.exports = class trabalhosController {
 
   async putQuizSummary(params, value) {
     try {
-      this.cache.getSummaries = null;
+      const formatedKey = this.getKeyFormated(`atividade_generic_quiz_summary`)
+
+      await this.cache.remove(formatedKey)
 
       const quiz_summary = await this.request.put(
         "aee_digital_trabalhos",
@@ -596,6 +776,8 @@ module.exports = class trabalhosController {
         value
       );
 
+
+      await this.cache.set(formatedKey, quiz_summary)
       // this.logger.info(
       //   `controller:trabalhos.controller:putQuizSummary ${quiz_summary}`
       // );

@@ -225,7 +225,7 @@
             <%
             questionInfo = defaultOptionResponse
             %>
-            <%- include('../partials/sub_quiz_option', {question:questionInfo});%>
+            <%- include('../partials/sub_quiz_option', {question:questionInfo, centroId:centro.ID });%>
           </div>
         </span>
         <span class="border col-md-1"
@@ -233,7 +233,7 @@
             <%
             questionInfo = defaultResponse
             %>
-            <%- include('../partials/sub_quiz_input', {question:questionInfo});%></div></span
+            <%- include('../partials/sub_quiz_input', {question:questionInfo, centroId:centro.ID });%></div></span
         >
         <span class="border col-md-2"
           ><div class="form-group"><p name="data_avaliacao">
@@ -284,12 +284,9 @@
   
 
               responseInfo = await responseInfo.json();
-              console.log("AAAAAAAQUIIII", responseInfo)
               if(responseInfo.fileName){
                 window.open(responseInfo.fileName);
               }
-              console.log("VOLTOU", responseInfo)
-
               return responseInfo
               
             } catch (error) {
@@ -363,6 +360,7 @@
           async function getCentroResponses(centroId){
             try {
               var coord_quiz = '<%- JSON.stringify(coord_quiz) %>'
+              console.log("QUIZ", coord_quiz)
               var apiUrl = `bff/coord_responses?centroID=${centroId}`;
               let responseInfo = await fetch(apiUrl,{
                 headers: {
@@ -429,7 +427,7 @@
            
             const avaliacao = centroDiv.children[5].children[0].children[0]
             
-            if(centroSummary && centroSummary.ANSWERS.length>0){
+            if(centroSummary){
               const Atualizadas = document.getElementById("Atualizadas")
               let AtualizadasAmount = parseInt(Atualizadas.innerText)
               AtualizadasAmount = AtualizadasAmount +1

@@ -83,7 +83,10 @@ module.exports = class QuizActions {
 
   async send(req, res, action_info) {
     let { centro_id } = action_info;
-    let paramsParsed = `CENTRO_ID=${centro_id}`;
+
+    let paramsParsed = this.parser.getParamsParsed({
+      CENTRO_ID: centro_id
+    })
 
     const quiz_responses =
       await this.trabalhocontroller.getQuizResponseByParams(paramsParsed);
@@ -113,10 +116,8 @@ module.exports = class QuizActions {
         await this.userinfocontroller.checkUserWasInitialized(action_info);
 
       if (!checkWasInitialized) {
-        let centro = await this.regionalcontroller.getCentroByCacheByID(
-          centro_id
-        );
-        await this.userinfocontroller.insertAnswers(centro);
+          centro = await this.regionalcontroller.getCentroByParam(`_id=${centro_id}`)
+          await this.userinfocontroller.insertAnswers(centro);
       }
 
       const form_info = await this.userinfocontroller.getFormInfo(
@@ -124,10 +125,10 @@ module.exports = class QuizActions {
         form_alias,
         page
       );
-
-      this.logger.info(
-        `helpers:quiz_actions:open => ${JSON.stringify(form_info)}`
-      );
+ 
+      // this.logger.info(
+      //   `helpers:quiz_actions:open => ${JSON.stringify(form_info)}`
+      // ); 
 
       res.render("pages/quiz", {
         index: page,

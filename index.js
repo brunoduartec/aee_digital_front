@@ -1,13 +1,21 @@
 /* eslint-disable no-undef */
-const bootstrap = require("./bootstrap");
-(async () => {
+
+const Cache = require("./helpers/cache");
+const cache = new Cache();
+const logger = require("./helpers/logger");
+
+cache.on('connected', async ()=>{
+  logger.info("Start Initializing Controllers")
+  const bootstrap = require("./bootstrap");
   await bootstrap.initialize();
-})();
+} )
+
+cache.connect();
 
 const http = require("http");
 
 const server = require("./server")();
-const logger = require("./helpers/logger");
+
 
 const config = require("./helpers/config");
 

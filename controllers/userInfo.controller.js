@@ -19,6 +19,9 @@ module.exports = class UserInfoController {
   }
 
   getInfo(item, param) {
+    if(!item)
+    return null;
+
     let sub_params = param.split(".");
     let sub;
 
@@ -52,13 +55,17 @@ module.exports = class UserInfoController {
 
   async insertAnswers(centro) {
     try {
-      let centroInfo = await this.centroinfocontroller.getCentroInfo(
-        decodeURIComponent(centro.REGIONAL.NOME_REGIONAL),
-        decodeURIComponent(centro.NOME_CENTRO),
-        decodeURIComponent(centro.NOME_CURTO)
-      );
 
-      centroInfo = centroInfo.centro;
+      let centroInfo
+      if (centro?.REGIONAL?.NOME_REGIONAL && centro?.NOME_CENTRO && centro?.NOME_CURTO) {
+        centroInfo = await this.centroinfocontroller.getCentroInfo(
+          decodeURIComponent(centro.REGIONAL.NOME_REGIONAL),
+          decodeURIComponent(centro.NOME_CENTRO),
+          decodeURIComponent(centro.NOME_CURTO)
+        );
+
+        centroInfo = centroInfo?.centro || null;
+      }
 
       const cadastroFormName = "Cadastro de Informações Anual";
 

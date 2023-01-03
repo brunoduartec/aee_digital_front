@@ -1,23 +1,9 @@
 var express = require('express');
 var router = express.Router();
 
-const readXlsxFile = require("read-excel-file/node");
 const logger = require("../helpers/logger");
-const parser = require("../helpers/parser");
 
 var session = require("express-session");
-
-const trabalhosController = require("../controllers/trabalhos.controller");
-const trabalhoscontroller = new trabalhosController();
-
-const authController = require("../controllers/auth.controller");
-const authcontroller = new authController(
-  logger,
-  readXlsxFile,
-  trabalhoscontroller,
-  parser
-);
-authcontroller.generatePassCache();
 
 const sessionController = require("../controllers/session.controller")
 const sessioncontroller = new sessionController();

@@ -105,12 +105,34 @@ router.get("/bff/regional", async function (req, res) {
   }
 });
 
+router.get("/bff/getregionalinfo", async function(req,res){
+  try {
+   
+    const regionalName = req.query.regionalName;
+    console.log("ENTROU AQUI-----------------", regionalName)
+    const centros = await regionalcontroller.getCentrosByRegional(regionalName)
+
+    const summaries = await trabalhoscontroller.getSummaries();
+
+   
+
+
+    res.json({
+      responses,
+      centros,
+    });
+  } catch (error) {
+    this.logger.error(`/bff/generalinfo: ${error}`);
+    throw error;
+  }
+})
+
 router.get("/bff/generalinfo", async function (req, res) {
   try {
     const passes = await trabalhoscontroller.getPasses();
     const responses = await trabalhoscontroller.getSummaries();
     const regionais = await regionalcontroller.getRegionais();
-    const centros = await regionalcontroller.getCentrosByCache();
+    const centros = await regionalcontroller.getCentros();
 
     res.json({
       passes: passes,
@@ -198,7 +220,7 @@ router.get("/bff/situacao", async function (req, res) {
       let situacao = await trabalhoscontroller.getQuizResponseByParams(
         parser.getParamsParsed({
           CENTRO_ID: id,
-          QUESTION_ID: question.ID,
+          "QUESTION_ID._id": question.ID,
         })
       );
       situacao = situacao[0];
@@ -470,12 +492,33 @@ router.post("/bff/add_answer", requireAuth, async function (req, res) {
   }
 });
 
+router.get("/bff/get_answer", requireAuth, async function (req, res) {
+  try {
+    const answer = req.originalUrl;
+    let paramsFrom = parser.getQueryParamsParsed(answer);
+
+    let paramsParsed = parser.getParamsParsed({
+      CENTRO_ID: paramsFrom.centroId,
+      _id: paramsFrom.answerId,
+    });
+    const quizResponse = await trabalhoscontroller.getQuizResponseByParams(
+      paramsParsed
+     
+    );
+    res.json(quizResponse);
+  } catch (error) {
+    this.logger.error(`/bff/update_answer: ${error}`);
+    throw error;
+  }
+});
+
 router.put("/bff/update_answer", requireAuth, async function (req, res) {
   try {
     const answer = req.originalUrl;
     let paramsFrom = parser.getQueryParamsParsed(answer);
 
     let paramsParsed = parser.getParamsParsed({
+      CENTRO_ID: paramsFrom.centroId,
       _id: paramsFrom.answerId,
     });
     const quizResponse = await trabalhoscontroller.putQuizResponse(
@@ -485,7 +528,7 @@ router.put("/bff/update_answer", requireAuth, async function (req, res) {
       }
     );
 
-    if (trabalhoscontroller.checkQuestionInCoordQuiz(paramsFrom.questionId)) {
+    if (await trabalhoscontroller.checkQuestionInCoordQuiz(paramsFrom.questionId)) {
       trabalhoscontroller.updateCoordResponseByCentroId(
         paramsFrom.questionId,
         paramsFrom.answerId,
