@@ -352,6 +352,12 @@
   margin-right: auto;
 }
 
+.validacao-coord-subtitulo .form-group p {
+  vertical-align: middle;
+  margin-bottom:5px;
+  margin-top:5px;
+}
+
 .validacao-coord-subtitulo h3 {
   margin-top: 2%;
   margin-bottom: 1%;
