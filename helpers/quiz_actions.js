@@ -27,7 +27,7 @@ module.exports = class QuizActions {
 
   async previous(req, res, action_info) {
     action_info.direction = -1;
-    this._move(res, action_info);
+    this._move(res, res, action_info);
   }
 
   async save(req, res, action_info) {

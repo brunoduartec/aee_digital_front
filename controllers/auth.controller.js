@@ -28,7 +28,9 @@ module.exports = class authController {
 
   async generatePassCache() {
     const schema = require("../resources/schema")();
-    let excel = await this.xlsReader(this.fileName, { schema });
+    let excel = await this.xlsReader(this.fileName, {
+      schema
+    });
     let objects = excel.rows;
 
     for (let index = 0; index < objects.length; index++) {
@@ -109,7 +111,7 @@ module.exports = class authController {
 
   getPassInfoByCache(user, pass) {
     try {
-      if (this.cache[user]?.pass === pass) {
+      if (this.cache[user] ?.pass === pass) {
         return this.cache[user];
       }
       return;
@@ -133,7 +135,10 @@ module.exports = class authController {
 
   getPassGroupByPattern(userInfo) {
     let groups = [];
-    let { centro, regional } = userInfo;
+    let {
+      centro,
+      regional
+    } = userInfo;
     if (centro === "*") {
       if (regional === "*") {
         groups.push("coord_geral");
@@ -147,7 +152,12 @@ module.exports = class authController {
   }
 
   getScopeIdByPattern(userInfo) {
-    let { centro_id, regional_id, admin, alianca } = userInfo;
+    let {
+      centro_id,
+      regional_id,
+      admin,
+      alianca
+    } = userInfo;
     let scope_id;
     if (centro_id) {
       return centro_id;
@@ -164,8 +174,8 @@ module.exports = class authController {
 
   getPassInfoByScope(userInfo) {
     let params = {
-      user: userInfo?.user,
-      pass: userInfo?.pass,
+      user: userInfo ?.user,
+      pass: userInfo ?.pass,
       groups: this.getPassGroupByPattern(userInfo),
       scope_id: this.getScopeIdByPattern(userInfo),
     };
@@ -183,8 +193,8 @@ module.exports = class authController {
 
       let passInfo = await this.trabalhocontroller.getPassByParams(
         this.parser.getParamsParsed({
-          user: loginInfo?.user,
-          pass: loginInfo?.pass,
+          user: loginInfo ?.user,
+          pass: loginInfo ?.pass,
         })
       );
 
@@ -201,8 +211,8 @@ module.exports = class authController {
 
   async getLoginHint(info) {
     let loginHint = {
-      centro: info.centro,
-      regional: info.regional,
+      centro: info.centro || "*",
+      regional: info.regional || "*",
       curto: info.curto,
     };
 

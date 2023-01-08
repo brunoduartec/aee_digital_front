@@ -52,14 +52,7 @@ module.exports = class UserInfoController {
 
   async insertAnswers(centro) {
     try {
-      let centroInfo = await this.centroinfocontroller.getCentroInfo(
-        decodeURIComponent(centro.REGIONAL.NOME_REGIONAL),
-        decodeURIComponent(centro.NOME_CENTRO),
-        decodeURIComponent(centro.NOME_CURTO)
-      );
-
-      centroInfo = centroInfo.centro;
-
+  
       const cadastroFormName = "Cadastro de Informações Anual";
 
       let questionsPage = await this.trabalhocontroller.getFormQuestions(
@@ -73,17 +66,9 @@ module.exports = class UserInfoController {
         for (let l = 0; l < questions.length; l++) {
           const question = questions[l];
 
-          let match = this.depara.find((m) => {
-            return (
-              m.QUIZ == question.CATEGORY && m.QUESTION == question.QUESTION
-            );
-          });
 
           let answer = " ";
 
-          if (match) {
-            answer = this.getInfo(centroInfo, match.FROM) || " ";
-          }
 
           let answers = [];
           answers = answers.concat(answer);
@@ -94,7 +79,7 @@ module.exports = class UserInfoController {
 
           for (const answ of answers) {
             let answerInfo = {
-              CENTRO_ID: centro.ID,
+              CENTRO_ID: centro._id,
               QUIZ_ID: question.QUIZ_ID,
               QUESTION_ID: question._id,
               ANSWER: answ,
