@@ -5,7 +5,7 @@ services:
     environment:
       - NODE_ENV=development
       - trabalho_api=trabalho_api
-    build: .
+    build: https://github.com/brunoduartec/aee_digital_trabalhos.git
     command: npm start
     image: aee_digital_front
     container_name: aee_digital_front
