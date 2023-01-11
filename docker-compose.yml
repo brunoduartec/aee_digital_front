@@ -1,4 +1,4 @@
-version: "3"
+version: "3.5"
 
 services:
   aee_digital_front:
@@ -20,7 +20,5 @@ services:
 networks:
   aee_digital_backend:
     external: true
-    name: aee_digital_backend
   aee_trabalho_db:
-    name: aee_trabalho_db
     driver: bridge
