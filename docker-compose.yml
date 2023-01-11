@@ -1,11 +1,11 @@
-version: "3"
+version: "3.5"
 
 services:
   aee_digital_front:
     environment:
       - NODE_ENV=development
       - trabalho_api=trabalho_api
-    build: https://github.com/brunoduartec/aee_digital_trabalhos.git
+    build: https://github.com/brunoduartec/aee_digital_front.git
     command: npm start
     image: aee_digital_front
     container_name: aee_digital_front
@@ -20,7 +20,5 @@ services:
 networks:
   aee_digital_backend:
     external: true
-    name: aee_digital_backend
   aee_trabalho_db:
-    name: aee_trabalho_db
     driver: bridge
