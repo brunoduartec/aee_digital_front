@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+  <body class="body">
+    
+    <header class="cabeçalho"><%- include('../partials/header'); %></header>
+    <div class="cadastrar-titulo">
+      <h2>Validação de Informações</h2>
+    </div>
+
+    <div class="overlay"></div>
+    <div class="spanner">
+      <div class="loader"></div>
+      <p>Buscando informações, por favor aguarde</p>
+    </div>
+
+    <div class="validacao-coord-subtitulo">
+      <h3>Regional <%= regionalInfo.NOME_REGIONAL%></h3>
+      <p><b> Coordenador: </b><%= coordenador.NOME%></p>
+      <p><b> Quantidade de Casas: </b><%=centros.length%></p>
+      <div class="form row">
+        <span class="border col-md-12"
+          ><div class="form-group">
+            <p><b>Observações da Secretaria:</b></p>
+          </div></span
+        >
+      </div>
+      <br />
+    </div>
+    <%
+    totalRespostas = 0
+    totalCentros = centros.length
+    porcentagemRespostas = 100*totalRespostas/totalCentros
+    porcentagemRespostasFaltantes = 100 - porcentagemRespostas
+    const defaultResponse = {
+            ANSWER_ID:"",
+            _id:"",
+            ANSWER:""
+          }
+
+    var defaultOptionResponse = {
+            ANSWER_ID:"",
+            _id:"",
+            ANSWER:"",
+            PRESET_VALUES:["Pendente","Integrada", "Inscrita", "Desfiliada", "Encerrada"]
+          }
+    %>
+    <div class="validacao-coord-dados">
+      <div class="form row">
+        <span class="border col-md-12"
+          ><div class="form-group" style="color: #0d6efd">
+            <p><b>Status das Atualizações </b></p>
+          </div></span
+        >
+        <span class="border col-md-2"
+          ><div class="form-group" style="color: #0d6efd">
+            <p><b>Situação das Casas</b></p>
+          </div></span
+        >
+        <span class="border col-md-10"
+          ><div class="form-group" style="color: #0d6efd">
+            <p><b>Situação do Coordenador</b></p>
+          </div></span
+        >
+      </div>
+      <div class="form row">
+        <span class="border col-md-1"
+          ><div class="form-group">
+            <p><b>Atualiz.</b></p>
+          </div></span
+        >
+        <span class="border col-md-1"
+          ><div class="form-group text-truncate" style="color: red">
+            <p><b>Penden.</b></p>
+          </div></span
+        >
+        <span class="border col-md-2"
+          ><div class="form-group">
+            <p><b>Integradas</b></p>
+          </div></span
+        >
+        <span class="border col-md-2"
+          ><div class="form-group">
+            <p><b>Inscritas</b></p>
+          </div></span
+        >
+        <span class="border col-md-2"
+          ><div class="form-group" style="color: red">
+            <p><b>Pendentes</b></p>
+          </div></span
+        >
+        <span class="border col-md-2"
+          ><div class="form-group">
+            <p><b>Desfiliadas</b></p>
+          </div></span
+        >
+        <span class="border col-md-2"
+          ><div class="form-group">
+            <p><b>Encerradas</b></p>
+          </div></span
+        >
+      </div>
+      <div class="form row">
+        <span class="border col-md-1"
+          ><div class="form-group"><p id="Atualizadas"><%=totalRespostas%></p></div></span
+        >
+        <span class="border col-md-1"
+          ><div class="form-group"><p id="Pendentes"><%=totalCentros - totalRespostas%></p></div></span
+        >
+        <span class="border col-md-2"
+          ><div class="form-group"><p id="Coord_Integradas">0</p></div></span
+        >
+        <span class="border col-md-2"
+          ><div class="form-group"><p id="Coord_Inscritas">0</p></div></span
+        >
+        <span class="border col-md-2"
+          ><div class="form-group"><p id="Coord_Pendentes">0</p></div></span
+        >
+        <span class="border col-md-2"
+          ><div class="form-group"><p id="Coord_Desfiliadas">0</p></div></span
+        >
+        <span class="border col-md-2"
+          ><div class="form-group"><p id="Coord_Encerradas">0</p></div></span
+        >
+      
+      </div>
+      <div class="form row">
+        <span class="border col-md-1"
+          ><div class="form-group"><p id="Atualizadas_percent">0%</p></div></span
+        >
+        <span class="border col-md-1"
+          ><div class="form-group"><p id="Pendentes_percent">0%</p></div></span
+        >
+        <span class="border col-md-2"
+          ><div class="form-group"><p id="Coord_Integradas_percent">0%</p></div></span
+        >
+        <span class="border col-md-2"
+          ><div class="form-group"><p id="Coord_Inscritas_percent">0%</p></div></span
+        >
+        <span class="border col-md-2"
+          ><div class="form-group"><p id="Coord_Pendentes_percent">0%</p></div></span
+        >
+        <span class="border col-md-2"
+          ><div class="form-group"><p id="Coord_Desfiliadas_percent">0%</p></div></span
+        >
+        <span class="border col-md-2"
+        ><div class="form-group"><p id="Coord_Encerradas_percent">0%</p></div></span
+      >
+        
+      </div>
+      <br />
+
+      <div class="form row">
+        <span class="border col-md-12"
+          ><div class="form-group" style="color: #0d6efd">
+            <p><b>Atualização pelo Coordenador </b></p>
+          </div></span
+        >
+      </div>
+      <div class="form row">
+        <span class="border col-md-2"
+          ><div class="form-group">
+            <p><b>Nome da Casa:</b></p>
+          </div></span
+        >
+        <span class="border col-md-1"
+          ><div class="form-group">
+            <p><b>Apelido</b></p>
+          </div></span
+        >
+        <span class="border col-md-1"
+          ><div class="form-group">
+            <p><b>Auto Avaliação </b></p>
+          </div></span
+        >
+        <span class="border col-md-2"
+          ><div class="form-group" style="color: red">
+            <p><b>Situação</b></p>
+          </div></span
+        >
+        <span class="border col-md-1"
+          ><div class="form-group">
+            <p><b> Part. Reuniões (%)</b></p>
+          </div></span
+        >
+        <span class="border col-md-2"
+        ><div class="form-group">
+          <p><b>Data da Avaliação</b></p>
+        </div></span
+        >
+        <span class="border col-md-2"
+          ><div class="form-group">
+            <p><b>Perguntas Faltantes</b></p>
+          </div></span
+        >
+
+        <span class="border col-md-1"
+          ><div class="form-group">
+            <p><b>Baixar</b></p>
+          </div></span
+        >
+      </div>
+
+      <% centros.forEach(function(centro) { 
+        
+        %>
+        <div class="form row " style="background-color:rgb(212, 99, 131);" name="centro" id="<%=centro.ID%>">
+        <span class="border col-md-2"
+          ><div class="form-group"><p>
+            <a href="/cadastro_alianca?ID=<%=centro.ID%>&page=0">
+            <%=centro.NOME_CENTRO%>
+            </a>
+            </p></div></span
+        >
+        <span class="border col-md-1"
+          ><div class="form-group"><p><%=centro.NOME_CURTO%></p></div></span
+        >
+        <span class="border col-md-1"
+          ><div class="form-group"><p id="auto_avaliacao"></p></div></span
+        >
+        <span class="border col-md-2"
+          ><div class="form-group" name="prop_0">
+            <%
+            questionInfo = defaultOptionResponse
+            %>
+            <%- include('../partials/sub_quiz_option', {question:questionInfo});%>
+          </div>
+        </span>
+        <span class="border col-md-1"
+          ><div class="form-group" name="prop_1">
+            <%
+            questionInfo = defaultResponse
+            %>
+            <%- include('../partials/sub_quiz_input', {question:questionInfo});%></div></span
+        >
+        <span class="border col-md-2"
+          ><div class="form-group"><p name="data_avaliacao">
+                Não Finalizado
+          </p></div></span>
+
+
+          <span class="border col-md-2"><div class="form-group" name="perguntas_faltantes"></div></span>
+
+          <span class="border col-md-1"><div class="form-group" name="download">
+            <a href="http://162.214.123.133:30101/db/aee/expCsv/atividade_generic_quiz_answers?key=CENTRO_ID&value=<%=centro.ID%>&type=O">
+              <img src="/img/download.svg" alt="Bootstrap">
+              
+              </a>
+            
+              <input id="clickMe" type="button" value="clickme" onclick="DownloadResponses('<%=centro.ID%>');" />
+
+            </div></span>
+
+          
+      </div>
+
+      <%});%>
+
+      <br />
+  
+    <br />
+
+      <script>
+
+        $(document).ready( async function(){
+          var centros = <%- JSON.stringify(centros) %> 
+          showOverlay();
+           await setCentrosResponses(centros)
+           hideOverlay();
+        });
+
+
+        async function DownloadResponses(centroId){
+          try {
+              var apiUrl = `bff/exportcentroresponses?centroId=${centroId}`;
+              let responseInfo = await fetch(apiUrl,{
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                method: "GET",
+              });
+  
+
+              responseInfo = await responseInfo.json();
+              console.log("AAAAAAAQUIIII", responseInfo)
+              if(responseInfo.fileName){
+                window.open(responseInfo.fileName);
+              }
+              console.log("VOLTOU", responseInfo)
+
+              return responseInfo
+              
+            } catch (error) {
+              console.log(`Error at Download ${centroId}`, error)
+              throw(error)
+            }
+        }
+
+        function updateCoordSituationStatus(response, totalAmount){
+          let element = document.getElementById(`Coord_${response}s`);
+
+          let element_percent = document.getElementById(`Coord_${response}s_percent`);
+
+          let amount = parseInt(element.innerText) + 1
+
+          element.innerHTML = amount;
+          let percent = 100*amount/totalAmount
+          element_percent.innerText = Math.round(percent).toString().concat("%")
+
+        }
+
+          function getCentroSummary(summaries, centroId){
+           return summaries.find(m=> {
+             return m.CENTRO_ID === centroId
+           })
+          }
+
+          async function getCentroRequiredQuestions(centroId){
+            try {
+              var apiUrl = `bff/get_required?centroID=${centroId}`;
+              let responseInfo = await fetch(apiUrl,{
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                method: "GET",
+              });
+  
+              responseInfo = await responseInfo.json();
+
+              return responseInfo
+              
+            } catch (error) {
+              console.log(`Error at getCentroRequiredQuestions ${centroId}`, error)
+              throw(error)
+            }
+          }
+
+          async function getAvaliacaoResponses(regionalId){
+            try {
+              var regionalInfo = JSON.parse('<%- JSON.stringify(regionalInfo)%>')
+              var avaliacaoQuestionId = '<%- avaliacaoQuestionId %>'
+
+              var apiUrl = `bff/answerbyregional?questionId=${avaliacaoQuestionId}&regionalName=${regionalInfo.NOME_REGIONAL}`;
+              let responseInfo = await fetch(apiUrl,{
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                method: "GET"
+              });
+  
+              responseInfo = await responseInfo.json();
+
+              return responseInfo
+              
+            } catch (error) {
+              console.log(`Error at getAvaliacaoResponses`, error)
+              throw(error)
+            }
+          }
+
+          async function getCentroResponses(centroId){
+            try {
+              var coord_quiz = '<%- JSON.stringify(coord_quiz) %>'
+              var apiUrl = `bff/coord_responses?centroID=${centroId}`;
+              let responseInfo = await fetch(apiUrl,{
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                method: "POST",
+                body: coord_quiz
+              });
+  
+              responseInfo = await responseInfo.json();
+
+              return responseInfo
+              
+            } catch (error) {
+              console.log(`Error at getCentroResponses ${centroId}`, error)
+              throw(error)
+            }
+          }
+
+        async function setCentroResponse(centroDiv, centro, totalCentros, avaliacaoResponses){
+          let responses = await getCentroResponses(centro.ID);
+
+          let responseInfo = responses.templates
+          let not_finished = responses.not_finished
+
+          const situacao = centroDiv.children[3].children[0].children[0]
+
+          if(avaliacaoResponses[centro.ID]){
+            const auto = centroDiv.children[2].children[0].children[0]
+            auto.innerText = avaliacaoResponses[centro.ID].ANSWER
+            console.log("ENTROU", avaliacaoResponses[centro.ID])
+
+          }
+
+          const participacao = centroDiv.children[4].children[0].children[0]
+        
+          situacao.setAttribute("id", responseInfo[0].ANSWER_ID)
+          situacao.setAttribute("name", responseInfo[0].ANSWER_ID)
+          situacao.setAttribute("questionid", responseInfo[0]._id)
+
+          let response = responseInfo[0].ANSWER.length > 3 ? responseInfo[0].ANSWER : "Pendente"
+
+          const $options = Array.from(situacao.options);
+          let option = $options.find(item => item.text === responseInfo[0].ANSWER)
+
+          if(!option){
+            option = $options.find(item => item.text === "Pendente")
+          }
+          
+          if(option){
+            option.selected = true;
+          }
+          
+          participacao.setAttribute("id", responseInfo[1].ANSWER_ID)
+          participacao.setAttribute("name", responseInfo[1].ANSWER_ID)
+          participacao.setAttribute("questionid", responseInfo[1]._id)
+          participacao.setAttribute("value", responseInfo[1].ANSWER)
+
+          updateCoordSituationStatus(response, totalCentros)
+        }
+
+        async function setCentroSummary(centroDiv, summaries, centro){
+            let centroSummary = await getCentroSummary(summaries, centro.ID)
+           
+            const avaliacao = centroDiv.children[5].children[0].children[0]
+            
+            if(centroSummary && centroSummary.ANSWERS.length>0){
+              const Atualizadas = document.getElementById("Atualizadas")
+              let AtualizadasAmount = parseInt(Atualizadas.innerText)
+              AtualizadasAmount = AtualizadasAmount +1
+              Atualizadas.innerText =  AtualizadasAmount
+
+              const Pendentes = document.getElementById("Pendentes")
+               PendentesAmount = parseInt(Pendentes.innerText)
+              PendentesAmount = PendentesAmount -1
+              Pendentes.innerText =  PendentesAmount
+
+              let Atualizadas_percent = document.getElementById("Atualizadas_percent");
+              let Pendentes_percent = document.getElementById("Pendentes_percent");
+
+              aPercent = 100* (( AtualizadasAmount ) / (AtualizadasAmount + PendentesAmount))
+              pPercent  = 100* (( PendentesAmount ) / (AtualizadasAmount + PendentesAmount))
+
+              Atualizadas_percent.innerText = aPercent.toFixed() + "%"
+              Pendentes_percent.innerText = pPercent.toFixed() + "%"
+
+              const lastSummary = centroSummary
+              centroDiv.setAttribute("style", "background-color:rgb(159, 226, 191);")
+
+              const data = centroDiv.children[5].children[0].children[0]
+
+              let date = new Date(lastSummary.LASTMODIFIED).toLocaleString("pt-BR")
+              data.innerText = date
+            }else{
+              setPerguntasFaltantes(centroDiv,centro);
+            }
+        }
+
+        async function setPerguntasFaltantes(centroDiv, centro){
+            const requiredQuestions = await getCentroRequiredQuestions(centro.ID);
+
+            if(requiredQuestions.length > 0){
+              const perguntas_faltantes = centroDiv.children[6].children[0]
+  
+  
+              let ul = document.createElement("ul");
+  
+              perguntas_faltantes.appendChild(ul)
+  
+              for (const question of requiredQuestions) {
+                let li = document.createElement("li")
+                li.innerText = question.QUESTION_ID.QUESTION
+  
+                ul.appendChild(li)
+              }
+
+              centroDiv.setAttribute("style", "background-color:rgb(253, 243, 128);")
+            }
+            else{
+              const data = centroDiv.children[5].children[0].children[0]
+              data.innerText = "Não Iniciado"
+            }
+            
+
+
+        }
+
+        async function setCentroInfo(summaries, centro, totalCentrosAmount, avaliacaoResponses){
+          const centroDiv = document.getElementById(centro.ID)
+
+          const situacao = centroDiv.children[3].children[0].children[0]
+
+          try {
+
+            setCentroResponse(centroDiv, centro, totalCentrosAmount, avaliacaoResponses)
+            setCentroSummary(centroDiv, summaries, centro)
+            
+           
+          } catch (error) {
+            console.log(`Error setCentroInfo ${centro.NOME_CENTRO}`, error)
+            throw(error)
+          }
+
+
+        }
+
+        async function setCentrosResponses(centros){
+          let summaries = <%- JSON.stringify(summaries) %>; 
+
+          let avaliacaoResponses = await getAvaliacaoResponses();
+
+          for (const centro of centros) {
+            setCentroInfo(summaries, centro, centros.length, avaliacaoResponses)  
+          }
+        }
+      
+        </script>
+
+    <footer><%- include('../partials/footer'); %></footer>
+    <%- include('../partials/quiz_validate');%>
+  </body>
+</html>

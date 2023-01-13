@@ -1,0 +1,106 @@
+<h3><%=quiz.CATEGORY %></h3>
+<%quiz.QUESTIONS.forEach(function(group){ %>
+  <table id=<%=group._id%> class="col-md-12">
+    <tr>
+      <td>
+        <div id="template_<%=group._id%>" name="template_<%=group._id%>">
+  <%
+  let answers_length = 1
+  if(group.IS_MULTIPLE){
+    let answers = group.GROUP[0].ANSWER
+
+    if(!answers){
+      group.GROUP[0].ANSWER = []
+      group.GROUP[0].ANSWER.push(" ")
+      answers = group.GROUP[0].ANSWER
+    }
+
+    answers_length = answers.length
+  }%>
+  <p><%=group.GROUP_NAME%></p>
+
+  <%
+  let size = group.GROUP.length;
+  if(group.IS_MULTIPLE){
+    size++;
+  }
+  const itemSize = 12/size;
+  for (let index = 0; index < answers_length; index++) {%>
+    <div class="form row" id="group_<%=group._id%>" name="group_<%=group._id%>">
+    <%group.GROUP.forEach(function(question){%>
+
+      <%
+      if(question.ANSWER && question.ANSWER_ID){
+        let l = question.ANSWER.length
+        const answer = question.ANSWER[index]
+        const answer_id = question.ANSWER_ID[index]
+        const questionInfo = {
+         ANSWER: answer,
+         ANSWER_ID: answer_id,
+         PRESET_VALUES: question.PRESET_VALUES,
+         _id: question._id
+       }
+       %>
+      <div class="form-group col-md-<%= itemSize%>">
+      <label for="<%= answer_id%>">
+        <%if(question.IS_REQUIRED){%>
+          *
+          <%}%>
+        <%= question.QUESTION%>
+        </label>
+       
+      <% switch (question.ANSWER_TYPE) {
+          case 'Option' : %>
+            <%- include('./sub_quiz_option', {question:questionInfo});%>
+          <%break; 
+          case 'Date' :%>
+            <%- include('./sub_quiz_date', {question:questionInfo});%>
+          <%break;
+          case 'Boolean' :%>
+            <%- include('./sub_quiz_radio', {question:questionInfo});%>
+          <%break;
+            case 'TextArea' :%>
+            <%- include('./sub_quiz_textarea', {question:questionInfo});%>
+          <%break;
+            case 'Time' :%>
+            <%- include('./sub_quiz_time', {question:questionInfo});%>
+          <%break;
+          case 'Dia_Trabalho' :%>
+            <%- include('./sub_quiz_dia_trabalho', {question:questionInfo});%>
+          <%break;
+          default:%>
+            <%- include('./sub_quiz_input', {question:questionInfo});%>
+          <% break;
+        } %>
+      
+      
+      
+      </div>
+
+        <%
+      }
+      %>
+      <%});%>
+
+      <%if(group.IS_MULTIPLE){%>
+        <div class="form-group col-md-<%= itemSize%> ">
+            <button type="button" class="btn btn-warning" style="vertical-align: bottom" onclick="Delete(this, '<%= group._id%>')">
+                <img src="/img/trash-fill.svg" alt="Bootstrap">
+              </button>
+        </div>
+      <%}%>
+
+    </div>
+
+  <%}%>
+          </div>
+          </td>
+        </tr>
+    </table>
+    <%if(group.IS_MULTIPLE){%>
+      <div class="form-group col-md-<%= itemSize%> align-self-end">
+        <button type="button" class="btn btn-primary" style="vertical-align: bottom" onclick="Add('<%= group._id%>', '<%= quiz._id%>', '<%=centroId%>')">Adicionar</button>
+    </div>
+    <%}%>
+
+<%});%>

@@ -1,18 +1,24 @@
-version: "3"
+version: "3.5"
 
 services:
-  aee_tech_front:
-    build:
-      context: .
+  aee_digital_front:
+    environment:
+      - NODE_ENV=development
+      - trabalho_api=trabalho_api
+    build: https://github.com/brunoduartec/aee_digital_front.git
+    command: npm start
+    image: aee_digital_front
+    container_name: aee_digital_front
     ports:
       - "4200:4200"
-    container_name: aee_tech_front
-    image: aee_tech_front
+    networks:
+      - aee_digital_backend
+      - aee_trabalho_db
     volumes:
-       - .:/usr/app/app-ui
-       - /usr/app/app-ui/node_modules
-    networks: 
-      - app-network
+      - ./logs:/app/logs
+    restart: always
 networks:
-  app-network:
-      driver: bridge
+  aee_digital_backend:
+    external: true
+  aee_trabalho_db:
+    driver: bridge

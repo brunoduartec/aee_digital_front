@@ -1,12 +1,14 @@
-FROM node:10
+FROM node:17.4-alpine
 
-WORKDIR /usr/app/app-ui
+WORKDIR /app
 
-COPY package*.json /usr/app/app-ui/
+COPY package*.json ./
 
-RUN npm install -g @angular/cli @angular-devkit/build-angular && npm install
+RUN npm install
 
-COPY . /usr/app/app-ui/
+COPY . .
+
+ENV NODE_ENV=production
 
 EXPOSE 4200
 

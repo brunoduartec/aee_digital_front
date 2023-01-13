@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('../partials/head'); %>
+</head>
+
+<body class="body">
+  <header class="cabeçalho"><%- include('../partials/header'); %></header>
+
+   <% const indexToNumber = parseInt(index, 10);%>
+
+  <div class="cadastrar-titulo">
+    <h2> <%=form_alias  %> </h2>
+  </div>
+
+  <div class="cadastrar-links">
+    <ul class="nav nav-tabs justify-content-center">
+      <% 
+           const pages = titles.length
+           for(i=0;i<pages;i++){
+             let title = titles[i];
+            %>
+      <li class="nav-item">
+        <%if(i == indexToNumber){%>
+        <a class="nav-link active" aria-current="page" href="/cadastro_alianca?ID=<%=centro_id%>&page=<%=i%>"><%=i+1%>°
+          <%=title%></a>
+
+        <%}else{%>
+        <a class="nav-link" href="/cadastro_alianca?ID=<%=centro_id%>&page=<%=i%>"><%=i+1%>° <%=title%></a>
+        <%}%>
+          </li>
+          <%};%>
+      <li class="nav-item">
+
+        <%if(indexToNumber>=pages){%>
+        <a class="nav-link active" aria-current="page" href="/cadastro_alianca?ID=<%=centro_id%>&page=<%=i%>"><%=i+1%>°
+          Validação</a>
+
+        <%}else{%>
+        <a class="nav-link" href="/cadastro_alianca?ID=<%=centro_id%>&page=<%=i%>"><%=i+1%>° Validação</a>
+        <%}%>
+          </li>
+
+        </ul>
+      </div>
+
+      <div>
+        <form class="cadastrar-form" name="quiz" action="/quiz" method="post">
+          <input type="hidden" id="form_alias" name="form_alias" value="<%=form_alias%>" />
+        <input type="hidden" id="centro_id" name="centro_id" value="<%=centro_id%>" />
+        <input type="hidden" id="page" name="page" value="<%=index%>" />
+        <input type="hidden" id="page" name="redirect" value="/cadastro_alianca?ID=<%=centro_id%>" />
+
+        <%
+            const maxPage = results.PAGES.length;
+
+            if(indexToNumber >= maxPage){%>
+        <%- include('../partials/summary', {quiz:results}); %>
+        <%}else{
+            let page = results.PAGES[indexToNumber];
+
+            page.QUIZES.forEach(function(result){%>
+        <%- include('../partials/sub_quiz', {quiz:result, centroId: centro_id}); %>
+        <%}); %>
+        <%}%>
+
+          <div class="cadastrar-botoes">
+            <ul>
+              <%if(indexToNumber > 0){ %>
+              <li>
+                <a href="/cadastro_alianca?ID=<%=centro_id%>&page=<%=indexToNumber - 1%>">
+                  <button class="btn btn-primary" value="previous" name="action">Anterior</button>
+                </a>
+              </li>
+              <%}%>
+                    <%if(indexToNumber == pages && canSend){%>
+              <li>
+                <button type="submit" class="btn btn-primary" value="send" name="action">Finalizar</button>
+              </li>
+              <%}%>
+              <%if(indexToNumber < pages){%>
+              <li>
+                <a href="/cadastro_alianca?ID=<%=centro_id%>&page=<%=indexToNumber+1%>">
+                  <button class="btn btn-primary" value="next" name="action">Próximo</button>
+                </a>
+
+              </li>
+              <%}%>
+            </ul>
+          </div>
+    </form>
+  </div>
+    <footer>
+          <%- include('../partials/footer'); %>
+      </footer>
+      <%- include('../partials/quiz_validate');%>
+</body>
+
+</html>

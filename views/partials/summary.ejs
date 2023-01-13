@@ -1,0 +1,54 @@
+<div class="validacao">
+  <% let pages = results.PAGES; pages.forEach(function(page){%>
+  <h3><%=page.PAGE_NAME%></h3>
+
+  <%page.QUIZES.forEach(quiz => {%>
+  <div class="form row">
+    <span class="border col-md-12">
+      <div class="form-group" style="color: #0d6efd">
+        <p><b><%=quiz.CATEGORY%> </b></p>
+      </div>
+    </span>
+  </div>
+  <div class="form row">
+    <%quiz.QUESTIONS.forEach(questionGroup => {
+       const group = questionGroup.GROUP;
+      const itemSize = 12/group.length;
+
+      let answers_length = 1
+      if(questionGroup.IS_MULTIPLE){
+        if(group[0].ANSWER)
+        answers_length = group[0].ANSWER.length;
+        else
+        answer_length=0;
+      }
+
+      %>
+      <%for (let index = 0; index < answers_length; index++) {%>
+        <%
+      group.forEach(question => {
+        const answer =question.ANSWER ? question.ANSWER[index] : " "
+      %>
+      <div class="form-group col-md-<%=itemSize%>">
+        <%if(question.IS_REQUIRED && (!answer || answer == " ") ){%>
+          <p style="background-color:Tomato;">
+        <%} else{ %>
+        <p>
+          <%}%>
+          <b><%= question.QUESTION%>:</b> 
+          
+          <%if(answer == "true"){%>
+            Sim
+          <%}else if(answer == "false"){%>
+            Não
+          <%} else { %>
+          <%= answer%>
+          <%}%>
+          </p>
+      </div>
+      <%});%>  
+      <%}%>
+        <%});%>
+  </div>
+  <%});%> <%});%>
+</div>

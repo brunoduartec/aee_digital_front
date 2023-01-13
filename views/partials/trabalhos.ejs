@@ -1,0 +1,35 @@
+<table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+    <thead>
+        <tr>
+          <th scope="col">Regional</th>
+          <th scope="col">Nome Centro</th>
+          <th scope="col">Nome Atividade</th>
+          <th scope="col">Inicio</th>
+          <th scope="col">Fim</th>
+        </tr>
+      </thead>
+
+      <tbody>
+          <% trabalhos_centros.forEach(function(centro) { %>
+            <% centro.forEach(function(atividade) { %>
+            <tr>
+              <td><%= atividade.REGIONAL %></td>
+              <td><%= atividade.NOME_CENTRO %></td>
+              <td><%= atividade.ATIVIDADE.NOME_ATIVIDADE %></td>
+              <td><%= atividade.HORINI %></td>
+              <td><%= atividade.HORFIM %></td>
+            </tr>
+            <% }); %>
+          <% }); %>
+      </tbody>
+</table>
+
+<script>
+  // Basic example
+$(document).ready(function () {
+  $('#dtBasicExample').DataTable({
+    "pagingType": "simple" // "simple" option for 'Previous' and 'Next' buttons only
+  });
+  $('.dataTables_length').addClass('bs-select');
+});
+    </script>

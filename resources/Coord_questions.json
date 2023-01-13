@@ -1,0 +1,21 @@
+{
+    "CATEGORY": "Coordenador",
+    "QUESTIONS": [
+        {
+            "GROUP": [
+                {
+                    "PRESET_VALUES": ["Integrada", "Inscrita"],
+                    "QUESTION": "Situação",
+                    "ANSWER_TYPE": "Option"
+                },
+                {
+                    "PRESET_VALUES": [],
+                    "QUESTION": "Participação em Reuniões",
+                    "ANSWER_TYPE": "String"
+                }
+            ],
+            "IS_MULTIPLE": false
+        }
+       
+    ]
+}

@@ -1,0 +1,245 @@
+module.exports = class SearchController {
+  constructor(
+    regionalcontroller,
+    trabalhocontroller,
+    logger = require("../helpers/logger"),
+    parser = require("../helpers/parser")
+  ) {
+    this.regionalcontroller = regionalcontroller;
+    this.trabalhocontroller = trabalhocontroller;
+    this.logger = logger;
+    this.parser = parser;
+  }
+
+  async getPesquisaResult(pesquisaInfo) {
+    const regionalcontroller = this.regionalcontroller;
+
+    const regional = pesquisaInfo.regional;
+    const centro = pesquisaInfo.centro;
+    const trabalho = pesquisaInfo.trabalho;
+    const search = pesquisaInfo.search;
+    const opcao = pesquisaInfo.option;
+
+    const searchByOpcao = {
+      Centro: async function () {
+        const paramsParsed = this.parser.getParamsParsed({
+          NOME_CURTO: decodeURIComponent(search),
+        });
+        const centro = await regionalcontroller.getCentroByParam(paramsParsed);
+        let centros = {
+          amount: centro ? centro.length : 0,
+          items: centro,
+        };
+
+        this.logger.info(
+          `controller:search.controller:getPesquisaResult:Centro ${centros}`
+        );
+        return centros;
+      },
+      Centro_Summary: async function () {
+        let centroInfo = [];
+        let paramsParsed = this.parser.getParamsParsed({
+          NOME_CURTO: decodeURIComponent(centro),
+        });
+
+        centroInfo.push(
+          await regionalcontroller.getCentroByParam(paramsParsed)
+        );
+        const centro_id = centroInfo[0].ID;
+
+        paramsParsed = this.parser.getParamsParsed({
+          CENTRO_ID: centro_id,
+        });
+
+        let centroSummary = {};
+        const summary =
+          await this.trabalhocontroller.getAtividadesCentroSummaryByParams(
+            paramsParsed
+          );
+        centroSummary.items = [];
+        centroSummary.amount = 0;
+
+        const atividade_order = [
+          "Assistência Espiritual",
+          "Curso Básico",
+          "Escola de Aprendizes do Evangelho",
+          "Curso de Médiuns",
+          "Evangelização Infantil",
+          "Pré-Mocidade",
+          "Mocidade",
+        ];
+
+        atividade_order.forEach((atividade_name) => {
+          const item = summary.find((summary) => {
+            return summary.ATIVIDADE.NOME_ATIVIDADE == atividade_name;
+          });
+          if (item) {
+            centroSummary.items.push(item);
+            centroSummary.amount++;
+          }
+        });
+
+        this.logger.info(
+          `controller:search.controller:getPesquisaResult:Centro_Summary: ${centroSummary}`
+        );
+        return centroSummary;
+      },
+
+      Trabalho: async function () {
+        let centros;
+
+        if (regional != "Todos") {
+          centros = await regionalcontroller.getCentrosByRegional(regional);
+        } else {
+          centros = await regionalcontroller.getCentros();
+        }
+
+        let atividades = {};
+
+        atividades.items = [];
+        atividades.amount = 0;
+
+        for (let index = 0; index < centros.length; index++) {
+          const centro = centros[index];
+          const centro_id = centro.ID;
+
+          let paramsParsed = this.parser.getParamsParsed({
+            CENTRO_ID: centro_id,
+            "ATIVIDADE.NOME_ATIVIDADE": trabalho != "Todos" ? trabalho : null,
+          });
+
+          let atividade =
+            await this.trabalhocontroller.getAtividadesCentroByParams(
+              paramsParsed
+            );
+
+          atividades.amount += atividade.length;
+          for (let index = 0; index < atividade.length; index++) {
+            let element = atividade[index];
+            element.NOME_CENTRO = centro.NOME_CENTRO;
+            element.REGIONAL = centro.REGIONAL.NOME_REGIONAL;
+          }
+          if (atividade && atividade.length > 0) {
+            atividades.items.push(atividade);
+          }
+        }
+
+        this.logger.info(
+          `controller:search.controller:getPesquisaResult:Trabalhos: ${atividades}`
+        );
+        return atividades;
+      },
+      Regional: async function () {
+        const centros = await regionalcontroller.getCentros();
+        let regional = {
+          amount: centros.length,
+          items: centros,
+        };
+        this.logger.info(
+          `controller:search.controller:getPesquisaResult:Regional: ${regional}`
+        );
+        return regional;
+      },
+
+      Quiz: async function () {
+        let name = search.name;
+        let centro_id = search.id;
+        const page = search.page;
+        let finalized = false;
+
+        let paramsParsed = this.parser.getParamsParsed({
+          NAME: name,
+        });
+
+        let form_template = await this.trabalhocontroller.getFormByParams(
+          paramsParsed
+        );
+
+        form_template = form_template[0];
+        let pages = form_template.PAGES;
+        let page_titles = pages.map((m) => {
+          return m.PAGE_NAME;
+        });
+
+        paramsParsed = this.parser.getParamsParsed({
+          CENTRO_ID: centro_id,
+        });
+
+        if (page < pages.length) {
+          let page_info = pages[page];
+          pages = [];
+          pages.push(page_info);
+        } else {
+          finalized = await this.trabalhocontroller.checkFormCompletion(
+            name,
+            centro_id
+          );
+        }
+
+        paramsParsed = this.parser.getParamsParsed({
+          CENTRO_ID: centro_id,
+        });
+
+        const quiz_responses =
+          await this.trabalhocontroller.getQuizResponseByParams(paramsParsed);
+
+        for (let index = 0; index < pages.length; index++) {
+          const page = pages[index];
+
+          let quizes = page.QUIZES;
+          for (let index = 0; index < quizes.length; index++) {
+            const quiz = quizes[index];
+
+            let groups = quiz.QUESTIONS;
+
+            for (let j = 0; j < groups.length; j++) {
+              const group = groups[j].GROUP;
+
+              for (let k = 0; k < group.length; k++) {
+                const question = group[k];
+
+                let answer;
+                answer = quiz_responses.filter((m) => {
+                  try {
+                    return m.QUESTION_ID._id == question._id;
+                  } catch (error) {
+                    answer = "";
+                  }
+                });
+
+                if (answer.length > 0) {
+                  question.ANSWER = JSON.parse(
+                    JSON.stringify(
+                      answer.map((m) => {
+                        return m.ANSWER;
+                      })
+                    )
+                  );
+                  question.ANSWER_ID = JSON.parse(
+                    JSON.stringify(
+                      answer.map((m) => {
+                        return m.ID;
+                      })
+                    )
+                  );
+                }
+              }
+            }
+          }
+        }
+
+        let quiz = {
+          templates: form_template,
+          titles: page_titles,
+          finalized: finalized,
+        };
+
+        this.logger.info(
+          `controller:search.controller:getPesquisaResult:Quiz: ${quiz}`
+        );
+        return quiz;
+      },
+    };
+    return await searchByOpcao[opcao].call(this);
+  }
+};

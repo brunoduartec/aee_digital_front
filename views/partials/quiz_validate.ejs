@@ -1,0 +1,140 @@
+<script>
+  function updateFormItem(item) {
+    const subId = item.id.split("_");
+
+    id = subId[0];
+
+    var itemsChanged = document.getElementsByName(id);
+    var itemChanged;
+
+    for (let index = 0; index < itemsChanged.length; index++) {
+      const element = itemsChanged[index];
+      if (element.value) {
+        itemChanged = element;
+        break;
+      }
+    }
+
+    const answerId = item.id;
+    let questionId;
+
+    var apiUrl = `/bff/update_answer?answerId=${answerId}&answer=${itemChanged.value.toString()}`;
+    if (itemChanged) {
+      questionId = itemChanged.getAttribute("questionId");
+      if (questionId) {
+        apiUrl = apiUrl.concat(`&questionId=${questionId}`);
+      }
+    }
+
+    fetch(apiUrl, {
+      method: "PUT",
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        const responseInfo = data[0];
+      })
+      .catch((err) => {
+        console.log("---ERROR---", err);
+        throw error;
+        // Do something for an error here
+      });
+  }
+
+  function callCreateRoute(table, clone, groupId, quizId, centroId) {
+    console.log("AQUI", groupId, quizId, centroId);
+    var apiUrl = `/bff/add_answer?groupId=${groupId}&quizId=${quizId}&centroId=${centroId}`;
+    fetch(apiUrl, {
+      method: "POST",
+    })
+      .then((response) => {
+        console.log("AAA", response);
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Will add Data", data);
+        const children = clone.children;
+
+        for (let index = 0; index < data.length; index++) {
+          const item = data[index];
+          const child = children[index];
+          const childrenOfChildren = child.children;
+
+          for (let index = 0; index < childrenOfChildren.length; index++) {
+            const childOfChild = childrenOfChildren[index];
+            childOfChild.setAttribute("id", item.ID);
+            childOfChild.setAttribute("name", item.ID);
+            childOfChild.setAttribute("value", item.ANSWER);
+          }
+        }
+
+        console.log("Chegou ate aqui");
+        var row = table.insertRow(-1);
+        row.appendChild(clone);
+      })
+      .then((data) => {
+        console.log("----ITEM ADDED", data);
+      })
+      .catch((err) => {
+        console.log("---ERROR---", err);
+        throw error;
+        // Do something for an error here
+      });
+  }
+
+  function callDeleteRoute(item, table_id, answerId) {
+    var apiUrl = `/bff/remove_answer?answerId=${answerId}`;
+    fetch(apiUrl, {
+      method: "DELETE",
+    })
+      .then((response) => {
+        var p = item.parentNode;
+        p.remove();
+        return response.json();
+      })
+      .then((data) => {
+        console.log("--ITEM REMOVED--");
+      })
+      .catch((err) => {
+        console.log("---ERROR---", err);
+        throw error;
+        // Do something for an error here
+      });
+  }
+
+  function Add(groupId, quizId, centroId) {
+    var table = document.getElementById(groupId);
+    var template = document.getElementsByName(`group_${groupId}`);
+
+    let lastTemplate = template[template.length - 1];
+
+    var clone = lastTemplate.cloneNode(true);
+
+    callCreateRoute(table, clone, groupId, quizId, centroId);
+  }
+
+  function Delete(item, table_id) {
+    const itemParent = item.parentNode;
+    const itemParentParent = itemParent.parentNode;
+    const children = itemParentParent.children;
+
+    if (children.length == 1) {
+      return;
+    }
+
+    for (let index = 0; index < children.length; index++) {
+      const element = children[index];
+      const elementChildren = element.children;
+
+      for (let j = 0; j < elementChildren.length; j++) {
+        const elementChild = elementChildren[j];
+        id = elementChild.getAttribute("id");
+        if (id) {
+          callDeleteRoute(element, table_id, id);
+          break;
+        }
+      }
+    }
+  }
+</script>

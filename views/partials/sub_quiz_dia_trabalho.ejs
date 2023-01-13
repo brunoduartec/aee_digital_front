@@ -1,0 +1,53 @@
+               <table id="myTable" class="col-md-12">
+                <tr>
+                    <td>
+                        <div id="template">
+                            <div class="form row">  
+                             <div class="form-group col-md-3">
+                                 <label for="Trabalho Centro Espírita">Dia da semana</label>
+                                 <select class="form-select" id="Trabalho Centro Espírita" aria-label="Default select example">    
+                                         <option selected>Selecione o dia</option>
+                                         <option value="Segunda-feira">Segunda-feira</option>
+                                         <option value="Terça-feira">Terça-feira</option>
+                                         <option value="Quarta-feira">Quarta-feira</option>
+                                         <option value="Quinta-feira">Quinta-feira</option>
+                                         <option value="Sexta-feira">Sexta-feira</option>
+                                         <option value="Sábado">Sábado</option>
+                                         <option value="Domingo">Domingo</option>
+                                 </select>
+                             </div>
+                             <div class="form-group col-md-3">
+                                 <label for="exampleFormControlInput1">Horário de Início:</label>
+                                 <input type="time" class="form-control" id="exampleFormControlInput1" placeholder="Ex: Assistência Maternal Espirita">   
+                             </div>
+                             <div class="form-group col-md-3">
+                                 <label for="exampleFormControlInput1">Horário de Término:</label>
+                                 <input type="time" class="form-control" id="exampleFormControlInput1" placeholder="Ex: Assistência Maternal Espirita">   
+                             </div>
+                             <div class="form-group col-md-3 align-self-end">
+                                <button type="button" class="btn btn-warning" style="vertical-align: bottom" onclick="Delete(this)">-</button>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3 align-self-end">
+                            <button type="button" class="btn btn-primary" style="vertical-align: bottom" onclick="Add()">Incluir mais um dia</button>
+                        </div>
+                    </td>
+                </tr>
+               </table>
+
+               <script>
+                function Add() {
+                    var table = document.getElementById("myTable");
+                    var template = document.getElementById("template");
+                    var clone = template.cloneNode(true);
+                    var rowCount = table.rows.length;
+                    var row = table.insertRow(rowCount-1);
+                    row.appendChild(clone)
+                }
+
+                function Delete(r){
+                    var i = r.parentNode.parentNode.rowIndex;
+                    document.getElementById("myTable").deleteRow(i);
+                }
+                </script>

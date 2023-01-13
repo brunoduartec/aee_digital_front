@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../partials/head'); %>
+  </head>
+  <body class="body">
+    <header><%- include('../partials/header'); %></header>
+
+    <main class="flex-shrink-0">
+      <div class="container">
+        <%if (opcao == "Trabalhos") { %> <%-
+        include('../partials/editar_trabalho_centro', {trabalhos: result});%>
+        <%}%> <%if (opcao == "Centro") { %> <%-
+        include('../partials/editar_centro', {centro: result});%> <%}%>
+      </div>
+    </main>
+    <footer><%- include('../partials/footer'); %></footer>
+  </body>
+</html>

@@ -1,0 +1,134 @@
+<%if (result) { %>
+  <h1>Dados do Centro Espírita</h1>
+<form>
+  <div class="form-group">
+    <label for="nome">Nome</label>
+    <input
+      type="text"
+      class="form-control"
+      id="nome"
+      value="<%=result.NOME_CENTRO%>"
+    />
+    <small id="nome" class="form-text text-muted"
+      >Nome completo do centro</small
+    >
+  </div>
+
+  <div class="form-group">
+    <label for="nome_curto">Nome Curto</label>
+    <input
+      type="text"
+      class="form-control"
+      id="nome_curto"
+      value="<%=result.NOME_CURTO%>"
+    />
+    <small id="nome_curto" class="form-text text-muted"
+      >Nome curto do centro</small
+    >
+  </div>
+
+  <div class="form-group">
+    <label for="cnpj">CNPJ</label>
+    <input
+      type="text"
+      class="form-control"
+      id="cnpj"
+      value="<%=result.CNPJ_CENTRO%>"
+    />
+    <small id="cnpj" class="form-text text-muted">CNPJ do centro</small>
+  </div>
+
+  <div class="form-group">
+    <label for="fundacao">Fundação</label>
+    <input
+      type="text"
+      class="form-control"
+      id="fundacao"
+      value="<%=result.DATA_FUNDACAO%>"
+    />
+    <small id="fundacao" class="form-text text-muted"
+      >Data de fundação do centro</small
+    >
+  </div>
+
+  <div class="form-group">
+    <label for="endereco">Endereço</label>
+    <input
+      type="text"
+      class="form-control"
+      id="endereco"
+      value="<%=result.ENDERECO%>"
+    />
+    <small id="endereco" class="form-text text-muted"
+      >Endereço do centro</small
+    >
+  </div>
+
+  <div class="form-group">
+    <label for="cep">CEP</label>
+    <input
+      type="text"
+      class="form-control"
+      id="cep"
+      value="<%=result.CEP%>"
+    />
+    <small id="cep" class="form-text text-muted">CEP do centro</small>
+  </div>
+
+  <div class="form-group">
+    <label for="bairro">Bairro</label>
+    <input
+      type="text"
+      class="form-control"
+      id="bairro"
+      value="<%=result.ENDERECO%>"
+    />
+    <small id="bairro" class="form-text text-muted"
+      >Bairro do centro</small
+    >
+  </div>
+
+  <div class="form-group">
+    <label for="cidade">Cidade</label>
+    <input
+      type="text"
+      class="form-control"
+      id="cidade"
+      value="<%=result.CIDADE%>"
+    />
+    <small id="cidade" class="form-text text-muted"
+      >Cidade do centro</small
+    >
+  </div>
+
+  <div class="form-group">
+    <label for="estado">Estadoo</label>
+    <input
+      type="text"
+      class="form-control"
+      id="estado"
+      value="<%=result.ESTADO%>"
+    />
+    <small id="estado" class="form-text text-muted"
+      >Estado do centro</small
+    >
+  </div>
+
+  <div class="form-group">
+    <label for="pais">País</label>
+    <input
+      type="text"
+      class="form-control"
+      id="pais"
+      value="<%=result.PAIS%>"
+    />
+    <small id="pais" class="form-text text-muted">País do centro</small>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Atualizar</button>
+</form>
+
+<%} else{%>
+<p>Centro não encontrado</p>
+<%}%>
+</div>

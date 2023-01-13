@@ -1,0 +1,9 @@
+<select id="<%= question.ANSWER_ID%>" name="<%= question.ANSWER_ID%>" class="form-select" questionId="<%=question._id%>" onfocusout="updateFormItem(this)">
+    <%if(!question.PRESET_VALUES){%>
+    <option>Vazio</option>
+    <%}else{%>
+    <% question.PRESET_VALUES.forEach(function(option) { %>
+    <option <%if(question.ANSWER == option){%> selected <%}%>><%= option %></option>
+    <% }); %>
+    <%}%>
+  </select>

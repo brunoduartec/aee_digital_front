@@ -10,12 +10,9 @@ on:
     tags:
       - v*
 
-  # Run tests for any PRs.
-  pull_request:
-
 env:
   # TODO: Change variable to your image's name.
-  IMAGE_NAME: aeetechfront
+  IMAGE_NAME: aee_digital_front
 
 jobs:
   # Run tests.
@@ -74,3 +71,12 @@ jobs:
 
           docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
+      - name: Deploy docker image
+        uses: chaplyk/docker-compose-remote-action@v1.1
+        with:
+          ssh_host: ${{ secrets.SSH_HOST }}
+          ssh_user: ${{ secrets.SSH_USER }}
+          ssh_key: ${{ secrets.SSH_KEY }}
+          compose_file: docker-compose.yml
+          pull: true
+          build: true
