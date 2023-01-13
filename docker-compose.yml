@@ -5,9 +5,9 @@ services:
     environment:
       - NODE_ENV=development
       - trabalho_api=trabalho_api
-    build: https://github.com/brunoduartec/aee_digital_front.git
+    build: .
     command: npm start
-    image: aee_digital_front
+    image: docker.pkg.github.com/brunoduartec/aee_digital_front
     container_name: aee_digital_front
     ports:
       - "4200:4200"
