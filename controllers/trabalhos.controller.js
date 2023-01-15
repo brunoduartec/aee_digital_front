@@ -1,3 +1,4 @@
+const commonHelper = require("../helpers/common.helper")
 module.exports = class trabalhosController {
   constructor(
     parser = require("../helpers/parser"),
@@ -403,10 +404,17 @@ module.exports = class trabalhosController {
     }
   }
 
-  async getSummaries() {
+  
+
+  async getSummaries(data) {
+    let removeFields
+    if(data){
+      removeFields = data.removeFields
+    }
     try {
+      let summaries;
       if (this.cache.getSummaries) {
-        return this.cache.getSummaries;
+          summaries = this.cache.getSummaries;
       } else {
         const quiz_summaries = await this.request.get(
           "aee_digital_trabalhos",
@@ -414,13 +422,14 @@ module.exports = class trabalhosController {
         );
 
         this.cache.getSummaries = quiz_summaries;
-        // this.logger.info(
-        //   `controller:trabalhos.controller:getSummaries => ${JSON.stringify(
-        //     quiz_summaries
-        //   )}`
-        // );
-        return quiz_summaries;
+        summaries = quiz_summaries
       }
+
+      if(removeFields){
+        summaries = commonHelper.getArrayOmitingParams(summaries,removeFields)
+      }
+
+      return summaries
     } catch (error) {
       this.logger.error(
         `controller:trabalhos.controller:getSummaries: Error=> ${error}`

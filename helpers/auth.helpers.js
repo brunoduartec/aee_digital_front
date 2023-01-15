@@ -39,7 +39,7 @@ const pageByPermission = {
     return `/summary_coord?ID=${info.link}`;
   },
   coord_geral: function () {
-    return `/summary_alianca`;
+    return `/summary_alianca?start=1/1/2023&end=31/12/2024`;
   },
 };
 

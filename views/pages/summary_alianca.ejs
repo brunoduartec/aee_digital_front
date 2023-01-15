@@ -7,6 +7,10 @@
   <body class="body">
     <header class="cabeçalho"><%- include('../partials/header'); %></header>
 
+    <div>
+      Dados de <%= start %> até <%= end%>
+    </div>
+
     <div class="container">
       <div class="row">
         <div class="col-xs-6">
@@ -34,6 +38,8 @@
     </div>
 
     <script>
+      const start = <%- JSON.stringify(start) %> 
+      const end = <%- JSON.stringify(end) %> 
       $(document).ready(function () {
         console.log("Ready disparado");
         myFunction();
@@ -218,7 +224,7 @@
       }
 
       function callGetGeneralInfo(div) {
-        var apiUrl = `/bff/generalinfo`;
+        var apiUrl = `/bff/generalinfo?start=${start}&end=${end}`;
         fetch(apiUrl, {
           method: "GET",
         })
@@ -261,13 +267,11 @@
 
               let started = 0;
               //augment with started info
-              console.log("REGIONAL", regional);
               for (const centroInfo of centrosOfRegional) {
                 const hasStarted = passes.find((m) => {
                   return m.scope_id === centroInfo.ID;
                 });
 
-                console.log("CENTRO", hasStarted, centroInfo);
                 if (hasStarted) {
                   started++;
                 }

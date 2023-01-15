@@ -134,7 +134,8 @@ router.get("/summary_coord", requireAuth, async function (req, res) {
 });
 
 router.get("/summary_alianca", requireAuth, async function (req, res) {
-  res.render("pages/summary_alianca", {});
+  const { start, end } = req.query;
+  res.render("pages/summary_alianca", { start,end });
 });
 
 module.exports = router;
