@@ -107,10 +107,34 @@ router.get("/bff/regional", async function (req, res) {
 
 router.get("/bff/generalinfo", async function (req, res) {
   try {
+    let { start,end } = req.query;
     const passes = await trabalhoscontroller.getPasses();
-    const responses = await trabalhoscontroller.getSummaries();
+    let responses = await trabalhoscontroller.getSummaries({removeFields:["ANSWERS"]});
     const regionais = await regionalcontroller.getRegionais();
     const centros = await regionalcontroller.getCentrosByCache();
+
+    if(start){
+      let startDateParts = start.split("/")
+      
+      let endDateParts
+      let endDate
+      let startDate = new Date(startDateParts[2],startDateParts[1] -1,startDateParts[0])
+      
+      if(end){
+        endDateParts = end.split("/")
+        endDate = new Date(endDateParts[2],endDateParts[1] -1,endDateParts[0])
+      }
+      else{
+        end = Date.now()
+      }
+      
+      responses = responses.filter((response)=>{
+        const responseDate = new Date(response.LASTMODIFIED)
+
+        return responseDate >= startDate && responseDate <= endDate
+
+      })
+    }
 
     res.json({
       passes: passes,
