@@ -77,6 +77,7 @@ module.exports = class trabalhosController {
 
       paramsParsed = this.parser.getParamsParsed({
         QUIZ_ID: coord_quiz[0].ID,
+        fields:"QUESTION_ID._id,_id,ANSWER"
       });
 
       this.cache.coord_responses = await this.getQuizResponseByParams(

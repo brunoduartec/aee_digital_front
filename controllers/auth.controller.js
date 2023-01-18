@@ -1,6 +1,5 @@
 module.exports = class authController {
   constructor(
-    reader,
     trabalhocontroller,
     logger = require("../helpers/logger"),
     parser = require("../helpers/parser")
@@ -18,8 +17,6 @@ module.exports = class authController {
     this.groups = require("../resources/groups.json");
     this.permissions = require("../resources/permissions.json");
     this.parser = parser;
-
-    this.cache = {};
   }
 
   async checkUserPass(user, pass) {

@@ -1,5 +1,3 @@
-const readXlsxFile = require("read-excel-file/node");
-
 const parser = require("../helpers/parser");
 
 const regionalController = require("../controllers/regional.controller");
@@ -9,7 +7,7 @@ const trabalhosController = require("../controllers/trabalhos.controller");
 const trabalhoscontroller = new trabalhosController();
 
 const authController = require("../controllers/auth.controller");
-const authcontroller = new authController(readXlsxFile, trabalhoscontroller);
+const authcontroller = new authController(trabalhoscontroller);
 
 const SearchController = require("../controllers/search.controller");
 const searchcontroller = new SearchController(

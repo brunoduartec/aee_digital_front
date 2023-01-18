@@ -83,16 +83,18 @@ module.exports = class QuizActions {
 
   async send(req, res, action_info) {
     let { centro_id } = action_info;
-    let paramsParsed = `CENTRO_ID=${centro_id}`;
+
+    let paramsParsed = this.parser.getParamsParsed({
+      CENTRO_ID: centro_id,
+      fields: "_id"
+    })
 
     const quiz_responses =
       await this.trabalhocontroller.getQuizResponseByParams(paramsParsed);
 
-    const responses = quiz_responses.map((m) => m.ID);
-
     let params = {
       CENTRO_ID: centro_id,
-      ANSWERS: responses,
+      ANSWERS: quiz_responses,
       LASTMODIFIED: new Date(),
     };
     await this.trabalhocontroller.postQuizSummary(params);
@@ -109,16 +111,6 @@ module.exports = class QuizActions {
   async open(req, res, action_info) {
     let { centro_id, form_alias, page } = action_info;
     try {
-      let checkWasInitialized =
-        await this.userinfocontroller.checkUserWasInitialized(action_info);
-
-      if (!checkWasInitialized) {
-        let centro = await this.regionalcontroller.getCentroByCacheByID(
-          centro_id
-        );
-        await this.userinfocontroller.insertAnswers(centro);
-      }
-
       const form_info = await this.userinfocontroller.getFormInfo(
         centro_id,
         form_alias,
