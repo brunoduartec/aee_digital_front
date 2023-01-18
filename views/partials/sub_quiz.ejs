@@ -72,19 +72,15 @@
             <%- include('./sub_quiz_input', {question:questionInfo});%>
           <% break;
         } %>
-      
-      
-      
+
       </div>
 
-        <%
-      }
-      %>
+        <% } %>
       <%});%>
 
       <%if(group.IS_MULTIPLE){%>
         <div class="form-group col-md-<%= itemSize%> ">
-            <button type="button" class="btn btn-warning" style="vertical-align: bottom" onclick="Delete(this, '<%= group._id%>')">
+            <button type="button" class="btn btn-warning" style="vertical-align: bottom" onclick="Delete(this, '<%= group._id%>','<%= centroId%>')">
                 <img src="/img/trash-fill.svg" alt="Bootstrap">
               </button>
         </div>

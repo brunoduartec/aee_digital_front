@@ -83,18 +83,24 @@
       });
   }
 
-  function callDeleteRoute(item, table_id, answerId) {
-    var apiUrl = `/bff/remove_answer?answerId=${answerId}`;
+  function callDeleteRoute(item, table_id, centroId, questionId, answerId) {
+    var apiUrl = `/bff/remove_answer?centroId=${centroId}&questionId=${questionId}&answerId=${answerId}`;
     fetch(apiUrl, {
       method: "DELETE",
     })
       .then((response) => {
-        var p = item.parentNode;
-        p.remove();
+       
         return response.json();
       })
       .then((data) => {
-        console.log("--ITEM REMOVED--");
+        if(data?.removedItems>0){
+          var p = item.parentNode;
+          p.remove();
+          console.log("--ITEM REMOVED--");
+        }
+        else{
+          console.log("--ITEM NOT REMOVED--");
+        }
       })
       .catch((err) => {
         console.log("---ERROR---", err);
@@ -114,7 +120,7 @@
     callCreateRoute(table, clone, groupId, quizId, centroId);
   }
 
-  function Delete(item, table_id) {
+  function Delete(item, table_id, centroId) {
     const itemParent = item.parentNode;
     const itemParentParent = itemParent.parentNode;
     const children = itemParentParent.children;
@@ -129,9 +135,10 @@
 
       for (let j = 0; j < elementChildren.length; j++) {
         const elementChild = elementChildren[j];
-        id = elementChild.getAttribute("id");
-        if (id) {
-          callDeleteRoute(element, table_id, id);
+        const answerId = elementChild.getAttribute("id");
+        const questionId = elementChild.getAttribute("questionid");
+        if (answerId) {
+          callDeleteRoute(element, table_id,centroId, questionId, answerId);
           break;
         }
       }

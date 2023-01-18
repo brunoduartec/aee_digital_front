@@ -14,19 +14,6 @@ const ExcelExportResponses = require("../controllers/excelexportresponses.contro
 const excelExporterController = require("../controllers/excelexporter.controller");
 const excelexportercontroller = new excelExporterController();
 
-const SearchController = require("../controllers/search.controller");
-const searchcontroller = new SearchController(
-  regionalcontroller,
-  trabalhoscontroller
-);
-
-const userInfoController = require("../controllers/userInfo.controller");
-const userinfocontroller = new userInfoController(
-  regionalcontroller,
-  trabalhoscontroller,
-  searchcontroller
-);
-
 const ReportInfo = require("../controllers/reportinfo.controller");
 const reportinfo = new ReportInfo(
   excelexportercontroller,
@@ -463,15 +450,33 @@ router.delete("/bff/remove_answer", requireAuth, async function (req, res) {
   try {
     const answer = req.originalUrl;
     let paramsFrom = parser.getQueryParamsParsed(answer);
+    let removedItem = 0
 
     let paramsParsed = parser.getParamsParsed({
-      _id: paramsFrom.answerId,
-    });
-    let quizResponse = await trabalhoscontroller.deleteQuizResponseByParams(
+      "QUESTION_ID._id": paramsFrom.questionId,
+      CENTRO_ID: paramsFrom.centroId
+    })
+
+    let quizResponse = await trabalhoscontroller.getQuizResponseByParams(
       paramsParsed
     );
 
-    res.json(quizResponse);
+    if(quizResponse.length>1){
+      paramsParsed = parser.getParamsParsed({
+        _id: paramsFrom.answerId,
+        CENTRO_ID: paramsFrom.centroId,
+      });
+  
+  
+      const removed = await trabalhoscontroller.deleteQuizResponseByParams(
+        paramsParsed
+      );
+      removedItem = removed.deletedCount;
+    }
+
+    res.json({
+      removedItems: removedItem
+    });
   } catch (error) {
     this.logger.error(`/bff/remove_answer: ${error}`);
     throw error;
