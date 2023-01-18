@@ -399,53 +399,36 @@ router.get("/bff/exportrgeneralresponses", async function (req, res) {
   }
 });
 
-router.get("/bff/initializeuserinfo", async function (req, res) {
+router.post("/bff/initialize_centro", async function (req, res) {
   try {
     const centroId = req.query.centroId;
 
-    let centroInfo;
-    let centro, curto, regional;
-
-    let paramsParsed;
-    if (centroId) {
-      paramsParsed = parser.getParamsParsed({
-        _id: centroId,
-      });
-    } else {
-      paramsParsed = parser.getParamsParsed({
-        NOME_CENTRO: req.query.centro,
-        NOME_CURTO: req.query.curto,
-        "REGIONAL.NOME_REGIONAL": req.query.regionalName,
-      });
-    }
-
-    centroInfo = await regionalcontroller.getCentroByParam(paramsParsed);
-
-    (centro = centroInfo.NOME_CENTRO),
-      (regional = centroInfo.REGIONAL.NOME_REGIONAL),
-      (curto = centroInfo.NOME_CURTO);
+    if(!centroId)
+    throw new Error("centroId required")
 
     let responses = await trabalhoscontroller.getQuizResponseByParams({
-      CENTRO_ID: centroInfo.ID,
+      CENTRO_ID: centroId,
     });
 
-    if (!responses[0]) {
-      const info = {
-        centro: centro,
-        regional: regional,
-        curto: curto,
-      };
-
-      let response = await userinfocontroller.initializeUserInfo(
-        info,
-        centroInfo
+    
+    if (responses.length == 0) {
+      const cadastroFormName = "Cadastro de Informações Anual";
+  
+      let questionsPage = await trabalhoscontroller.getFormQuestions(
+        cadastroFormName
       );
-      res.json(response);
+
+     const answersAdded = await trabalhoscontroller.initializeAnswers(centroId, questionsPage)
+
+      res.json({
+        "message": "Adicionados",
+        responses: answersAdded
+      });
     }
   } catch (error) {
-    logger.error(`/bff/initializeuserinfo: ${error}`);
+    logger.error(`/bff/initialize_centro: ${error}`);
     res.json({
-      status: 500,
+      status: 401,
       response: error.message,
     });
   }

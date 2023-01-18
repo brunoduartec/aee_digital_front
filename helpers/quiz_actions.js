@@ -92,9 +92,13 @@ module.exports = class QuizActions {
     const quiz_responses =
       await this.trabalhocontroller.getQuizResponseByParams(paramsParsed);
 
+    const quizResponsesMapped = quiz_responses.map((response)=>{
+      return response.ID
+    })
+
     let params = {
       CENTRO_ID: centro_id,
-      ANSWERS: quiz_responses,
+      ANSWERS: quizResponsesMapped,
       LASTMODIFIED: new Date(),
     };
     await this.trabalhocontroller.postQuizSummary(params);
