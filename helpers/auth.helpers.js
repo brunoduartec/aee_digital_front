@@ -17,13 +17,9 @@ const searchcontroller = new SearchController(
   trabalhoscontroller
 );
 
-const CentroInfoController = require("../controllers/centroInfo.controller");
-const centroinfocontroller = new CentroInfoController();
-
 const userInfoController = require("../controllers/userInfo.controller");
 const userinfocontroller = new userInfoController(
   regionalcontroller,
-  centroinfocontroller,
   trabalhoscontroller,
   searchcontroller
 );

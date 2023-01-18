@@ -14,9 +14,6 @@ const ExcelExportResponses = require("../controllers/excelexportresponses.contro
 const excelExporterController = require("../controllers/excelexporter.controller");
 const excelexportercontroller = new excelExporterController();
 
-const CentroInfoController = require("../controllers/centroInfo.controller");
-const centroinfocontroller = new CentroInfoController();
-
 const SearchController = require("../controllers/search.controller");
 const searchcontroller = new SearchController(
   regionalcontroller,
@@ -26,7 +23,6 @@ const searchcontroller = new SearchController(
 const userInfoController = require("../controllers/userInfo.controller");
 const userinfocontroller = new userInfoController(
   regionalcontroller,
-  centroinfocontroller,
   trabalhoscontroller,
   searchcontroller
 );
@@ -53,13 +49,55 @@ const excelexporteresponses = new ExcelExportResponses(
 const { requireAuth } = require("../helpers/auth.helpers");
 
 router.post("/bff/coord_responses", async function (req, res) {
-  const centroID = req.query.centroID;
-  const coord_quiz = req ? req.body : null;
+  const centroId = req.query.centroID;
+  let coord_quiz = req ? req.body : null;
   try {
-    const coord_responses = await getCentroCoordResponses(centroID, coord_quiz);
-    res.json(coord_responses);
+
+    const templates = [];
+    if (!centroId) {
+      return templates;
+    }
+
+    if (coord_quiz) {
+      coord_quiz = coord_quiz[0];
+
+      let coordresponse = await trabalhoscontroller.getCoordResponsesByCentroId(
+        centroId
+      );
+
+      for (const question of coord_quiz.QUESTIONS[0].GROUP) {
+        let response = coordresponse.filter((m) => {
+          return m.QUESTION_ID._id == question._id;
+        });
+
+        response = response[0];
+
+        if (!response) {
+          response = await setQuizResponse(
+            centroId,
+            coord_quiz.ID,
+            question._id,
+            " "
+          );
+          if (response) {
+            response = response[0];
+          }
+        }
+
+        if (response) {
+          templates.push({
+            ANSWER_ID: response.ID,
+            ANSWER: response.ANSWER,
+            _id: response.QUESTION_ID._id,
+            PRESET_VALUES: question.PRESET_VALUES,
+          });
+        }
+      }
+    }
+
+    res.json ({ templates });
   } catch (error) {
-    logger.error(`post:coord_responses ${centroID}: ${error}`);
+    logger.error(`post:coord_responses ${centroId}: ${error}`);
     throw error;
   }
 });
@@ -223,6 +261,7 @@ router.get("/bff/situacao", async function (req, res) {
         parser.getParamsParsed({
           CENTRO_ID: id,
           QUESTION_ID: question.ID,
+          fields: "ANSWER,_id"
         })
       );
       situacao = situacao[0];
@@ -281,6 +320,7 @@ router.get("/bff/answerbyregional", async function (req, res) {
     const questionAnswers = await trabalhoscontroller.getQuizResponseByParams(
       parser.getParamsParsed({
         "QUESTION_ID._id": questionId,
+        fields:"ANSWER,_id"
       })
     );
 
@@ -420,6 +460,7 @@ router.get("/bff/get_required", async function (req, res) {
       parser.getParamsParsed({
         CENTRO_ID: centroId,
         "QUESTION_ID.IS_REQUIRED": true,
+        fields:"ANSWER,CENTRO_ID"
       })
     );
 
@@ -523,59 +564,6 @@ router.put("/bff/update_answer", requireAuth, async function (req, res) {
     throw error;
   }
 });
-
-async function getCentroCoordResponses(centroId, quizInfo) {
-  try {
-    const templates = [];
-    if (!centroId) {
-      return templates;
-    }
-
-    if (quizInfo) {
-      quizInfo = quizInfo[0];
-
-      let coordresponse = await trabalhoscontroller.getCoordResponsesByCentroId(
-        centroId
-      );
-
-      for (const question of quizInfo.QUESTIONS[0].GROUP) {
-        let response = coordresponse.filter((m) => {
-          return m.QUESTION_ID._id == question._id;
-        });
-
-        response = response[0];
-
-        if (!response) {
-          response = await setQuizResponse(
-            centroId,
-            quizInfo.ID,
-            question._id,
-            " "
-          );
-          if (response) {
-            response = response[0];
-          }
-        }
-
-        if (response) {
-          templates.push({
-            ANSWER_ID: response.ID,
-            ANSWER: response.ANSWER,
-            _id: response.QUESTION_ID._id,
-            PRESET_VALUES: question.PRESET_VALUES,
-          });
-        }
-      }
-    }
-
-    return {
-      templates: templates,
-    };
-  } catch (error) {
-    logger.error(`getCentroCoordResponses ${error}`);
-    throw error;
-  }
-}
 
 async function setQuizResponse(centroID, quizID, questionID, ANSWER) {
   try {
