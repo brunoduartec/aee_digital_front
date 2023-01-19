@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "start": "nodemon --inspect=0.0.0.0:9229 index.js",
+    "start": "node index.js",
+    "start:dev":"nodemon --inspect=0.0.0.0:9229 index.js",
     "lint": "eslint **/*.js"
   },
   "repository": {
