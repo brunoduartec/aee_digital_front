@@ -8,9 +8,6 @@ const request = new Request();
 const regionalController = require("./controllers/regional.controller");
 const regionalcontroller = new regionalController();
 
-const CentroInfoController = require("./controllers/centroInfo.controller");
-const centroinfocontroller = new CentroInfoController();
-
 const trabalhosController = require("./controllers/trabalhos.controller");
 const trabalhoscontroller = new trabalhosController();
 
@@ -31,7 +28,6 @@ function initcontroller(controller) {
 const promises = [];
 
 promises.push(initcontroller(regionalcontroller));
-promises.push(initcontroller(centroinfocontroller));
 promises.push(initcontroller(trabalhoscontroller));
 
 async function initialize() {

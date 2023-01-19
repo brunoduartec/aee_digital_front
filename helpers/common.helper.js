@@ -9,7 +9,6 @@ function getArrayOmitingParams(array, filter){
 }
 
 
-
 module.exports = {
     getArrayOmitingParams
 }

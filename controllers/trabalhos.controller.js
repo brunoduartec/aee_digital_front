@@ -77,6 +77,7 @@ module.exports = class trabalhosController {
 
       paramsParsed = this.parser.getParamsParsed({
         QUIZ_ID: coord_quiz[0].ID,
+        fields:"QUESTION_ID._id,_id,ANSWER"
       });
 
       this.cache.coord_responses = await this.getQuizResponseByParams(
@@ -605,14 +606,42 @@ module.exports = class trabalhosController {
         value
       );
 
-      // this.logger.info(
-      //   `controller:trabalhos.controller:putQuizSummary ${quiz_summary}`
-      // );
       return quiz_summary;
     } catch (error) {
       this.logger.error(
         `controller:trabalhos.controller:putQuizSummary: Error=> ${error}`
       );
+      throw error;
+    }
+  }
+
+  async initializeAnswers(centroId, questionsPage) {
+    try {
+      
+      let answersToAdd = [];
+
+      for (let index = 0; index < questionsPage.length; index++) {
+        const questions = questionsPage[index];
+
+        for (let l = 0; l < questions.length; l++) {
+          const question = questions[l];
+
+            let answerInfo = {
+              CENTRO_ID: centroId,
+              QUIZ_ID: question.QUIZ_ID,
+              QUESTION_ID: question._id,
+              ANSWER: " ",
+            };
+            answersToAdd.push(answerInfo);
+          
+        }
+      }
+
+      await this.postQuizResponse(answersToAdd);
+      return answersToAdd;
+      
+    } catch (error) {
+      this.logger.error(`Insert Answers ${error}`);
       throw error;
     }
   }
