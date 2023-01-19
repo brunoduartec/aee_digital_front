@@ -1,7 +1,3 @@
-const parser = require("../helpers/parser");
-
-const regionalController = require("../controllers/regional.controller");
-const regionalcontroller = new regionalController();
 
 const trabalhosController = require("../controllers/trabalhos.controller");
 const trabalhoscontroller = new trabalhosController();
@@ -9,18 +5,6 @@ const trabalhoscontroller = new trabalhosController();
 const authController = require("../controllers/auth.controller");
 const authcontroller = new authController(trabalhoscontroller);
 
-const SearchController = require("../controllers/search.controller");
-const searchcontroller = new SearchController(
-  regionalcontroller,
-  trabalhoscontroller
-);
-
-const userInfoController = require("../controllers/userInfo.controller");
-const userinfocontroller = new userInfoController(
-  regionalcontroller,
-  trabalhoscontroller,
-  searchcontroller
-);
 
 const SessionController = require("../controllers/session.controller");
 const sessioncontroller = new SessionController();
@@ -58,22 +42,6 @@ async function TryAuthenticate(req, res) {
   if (!auth) {
     res.redirect("/login?failedAuth=true");
   } else {
-    let mustInitialize = auth.scope_id == null;
-
-    const userInfo = await userinfocontroller.initializeUserInfo(auth);
-    auth.scope_id = userInfo.scope_id;
-
-    if (mustInitialize) {
-      const appendInfo = {
-        scope_id: userInfo.scope_id,
-      };
-      const paramsParsed = parser.getParamsParsed({
-        user: loginInfo.user,
-        pass: loginInfo.pass,
-      });
-      await trabalhoscontroller.updatePass(paramsParsed, appendInfo);
-    }
-
     const authToken = sessioncontroller.generateAuthToken();
 
     sessioncontroller.setAuthToken(authToken, loginInfo.user);
@@ -81,7 +49,7 @@ async function TryAuthenticate(req, res) {
     req.session.authToken = authToken;
 
     let info = {
-      link: userInfo.scope_id,
+      link: auth.scope_id,
     };
 
     req.session.auth = auth;

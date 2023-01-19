@@ -49,28 +49,6 @@ module.exports = class UserInfoController {
   }
 
 
-  async checkUserWasInitialized(info) {
-    let { centro_id } = info;
-
-    let form = await this.trabalhocontroller.getFormByParams(
-      this.parser.getParamsParsed({
-        NAME: "Cadastro de Informações Anual",
-      })
-    );
-
-    let firstQuestionId = form[0].PAGES[0].QUIZES[0].QUESTIONS[0].GROUP[0]._id;
-
-    let answers = await this.trabalhocontroller.getQuizResponseByParams(
-      this.parser.getParamsParsed({
-        CENTRO_ID: centro_id,
-        fields: "_id",
-        "QUESTION_ID._id": firstQuestionId,
-      })
-    );
-
-    return answers.length > 0;
-  }
-
   async getFormInfo(centro_id, form_alias, page) {
     const pesquisaInfo = {
       search: {
