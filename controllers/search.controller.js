@@ -163,6 +163,7 @@ module.exports = class SearchController {
 
         paramsParsed = this.parser.getParamsParsed({
           CENTRO_ID: centro_id,
+          fields:"QUESTION_ID._id,_id,ANSWER"
         });
 
         if (page < pages.length) {
@@ -175,10 +176,6 @@ module.exports = class SearchController {
             centro_id
           );
         }
-
-        paramsParsed = this.parser.getParamsParsed({
-          CENTRO_ID: centro_id,
-        });
 
         const quiz_responses =
           await this.trabalhocontroller.getQuizResponseByParams(paramsParsed);
@@ -198,13 +195,8 @@ module.exports = class SearchController {
               for (let k = 0; k < group.length; k++) {
                 const question = group[k];
 
-                let answer;
-                answer = quiz_responses.filter((m) => {
-                  try {
+                let answer = quiz_responses.filter((m) => {
                     return m.QUESTION_ID._id == question._id;
-                  } catch (error) {
-                    answer = "";
-                  }
                 });
 
                 if (answer.length > 0) {

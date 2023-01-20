@@ -284,11 +284,9 @@
   
 
               responseInfo = await responseInfo.json();
-              console.log("AAAAAAAQUIIII", responseInfo)
               if(responseInfo.fileName){
                 window.open(responseInfo.fileName);
               }
-              console.log("VOLTOU", responseInfo)
 
               return responseInfo
               
@@ -386,14 +384,12 @@
           let responses = await getCentroResponses(centro.ID);
 
           let responseInfo = responses.templates
-          let not_finished = responses.not_finished
 
           const situacao = centroDiv.children[3].children[0].children[0]
 
           if(avaliacaoResponses[centro.ID]){
             const auto = centroDiv.children[2].children[0].children[0]
             auto.innerText = avaliacaoResponses[centro.ID].ANSWER
-            console.log("ENTROU", avaliacaoResponses[centro.ID])
 
           }
 

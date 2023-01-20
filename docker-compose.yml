@@ -1,4 +1,4 @@
-version: "3"
+version: "3.5"
 
 services:
   aee_digital_front:
@@ -7,20 +7,15 @@ services:
       - trabalho_api=trabalho_api
     build: .
     command: npm start
-    image: aee_digital_front
+    image: docker.pkg.github.com/brunoduartec/aee_digital_front
     container_name: aee_digital_front
     ports:
       - "4200:4200"
     networks:
       - aee_digital_backend
-      - aee_trabalho_db
     volumes:
       - ./logs:/app/logs
     restart: always
 networks:
   aee_digital_backend:
     external: true
-    name: aee_digital_backend
-  aee_trabalho_db:
-    name: aee_trabalho_db
-    driver: bridge

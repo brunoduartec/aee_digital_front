@@ -10,9 +10,6 @@ const regionalcontroller = new regionalController();
 const trabalhosController = require("../controllers/trabalhos.controller");
 const trabalhoscontroller = new trabalhosController();
 
-const CentroInfoController = require("../controllers/centroInfo.controller");
-const centroinfocontroller = new CentroInfoController();
-
 const SearchController = require("../controllers/search.controller");
 const searchcontroller = new SearchController(
   regionalcontroller,
@@ -22,7 +19,6 @@ const searchcontroller = new SearchController(
 const userInfoController = require("../controllers/userInfo.controller");
 const userinfocontroller = new userInfoController(
   regionalcontroller,
-  centroinfocontroller,
   trabalhoscontroller,
   searchcontroller
 );
@@ -134,7 +130,8 @@ router.get("/summary_coord", requireAuth, async function (req, res) {
 });
 
 router.get("/summary_alianca", requireAuth, async function (req, res) {
-  res.render("pages/summary_alianca", {});
+  const { start, end } = req.query;
+  res.render("pages/summary_alianca", { start,end });
 });
 
 module.exports = router;
