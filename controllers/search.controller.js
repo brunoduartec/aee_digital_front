@@ -1,12 +1,12 @@
 module.exports = class SearchController {
   constructor(
     regionalcontroller,
-    trabalhocontroller,
+    trabalhoscontroller,
     logger = require("../helpers/logger"),
     parser = require("../helpers/parser")
   ) {
     this.regionalcontroller = regionalcontroller;
-    this.trabalhocontroller = trabalhocontroller;
+    this.trabalhoscontroller = trabalhoscontroller;
     this.logger = logger;
     this.parser = parser;
   }
@@ -45,17 +45,10 @@ module.exports = class SearchController {
         centroInfo.push(
           await regionalcontroller.getCentroByParam(paramsParsed)
         );
-        const centro_id = centroInfo[0].ID;
-
-        paramsParsed = this.parser.getParamsParsed({
-          CENTRO_ID: centro_id,
-        });
+        const centro_id = centroInfo[0]._id;
 
         let centroSummary = {};
-        const summary =
-          await this.trabalhocontroller.getAtividadesCentroSummaryByParams(
-            paramsParsed
-          );
+        const summary = await this.trabalhoscontroller.getAtividadesCentroSummaryByParams( { CENTRO_ID: centro_id } );
         centroSummary.items = [];
         centroSummary.amount = 0;
 
@@ -89,7 +82,7 @@ module.exports = class SearchController {
         let centros;
 
         if (regional != "Todos") {
-          centros = await regionalcontroller.getCentrosByRegional(regional);
+          centros = await regionalcontroller.getCentroByParam({"REGIONAL.NOME_REGIONAL": regional});
         } else {
           centros = await regionalcontroller.getCentros();
         }
@@ -101,17 +94,9 @@ module.exports = class SearchController {
 
         for (let index = 0; index < centros.length; index++) {
           const centro = centros[index];
-          const centro_id = centro.ID;
+          const centro_id = centro._id;
 
-          let paramsParsed = this.parser.getParamsParsed({
-            CENTRO_ID: centro_id,
-            "ATIVIDADE.NOME_ATIVIDADE": trabalho != "Todos" ? trabalho : null,
-          });
-
-          let atividade =
-            await this.trabalhocontroller.getAtividadesCentroByParams(
-              paramsParsed
-            );
+          let atividade = await this.trabalhoscontroller.getAtividadesCentroByParams( { CENTRO_ID: centro_id, "ATIVIDADE.NOME_ATIVIDADE": trabalho != "Todos" ? trabalho : null, } );
 
           atividades.amount += atividade.length;
           for (let index = 0; index < atividade.length; index++) {
@@ -147,13 +132,7 @@ module.exports = class SearchController {
         const page = search.page;
         let finalized = false;
 
-        let paramsParsed = this.parser.getParamsParsed({
-          NAME: name,
-        });
-
-        let form_template = await this.trabalhocontroller.getFormByParams(
-          paramsParsed
-        );
+        let form_template = await this.trabalhoscontroller.getFormByParams( { NAME: name } );
 
         form_template = form_template[0];
         let pages = form_template.PAGES;
@@ -161,24 +140,18 @@ module.exports = class SearchController {
           return m.PAGE_NAME;
         });
 
-        paramsParsed = this.parser.getParamsParsed({
-          CENTRO_ID: centro_id,
-          fields:"QUESTION_ID._id,_id,ANSWER"
-        });
-
         if (page < pages.length) {
           let page_info = pages[page];
           pages = [];
           pages.push(page_info);
         } else {
-          finalized = await this.trabalhocontroller.checkFormCompletion(
+          finalized = await this.trabalhoscontroller.checkFormCompletion(
             name,
             centro_id
           );
         }
 
-        const quiz_responses =
-          await this.trabalhocontroller.getQuizResponseByParams(paramsParsed);
+        const quiz_responses = await this.trabalhoscontroller.getQuizResponseByParams({ CENTRO_ID: centro_id, fields:"QUESTION_ID,_id,ANSWER" });
 
         for (let index = 0; index < pages.length; index++) {
           const page = pages[index];
@@ -196,7 +169,7 @@ module.exports = class SearchController {
                 const question = group[k];
 
                 let answer = quiz_responses.filter((m) => {
-                    return m.QUESTION_ID._id == question._id;
+                    return m.QUESTION_ID == question._id;
                 });
 
                 if (answer.length > 0) {
@@ -210,7 +183,7 @@ module.exports = class SearchController {
                   question.ANSWER_ID = JSON.parse(
                     JSON.stringify(
                       answer.map((m) => {
-                        return m.ID;
+                        return m._id;
                       })
                     )
                   );

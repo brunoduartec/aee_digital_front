@@ -3,7 +3,6 @@ const bootstrap = require("./bootstrap");
 (async () => {
   await bootstrap.initialize();
 })();
-
 const http = require("http");
 
 const server = require("./server")();

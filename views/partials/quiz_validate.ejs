@@ -63,8 +63,8 @@
 
           for (let index = 0; index < childrenOfChildren.length; index++) {
             const childOfChild = childrenOfChildren[index];
-            childOfChild.setAttribute("id", item.ID);
-            childOfChild.setAttribute("name", item.ID);
+            childOfChild.setAttribute("id", item._id);
+            childOfChild.setAttribute("name", item._id);
             childOfChild.setAttribute("value", item.ANSWER);
           }
         }

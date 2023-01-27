@@ -89,7 +89,7 @@ module.exports = class UserInfoController {
           const regional = await this.regionalcontroller.getRegionalByParams(
             paramsParsed
           );
-          info.scope_id = regional.ID;
+          info.scope_id = regional._id;
         }
       } else {
         const paramsParsed = this.parser.getParamsParsed({
@@ -102,7 +102,7 @@ module.exports = class UserInfoController {
           paramsParsed
         );
 
-        info.scope_id = centro.ID;
+        info.scope_id = centro._id;
       }
       return info;
     } catch (error) {

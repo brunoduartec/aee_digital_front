@@ -1,12 +1,12 @@
 module.exports = class QuizActions {
   constructor(
-    trabalhocontroller,
+    trabalhoscontroller,
     userinfocontroller,
     regionalcontroller,
     logger,
     parser
   ) {
-    this.trabalhocontroller = trabalhocontroller;
+    this.trabalhoscontroller = trabalhoscontroller;
     this.userinfocontroller = userinfocontroller;
     this.regionalcontroller = regionalcontroller;
     this.logger = logger;
@@ -61,19 +61,14 @@ module.exports = class QuizActions {
 
           if (responses[question.ANSWER_ID]) {
             if (!question.ANSWER) {
-              await this.trabalhocontroller.postQuizResponse({
+              await this.trabalhoscontroller.postQuizResponse({
                 CENTRO_ID: centro_id,
                 QUIZ_ID: quiz._id,
                 QUESTION_ID: question._id,
                 ANSWER: answer,
               });
             } else if (question.ANSWER != responses[question._id]) {
-              let paramsParsed = this.parser.getParamsParsed({
-                _id: question.ANSWER_ID,
-              });
-              await this.trabalhocontroller.putQuizResponse(paramsParsed, {
-                ANSWER: answer,
-              });
+              await this.trabalhoscontroller.putQuizResponse({ _id: question.ANSWER_ID, }, { ANSWER: answer, });
             }
           }
         }
@@ -84,24 +79,16 @@ module.exports = class QuizActions {
   async send(req, res, action_info) {
     let { centro_id } = action_info;
 
-    let paramsParsed = this.parser.getParamsParsed({
-      CENTRO_ID: centro_id,
-      fields: "_id"
-    })
+    const quiz_responses = await this.trabalhoscontroller.getQuizResponseByParams({ CENTRO_ID: centro_id, fields: "_id" });
 
-    const quiz_responses =
-      await this.trabalhocontroller.getQuizResponseByParams(paramsParsed);
-
-    const quizResponsesMapped = quiz_responses.map((response)=>{
-      return response.ID
-    })
+    const quizResponsesMapped = quiz_responses.map((response)=>{ return response._id })
 
     let params = {
       CENTRO_ID: centro_id,
       ANSWERS: quizResponsesMapped,
       LASTMODIFIED: new Date(),
     };
-    await this.trabalhocontroller.postQuizSummary(params);
+    await this.trabalhoscontroller.postQuizSummary(params);
 
     res.render("pages/thanks", {});
   }

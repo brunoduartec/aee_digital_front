@@ -20,14 +20,7 @@ module.exports = class ExcelExportReportsController {
         await this.reportinfo.refresh(size);
       }
 
-      const params = {
-        NAME: "Cadastro de Informações Anual",
-      };
-
-      const paramsParsed = this.parser.getParamsParsed(params);
-      const forms = await this.trabalhoscontroller.getFormByParams(
-        paramsParsed
-      );
+      const forms = await this.trabalhoscontroller.getFormByParams({ NAME: "Cadastro de Informações Anual" });
       const form = forms[0];
 
       this.headers = [];
@@ -132,7 +125,7 @@ module.exports = class ExcelExportReportsController {
 
     for (let index = 0; index < centros.length; index++) {
       const centro = centros[index];
-      promises.push(this.exportCentro(centro.ID));
+      promises.push(this.exportCentro(centro._id));
     }
 
     await Promise.all(promises)
@@ -184,7 +177,7 @@ module.exports = class ExcelExportReportsController {
     let infoFormated = [];
     for (let index = 0; index < context.length; index++) {
       const item = context[index];
-      const centroId = item.ID;
+      const centroId = item._id;
       try {
         const centroInfoFormated = await this.formatCentroToExport(centroId);
         infoFormated = infoFormated.concat(centroInfoFormated.infoFormated);

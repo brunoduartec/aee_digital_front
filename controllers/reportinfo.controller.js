@@ -35,7 +35,7 @@ module.exports = class ReportInfo {
 
   async getCentroInfo(centroId) {
     const centro = this.centros.find((m) => {
-      return m.ID == centroId;
+      return m._id == centroId;
     });
 
     return centro;
@@ -99,7 +99,7 @@ module.exports = class ReportInfo {
     return new Promise((resolve, reject) => {
       (async () => {
         try {
-          const centroID = centro.ID;
+          const centroID = centro._id;
           const regionalName = centro.REGIONAL.NOME_REGIONAL;
           let regional = instance.reports[regionalName];
           if (!instance.reports[regionalName]) {

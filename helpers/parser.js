@@ -1,3 +1,4 @@
+const qs = require("qs")
 function getNestedObject(nestedObj, pathArr) {
   return pathArr.reduce(
     (obj, key) => (obj && obj[key] !== "undefined" ? obj[key] : undefined),
@@ -6,22 +7,7 @@ function getNestedObject(nestedObj, pathArr) {
 }
 
 function getParamsParsed(params) {
-  let paramsParsed = "";
-
-  let keys = Object.keys(params);
-
-  for (let index = 0; index < keys.length; index++) {
-    const key = keys[index];
-    const value = params[key];
-
-    if (value) {
-      paramsParsed = paramsParsed.concat(
-        `&${key}=${decodeURIComponent(value)}`
-      );
-    }
-  }
-
-  return paramsParsed.substring(1);
+  return qs.stringify(params, { encode: false })
 }
 
 function getQueryParamsParsed(query) {
