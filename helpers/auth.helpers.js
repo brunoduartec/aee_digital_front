@@ -14,7 +14,7 @@ const pageByPermission = {
     return `/cadastro_alianca?ID=${info.link}&page=0`;
   },
   coord_regional: function (info) {
-    return `/summary_coord?ID=${info.link}`;
+    return `/summary_coord?ID=${info.link}&start=1/1/2023&end=31/12/2024`;
   },
   coord_geral: function () {
     return `/summary_alianca?start=1/1/2023&end=31/12/2024`;
