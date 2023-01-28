@@ -120,6 +120,8 @@ module.exports = class trabalhosController extends CacheableController {
     return await this.get('atividade_generic_quiz_answer')
   }
 
+  
+
   async getPessoaByParams(params) {
     return await this.get('pessoa', params)
   }

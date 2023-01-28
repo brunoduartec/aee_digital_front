@@ -11,24 +11,16 @@ const trabalhosController = require("../controllers/trabalhos.controller");
 const trabalhoscontroller = new trabalhosController();
 
 const ExcelExportResponses = require("../controllers/excelexportresponses.controller");
-const excelExporterController = require("../controllers/excelexporter.controller");
-const excelexportercontroller = new excelExporterController();
-
-const ReportInfo = require("../controllers/reportinfo.controller");
-const reportinfo = new ReportInfo(
-  excelexportercontroller,
-  trabalhoscontroller,
-  regionalcontroller
-);
+const excelExporterHelper = require("../helpers/excelexporter.helper");
+const excelexporter = new excelExporterHelper();
 
 const excelexporteresponses = new ExcelExportResponses(
-  excelexportercontroller,
-  reportinfo,
+  excelexporter,
   trabalhoscontroller
 );
 
 (async () => {
-  await reportinfo.repeatedRefresh();
+  // await reportinfo.repeatedRefresh();
   await excelexporteresponses.init();
   console.log("INITED");
 })();
