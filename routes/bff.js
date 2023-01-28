@@ -20,7 +20,6 @@ const excelexporteresponses = new ExcelExportResponses(
 );
 
 (async () => {
-  // await reportinfo.repeatedRefresh();
   await excelexporteresponses.init();
   console.log("INITED");
 })();
@@ -400,13 +399,15 @@ router.get("/bff/get_required", async function (req, res) {
 
     const questions = await trabalhoscontroller.getQuestionByParams({ IS_REQUIRED: true, fields:"_id, QUESTION" })
 
-    const not_finished = responses.filter((response)=>{
+    let not_finished_unique = []
+    let not_finished = responses.filter((response)=>{
       const isrequired = questions.find((q)=>{
         return q._id === response.QUESTION_ID
       });
 
       return isrequired && response.ANSWER.trim().length == 0
-    }).map((response)=>{
+    })
+    .map((response)=>{
       return {
         QUESTION: questions.find((q)=>{
           return q._id == response.QUESTION_ID
@@ -414,7 +415,14 @@ router.get("/bff/get_required", async function (req, res) {
       }
     })
 
-    res.json(not_finished);
+    not_finished.forEach(question => {
+      const QUESTION = question.QUESTION
+      if(!not_finished_unique.includes(QUESTION)){
+        not_finished_unique.push(QUESTION)
+      }
+    });
+
+    res.json(not_finished_unique);
   } catch (error) {
     this.logger.error(`/bff/get_required: ${error}`);
     throw error;
