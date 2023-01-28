@@ -1,7 +1,7 @@
 const excelJS = require("exceljs");
 
 module.exports = class ExcelExporter {
-  constructor(logger = require("../helpers/logger")) {
+  constructor(logger = require("./logger")) {
     this.logger = logger;
   }
 

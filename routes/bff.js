@@ -11,33 +11,26 @@ const trabalhosController = require("../controllers/trabalhos.controller");
 const trabalhoscontroller = new trabalhosController();
 
 const ExcelExportResponses = require("../controllers/excelexportresponses.controller");
-const excelExporterController = require("../controllers/excelexporter.controller");
-const excelexportercontroller = new excelExporterController();
-
-const ReportInfo = require("../controllers/reportinfo.controller");
-const reportinfo = new ReportInfo(
-  excelexportercontroller,
-  trabalhoscontroller,
-  regionalcontroller
-);
+const excelExporterHelper = require("../helpers/excelexporter.helper");
+const excelexporter = new excelExporterHelper();
 
 const excelexporteresponses = new ExcelExportResponses(
-  excelexportercontroller,
-  reportinfo,
+  excelexporter,
   trabalhoscontroller
 );
 
 (async () => {
-  await reportinfo.repeatedRefresh();
   await excelexporteresponses.init();
   console.log("INITED");
 })();
 
-const { requireAuth } = require("../helpers/auth.helpers");
+const {
+  requireAuth
+} = require("../helpers/auth.helpers");
 
-router.post("/bff/coord_responses", async function (req, res) {
+router.get("/bff/coord_responses", async function (req, res) {
   const centroId = req.query.centroID;
-  let coord_quiz = req ? req.body : null;
+
   try {
 
     const templates = [];
@@ -45,46 +38,52 @@ router.post("/bff/coord_responses", async function (req, res) {
       return templates;
     }
 
-    if (coord_quiz) {
-      coord_quiz = coord_quiz[0];
+    let coord_quiz = await trabalhoscontroller.getQuizTemplateByParams({
+      CATEGORY: "Coordenador",
+    });
 
-      let coordresponse = await trabalhoscontroller.getCoordResponsesByCentroId(
-        centroId
-      );
+    coord_quiz = coord_quiz[0]
 
-      for (const question of coord_quiz.QUESTIONS[0].GROUP) {
-        let response = coordresponse.filter((m) => {
-          return m.QUESTION_ID._id == question._id;
-        });
+    let coordresponse = await trabalhoscontroller.getQuizResponseByParams({
+      CENTRO_ID: centroId,
+      QUIZ_ID: coord_quiz._id,
+      fields: "QUESTION_ID,_id,ANSWER"
+    });
 
-        response = response[0];
+    for (const question of coord_quiz.QUESTIONS[0].GROUP) {
+      let response = coordresponse.filter((m) => {
+        return m.QUESTION_ID == question._id;
+      });
 
-        if (!response) {
-          response = await setQuizResponse(
-            centroId,
-            coord_quiz.ID,
-            question._id,
-            " "
-          );
-          if (response) {
-            response = response[0];
-          }
-        }
+      response = response[0];
 
+      if (!response) {
+        response = await setQuizResponse(
+          centroId,
+          coord_quiz._id,
+          question._id,
+          " "
+        );
         if (response) {
-          templates.push({
-            ANSWER_ID: response.ID,
-            ANSWER: response.ANSWER,
-            _id: response.QUESTION_ID._id,
-            PRESET_VALUES: question.PRESET_VALUES,
-          });
+          response = response[0];
         }
+      }
+
+      if (response) {
+        templates.push({
+          ANSWER_ID: response._id,
+          ANSWER: response.ANSWER,
+          _id: response.QUESTION_ID,
+          PRESET_VALUES: question.PRESET_VALUES,
+        });
       }
     }
 
-    res.json ({ templates });
+    res.json({
+      templates
+    });
   } catch (error) {
-    logger.error(`post:coord_responses ${centroId}: ${error}`);
+    logger.error(`get:coord_responses ${centroId}: ${error}`);
     throw error;
   }
 });
@@ -95,7 +94,7 @@ router.get("/bff/centros", async function (req, res) {
 
     let centros;
     if (regionalName) {
-      centros = await regionalcontroller.getCentrosByRegional(regionalName);
+      centros = await regionalcontroller.getCentroByParam({"REGIONAL.NOME_REGIONAL":regionalName});
     } else {
       centros = await regionalcontroller.getCentros();
     }
@@ -132,34 +131,16 @@ router.get("/bff/regional", async function (req, res) {
 
 router.get("/bff/generalinfo", async function (req, res) {
   try {
-    let { start,end } = req.query;
+    let {
+      start,
+      end
+    } = req.query;
     const passes = await trabalhoscontroller.getPasses();
-    let responses = await trabalhoscontroller.getSummaries({removeFields:["ANSWERS"]});
+    let responses = await trabalhoscontroller.getSummaries(start, end);
     const regionais = await regionalcontroller.getRegionais();
-    const centros = await regionalcontroller.getCentrosByCache();
+    const centros = await regionalcontroller.getCentros();
 
-    if(start){
-      let startDateParts = start.split("/")
-      
-      let endDateParts
-      let endDate
-      let startDate = new Date(startDateParts[2],startDateParts[1] -1,startDateParts[0])
-      
-      if(end){
-        endDateParts = end.split("/")
-        endDate = new Date(endDateParts[2],endDateParts[1] -1,endDateParts[0])
-      }
-      else{
-        end = Date.now()
-      }
-      
-      responses = responses.filter((response)=>{
-        const responseDate = new Date(response.LASTMODIFIED)
 
-        return responseDate >= startDate && responseDate <= endDate
-
-      })
-    }
 
     res.json({
       passes: passes,
@@ -185,17 +166,13 @@ router.get("/bff/coord_info", async function (req, res) {
       paramsParsed
     );
 
-    let coord_quiz = await trabalhoscontroller.getQuizTemplateByParams(
-      parser.getParamsParsed({
-        CATEGORY: "Coordenador",
-      })
-    );
+    let coord_quiz = await trabalhoscontroller.getQuizTemplateByParams({
+      CATEGORY: "Coordenador",
+    });
 
-    let coordenador = await trabalhoscontroller.getPessoaByParams(
-      parser.getParamsParsed({
-        _id: regionalInfo.COORDENADOR_ID,
-      })
-    );
+    let coordenador = await trabalhoscontroller.getPessoaByParams({
+      _id: regionalInfo.COORDENADOR_ID,
+    });
 
     res.json({
       regional: regionalInfo,
@@ -212,17 +189,15 @@ router.get("/bff/situacao", async function (req, res) {
   try {
     const nomeRegional = req.query.regionalName;
 
-    const centros = await regionalcontroller.getCentrosByRegional(nomeRegional);
+    const centros = await regionalcontroller.getCentroByParam({"REGIONAL.NOME_REGIONAL":nomeRegional});
 
     const centroIDs = centros.map((m) => {
-      return m.ID;
+      return m._id;
     });
 
-    let question = await trabalhoscontroller.getQuestionByParams(
-      parser.getParamsParsed({
-        QUESTION: "Situação",
-      })
-    );
+    let question = await trabalhoscontroller.getQuestionByParams({
+      QUESTION: "Situação",
+    });
 
     question = question[0];
 
@@ -233,24 +208,20 @@ router.get("/bff/situacao", async function (req, res) {
       Inscritas: [],
     };
     for (const id of centroIDs) {
-      let summary = await trabalhoscontroller.getQuizSummaryByParams(
-        parser.getParamsParsed({
-          CENTRO_ID: id,
-        })
-      );
+      let summary = await trabalhoscontroller.getQuizSummaryByParams({
+        CENTRO_ID: id,
+      });
       summary = summary[0];
 
       if (summary) {
         situacoes.summary.push(summary);
       }
 
-      let situacao = await trabalhoscontroller.getQuizResponseByParams(
-        parser.getParamsParsed({
-          CENTRO_ID: id,
-          QUESTION_ID: question.ID,
-          fields: "ANSWER,_id"
-        })
-      );
+      let situacao = await trabalhoscontroller.getQuizResponseByParams({
+        CENTRO_ID: id,
+        QUESTION_ID: question._id,
+        fields: "ANSWER,_id"
+      });
       situacao = situacao[0];
       if (situacao) {
         if (situacao.ANSWER == " ") {
@@ -286,11 +257,9 @@ router.get("/bff/summary", async function (req, res) {
   try {
     const centroID = req.query.centroID;
 
-    const response = await trabalhoscontroller.getQuizSummaryByParams(
-      parser.getParamsParsed({
-        CENTRO_ID: centroID,
-      })
-    );
+    const response = await trabalhoscontroller.getQuizSummaryByParams({
+      CENTRO_ID: centroID,
+    });
 
     res.json(response);
   } catch (error) {
@@ -304,20 +273,18 @@ router.get("/bff/answerbyregional", async function (req, res) {
     const questionId = req.query.questionId;
     const regionalName = req.query.regionalName;
 
-    const questionAnswers = await trabalhoscontroller.getQuizResponseByParams(
-      parser.getParamsParsed({
-        "QUESTION_ID._id": questionId,
-        fields:"ANSWER,_id"
-      })
-    );
+    const questionAnswers = await trabalhoscontroller.getQuizResponseByParams({
+      "QUESTION_ID": questionId,
+      fields: "ANSWER,_id,CENTRO_ID"
+    });
 
-    const centros = await regionalcontroller.getCentrosByRegional(regionalName);
-
+    const centros = await regionalcontroller.getCentroByParam({"REGIONAL.NOME_REGIONAL":regionalName});
+    
     let questionResponses = {};
 
     for (const centro of centros) {
-      questionResponses[centro.ID] = questionAnswers.find((m) => {
-        return m.CENTRO_ID === centro.ID;
+      questionResponses[centro._id] = questionAnswers.find((m) => {
+        return m.CENTRO_ID === centro._id;
       });
     }
 
@@ -390,22 +357,22 @@ router.post("/bff/initialize_centro", async function (req, res) {
   try {
     const centroId = req.query.centroId;
 
-    if(!centroId)
-    throw new Error("centroId required")
+    if (!centroId)
+      throw new Error("centroId required")
 
     let responses = await trabalhoscontroller.getQuizResponseByParams({
       CENTRO_ID: centroId,
     });
 
-    
+
     if (responses.length == 0) {
       const cadastroFormName = "Cadastro de Informações Anual";
-  
-      let questionsPage = await trabalhoscontroller.getFormQuestions(
-        cadastroFormName
-      );
 
-     const answersAdded = await trabalhoscontroller.initializeAnswers(centroId, questionsPage)
+      let questionsPage = await trabalhoscontroller.getFormByParams({
+        "NAME": cadastroFormName
+      });
+
+      const answersAdded = await trabalhoscontroller.initializeAnswers(centroId, questionsPage)
 
       res.json({
         "message": "Adicionados",
@@ -425,21 +392,37 @@ router.get("/bff/get_required", async function (req, res) {
   try {
     const centroId = req.query.centroID;
 
-    let not_finished;
-    const responses = await trabalhoscontroller.getQuizResponseByParams(
-      parser.getParamsParsed({
-        CENTRO_ID: centroId,
-        "QUESTION_ID.IS_REQUIRED": true,
-        fields:"ANSWER,CENTRO_ID"
-      })
-    );
+    const responses = await trabalhoscontroller.getQuizResponseByParams({
+      CENTRO_ID: centroId,
+      fields: "ANSWER, QUESTION_ID"
+    });
 
-    if (responses) {
-      not_finished = responses.filter((m) => {
-        return m.ANSWER.trim().length == 0;
+    const questions = await trabalhoscontroller.getQuestionByParams({ IS_REQUIRED: true, fields:"_id, QUESTION" })
+
+    let not_finished_unique = []
+    let not_finished = responses.filter((response)=>{
+      const isrequired = questions.find((q)=>{
+        return q._id === response.QUESTION_ID
       });
-    }
-    res.json(not_finished);
+
+      return isrequired && response.ANSWER.trim().length == 0
+    })
+    .map((response)=>{
+      return {
+        QUESTION: questions.find((q)=>{
+          return q._id == response.QUESTION_ID
+        })?.QUESTION
+      }
+    })
+
+    not_finished.forEach(question => {
+      const QUESTION = question.QUESTION
+      if(!not_finished_unique.includes(QUESTION)){
+        not_finished_unique.push(QUESTION)
+      }
+    });
+
+    res.json(not_finished_unique);
   } catch (error) {
     this.logger.error(`/bff/get_required: ${error}`);
     throw error;
@@ -452,25 +435,16 @@ router.delete("/bff/remove_answer", requireAuth, async function (req, res) {
     let paramsFrom = parser.getQueryParamsParsed(answer);
     let removedItem = 0
 
-    let paramsParsed = parser.getParamsParsed({
-      "QUESTION_ID._id": paramsFrom.questionId,
+    let quizResponse = await trabalhoscontroller.getQuizResponseByParams({
+      "QUESTION_ID": paramsFrom.questionId,
       CENTRO_ID: paramsFrom.centroId
-    })
+    });
 
-    let quizResponse = await trabalhoscontroller.getQuizResponseByParams(
-      paramsParsed
-    );
-
-    if(quizResponse.length>1){
-      paramsParsed = parser.getParamsParsed({
+    if (quizResponse.length > 1) {
+      const removed = await trabalhoscontroller.deleteQuizResponseByParams({
         _id: paramsFrom.answerId,
         CENTRO_ID: paramsFrom.centroId,
       });
-  
-  
-      const removed = await trabalhoscontroller.deleteQuizResponseByParams(
-        paramsParsed
-      );
       removedItem = removed.deletedCount;
     }
 
@@ -492,12 +466,9 @@ router.post("/bff/add_answer", requireAuth, async function (req, res) {
     const answer = req.originalUrl;
     let paramsFrom = parser.getQueryParamsParsed(answer);
 
-    const paramsParsed = parser.getParamsParsed({
+    const groupQuestion = await trabalhoscontroller.getGroupQuestionByParams({
       _id: paramsFrom.groupId,
     });
-    const groupQuestion = await trabalhoscontroller.getGroupQuestionByParams(
-      paramsParsed
-    );
 
     const questions = groupQuestion[0].GROUP;
 
@@ -528,23 +499,13 @@ router.put("/bff/update_answer", requireAuth, async function (req, res) {
     const answer = req.originalUrl;
     let paramsFrom = parser.getQueryParamsParsed(answer);
 
-    let paramsParsed = parser.getParamsParsed({
+    const quizResponse = await trabalhoscontroller.putQuizResponse({
       _id: paramsFrom.answerId,
+    }, {
+      ANSWER: paramsFrom.answer,
     });
-    const quizResponse = await trabalhoscontroller.putQuizResponse(
-      paramsParsed,
-      {
-        ANSWER: paramsFrom.answer,
-      }
-    );
 
-    if (trabalhoscontroller.checkQuestionInCoordQuiz(paramsFrom.questionId)) {
-      trabalhoscontroller.updateCoordResponseByCentroId(
-        paramsFrom.questionId,
-        paramsFrom.answerId,
-        paramsFrom.answer
-      );
-    }
+    
 
     res.json(quizResponse);
   } catch (error) {
