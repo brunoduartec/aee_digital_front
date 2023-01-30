@@ -137,37 +137,6 @@ module.exports = class trabalhosController extends CacheableController {
     return await this.put('atividade_generic_quiz_summary', params, value)
   }
 
-  async initializeAnswers(centroId, questionsPage) {
-    try {
-
-      let answersToAdd = [];
-
-      for (let index = 0; index < questionsPage.length; index++) {
-        const questions = questionsPage[index];
-
-        for (let l = 0; l < questions.length; l++) {
-          const question = questions[l];
-
-          let answerInfo = {
-            CENTRO_ID: centroId,
-            QUIZ_ID: question.QUIZ_ID,
-            QUESTION_ID: question._id,
-            ANSWER: " ",
-          };
-          answersToAdd.push(answerInfo);
-
-        }
-      }
-
-      await this.postQuizResponse(answersToAdd);
-      return answersToAdd;
-
-    } catch (error) {
-      this.logger.error(`Insert Answers ${error}`);
-      throw error;
-    }
-  }
-
   async checkFormCompletion(formName, centroId) {
     try {
       let form = await this.getFormByParams({

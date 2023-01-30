@@ -236,12 +236,12 @@
             <%- include('../partials/sub_quiz_input', {question:questionInfo});%></div></span
         >
         <span class="border col-md-2"
-          ><div class="form-group"><p name="data_avaliacao">
+          ><div class="form-group"><p name="data_avaliacao" id="data_avaliacao_<%=centro._id%>">
                 Não Finalizado
           </p></div></span>
 
 
-          <span class="border col-md-2"><div class="form-group" name="perguntas_faltantes"></div></span>
+          <span class="border col-md-2"><div class="form-group" name="perguntas_faltantes" id="perguntas_faltantes_<%=centro._id%>"></div></span>
 
           <span class="border col-md-1"><div class="form-group" name="download">
             <a href="http://162.214.123.133:30101/db/aee/expCsv/atividade_generic_quiz_answers?key=CENTRO_ID&value=<%=centro._id%>&type=O">
@@ -461,8 +461,7 @@
             const requiredQuestions = await getCentroRequiredQuestions(centro._id);
 
             if(requiredQuestions.length > 0){
-              const perguntas_faltantes = centroDiv.children[6].children[0]
-  
+              const perguntas_faltantes = document.getElementById(`perguntas_faltantes_${centro._id}`)
   
               let ul = document.createElement("ul");
   
@@ -475,11 +474,11 @@
                 ul.appendChild(li)
               }
 
-              centroDiv.setAttribute("style", "background-color:rgb(253, 243, 128);")
             }
             else{
-              const data = centroDiv.children[5].children[0].children[0]
-              data.innerText = "Não Iniciado"
+              centroDiv.setAttribute("style", "background-color:rgb(253, 243, 128);")
+              const data = document.getElementById(`data_avaliacao_${centro._id}`)
+              data.innerText = "Falta Enviar"
             }
             
 
