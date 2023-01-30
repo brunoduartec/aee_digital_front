@@ -368,11 +368,40 @@ router.post("/bff/initialize_centro", async function (req, res) {
     if (responses.length == 0) {
       const cadastroFormName = "Cadastro de Informações Anual";
 
-      let questionsPage = await trabalhoscontroller.getFormByParams({
+      let form = await trabalhoscontroller.getFormByParams({
         "NAME": cadastroFormName
       });
 
-      const answersAdded = await trabalhoscontroller.initializeAnswers(centroId, questionsPage)
+      form = form[0];
+      let pages = form.PAGES;
+
+      let answersToAdd = []
+
+      pages.forEach(page => {
+        const quizes = page.QUIZES;
+
+        quizes.forEach((quiz)=>{
+          const questions = quiz.QUESTIONS;
+          questions.forEach(group=>{
+            let GROUP = group.GROUP
+            GROUP.forEach(question=>{
+              let answerInfo = {
+                CENTRO_ID: centroId,
+                QUIZ_ID: quiz._id,
+                QUESTION_ID: question._id,
+                ANSWER: " ",
+              };
+
+              answersToAdd.push(answerInfo)
+            })
+          })
+
+        })
+
+      });
+
+      
+      const answersAdded = await trabalhoscontroller.postQuizResponse(answersToAdd);
 
       res.json({
         "message": "Adicionados",
@@ -397,32 +426,22 @@ router.get("/bff/get_required", async function (req, res) {
       fields: "ANSWER, QUESTION_ID"
     });
 
-    const questions = await trabalhoscontroller.getQuestionByParams({ IS_REQUIRED: true, fields:"_id, QUESTION" })
+    let questions = await trabalhoscontroller.getQuestionByParams({ IS_REQUIRED: true, fields:"_id, QUESTION" })
 
-    let not_finished_unique = []
-    let not_finished = responses.filter((response)=>{
-      const isrequired = questions.find((q)=>{
-        return q._id === response.QUESTION_ID
-      });
+    let not_finished = [];
 
-      return isrequired && response.ANSWER.trim().length == 0
-    })
-    .map((response)=>{
-      return {
-        QUESTION: questions.find((q)=>{
-          return q._id == response.QUESTION_ID
-        })?.QUESTION
+    questions.forEach(question => {
+      const hasResponse = responses.find((response)=>{
+        return response.QUESTION_ID == question._id && response.ANSWER.trim().length > 0
+      })
+
+      if(!hasResponse){
+        not_finished.push(question.QUESTION)
       }
-    })
-
-    not_finished.forEach(question => {
-      const QUESTION = question.QUESTION
-      if(!not_finished_unique.includes(QUESTION)){
-        not_finished_unique.push(QUESTION)
-      }
+      
     });
 
-    res.json(not_finished_unique);
+    res.json(not_finished);
   } catch (error) {
     this.logger.error(`/bff/get_required: ${error}`);
     throw error;
