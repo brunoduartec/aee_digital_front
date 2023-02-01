@@ -15,10 +15,12 @@
       }
     }
 
+    const valueToApply = itemChanged ? itemChanged.value.toString(): ""
+
     const answerId = item.id;
     let questionId;
 
-    var apiUrl = `/bff/update_answer?answerId=${answerId}&answer=${itemChanged.value.toString()}`;
+    var apiUrl = `/bff/update_answer?answerId=${answerId}&answer=${valueToApply}`;
     if (itemChanged) {
       questionId = itemChanged.getAttribute("questionId");
       if (questionId) {
