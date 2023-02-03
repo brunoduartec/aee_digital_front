@@ -241,15 +241,11 @@
           </p></div></span>
         <span class="border col-md-2"><div class="form-group" name="perguntas_faltantes" id="perguntas_faltantes_<%=centro._id%>"></div></span>
 
-          <span class="border col-md-1"><div class="form-group" name="download">
-            <a href="http://162.214.123.133:30101/db/aee/expCsv/atividade_generic_quiz_answers?key=CENTRO_ID&value=<%=centro._id%>&type=O">
-              <img src="/img/download.svg" alt="Bootstrap">
-              
-              </a>
-            
-              <input id="clickMe" type="button" value="clickme" onclick="DownloadResponses('<%=centro._id%>');" />
-
-            </div></span>
+          <span class="border col-md-1">
+            <div class="form-group" name="download">
+              <input id="clickMe" class="btn btn-link" type="button" value="Baixar" onclick="DownloadResponses('<%=centro._id%>');" />
+            </div>
+          </span>
 
           
       </div>

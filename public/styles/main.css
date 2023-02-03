@@ -355,6 +355,7 @@
 .validacao-coord-subtitulo .form-group p {
   margin-bottom:5px;
   margin-top:5px;
+  text-align: center;
 }
 
 .validacao-coord-subtitulo h3 {
@@ -389,6 +390,11 @@
 
 .validacao-coord-dados .form-control {
   margin: 5px;
+  font-size: small;
+  text-align: center;
+}
+
+.validacao-coord-dados span input {
   font-size: small;
   text-align: center;
 }
