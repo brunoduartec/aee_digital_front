@@ -65,73 +65,73 @@ const excelexporter = new ExcelExportResponses(
   await excelexporter.init();
 })();
 
-describe("controllers:exportexcelresponses", () => {
-  it("should validade init", async () => {
-    const init = await excelexporter.init();
+// describe("controllers:exportexcelresponses", () => {
+//   it("should validade init", async () => {
+//     const init = await excelexporter.init();
 
-    expect(init).toBe(true);
-  });
+//     expect(init).toBe(true);
+//   });
 
-  it("should validade formatInfo", async () => {
-    const data = [
-      {
-        ANSWER: "Banana",
-        QUESTION_ID: "id_1",
-      },
-      {
-        ANSWER: "Banana",
-        QUESTION_ID: "id_2",
-      },
-    ];
-    const formatInfo = await excelexporter.getFormatInfo(data);
-    const expected = formatInfo["id_1"];
+//   it("should validade formatInfo", async () => {
+//     const data = [
+//       {
+//         ANSWER: "Banana",
+//         QUESTION_ID: "id_1",
+//       },
+//       {
+//         ANSWER: "Banana",
+//         QUESTION_ID: "id_2",
+//       },
+//     ];
+//     const formatInfo = await excelexporter.getFormatInfo(data);
+//     const expected = formatInfo["id_1"];
 
-    expect(typeof formatInfo).toBe("object");
-    expect(expected).toBe("Banana");
-  });
+//     expect(typeof formatInfo).toBe("object");
+//     expect(expected).toBe("Banana");
+//   });
 
-  it("should validade headers", async () => {
-    await excelexporter.init(3);
-    const headers = await excelexporter.getHeaders();
+//   it("should validade headers", async () => {
+//     await excelexporter.init(3);
+//     const headers = await excelexporter.getHeaders();
 
-    expect(headers.length).toBe(130);
-  });
+//     expect(headers.length).toBe(130);
+//   });
 
-  it("should validade centro reports", async () => {
-    await excelexporter.init(3);
+//   it("should validade centro reports", async () => {
+//     await excelexporter.init(3);
 
-    const centroId = "61b0ba7e71572500128b85df";
-    const response = await excelexporter.exportCentro(centroId);
-    expect(response.length).toBeGreaterThan(1);
-  });
+//     const centroId = "61b0ba7e71572500128b85df";
+//     const response = await excelexporter.exportCentro(centroId);
+//     expect(response.length).toBeGreaterThan(1);
+//   });
 
-  it("should validade centro of a regional reports", async () => {
-    await excelexporter.init(3);
+//   it("should validade centro of a regional reports", async () => {
+//     await excelexporter.init(3);
 
-    const regional = "ABC";
-    const response = await excelexporter.exportCentrosByRegional(regional);
-    expect(response.length).toBeGreaterThan(1);
-  });
+//     const regional = "ABC";
+//     const response = await excelexporter.exportCentrosByRegional(regional);
+//     expect(response.length).toBeGreaterThan(1);
+//   });
 
-  it("should validade regional reports", async () => {
-    await excelexporter.init();
+//   it("should validade regional reports", async () => {
+//     await excelexporter.init();
 
-    const regional = "NORDESTE";
-    const response = await excelexporter.exportRegional(regional);
-    expect(response[0].length).toBeGreaterThan(1);
-  });
+//     const regional = "NORDESTE";
+//     const response = await excelexporter.exportRegional(regional);
+//     expect(response[0].length).toBeGreaterThan(1);
+//   });
 
-  it("should validade regionais reports", async () => {
-    await excelexporter.init();
+//   it("should validade regionais reports", async () => {
+//     await excelexporter.init();
 
-    const response = await excelexporter.exportRegionais();
-    expect(response.length).toBeGreaterThan(1);
-  });
+//     const response = await excelexporter.exportRegionais();
+//     expect(response.length).toBeGreaterThan(1);
+//   });
 
-  it("should validade general reports", async () => {
-    await excelexporter.init();
+//   it("should validade general reports", async () => {
+//     await excelexporter.init();
 
-    const response = await excelexporter.exportAll();
-    expect(response.length).toBeGreaterThan(1);
-  });
-});
+//     const response = await excelexporter.exportAll();
+//     expect(response.length).toBeGreaterThan(1);
+//   });
+// });

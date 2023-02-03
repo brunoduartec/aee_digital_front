@@ -1,33 +1,24 @@
+
 module.exports = class ExcelExportReportsController {
   constructor(
     exporter,
-    reportinfo,
     trabalhoscontroller,
+    Regionaiscontroller = require("./regional.controller"),
     parser = require("../helpers/parser"),
     logger = require("../helpers/logger")
   ) {
     this.exporter = exporter;
-    this.reportinfo = reportinfo;
+    this.regionaiscontroller = new Regionaiscontroller();
     this.trabalhoscontroller = trabalhoscontroller;
     this.logger = logger;
     this.parser = parser;
     this.headers = [];
   }
 
-  async init(size) {
+  async init() {
     try {
-      if (!this.reportinfo.hasInitialized()) {
-        await this.reportinfo.refresh(size);
-      }
 
-      const params = {
-        NAME: "Cadastro de Informações Anual",
-      };
-
-      const paramsParsed = this.parser.getParamsParsed(params);
-      const forms = await this.trabalhoscontroller.getFormByParams(
-        paramsParsed
-      );
+      const forms = await this.trabalhoscontroller.getFormByParams({ NAME: "Cadastro de Informações Anual" });
       const form = forms[0];
 
       this.headers = [];
@@ -132,7 +123,7 @@ module.exports = class ExcelExportReportsController {
 
     for (let index = 0; index < centros.length; index++) {
       const centro = centros[index];
-      promises.push(this.exportCentro(centro.ID));
+      promises.push(this.exportCentro(centro._id));
     }
 
     await Promise.all(promises)
@@ -153,9 +144,13 @@ module.exports = class ExcelExportReportsController {
   }
 
   async exportRegional(regionalName) {
-    const centros = await this.reportinfo.getCentrosInRegionalInfo(
-      regionalName
-    );
+
+    let centros = await this.regionaiscontroller.getCentros();
+
+    centros = centros.filter((centro)=>{
+      return centro.REGIONAL.NOME_REGIONAL === regionalName
+    })
+
     const fileName = this.getRegionalFileName(regionalName);
 
     return await this.exportBatch(fileName, centros);
@@ -163,7 +158,8 @@ module.exports = class ExcelExportReportsController {
 
   async exportRegionais() {
     const files = [];
-    const regionais = await this.reportinfo.getRegionaisInfo();
+    const regionais = await this.regionaiscontroller.getRegionais();
+
     for (let index = 0; index < regionais.length; index++) {
       const regional = regionais[index];
       let regionalFile = await this.exportRegional(regional.NOME_REGIONAL);
@@ -174,7 +170,7 @@ module.exports = class ExcelExportReportsController {
   }
 
   async exportAll() {
-    const centros = await this.reportinfo.getCentrosInfo();
+    const centros = await this.regionaiscontroller.getCentros();
     const fileName = this.getAllFileName();
 
     return await this.exportBatch(fileName, centros);
@@ -184,7 +180,7 @@ module.exports = class ExcelExportReportsController {
     let infoFormated = [];
     for (let index = 0; index < context.length; index++) {
       const item = context[index];
-      const centroId = item.ID;
+      const centroId = item._id;
       try {
         const centroInfoFormated = await this.formatCentroToExport(centroId);
         infoFormated = infoFormated.concat(centroInfoFormated.infoFormated);
@@ -204,16 +200,13 @@ module.exports = class ExcelExportReportsController {
 
   async formatCentroToExport(centroId) {
     try {
-      const centroInfo = await this.reportinfo.getCentroInfo(centroId);
+      let centroInfo = await this.regionaiscontroller.getCentroByParam({_id: centroId})
+      centroInfo = centroInfo[0]
 
       const centroName = centroInfo.NOME_CENTRO;
       const regionalName = centroInfo.REGIONAL.NOME_REGIONAL;
 
-      const centroReportInfo = await this.reportinfo.getCentroReportInfo(
-        regionalName,
-        centroId
-      );
-      const data = centroReportInfo.RESPONSES;
+      const data = await this.trabalhoscontroller.getQuizResponseByParams({CENTRO_ID: centroId})
 
       const infoFormated = [];
       infoFormated.push(data);

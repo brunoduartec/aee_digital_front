@@ -206,10 +206,10 @@
       <% centros.forEach(function(centro) { 
         
         %>
-        <div class="form row " style="background-color:rgb(212, 99, 131);" name="centro" id="<%=centro.ID%>">
+        <div class="form row " style="background-color:rgb(212, 99, 131);" name="centro" id="<%=centro._id%>">
         <span class="border col-md-2"
           ><div class="form-group"><p>
-            <a href="/cadastro_alianca?ID=<%=centro.ID%>&page=0">
+            <a href="/cadastro_alianca?ID=<%=centro._id%>&page=0">
             <%=centro.NOME_CENTRO%>
             </a>
             </p></div></span
@@ -236,20 +236,20 @@
             <%- include('../partials/sub_quiz_input', {question:questionInfo});%></div></span
         >
         <span class="border col-md-2"
-          ><div class="form-group"><p name="data_avaliacao">
+          ><div class="form-group"><p name="data_avaliacao" id="data_avaliacao_<%=centro._id%>">
                 Não Finalizado
           </p></div></span>
 
 
-          <span class="border col-md-2"><div class="form-group" name="perguntas_faltantes"></div></span>
+          <span class="border col-md-2"><div class="form-group" name="perguntas_faltantes" id="perguntas_faltantes_<%=centro._id%>"></div></span>
 
           <span class="border col-md-1"><div class="form-group" name="download">
-            <a href="http://162.214.123.133:30101/db/aee/expCsv/atividade_generic_quiz_answers?key=CENTRO_ID&value=<%=centro.ID%>&type=O">
+            <a href="http://162.214.123.133:30101/db/aee/expCsv/atividade_generic_quiz_answers?key=CENTRO_ID&value=<%=centro._id%>&type=O">
               <img src="/img/download.svg" alt="Bootstrap">
               
               </a>
             
-              <input id="clickMe" type="button" value="clickme" onclick="DownloadResponses('<%=centro.ID%>');" />
+              <input id="clickMe" type="button" value="clickme" onclick="DownloadResponses('<%=centro._id%>');" />
 
             </div></span>
 
@@ -267,7 +267,7 @@
         $(document).ready( async function(){
           var centros = <%- JSON.stringify(centros) %> 
           showOverlay();
-           await setCentrosResponses(centros)
+          setCentrosResponses(centros)
            hideOverlay();
         });
 
@@ -358,74 +358,74 @@
             }
           }
 
-          async function getCentroResponses(centroId){
+          async function getCentroResponses(centroId, callback){
             try {
-              var coord_quiz = '<%- JSON.stringify(coord_quiz) %>'
               var apiUrl = `bff/coord_responses?centroID=${centroId}`;
               let responseInfo = await fetch(apiUrl,{
-                headers: {
-                  "Content-Type": "application/json"
-                },
-                method: "POST",
-                body: coord_quiz
+              headers: {
+              "Content-Type": "application/json"
+              },
+              method: "GET"
+              }) .then((response) => {
+                return response.json();
+              })
+              .then((data) => {
+                callback(data)  
               });
-  
-              responseInfo = await responseInfo.json();
-
-              return responseInfo
-              
             } catch (error) {
               console.log(`Error at getCentroResponses ${centroId}`, error)
               throw(error)
             }
           }
 
-        async function setCentroResponse(centroDiv, centro, totalCentros, avaliacaoResponses){
-          let responses = await getCentroResponses(centro.ID);
+        function setCentroResponse(centroDiv, centro, totalCentros, avaliacaoResponses){
+          let responses = getCentroResponses(centro._id, function(data){
+            let responseInfo = data.templates
 
-          let responseInfo = responses.templates
+            const situacao = centroDiv.children[3].children[0].children[0]
 
-          const situacao = centroDiv.children[3].children[0].children[0]
-
-          if(avaliacaoResponses[centro.ID]){
+            if(avaliacaoResponses[centro._id]){
             const auto = centroDiv.children[2].children[0].children[0]
-            auto.innerText = avaliacaoResponses[centro.ID].ANSWER
+            auto.innerText = avaliacaoResponses[centro._id].ANSWER
 
-          }
+            }
 
-          const participacao = centroDiv.children[4].children[0].children[0]
-        
-          situacao.setAttribute("id", responseInfo[0].ANSWER_ID)
-          situacao.setAttribute("name", responseInfo[0].ANSWER_ID)
-          situacao.setAttribute("questionid", responseInfo[0]._id)
+            const participacao = centroDiv.children[4].children[0].children[0]
 
-          let response = responseInfo[0].ANSWER.length > 3 ? responseInfo[0].ANSWER : "Pendente"
+            situacao.setAttribute("id", responseInfo[0].ANSWER_ID)
+            situacao.setAttribute("name", responseInfo[0].ANSWER_ID)
+            situacao.setAttribute("questionid", responseInfo[0]._id)
 
-          const $options = Array.from(situacao.options);
-          let option = $options.find(item => item.text === responseInfo[0].ANSWER)
+            let response = responseInfo[0].ANSWER.length > 3 ? responseInfo[0].ANSWER : "Pendente"
 
-          if(!option){
+            const $options = Array.from(situacao.options);
+            let option = $options.find(item => item.text === responseInfo[0].ANSWER)
+
+            if(!option){
             option = $options.find(item => item.text === "Pendente")
-          }
-          
-          if(option){
-            option.selected = true;
-          }
-          
-          participacao.setAttribute("id", responseInfo[1].ANSWER_ID)
-          participacao.setAttribute("name", responseInfo[1].ANSWER_ID)
-          participacao.setAttribute("questionid", responseInfo[1]._id)
-          participacao.setAttribute("value", responseInfo[1].ANSWER)
+            }
 
-          updateCoordSituationStatus(response, totalCentros)
+            if(option){
+            option.selected = true;
+            }
+
+            participacao.setAttribute("id", responseInfo[1].ANSWER_ID)
+            participacao.setAttribute("name", responseInfo[1].ANSWER_ID)
+            participacao.setAttribute("questionid", responseInfo[1]._id)
+            participacao.setAttribute("value", responseInfo[1].ANSWER)
+
+            updateCoordSituationStatus(response, totalCentros)
+          });
+
+          
         }
 
         async function setCentroSummary(centroDiv, summaries, centro){
-            let centroSummary = await getCentroSummary(summaries, centro.ID)
+            let centroSummary = await getCentroSummary(summaries, centro._id)
            
             const avaliacao = centroDiv.children[5].children[0].children[0]
             
-            if(centroSummary && centroSummary.ANSWERS.length>0){
+            if(centroSummary){
               const Atualizadas = document.getElementById("Atualizadas")
               let AtualizadasAmount = parseInt(Atualizadas.innerText)
               AtualizadasAmount = AtualizadasAmount +1
@@ -458,28 +458,27 @@
         }
 
         async function setPerguntasFaltantes(centroDiv, centro){
-            const requiredQuestions = await getCentroRequiredQuestions(centro.ID);
+            const requiredQuestions = await getCentroRequiredQuestions(centro._id);
 
             if(requiredQuestions.length > 0){
-              const perguntas_faltantes = centroDiv.children[6].children[0]
-  
+              const perguntas_faltantes = document.getElementById(`perguntas_faltantes_${centro._id}`)
   
               let ul = document.createElement("ul");
   
               perguntas_faltantes.appendChild(ul)
-  
+              
               for (const question of requiredQuestions) {
                 let li = document.createElement("li")
-                li.innerText = question.QUESTION_ID.QUESTION
+                li.innerText = question
   
                 ul.appendChild(li)
               }
 
-              centroDiv.setAttribute("style", "background-color:rgb(253, 243, 128);")
             }
             else{
-              const data = centroDiv.children[5].children[0].children[0]
-              data.innerText = "Não Iniciado"
+              centroDiv.setAttribute("style", "background-color:rgb(253, 243, 128);")
+              const data = document.getElementById(`data_avaliacao_${centro._id}`)
+              data.innerText = "Falta Enviar"
             }
             
 
@@ -487,7 +486,7 @@
         }
 
         async function setCentroInfo(summaries, centro, totalCentrosAmount, avaliacaoResponses){
-          const centroDiv = document.getElementById(centro.ID)
+          const centroDiv = document.getElementById(centro._id)
 
           const situacao = centroDiv.children[3].children[0].children[0]
 

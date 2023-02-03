@@ -68,50 +68,36 @@ router.post("/quiz", async function (req, res) {
   });
 });
 
-router.get("/summary_coord", requireAuth, async function (req, res) {
-  const { ID, regionalName } = req.query;
-
-  let paramsParsed;
+router.get("/summary_coord", requireAuth, async function (req, res, next) {
+ try {
+  const { ID, regionalName, start, end } = req.query;
+  
+  let regionalInfo;
 
   if (!regionalName) {
-    paramsParsed = parser.getParamsParsed({
-      _id: ID,
-    });
+    regionalInfo = await regionalcontroller.getRegionalByParams({ _id: ID})
+    
   } else {
-    paramsParsed = parser.getParamsParsed({
-      NOME_REGIONAL: regionalName,
-    });
+    regionalInfo = await regionalcontroller.getRegionalByParams({ NOME_REGIONAL: regionalName,})
+
   }
-  const regionalInfo = await regionalcontroller.getRegionalByParams(
-    paramsParsed
+
+  regionalInfo = regionalInfo[0];
+
+  const centros = await regionalcontroller.getCentroByParam(
+    {"REGIONAL._id": regionalInfo._id}
   );
 
-  const centros = await regionalcontroller.getCentroByCacheByRegional(
-    regionalInfo.NOME_REGIONAL
-  );
+  let coord_quiz = await trabalhoscontroller.getQuizTemplateByParams( { CATEGORY: "Coordenador", } );
 
-  let coord_quiz = await trabalhoscontroller.getQuizTemplateByParams(
-    parser.getParamsParsed({
-      CATEGORY: "Coordenador",
-    })
-  );
+  let coordenador = await trabalhoscontroller.getPessoaByParams( { _id: regionalInfo.COORDENADOR_ID, } );
 
-  let coordenador = await trabalhoscontroller.getPessoaByParams(
-    parser.getParamsParsed({
-      _id: regionalInfo.COORDENADOR_ID,
-    })
-  );
-
-  let autoavaliacao = await trabalhoscontroller.getQuizTemplateByParams(
-    parser.getParamsParsed({
-      CATEGORY: "Auto Avaliação",
-    })
-  );
+  let autoavaliacao = await trabalhoscontroller.getQuizTemplateByParams( { CATEGORY: "Auto Avaliação", } );
 
   let autoavaliacaoQuestion = autoavaliacao[0].QUESTIONS[0].GROUP[0];
   let avaliacaoQuestionId = autoavaliacaoQuestion._id;
 
-  const summaries = await trabalhoscontroller.getSummaries();
+  const summaries = await trabalhoscontroller.getSummaries(start, end);
 
   coordenador = coordenador[0];
 
@@ -127,6 +113,10 @@ router.get("/summary_coord", requireAuth, async function (req, res) {
     summaries: summaries,
     avaliacaoQuestionId: avaliacaoQuestionId,
   });
+ } catch (error) {
+  next();
+ }
+  
 });
 
 router.get("/summary_alianca", requireAuth, async function (req, res) {

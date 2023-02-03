@@ -15,10 +15,12 @@
       }
     }
 
+    const valueToApply = itemChanged ? itemChanged.value.toString(): ""
+
     const answerId = item.id;
     let questionId;
 
-    var apiUrl = `/bff/update_answer?answerId=${answerId}&answer=${itemChanged.value.toString()}`;
+    var apiUrl = `/bff/update_answer?answerId=${answerId}&answer=${valueToApply}`;
     if (itemChanged) {
       questionId = itemChanged.getAttribute("questionId");
       if (questionId) {
@@ -63,8 +65,8 @@
 
           for (let index = 0; index < childrenOfChildren.length; index++) {
             const childOfChild = childrenOfChildren[index];
-            childOfChild.setAttribute("id", item.ID);
-            childOfChild.setAttribute("name", item.ID);
+            childOfChild.setAttribute("id", item._id);
+            childOfChild.setAttribute("name", item._id);
             childOfChild.setAttribute("value", item.ANSWER);
           }
         }

@@ -19,18 +19,18 @@ const logger = require("../helpers/logger");
 
 router.get("/centros", requireAuth, async function (req, res) {
   const regionalName = req.query.regionalName;
-  let centros;
   let regionals;
-
+  let centros;
+  
   if (regionalName != null) {
-    centros = await regionalcontroller.getCentroByCacheByRegional(regionalName);
+    centros = await regionalcontroller.getCentroByParam({"REGIONAL.NOME_REGIONAL": regionalName});
     regionals = [
       {
         NOME_REGIONAL: regionalName,
       },
     ];
   } else {
-    centros = await regionalcontroller.getCentrosByCache();
+    centros = await regionalcontroller.getCentros();
     regionals = await regionalcontroller.getRegionais();
 
     regionals = regionals.sort(function (a, b) {

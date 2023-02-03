@@ -115,7 +115,7 @@
         a.setAttribute("class", "btn btn-primary");
         a.setAttribute(
           "href",
-          `/summary_coord?regionalName=${regionalInfo.NOME_REGIONAL}`
+          `/summary_coord?regionalName=${regionalInfo.NOME_REGIONAL}&start=${start}&end=${end}`
         );
         a.innerText = "Ver detalhes";
         divBody.appendChild(a);
@@ -269,7 +269,7 @@
               //augment with started info
               for (const centroInfo of centrosOfRegional) {
                 const hasStarted = passes.find((m) => {
-                  return m.scope_id === centroInfo.ID;
+                  return m.scope_id === centroInfo._id;
                 });
 
                 if (hasStarted) {
@@ -278,7 +278,7 @@
               }
 
               const centrosOfRegionalIDs = centrosOfRegional.map((n) => {
-                return n.ID;
+                return n._id;
               });
 
               const regionalResponses = [];
