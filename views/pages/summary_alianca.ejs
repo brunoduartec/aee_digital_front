@@ -19,15 +19,21 @@
 
     <div class="validacao-aee">
         <div>
-          <p>Dados de <%= start %> até <%= end%></p>
+          <p><b>Dados de <%= start %> até <%= end%></b></p>
         </div>
 
-        <div class="container">
+        <div>
           <div class="row">
-            <div class="col-xs-6">
-              <canvas id="myChart" style="width: 100%; max-width: 600px"></canvas>
+            <div class="col-md-6">
+              <p><b> Quantidade Total de Casas:</b> /*Incluir funcao para puxar todas as casas ativas*/ </p>
+              <p><b> Casas que Não Iniciaram o Cadastro:</b> /*Incluir funcao para puxar todas as casas ativas*/ </p>
+              <p><b> Casas que Iniciaram o Cadastro:</b> /*Incluir funcao para puxar todas as casas ativas*/ </p>
+              <p><b> Casas que Finalizaram o Cadastro:</b> /*Incluir funcao para puxar todas as casas ativas*/ </p>
             </div>
-            <div class="col-xs-6">
+            <div class="col-md-6">
+                <canvas id="myChart" style="width: 100%; max-width: 600px"></canvas>
+            </div>
+            <div>
               <input
                 id="clickMe"
                 class="btn btn-primary"
