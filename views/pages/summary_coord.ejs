@@ -206,7 +206,7 @@
       <% centros.forEach(function(centro) { 
         
         %>
-        <div class="form row " style="background-color:rgb(212, 99, 131);" name="centro" id="<%=centro._id%>">
+        <div class="form row " style="background-color:rgb(255, 160, 160);" name="centro" id="<%=centro._id%>">
         <span class="border col-md-2"
           ><div class="form-group"><p>
             <a href="/cadastro_alianca?ID=<%=centro._id%>&page=0">
@@ -440,7 +440,7 @@
               Pendentes_percent.innerText = pPercent.toFixed() + "%"
 
               const lastSummary = centroSummary
-              centroDiv.setAttribute("style", "background-color:rgb(159, 226, 191);")
+              centroDiv.setAttribute("style", "background-color:rgb(159, 234, 191);")
 
               const data = centroDiv.children[5].children[0].children[0]
 
@@ -470,7 +470,7 @@
 
             }
             else{
-              centroDiv.setAttribute("style", "background-color:rgb(253, 243, 128);")
+              centroDiv.setAttribute("style", "background-color:rgb(253, 243, 180);")
               const data = document.getElementById(`data_avaliacao_${centro._id}`)
               data.innerText = "Falta Enviar"
             }
