@@ -353,7 +353,6 @@
 }
 
 .validacao-coord-subtitulo .form-group p {
-  vertical-align: middle;
   margin-bottom:5px;
   margin-top:5px;
 }
@@ -370,8 +369,7 @@
   margin-right: auto;
 }
 
-.validacao-coord-dados .form-group p,
-select {
+.validacao-coord-dados p {
   text-align: center;
   margin: 5px;
   font-size: small;
@@ -380,6 +378,18 @@ select {
 .form-group ul li {
   text-align: left;
   font-size: small;
+}
+
+.validacao-coord-dados .form-select {
+  margin: 5px;
+  font-size: small;
+  text-align: center;
+}
+
+.validacao-coord-dados .form-control {
+  margin: 5px;
+  font-size: small;
+  text-align: center;
 }
 
 /* Tela Feedback*/
