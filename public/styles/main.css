@@ -374,6 +374,12 @@
 select {
   text-align: center;
   margin: 5px;
+  font-size: small;
+}
+
+.form-group ul li {
+  text-align: left;
+  font-size: small;
 }
 
 /* Tela Feedback*/
