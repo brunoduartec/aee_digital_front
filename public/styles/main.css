@@ -397,6 +397,7 @@
 .validacao-coord-dados span input {
   font-size: small;
   text-align: center;
+  margin: 5px;
 }
 
 /* Tela Feedback*/
