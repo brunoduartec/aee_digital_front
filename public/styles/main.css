@@ -514,3 +514,11 @@
 .spanner.show, .overlay.show {
 	opacity: 1
 }
+
+/* Tela Validação AEE*/
+
+.validacao-aee {
+  width: 85%;
+  margin-left: auto;
+  margin-right: auto;
+}

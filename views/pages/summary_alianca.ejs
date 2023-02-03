@@ -7,24 +7,8 @@
   <body class="body">
     <header class="cabeçalho"><%- include('../partials/header'); %></header>
 
-    <div>
-      Dados de <%= start %> até <%= end%>
-    </div>
-
-    <div class="container">
-      <div class="row">
-        <div class="col-xs-6">
-          <canvas id="myChart" style="width: 100%; max-width: 600px"></canvas>
-        </div>
-        <div class="col-xs-6">
-          <input
-            id="clickMe"
-            type="button"
-            value="Backup"
-            onclick="DownloadResponses();"
-          />
-        </div>
-      </div>
+    <div class="cadastrar-titulo">
+      <h2>Validação de Informações - Secretaria AEE</h2>
     </div>
 
     <div class="overlay"></div>
@@ -33,8 +17,30 @@
       <p>Buscando informações, por favor aguarde</p>
     </div>
 
-    <div class="container-fluid">
-      <div id="regionais" class="row"></div>
+    <div class="validacao-aee">
+        <div>
+          <p>Dados de <%= start %> até <%= end%></p>
+        </div>
+
+        <div class="container">
+          <div class="row">
+            <div class="col-xs-6">
+              <canvas id="myChart" style="width: 100%; max-width: 600px"></canvas>
+            </div>
+            <div class="col-xs-6">
+              <input
+                id="clickMe"
+                type="button"
+                value="Backup"
+                onclick="DownloadResponses();"
+              />
+            </div>
+          </div>
+        </div>
+
+      <div>
+        <div id="regionais" class="row"></div>
+      </div>
     </div>
 
     <script>
