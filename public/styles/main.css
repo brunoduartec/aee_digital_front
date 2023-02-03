@@ -378,6 +378,7 @@
 .form-group ul li {
   text-align: left;
   font-size: small;
+  margin: 5px;
 }
 
 .validacao-coord-dados .form-select {
