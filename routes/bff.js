@@ -20,8 +20,14 @@ const excelexporteresponses = new ExcelExportResponses(
 );
 
 (async () => {
-  await excelexporteresponses.init();
-  console.log("INITED");
+  try {
+    await excelexporteresponses.init();
+      
+  } catch (error) {
+    logger.error("Error initializing exporter")
+    throw error
+  }
+  
 })();
 
 const {

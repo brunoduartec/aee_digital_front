@@ -9,6 +9,7 @@ module.exports = class Request {
 
     this.logger = logger;
     this.constructor.instance = this;
+    this.timeout = 5;
 
     this.base = "/api/v1";
     this.instances = {};
@@ -21,7 +22,7 @@ module.exports = class Request {
   async get(instanceName, route) {
     try {
       const response = await axios.get(
-        encodeURI(`${this.instances[instanceName]}${this.base}${route}`)
+        encodeURI(`${this.instances[instanceName]}${this.base}${route}`),{timeout: this.timeout}
       );
       // this.logger.info(`helpers:request:get ${JSON.stringify(response.data)}`);
       return response.data;
@@ -35,7 +36,8 @@ module.exports = class Request {
     try {
       const response = await axios.post(
         encodeURI(`${this.instances[instanceName]}${this.base}${route}`),
-        body
+        body,
+        {timeout: this.timeout}
       );
       // this.logger.info(`helpers:request:post ${JSON.stringify(response.data)}`);
       return response.data;
@@ -51,7 +53,8 @@ module.exports = class Request {
         decodeURIComponent(
           `${this.instances[instanceName]}${this.base}${route}`
         ),
-        body
+        body,
+        {timeout: this.timeout}
       );
       // this.logger.info(`helpers:request:put  ${response.data}`);
       return response.data;
@@ -66,7 +69,8 @@ module.exports = class Request {
       const response = await axios.delete(
         decodeURIComponent(
           `${this.instances[instanceName]}${this.base}${route}`
-        )
+        ),
+        {timeout: this.timeout}
       );
       // this.logger.info(`helpers:request:delete ${response.data}`);
       return response.data;

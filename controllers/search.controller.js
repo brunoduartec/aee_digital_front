@@ -199,9 +199,6 @@ module.exports = class SearchController {
           finalized: finalized,
         };
 
-        this.logger.info(
-          `controller:search.controller:getPesquisaResult:Quiz: ${quiz}`
-        );
         return quiz;
       },
     };

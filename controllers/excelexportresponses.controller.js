@@ -51,7 +51,7 @@ module.exports = class ExcelExportReportsController {
       return true;
     } catch (error) {
       this.logger.error(`controllers:excelexporterresponses:init: ${error}`);
-      return false;
+      throw error
     }
   }
 

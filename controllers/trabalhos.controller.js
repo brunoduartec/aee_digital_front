@@ -35,7 +35,13 @@ module.exports = class trabalhosController extends CacheableController {
   }
 
   async getFormByParams(params) {
-    return await this.get('atividade_generic_form', params)
+    try {
+      return await this.get('atividade_generic_form', params)  
+    } catch (error) {
+      this.logger.error(`trabalhos.getFormByParams ${error}`)
+      throw error
+    }
+    
   }
 
   async getQuizTemplates() {
@@ -67,7 +73,12 @@ module.exports = class trabalhosController extends CacheableController {
   }
 
   async getPasses() {
-    return await this.get('pass')
+    try {
+      return await this.get('pass')
+    } catch (error) {
+      this.logger.error(`trabalhos.controllergetPasses ${error}`)
+      throw error
+    }
   }
 
 
@@ -104,7 +115,13 @@ module.exports = class trabalhosController extends CacheableController {
   }
 
   async getPassByParams(params) {
-    return await this.get('pass', params)
+    try {
+      return await this.get('pass', params)
+      
+    } catch (error) {
+      this.logger.error(`trabalhos.controllergetPasses ${error}`)
+      throw error
+    }
   }
 
 

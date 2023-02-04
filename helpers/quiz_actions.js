@@ -109,7 +109,7 @@ module.exports = class QuizActions {
       );
 
       this.logger.info(
-        `helpers:quiz_actions:open => ${JSON.stringify(form_info)}`
+        `helpers:quiz_actions:open => ${centro_id}`
       );
 
       res.render("pages/quiz", {

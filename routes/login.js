@@ -24,25 +24,40 @@ router.use((req, res, next) => {
 });
 
 
-router.get("/login", async function (req, res) {
-  const failedAuth = req.query.failedAuth;
-  let error
-  if (failedAuth) {
-    error = "Usuário ou senha incorretos. Favor tentar novamente"
-  }
-  res.render("pages/login", {
-    message: {
-      error: error
+router.get("/login", async function (req, res, next) {
+  try {
+    const failedAuth = req.query.failedAuth;
+    let error
+    if (failedAuth) {
+      error = "Usuário ou senha incorretos. Favor tentar novamente"
     }
-  });
+    res.render("pages/login", {
+      message: {
+        error: error
+      }
+    });
+    
+  } catch (error) {
+    next(error)
+  }
 });
 
-router.post("/login", async function (req, res) {
-  await TryAuthenticate(req, res);
+router.post("/login", async function (req, res, next) {
+  try {
+    await TryAuthenticate(req, res);
+  } catch (error) {
+    next(error)
+  }
 });
 
-router.get("/logout", async function (req, res) {
-  await TryLogout(req, res);
+router.get("/logout", async function (req, res, next) {
+  try {
+    await TryLogout(req, res);  
+  } catch (error) {
+  next(error)
+  }
+    
+  
 });
 
 module.exports = router;
