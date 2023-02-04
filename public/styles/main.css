@@ -522,3 +522,16 @@
   margin-left: auto;
   margin-right: auto;
 }
+
+.cards-regionais a {
+  margin-top: 10px;
+}
+
+.card-text {
+  margin-bottom: 0;
+}
+
+.container {
+  margin: 0 !important;
+  padding: 0 !important;
+}
