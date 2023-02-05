@@ -29,10 +29,10 @@
         <div>
           <div class="row">
             <div class="col-md-6">
-              <p id="status_total_casas"><b> Quantidade Total de Casas:</b> /*Incluir funcao para puxar todas as casas ativas*/ </p>
-              <p id="status_nao_iniciaram"><b> Casas que Não Iniciaram o Cadastro:</b> /*Incluir funcao para puxar todas as casas ativas*/ </p>
-              <p id="status_iniciaram"><b> Casas que Iniciaram o Cadastro:</b> /*Incluir funcao para puxar todas as casas ativas*/ </p>
-              <p id="status_finalizaram"><b> Casas que Finalizaram o Cadastro:</b> /*Incluir funcao para puxar todas as casas ativas*/ </p>
+              <p><b> Quantidade Total de Casas:</b> <span  id="status_total_casas"></span> </p>
+              <p ><b> Casas que Não Iniciaram o Cadastro:</b> <span id="status_nao_iniciaram"></span> </p>
+              <p ><b> Casas que Iniciaram o Cadastro:</b> <span id="status_iniciaram"></span> </p>
+              <p><b> Casas que Finalizaram o Cadastro:</b> <span  id="status_finalizaram"></span> </p>
             </div>
             <div class="col-md-6">
                 <canvas id="myChart" style="width: 100%; max-width: 600px"></canvas>
@@ -216,13 +216,16 @@
         myChart.data.datasets[0].data[2] = finished;
 
         const status_total_casas = document.getElementById("status_total_casas")
-        status_total_casas.innerHTML=`<b> Quantidade Total de Casas:</b> ${total}`
+        status_total_casas.innerText= total
 
         const status_iniciaram = document.getElementById("status_iniciaram")
-        status_iniciaram.innerHTML=`<b> Casas que Iniciaram o Cadastro:</b> ${started}`
+        status_iniciaram.innerText=started
+
+        const status_nao_iniciaram = document.getElementById("status_nao_iniciaram")
+        status_nao_iniciaram.innerText= total - started
 
         const status_finalizaram = document.getElementById("status_finalizaram")
-        status_finalizaram.innerHTML=`<b> Casas que Finalizaram o Cadastro:</b> ${finished}`
+        status_finalizaram.innerText=finished
 
 
         myChart.update();
