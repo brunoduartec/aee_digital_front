@@ -29,10 +29,10 @@
         <div>
           <div class="row">
             <div class="col-md-6">
-              <p><b> Quantidade Total de Casas:</b> /*Incluir funcao para puxar todas as casas ativas*/ </p>
-              <p><b> Casas que Não Iniciaram o Cadastro:</b> /*Incluir funcao para puxar todas as casas ativas*/ </p>
-              <p><b> Casas que Iniciaram o Cadastro:</b> /*Incluir funcao para puxar todas as casas ativas*/ </p>
-              <p><b> Casas que Finalizaram o Cadastro:</b> /*Incluir funcao para puxar todas as casas ativas*/ </p>
+              <p id="status_total_casas"><b> Quantidade Total de Casas:</b> /*Incluir funcao para puxar todas as casas ativas*/ </p>
+              <p id="status_nao_iniciaram"><b> Casas que Não Iniciaram o Cadastro:</b> /*Incluir funcao para puxar todas as casas ativas*/ </p>
+              <p id="status_iniciaram"><b> Casas que Iniciaram o Cadastro:</b> /*Incluir funcao para puxar todas as casas ativas*/ </p>
+              <p id="status_finalizaram"><b> Casas que Finalizaram o Cadastro:</b> /*Incluir funcao para puxar todas as casas ativas*/ </p>
             </div>
             <div class="col-md-6">
                 <canvas id="myChart" style="width: 100%; max-width: 600px"></canvas>
@@ -57,297 +57,16 @@
 
       <div class="validacao-aee">
         <div class="container">
-          <div class="row">
-            <div class="col-sm">
-              <div class="card mb-3 cards-regionais" style="max-width: 21rem;">
-                  <div class="card-body">
-                  <h5 class="card-title">Regional ABC</h5>
-                  <p class="card-text">Não Iniciado:</p>
-                  <p class="card-text">Iniciado:</p>
-                  <p class="card-text">Finalizado:</p>
-                  <p class="card-text">Total:</p>
-                  <a href="#" class="btn btn-primary btn-sm">Ver Detalhes</a>
-                  <a href="#" class="btn btn-primary btn-sm">Baixar Respostas</a>
-                  </div>
-              </div>
-            </div>
+          
+          <%for(i=0;i<regionais.length;i+=4){%>
+            <div class="row">
 
-            <div class="col-sm">
-              <div class="card mb-3 cards-regionais" style="max-width: 21rem;">
-                  <div class="card-body">
-                  <h5 class="card-title">Regional Araraquara</h5>
-                  <p class="card-text">Não Iniciado:</p>
-                  <p class="card-text">Iniciado:</p>
-                  <p class="card-text">Finalizado:</p>
-                  <p class="card-text">Total:</p>
-                  <a href="#" class="btn btn-primary btn-sm">Ver Detalhes</a>
-                  <a href="#" class="btn btn-primary btn-sm">Baixar Respostas</a>
-                  </div>
-              </div>
-            </div>
-            <div class="col-sm">
-              <div class="card mb-3 cards-regionais" style="max-width: 21rem;">
-                  <div class="card-body">
-                  <h5 class="card-title">Regional Campinas</h5>
-                  <p class="card-text">Não Iniciado:</p>
-                  <p class="card-text">Iniciado:</p>
-                  <p class="card-text">Finalizado:</p>
-                  <p class="card-text">Total:</p>
-                  <a href="#" class="btn btn-primary btn-sm">Ver Detalhes</a>
-                  <a href="#" class="btn btn-primary btn-sm">Baixar Respostas</a>
-                  </div>
-              </div>
-            </div>
+            <%for(var j=i; j<i+4 && j<regionais.length;j++){%>
+              <%- include("../partials/summary_alianca_regional",{regionalInfo: regionais[j],start,end})%>
+            <%}%>
+          
           </div>
-
-          <div class="row">
-            <div class="col-sm">
-              <div class="card mb-3 cards-regionais" style="max-width: 21rem;">
-                  <div class="card-body">
-                  <h5 class="card-title">Regional Centro-Oeste</h5>
-                  <p class="card-text">Não Iniciado:</p>
-                  <p class="card-text">Iniciado:</p>
-                  <p class="card-text">Finalizado:</p>
-                  <p class="card-text">Total:</p>
-                  <a href="#" class="btn btn-primary btn-sm">Ver Detalhes</a>
-                  <a href="#" class="btn btn-primary btn-sm">Baixar Respostas</a>
-                  </div>
-              </div>
-            </div>
-
-            <div class="col-sm">
-              <div class="card mb-3 cards-regionais" style="max-width: 21rem;">
-                  <div class="card-body">
-                  <h5 class="card-title">Regional Exterior</h5>
-                  <p class="card-text">Não Iniciado:</p>
-                  <p class="card-text">Iniciado:</p>
-                  <p class="card-text">Finalizado:</p>
-                  <p class="card-text">Total:</p>
-                  <a href="#" class="btn btn-primary btn-sm">Ver Detalhes</a>
-                  <a href="#" class="btn btn-primary btn-sm">Baixar Respostas</a>
-                  </div>
-              </div>
-            </div>
-            <div class="col-sm">
-              <div class="card mb-3 cards-regionais" style="max-width: 21rem;">
-                  <div class="card-body">
-                  <h5 class="card-title">Regional Extremo Sul</h5>
-                  <p class="card-text">Não Iniciado:</p>
-                  <p class="card-text">Iniciado:</p>
-                  <p class="card-text">Finalizado:</p>
-                  <p class="card-text">Total:</p>
-                  <a href="#" class="btn btn-primary btn-sm">Ver Detalhes</a>
-                  <a href="#" class="btn btn-primary btn-sm">Baixar Respostas</a>
-                  </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm">
-              <div class="card mb-3 cards-regionais" style="max-width: 21rem;">
-                  <div class="card-body">
-                  <h5 class="card-title">Regional Litoral Centro</h5>
-                  <p class="card-text">Não Iniciado:</p>
-                  <p class="card-text">Iniciado:</p>
-                  <p class="card-text">Finalizado:</p>
-                  <p class="card-text">Total:</p>
-                  <a href="#" class="btn btn-primary btn-sm">Ver Detalhes</a>
-                  <a href="#" class="btn btn-primary btn-sm">Baixar Respostas</a>
-                  </div>
-              </div>
-            </div>
-
-            <div class="col-sm">
-              <div class="card mb-3 cards-regionais" style="max-width: 21rem;">
-                  <div class="card-body">
-                  <h5 class="card-title">Regional Litoral Sul</h5>
-                  <p class="card-text">Não Iniciado:</p>
-                  <p class="card-text">Iniciado:</p>
-                  <p class="card-text">Finalizado:</p>
-                  <p class="card-text">Total:</p>
-                  <a href="#" class="btn btn-primary btn-sm">Ver Detalhes</a>
-                  <a href="#" class="btn btn-primary btn-sm">Baixar Respostas</a>
-                  </div>
-              </div>
-            </div>
-            <div class="col-sm">
-              <div class="card mb-3 cards-regionais" style="max-width: 21rem;">
-                  <div class="card-body">
-                  <h5 class="card-title">Regional Minas Gerais</h5>
-                  <p class="card-text">Não Iniciado:</p>
-                  <p class="card-text">Iniciado:</p>
-                  <p class="card-text">Finalizado:</p>
-                  <p class="card-text">Total:</p>
-                  <a href="#" class="btn btn-primary btn-sm">Ver Detalhes</a>
-                  <a href="#" class="btn btn-primary btn-sm">Baixar Respostas</a>
-                  </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm">
-              <div class="card mb-3 cards-regionais" style="max-width: 21rem;">
-                  <div class="card-body">
-                  <h5 class="card-title">Regional Nordeste </h5>
-                  <p class="card-text">Não Iniciado:</p>
-                  <p class="card-text">Iniciado:</p>
-                  <p class="card-text">Finalizado:</p>
-                  <p class="card-text">Total:</p>
-                  <a href="#" class="btn btn-primary btn-sm">Ver Detalhes</a>
-                  <a href="#" class="btn btn-primary btn-sm">Baixar Respostas</a>
-                  </div>
-              </div>
-            </div>
-
-            <div class="col-sm">
-              <div class="card mb-3 cards-regionais" style="max-width: 21rem;">
-                  <div class="card-body">
-                  <h5 class="card-title">Regional Nordeste 01</h5>
-                  <p class="card-text">Não Iniciado:</p>
-                  <p class="card-text">Iniciado:</p>
-                  <p class="card-text">Finalizado:</p>
-                  <p class="card-text">Total:</p>
-                  <a href="#" class="btn btn-primary btn-sm">Ver Detalhes</a>
-                  <a href="#" class="btn btn-primary btn-sm">Baixar Respostas</a>
-                  </div>
-              </div>
-            </div>
-            <div class="col-sm">
-              <div class="card mb-3 cards-regionais" style="max-width: 21rem;">
-                  <div class="card-body">
-                  <h5 class="card-title">Regional Piracicaba</h5>
-                  <p class="card-text">Não Iniciado:</p>
-                  <p class="card-text">Iniciado:</p>
-                  <p class="card-text">Finalizado:</p>
-                  <p class="card-text">Total:</p>
-                  <a href="#" class="btn btn-primary btn-sm">Ver Detalhes</a>
-                  <a href="#" class="btn btn-primary btn-sm">Baixar Respostas</a>
-                  </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm">
-              <div class="card mb-3 cards-regionais" style="max-width: 21rem;">
-                  <div class="card-body">
-                  <h5 class="card-title">Regional Ribeirão Preto </h5>
-                  <p class="card-text">Não Iniciado:</p>
-                  <p class="card-text">Iniciado:</p>
-                  <p class="card-text">Finalizado:</p>
-                  <p class="card-text">Total:</p>
-                  <a href="#" class="btn btn-primary btn-sm">Ver Detalhes</a>
-                  <a href="#" class="btn btn-primary btn-sm">Baixar Respostas</a>
-                  </div>
-              </div>
-            </div>
-
-            <div class="col-sm">
-              <div class="card mb-3 cards-regionais" style="max-width: 21rem;">
-                  <div class="card-body">
-                  <h5 class="card-title">Regional Sorocaba</h5>
-                  <p class="card-text">Não Iniciado:</p>
-                  <p class="card-text">Iniciado:</p>
-                  <p class="card-text">Finalizado:</p>
-                  <p class="card-text">Total:</p>
-                  <a href="#" class="btn btn-primary btn-sm">Ver Detalhes</a>
-                  <a href="#" class="btn btn-primary btn-sm">Baixar Respostas</a>
-                  </div>
-              </div>
-            </div>
-            <div class="col-sm">
-              <div class="card mb-3 cards-regionais" style="max-width: 21rem;">
-                  <div class="card-body">
-                  <h5 class="card-title">Regional SP Centro</h5>
-                  <p class="card-text">Não Iniciado:</p>
-                  <p class="card-text">Iniciado:</p>
-                  <p class="card-text">Finalizado:</p>
-                  <p class="card-text">Total:</p>
-                  <a href="#" class="btn btn-primary btn-sm">Ver Detalhes</a>
-                  <a href="#" class="btn btn-primary btn-sm">Baixar Respostas</a>
-                  </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm">
-              <div class="card mb-3 cards-regionais" style="max-width: 21rem;">
-                  <div class="card-body">
-                  <h5 class="card-title">Regional SP Leste </h5>
-                  <p class="card-text">Não Iniciado:</p>
-                  <p class="card-text">Iniciado:</p>
-                  <p class="card-text">Finalizado:</p>
-                  <p class="card-text">Total:</p>
-                  <a href="#" class="btn btn-primary btn-sm">Ver Detalhes</a>
-                  <a href="#" class="btn btn-primary btn-sm">Baixar Respostas</a>
-                  </div>
-              </div>
-            </div>
-
-            <div class="col-sm">
-              <div class="card mb-3 cards-regionais" style="max-width: 21rem;">
-                  <div class="card-body">
-                  <h5 class="card-title">Regional SP Norte</h5>
-                  <p class="card-text">Não Iniciado:</p>
-                  <p class="card-text">Iniciado:</p>
-                  <p class="card-text">Finalizado:</p>
-                  <p class="card-text">Total:</p>
-                  <a href="#" class="btn btn-primary btn-sm">Ver Detalhes</a>
-                  <a href="#" class="btn btn-primary btn-sm">Baixar Respostas</a>
-                  </div>
-              </div>
-            </div>
-            <div class="col-sm">
-              <div class="card mb-3 cards-regionais" style="max-width: 21rem;">
-                  <div class="card-body">
-                  <h5 class="card-title">Regional SP Oeste</h5>
-                  <p class="card-text">Não Iniciado:</p>
-                  <p class="card-text">Iniciado:</p>
-                  <p class="card-text">Finalizado:</p>
-                  <p class="card-text">Total:</p>
-                  <a href="#" class="btn btn-primary btn-sm">Ver Detalhes</a>
-                  <a href="#" class="btn btn-primary btn-sm">Baixar Respostas</a>
-                  </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm">
-              <div class="card mb-3 cards-regionais" style="max-width: 21rem;">
-                  <div class="card-body">
-                  <h5 class="card-title">Regional SP Sul </h5>
-                  <p class="card-text">Não Iniciado:</p>
-                  <p class="card-text">Iniciado:</p>
-                  <p class="card-text">Finalizado:</p>
-                  <p class="card-text">Total:</p>
-                  <a href="#" class="btn btn-primary btn-sm">Ver Detalhes</a>
-                  <a href="#" class="btn btn-primary btn-sm">Baixar Respostas</a>
-                  </div>
-              </div>
-            </div>
-
-            <div class="col-sm">
-              <div class="card mb-3 cards-regionais" style="max-width: 21rem;">
-                  <div class="card-body">
-                  <h5 class="card-title">Regional Vale do Paraíba</h5>
-                  <p class="card-text">Não Iniciado:</p>
-                  <p class="card-text">Iniciado:</p>
-                  <p class="card-text">Finalizado:</p>
-                  <p class="card-text">Total:</p>
-                  <a href="#" class="btn btn-primary btn-sm">Ver Detalhes</a>
-                  <a href="#" class="btn btn-primary btn-sm">Baixar Respostas</a>
-                  </div>
-              </div>
-            </div>
-            <div class="col-sm">
-            </div>
-          </div>
-
-
-
-
-
-
-
+          <%}%>
 
         </div>
 
@@ -361,6 +80,8 @@
     <script>
       const start = <%- JSON.stringify(start) %> 
       const end = <%- JSON.stringify(end) %> 
+      const regionais = <%- JSON.stringify(regionais) %>
+      
       $(document).ready(function () {
         console.log("Ready disparado");
         myFunction();
@@ -395,7 +116,6 @@
 
       function myFunction() {
         var div = document.getElementById("regionais");
-        // callGetRegionais(div)
         callGetGeneralInfo(div);
       }
 
@@ -409,54 +129,6 @@
         );
         a.innerText = "Baixar Respostas";
         return a;
-      }
-
-      function addCard(regionalInfo) {
-        let divCard = document.createElement("div");
-        divCard.setAttribute("id", `card_${regionalInfo.NOME_REGIONAL}`);
-        divCard.setAttribute("class", "card");
-        divCard.setAttribute("style", "width: 18rem;");
-
-        let divBody = document.createElement("div");
-        divBody.setAttribute("class", "card-body");
-
-        divCard.appendChild(divBody);
-
-        let h5 = document.createElement("h5");
-        h5.innerText = `${regionalInfo.NOME_REGIONAL} : ${regionalInfo.PAIS}`;
-
-        divBody.appendChild(h5);
-
-        let p = document.createElement("p");
-        p.setAttribute("class", "card-text");
-        p.innerText = "Recuperando Info";
-        divBody.appendChild(p);
-
-        let a = document.createElement("a");
-        a.setAttribute("class", "btn btn-primary");
-        a.setAttribute(
-          "href",
-          `/summary_coord?regionalName=${regionalInfo.NOME_REGIONAL}&start=${start}&end=${end}`
-        );
-        a.innerText = "Ver detalhes";
-        divBody.appendChild(a);
-
-        let downloadButton = getDownloadButton(regionalInfo.NOME_REGIONAL);
-        divBody.appendChild(downloadButton);
-
-        return divCard;
-      }
-
-      function addRegional(div, regionalInfo) {
-        let divCol = document.createElement("div");
-        divCol.setAttribute("class", "col-sm");
-
-        let regionalDiv = addCard(regionalInfo);
-        divCol.appendChild(regionalDiv);
-
-        div.appendChild(divCol);
-
-        return regionalDiv;
       }
 
       async function DownloadResponses() {
@@ -502,13 +174,7 @@
         }
       }
 
-      function setRegionalInfo(div, data) {
-        console.log("DIVINFO", div);
-        let divclass = div.getAttribute("class");
-        console.log("Class", divclass);
-
-        let children = div.children[0].children[1];
-
+      function setRegionalInfo(data) {
         let total = data.centros.length;
         let respondido = data.summary.length;
         let started = data.started;
@@ -523,8 +189,19 @@
           color = "bg-success";
         }
 
-        div.setAttribute("class", divclass.concat(" ").concat(color));
-        children.innerText = `Iniciado: ${started} (${startedPercent}%)\nFinalizado: ${respondido} (${finishedPercent}%)\nTotal: ${total}`;
+        const card_body = document.getElementById(`card-body_${data._id}`)
+        const divclass = card_body.className
+
+        card_body.setAttribute("class", divclass.concat(" ").concat(color));
+
+        const regional_iniciou = document.getElementById(`iniciado_${data._id}`)
+        regional_iniciou.innerText = `${started} (${startedPercent}%)`
+
+        const regional_finalizou = document.getElementById(`finalizado_${data._id}`)
+        regional_finalizou.innerText = `${respondido} (${finishedPercent}%)`
+
+        const regional_total = document.getElementById(`total_${data._id}`)
+        regional_total.innerText = `${total}`
       }
 
       function addData(chart, label, data) {
@@ -534,12 +211,19 @@
       }
 
       function setGeneralInfo(total, started, finished) {
-        console.log(myChart);
-
-        console.log(myChart.data);
         myChart.data.datasets[0].data[0] = total;
         myChart.data.datasets[0].data[1] = started;
         myChart.data.datasets[0].data[2] = finished;
+
+        const status_total_casas = document.getElementById("status_total_casas")
+        status_total_casas.innerHTML=`<b> Quantidade Total de Casas:</b> ${total}`
+
+        const status_iniciaram = document.getElementById("status_iniciaram")
+        status_iniciaram.innerHTML=`<b> Casas que Iniciaram o Cadastro:</b> ${started}`
+
+        const status_finalizaram = document.getElementById("status_finalizaram")
+        status_finalizaram.innerHTML=`<b> Casas que Finalizaram o Cadastro:</b> ${finished}`
+
 
         myChart.update();
       }
@@ -555,81 +239,58 @@
           .then((data) => {
             const responses = data.responses;
 
-            let uniqueresponses = {};
-
-            for (const response of responses) {
-              if (!uniqueresponses[response.CENTRO_ID]) {
-                uniqueresponses[response.CENTRO_ID] = response;
-              }
-            }
-
-            const regionais = data.regionais;
             const passes = data.passes;
             const centros = data.centros;
 
-            let uniqueregionals = {};
+            let totalStarted = 0;
+            let totalResponsesLength=0;
+
             for (const regional of regionais) {
-              if (!uniqueregionals.NOME_REGIONAL) {
-                uniqueregionals[regional.NOME_REGIONAL] = true;
-              }
-            }
-
-            let unique = Object.keys(uniqueregionals);
-
-            for (const regional of unique) {
+              let started = 0;
+              let regionalResponses = []
               const regionalInfo = {
-                NOME_REGIONAL: regional,
-                PAIS: " ",
+                NOME_REGIONAL: regional.NOME_REGIONAL,
+                PAIS: regional.PAIS,
               };
 
               let centrosOfRegional = centros.filter((m) => {
-                return m.REGIONAL.NOME_REGIONAL == regional;
+                return m.REGIONAL._id == regional._id;
               });
 
-              let started = 0;
-              //augment with started info
               for (const centroInfo of centrosOfRegional) {
                 const hasStarted = passes.find((m) => {
                   return m.scope_id === centroInfo._id;
                 });
+
+                const response = responses.find((m) => {
+                  return m.CENTRO_ID === centroInfo._id;
+                });
+
+                if(response){
+                  regionalResponses.push(response)  
+                  totalResponsesLength++;
+                }
+                
 
                 if (hasStarted) {
                   started++;
                 }
               }
 
-              const centrosOfRegionalIDs = centrosOfRegional.map((n) => {
-                return n._id;
-              });
 
-              const regionalResponses = [];
-              for (const id of centrosOfRegionalIDs) {
-                const response = responses.find((m) => {
-                  return m.CENTRO_ID.includes(id);
-                });
-
-                if (response) {
-                  regionalResponses.push(response);
-                }
-              }
-              let regionalDiv = addRegional(div, regionalInfo);
-              setRegionalInfo(regionalDiv, {
+              totalStarted+=started;
+              setRegionalInfo( {
+                _id:regional._id,
                 started: started,
                 centros: centrosOfRegional,
                 summary: regionalResponses,
               });
             }
 
-            let started = passes.filter((m) => {
-              return m.groups.includes("presidente");
-            });
-
-            let responseslength = Object.keys(uniqueresponses);
-
             setGeneralInfo(
               centros.length,
-              started.length,
-              responseslength.length
+              totalStarted,
+              totalResponsesLength
             );
 
             hideOverlay();
