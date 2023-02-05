@@ -121,7 +121,8 @@ router.get("/summary_coord", requireAuth, async function (req, res, next) {
 
 router.get("/summary_alianca", requireAuth, async function (req, res) {
   const { start, end } = req.query;
-  res.render("pages/summary_alianca", { start,end });
+  let regionais = await regionalcontroller.getRegionais();
+  res.render("pages/summary_alianca", { start,end, regionais });
 });
 
 module.exports = router;

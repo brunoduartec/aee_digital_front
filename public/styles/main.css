@@ -353,9 +353,9 @@
 }
 
 .validacao-coord-subtitulo .form-group p {
-  vertical-align: middle;
   margin-bottom:5px;
   margin-top:5px;
+  text-align: left;
 }
 
 .validacao-coord-subtitulo h3 {
@@ -370,8 +370,32 @@
   margin-right: auto;
 }
 
-.validacao-coord-dados .form-group p,
-select {
+.validacao-coord-dados p {
+  text-align: center;
+  margin: 5px;
+  font-size: small;
+}
+
+.form-group ul li {
+  text-align: left;
+  font-size: small;
+  margin: 5px;
+}
+
+.validacao-coord-dados .form-select {
+  margin: 5px;
+  font-size: small;
+  text-align: center;
+}
+
+.validacao-coord-dados .form-control {
+  margin: 5px;
+  font-size: small;
+  text-align: center;
+}
+
+.validacao-coord-dados span input {
+  font-size: small;
   text-align: center;
   margin: 5px;
 }
@@ -489,4 +513,25 @@ select {
 
 .spanner.show, .overlay.show {
 	opacity: 1
+}
+
+/* Tela Validação AEE*/
+
+.validacao-aee {
+  width: 85%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cards-regionais a {
+  margin-top: 10px;
+}
+
+.card-text {
+  margin-bottom: 0;
+}
+
+.container {
+  margin: 0 !important;
+  padding: 0 !important;
 }
