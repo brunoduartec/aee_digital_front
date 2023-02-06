@@ -143,7 +143,6 @@ router.get("/bff/generalinfo", async function (req, res) {
     } = req.query;
     const passes = await trabalhoscontroller.getPasses();
     let responses = await trabalhoscontroller.getSummaries(start, end);
-    const regionais = await regionalcontroller.getRegionais();
     const centros = await regionalcontroller.getCentros();
 
 
@@ -151,7 +150,6 @@ router.get("/bff/generalinfo", async function (req, res) {
     res.json({
       passes: passes,
       responses: responses,
-      regionais: regionais,
       centros: centros,
     });
   } catch (error) {

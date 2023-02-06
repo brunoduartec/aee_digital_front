@@ -7,7 +7,7 @@
     
     <header class="cabeçalho"><%- include('../partials/header'); %></header>
     <div class="cadastrar-titulo">
-      <h2>Validação de Informações</h2>
+      <h2>Validação de Informações - Coordenação Regional</h2>
     </div>
 
     <div class="overlay"></div>
@@ -24,8 +24,8 @@
         <span class="border col-md-12"
           ><div class="form-group">
             <p><b>Observações da Secretaria:</b></p>
-          </div></span
-        >
+          </div>
+        </span>
       </div>
       <br />
     </div>
@@ -162,10 +162,10 @@
       <div class="form row">
         <span class="border col-md-2"
           ><div class="form-group">
-            <p><b>Nome da Casa:</b></p>
+            <p><b>Nome da Casa</b></p>
           </div></span
         >
-        <span class="border col-md-1"
+        <span class="border col-md-2"
           ><div class="form-group">
             <p><b>Apelido</b></p>
           </div></span
@@ -185,7 +185,7 @@
             <p><b> Part. Reuniões (%)</b></p>
           </div></span
         >
-        <span class="border col-md-2"
+        <span class="border col-md-1"
         ><div class="form-group">
           <p><b>Data da Avaliação</b></p>
         </div></span
@@ -198,7 +198,7 @@
 
         <span class="border col-md-1"
           ><div class="form-group">
-            <p><b>Baixar</b></p>
+            <p><b>Baixar Respostas</b></p>
           </div></span
         >
       </div>
@@ -206,7 +206,7 @@
       <% centros.forEach(function(centro) { 
         
         %>
-        <div class="form row " style="background-color:rgb(212, 99, 131);" name="centro" id="<%=centro._id%>">
+        <div class="form row " style="background-color:rgb(255, 160, 160);" name="centro" id="<%=centro._id%>">
         <span class="border col-md-2"
           ><div class="form-group"><p>
             <a href="/cadastro_alianca?ID=<%=centro._id%>&page=0">
@@ -214,7 +214,7 @@
             </a>
             </p></div></span
         >
-        <span class="border col-md-1"
+        <span class="border col-md-2"
           ><div class="form-group"><p><%=centro.NOME_CURTO%></p></div></span
         >
         <span class="border col-md-1"
@@ -235,23 +235,17 @@
             %>
             <%- include('../partials/sub_quiz_input', {question:questionInfo});%></div></span
         >
-        <span class="border col-md-2"
+        <span class="border col-md-1"
           ><div class="form-group"><p name="data_avaliacao" id="data_avaliacao_<%=centro._id%>">
                 Não Finalizado
           </p></div></span>
+        <span class="border col-md-2"><div class="form-group" name="perguntas_faltantes" id="perguntas_faltantes_<%=centro._id%>"></div></span>
 
-
-          <span class="border col-md-2"><div class="form-group" name="perguntas_faltantes" id="perguntas_faltantes_<%=centro._id%>"></div></span>
-
-          <span class="border col-md-1"><div class="form-group" name="download">
-            <a href="http://162.214.123.133:30101/db/aee/expCsv/atividade_generic_quiz_answers?key=CENTRO_ID&value=<%=centro._id%>&type=O">
-              <img src="/img/download.svg" alt="Bootstrap">
-              
-              </a>
-            
-              <input id="clickMe" type="button" value="clickme" onclick="DownloadResponses('<%=centro._id%>');" />
-
-            </div></span>
+          <span class="border col-md-1">
+            <div class="form-group" name="download">
+              <input id="clickMe" class="btn btn-light" type="button" value="Baixar" onclick="DownloadResponses('<%=centro._id%>');" />
+            </div>
+          </span>
 
           
       </div>
@@ -260,7 +254,7 @@
 
       <br />
   
-    <br />
+      <br />
 
       <script>
 
@@ -446,7 +440,8 @@
               Pendentes_percent.innerText = pPercent.toFixed() + "%"
 
               const lastSummary = centroSummary
-              centroDiv.setAttribute("style", "background-color:rgb(159, 226, 191);")
+              centroDiv.setAttribute("style", "background-color:rgb(159, 234, 191);")
+              
 
               const data = centroDiv.children[5].children[0].children[0]
 
@@ -476,7 +471,7 @@
 
             }
             else{
-              centroDiv.setAttribute("style", "background-color:rgb(253, 243, 128);")
+              centroDiv.setAttribute("style", "background-color:rgb(253, 243, 180);")
               const data = document.getElementById(`data_avaliacao_${centro._id}`)
               data.innerText = "Falta Enviar"
             }
@@ -515,7 +510,7 @@
         }
       
         </script>
-
+    </div>
     <footer><%- include('../partials/footer'); %></footer>
     <%- include('../partials/quiz_validate');%>
   </body>

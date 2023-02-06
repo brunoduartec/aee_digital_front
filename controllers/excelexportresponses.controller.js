@@ -145,12 +145,9 @@ module.exports = class ExcelExportReportsController {
 
   async exportRegional(regionalName) {
 
-    let centros = await this.regionaiscontroller.getCentros();
+    let centros = await this.regionaiscontroller.getCentroByParam({"REGIONAL.NOME_REGIONAL": regionalName});
 
-    centros = centros.filter((centro)=>{
-      return centro.REGIONAL.NOME_REGIONAL === regionalName
-    })
-
+   
     const fileName = this.getRegionalFileName(regionalName);
 
     return await this.exportBatch(fileName, centros);
