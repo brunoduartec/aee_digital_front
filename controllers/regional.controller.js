@@ -11,22 +11,44 @@ module.exports = class regionalController extends CacheableController{
 
 
   async getRegionais() {
-    return await this.get('regionais')
+    try {
+      return await this.get('regionais')
+    } catch (error) {
+      throw error
+    }
   }
 
   async getRegionalByParams(params) {
-    return await this.get('regionais', params)
+    try {
+      return await this.get('regionais', params)
+    } catch (error) {
+      throw error      
+    }
   }
 
   async getCentros() {
-    return await this.get('centros')
+    try {
+      return await this.get('centros')
+    } catch (error) {
+        throw error      
+    }
   }
 
   async getCentroByParam(params) {
-    return await this.get('centros', params)
+    try {
+      return await this.get('centros', params)
+      
+    } catch (error) {
+      throw error
+    }
   }
 
   async updateCentro(params, value) {
-    return await this.put('centros', params, value)
+    try {
+      return await this.put('centros', params, value)
+      
+    } catch (error) {
+      throw error
+    }
   }
 };

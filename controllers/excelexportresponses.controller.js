@@ -15,7 +15,7 @@ module.exports = class ExcelExportReportsController {
     this.headers = [];
   }
 
-  async init() {
+  async initHeaders() {
     try {
 
       const forms = await this.trabalhoscontroller.getFormByParams({ NAME: "Cadastro de Informações Anual" });
@@ -73,8 +73,13 @@ module.exports = class ExcelExportReportsController {
     }
   }
 
-  getHeaders() {
-    return this.headers;
+  async getHeaders() {
+    if(this.headers)
+      return this.headers;
+    else{
+      await this.initHeaders();
+      return this.headers;
+    }
   }
 
   getCentroFileName(centroName, regionalName) {
@@ -99,7 +104,7 @@ module.exports = class ExcelExportReportsController {
               infoFormated.centroName,
               infoFormated.regionalName
             ),
-            this.getHeaders(),
+            await this.getHeaders(),
             infoFormated.infoFormated,
             this.getFormatInfo
           );
@@ -188,7 +193,7 @@ module.exports = class ExcelExportReportsController {
 
     let fileSaved = await this.exporter.export(
       fileName,
-      this.getHeaders(),
+      await this.getHeaders(),
       infoFormated,
       this.getFormatInfo
     );

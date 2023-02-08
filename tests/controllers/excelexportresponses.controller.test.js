@@ -47,23 +47,23 @@ const excelexporter_mock = {
   },
 };
 
-const exporter = new ReportInfo(
-  excelexporter_mock,
-  trabalhocontroller,
-  regionalcontroller,
-  0,
-  logger
-);
+// const exporter = new ReportInfo(
+//   excelexporter_mock,
+//   trabalhocontroller,
+//   regionalcontroller,
+//   0,
+//   logger
+// );
 
-const excelexporter = new ExcelExportResponses(
-  excelexportercontroller,
-  exporter,
-  trabalhocontroller
-);
+// const excelexporter = new ExcelExportResponses(
+//   excelexportercontroller,
+//   exporter,
+//   trabalhocontroller
+// );
 
-(async () => {
-  await excelexporter.init();
-})();
+// (async () => {
+//   await excelexporter.init();
+// })();
 
 // describe("controllers:exportexcelresponses", () => {
 //   it("should validade init", async () => {

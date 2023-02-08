@@ -46,7 +46,7 @@ router.post("/login", async function (req, res, next) {
   try {
     await TryAuthenticate(req, res);
   } catch (error) {
-    next(error)
+    next()
   }
 });
 

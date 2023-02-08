@@ -32,29 +32,35 @@ const requireAuth = (req, res, next) => {
   }
 };
 
-async function TryAuthenticate(req, res) {
-  const loginInfo = {
-    user: req.body.email,
-    pass: req.body.pass,
-  };
-
-  let auth = await authcontroller.authenticate(loginInfo);
-  if (!auth) {
-    res.redirect("/login?failedAuth=true");
-  } else {
-    const authToken = sessioncontroller.generateAuthToken();
-
-    sessioncontroller.setAuthToken(authToken, loginInfo.user);
-
-    req.session.authToken = authToken;
-
-    let info = {
-      link: auth.scope_id,
+async function TryAuthenticate(req, res, next) {
+  
+  try {
+    const loginInfo = {
+      user: req.body.email,
+      pass: req.body.pass,
     };
-
-    req.session.auth = auth;
-    res.redirect(pageByPermission[auth.groups[0]](info));
+  
+    let auth = await authcontroller.authenticate(loginInfo);
+    if (!auth) {
+      res.redirect("/login?failedAuth=true");
+    } else {
+      const authToken = sessioncontroller.generateAuthToken();
+  
+      sessioncontroller.setAuthToken(authToken, loginInfo.user);
+  
+      req.session.authToken = authToken;
+  
+      let info = {
+        link: auth.scope_id,
+      };
+  
+      req.session.auth = auth;
+      res.redirect(pageByPermission[auth.groups[0]](info));
+    }
+  } catch (error) {
+    throw error
   }
+  
 }
 
 async function TryLogout(req, res) {

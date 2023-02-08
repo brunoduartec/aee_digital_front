@@ -19,16 +19,16 @@ const excelexporteresponses = new ExcelExportResponses(
   trabalhoscontroller
 );
 
-(async () => {
-  try {
-    await excelexporteresponses.init();
+// (async () => {
+//   try {
+//     await excelexporteresponses.init();
       
-  } catch (error) {
-    logger.error("Error initializing exporter")
-    throw error
-  }
+//   } catch (error) {
+//     logger.error("Error initializing exporter")
+//     throw error
+//   }
   
-})();
+// })();
 
 const {
   requireAuth

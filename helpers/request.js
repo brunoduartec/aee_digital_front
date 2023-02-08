@@ -9,7 +9,7 @@ module.exports = class Request {
 
     this.logger = logger;
     this.constructor.instance = this;
-    this.timeout = 5;
+    this.timeout = 4000;
 
     this.base = "/api/v1";
     this.instances = {};
