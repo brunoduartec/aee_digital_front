@@ -11,6 +11,7 @@ module.exports = class CacheableController {
         this.logger = logger
         this.request = new Request();
         this.cache = new Cache(service)
+        this.ttl = 300
     }
 
     getFormatedName(domain, key) {
@@ -34,7 +35,7 @@ module.exports = class CacheableController {
                     `/${domain}?${paramsParsed}`
                 );
 
-                this.cache.set(formatedName, response)
+                this.cache.set(formatedName, response, this.ttl)
                 return response;
             }
         } catch (error) {
