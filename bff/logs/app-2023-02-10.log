@@ -1,0 +1,111 @@
+{"level":"info","message":"INITED"}
+{"level":"info","message":"API listening on port 4300!"}
+{"level":"info","message":"INITED"}
+{"level":"info","message":"API listening on port 4300!"}
+{"level":"info","message":"INITED"}
+{"level":"info","message":"API listening on port 4300!"}
+{"level":"info","message":"INITED"}
+2023-02-10T22:26:29.032Z [INFO]: API listening on port 4300!
+2023-02-10T22:26:29.641Z [INFO]: INITED
+2023-02-10T22:26:39.892Z [INFO]: The service is up and running.
+2023-02-10T22:29:37.678Z [INFO]: API listening on port 4300!
+2023-02-10T22:29:38.296Z [INFO]: INITED
+2023-02-10T22:29:42.070Z [INFO]: Route /healthcheck was called
+2023-02-10T22:29:42.072Z [INFO]: The service is up and running.
+2023-02-10T22:30:03.428Z [INFO]: Route /coord_responses was called
+2023-02-10T22:30:56.319Z [INFO]: API listening on port 4300!
+2023-02-10T22:30:56.353Z [INFO]: Route /coord_responses was called
+2023-02-10T22:30:56.355Z [INFO]: Received centroId undefined
+2023-02-10T22:30:56.910Z [INFO]: INITED
+2023-02-10T22:31:03.669Z [INFO]: Route /coord_responses was called
+2023-02-10T22:31:03.673Z [INFO]: Received centroId undefined
+2023-02-10T22:31:34.138Z [INFO]: API listening on port 4300!
+2023-02-10T22:31:34.232Z [INFO]: Route /coord_responses was called
+2023-02-10T22:31:34.234Z [INFO]: Received centroId undefined
+2023-02-10T22:31:34.723Z [INFO]: INITED
+2023-02-10T22:31:35.819Z [ERROR]: get:coord_responses undefined: Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+2023-02-10T22:31:51.150Z [INFO]: API listening on port 4300!
+2023-02-10T22:31:51.789Z [INFO]: INITED
+2023-02-10T22:31:55.256Z [INFO]: Route /coord_responses was called
+2023-02-10T22:31:55.258Z [INFO]: Received centroId undefined
+2023-02-10T22:31:56.851Z [ERROR]: get:coord_responses undefined: Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+2023-02-10T22:33:40.833Z [INFO]: API listening on port 4300!
+2023-02-10T22:33:41.453Z [INFO]: INITED
+2023-02-10T22:33:48.417Z [INFO]: Route /coord_responses was called
+2023-02-10T22:33:48.419Z [INFO]: Received centroId undefined
+2023-02-10T22:33:50.075Z [ERROR]: get:coord_responses undefined: Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+2023-02-10T22:34:12.763Z [INFO]: API listening on port 4300!
+2023-02-10T22:34:13.400Z [INFO]: INITED
+2023-02-10T22:34:16.221Z [INFO]: Route /coord_responses was called
+2023-02-10T22:34:16.223Z [INFO]: Received centroId undefined
+2023-02-10T22:34:16.233Z [INFO]: FUEN
+2023-02-10T22:34:17.673Z [ERROR]: get:coord_responses undefined: Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+2023-02-10T22:35:11.546Z [INFO]: API listening on port 4300!
+2023-02-10T22:35:12.355Z [INFO]: INITED
+2023-02-10T22:35:45.833Z [INFO]: API listening on port 4300!
+2023-02-10T22:35:46.444Z [INFO]: INITED
+2023-02-10T22:35:49.705Z [INFO]: API listening on port 4300!
+2023-02-10T22:35:50.311Z [INFO]: INITED
+2023-02-10T22:36:36.355Z [INFO]: API listening on port 4300!
+2023-02-10T22:36:36.978Z [INFO]: INITED
+2023-02-10T22:36:43.254Z [INFO]: Route /coord_responses was called
+2023-02-10T22:36:43.258Z [INFO]: Received centroId undefined
+2023-02-10T22:37:35.317Z [INFO]: Route /centros?regionalName=ABC was called
+2023-02-10T22:38:07.225Z [INFO]: Route /regional?regionalName=ABC was called
+2023-02-10T22:38:45.331Z [INFO]: Route /regional?regionalName=ABC was called
+2023-02-10T22:39:08.375Z [INFO]: API listening on port 4300!
+2023-02-10T22:39:08.983Z [INFO]: INITED
+2023-02-10T22:39:12.198Z [INFO]: Route /regional?regionalName=ABC was called
+2023-02-10T22:39:12.201Z [INFO]: Regional:ABC
+2023-02-10T22:39:39.305Z [INFO]: API listening on port 4300!
+2023-02-10T22:39:39.901Z [INFO]: INITED
+2023-02-10T22:39:43.377Z [INFO]: Route /regional?regionalName=ABC was called
+2023-02-10T22:39:43.380Z [INFO]: Regional:ABC
+2023-02-10T22:41:12.242Z [INFO]: API listening on port 4300!
+2023-02-10T22:41:12.857Z [INFO]: INITED
+2023-02-10T22:41:30.907Z [INFO]: API listening on port 4300!
+2023-02-10T22:41:31.503Z [INFO]: INITED
+2023-02-10T22:41:36.346Z [INFO]: Route /regional?regionalName=ABC was called
+2023-02-10T22:41:36.348Z [INFO]: Regional:ABC
+2023-02-10T22:41:44.088Z [INFO]: Route /regional was called
+2023-02-10T22:41:44.090Z [INFO]: Regional:undefined
+2023-02-10T22:42:39.340Z [INFO]: Route /generalinfo?start=1/1/2023&end=1/1/2024 was called
+2023-02-10T22:43:16.493Z [INFO]: API listening on port 4300!
+2023-02-10T22:43:17.083Z [INFO]: INITED
+2023-02-10T22:43:28.553Z [INFO]: Route /coord_info was called
+2023-02-10T22:44:29.439Z [INFO]: API listening on port 4300!
+2023-02-10T22:44:30.055Z [INFO]: INITED
+2023-02-10T22:45:09.080Z [INFO]: API listening on port 4300!
+2023-02-10T22:45:09.692Z [INFO]: INITED
+2023-02-10T22:45:19.264Z [INFO]: API listening on port 4300!
+2023-02-10T22:45:19.855Z [INFO]: INITED
+2023-02-10T22:45:26.270Z [INFO]: API listening on port 4300!
+2023-02-10T22:45:26.868Z [INFO]: INITED
+2023-02-10T22:45:34.257Z [INFO]: API listening on port 4300!
+2023-02-10T22:45:34.852Z [INFO]: INITED
+2023-02-10T22:45:42.045Z [INFO]: API listening on port 4300!
+2023-02-10T22:45:42.711Z [INFO]: INITED
+2023-02-10T22:45:49.297Z [INFO]: API listening on port 4300!
+2023-02-10T22:45:49.887Z [INFO]: INITED
+2023-02-10T22:45:55.330Z [INFO]: API listening on port 4300!
+2023-02-10T22:45:55.931Z [INFO]: INITED
+2023-02-10T22:46:02.686Z [INFO]: API listening on port 4300!
+2023-02-10T22:46:03.328Z [INFO]: INITED
+2023-02-10T22:46:16.441Z [INFO]: API listening on port 4300!
+2023-02-10T22:46:17.269Z [INFO]: INITED
+2023-02-10T22:46:22.662Z [INFO]: API listening on port 4300!
+2023-02-10T22:46:23.268Z [INFO]: INITED
+2023-02-10T22:46:29.266Z [INFO]: API listening on port 4300!
+2023-02-10T22:46:29.870Z [INFO]: INITED
+2023-02-10T22:46:42.214Z [INFO]: API listening on port 4300!
+2023-02-10T22:46:42.802Z [INFO]: INITED
+2023-02-10T22:46:49.536Z [INFO]: API listening on port 4300!
+2023-02-10T22:46:50.127Z [INFO]: INITED
+2023-02-10T22:47:02.743Z [INFO]: API listening on port 4300!
+2023-02-10T22:47:03.368Z [INFO]: INITED
+2023-02-10T22:47:14.721Z [INFO]: API listening on port 4300!
+2023-02-10T22:47:15.332Z [INFO]: INITED
+2023-02-10T22:47:21.205Z [INFO]: API listening on port 4300!
+2023-02-10T22:47:21.834Z [INFO]: INITED
+2023-02-10T22:47:27.801Z [INFO]: API listening on port 4300!
+2023-02-10T22:47:28.399Z [INFO]: INITED

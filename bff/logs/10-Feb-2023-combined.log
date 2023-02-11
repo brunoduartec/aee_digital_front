@@ -1,0 +1,9 @@
+{"level":"error","message":"helpers:request:get => Error: connect ECONNREFUSED 127.0.0.1:80"}
+{"level":"error","message":"aee_digital_trabalhos:atividade_generic_form: get Error=> Error: connect ECONNREFUSED 127.0.0.1:80"}
+{"level":"error","message":"controllers:excelexporterresponses:init: Error: connect ECONNREFUSED 127.0.0.1:80"}
+{"level":"error","message":"helpers:request:get => Error: connect ECONNREFUSED 127.0.0.1:80"}
+{"level":"error","message":"aee_digital_trabalhos:atividade_generic_form: get Error=> Error: connect ECONNREFUSED 127.0.0.1:80"}
+{"level":"error","message":"controllers:excelexporterresponses:init: Error: connect ECONNREFUSED 127.0.0.1:80"}
+{"level":"error","message":"helpers:request:get => Error: connect ECONNREFUSED 127.0.0.1:80"}
+{"level":"error","message":"aee_digital_trabalhos:atividade_generic_form: get Error=> Error: connect ECONNREFUSED 127.0.0.1:80"}
+{"level":"error","message":"controllers:excelexporterresponses:init: Error: connect ECONNREFUSED 127.0.0.1:80"}

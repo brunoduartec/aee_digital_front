@@ -1,14 +1,31 @@
 version: "3.5"
 
 services:
-  aee_digital_front:
+  aee_digital_front_bff:
     environment:
       - NODE_ENV=development
       - trabalho_api=trabalho_api
-    build: .
+    build: 
+      context: ./bff
     command: npm start
-    image: docker.pkg.github.com/brunoduartec/aee_digital_front
-    container_name: aee_digital_front
+    # image: docker.pkg.github.com/brunoduartec/aee_digital_front
+    container_name: aee_digital_front_bff
+    ports:
+      - "4300:4300"
+    networks:
+      - aee_digital_backend
+    volumes:
+      - ./logs:/app/logs
+    restart: always
+  aee_digital_front_front:
+    environment:
+      - NODE_ENV=development
+      - trabalho_api=trabalho_api
+    build: 
+      context: ./front
+    command: npm start
+    # image: docker.pkg.github.com/brunoduartec/aee_digital_front
+    container_name: aee_digital_front_front
     ports:
       - "4200:4200"
     networks:

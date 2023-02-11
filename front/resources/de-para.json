@@ -1,0 +1,655 @@
+[
+  {
+    "FROM": "regional",
+    "QUIZ": "CENTRO ESPÍRITA",
+    "QUESTION": "Regional"
+  },
+  {
+    "FROM": "Name",
+    "QUIZ": "CENTRO ESPÍRITA",
+    "QUESTION": "Nome do centro (Ex: Assistência Maternal Espirita)"
+  },
+  {
+    "FROM": "short",
+    "QUIZ": "CENTRO ESPÍRITA",
+    "QUESTION": "Apelido do centro (Ex: AME)"
+  },
+  {
+    "FROM": "cnpj",
+    "QUIZ": "CENTRO ESPÍRITA",
+    "QUESTION": "CNPJ (se houver)"
+  },
+  {
+    "FROM": "telefone",
+    "QUIZ": "CENTRO ESPÍRITA",
+    "QUESTION": "Telefone (se houver)"
+  },
+  {
+    "FROM": "fundacao",
+    "QUIZ": "CENTRO ESPÍRITA",
+    "QUESTION": "Data de Fundação"
+  },
+  {
+    "FROM": "site",
+    "QUIZ": "CENTRO ESPÍRITA",
+    "QUESTION": "Site na Internet"
+  },
+  {
+    "FROM": "facebook",
+    "QUIZ": "CENTRO ESPÍRITA",
+    "QUESTION": "Facebook"
+  },
+  {
+    "FROM": "instagram",
+    "QUIZ": "CENTRO ESPÍRITA",
+    "QUESTION": "Instagram"
+  },
+  {
+    "FROM": "local.endereco",
+    "QUIZ": "LOCALIZAÇÃO",
+    "QUESTION": "Endereço"
+  },
+  {
+    "FROM": "local.bairro",
+    "QUIZ": "LOCALIZAÇÃO",
+    "QUESTION": "Bairro"
+  },
+  {
+    "FROM": "local.cidade",
+    "QUIZ": "LOCALIZAÇÃO",
+    "QUESTION": "Cidade"
+  },
+  {
+    "FROM": "local.uf",
+    "QUIZ": "LOCALIZAÇÃO",
+    "QUESTION": "UF"
+  },
+  {
+    "FROM": "local.cep",
+    "QUIZ": "LOCALIZAÇÃO",
+    "QUESTION": "CEP"
+  },
+  {
+    "FROM": "local.pais",
+    "QUIZ": "LOCALIZAÇÃO",
+    "QUESTION": "País"
+  },
+  {
+    "FROM": "local.sede",
+    "QUIZ": "LOCALIZAÇÃO",
+    "QUESTION": "Possui sede própria?"
+  },
+  {
+    "FROM": "contato.nome",
+    "QUIZ": "DIRETORIA/PRESIDÊNCIA",
+    "QUESTION": "Nome do Presidente"
+  },
+  {
+    "FROM": "contato.email",
+    "QUIZ": "DIRETORIA/PRESIDÊNCIA",
+    "QUESTION": "E-mail do Presidente"
+  },
+  {
+    "FROM": "contato.telefone",
+    "QUIZ": "DIRETORIA/PRESIDÊNCIA",
+    "QUESTION": "Telefone do Presidente"
+  },
+  {
+    "FROM": "contato.periodo",
+    "QUIZ": "DIRETORIA/PRESIDÊNCIA",
+    "QUESTION": "Período do Mandato"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "DIRETORIA/PRESIDÊNCIA",
+    "QUESTION": "Incluir outras pessoas como responsável"
+  },
+  {
+    "FROM": "contato.autorizacao",
+    "QUIZ": "DIRETORIA/PRESIDÊNCIA",
+    "QUESTION": "Você autoriza a divulgação dos dados da CASA ESPÍRITA no site da AEE? São eles o endereço, telefone, horários de trabalhos e atividades. Nenhum dado pessoal será publicado no site."
+  },
+
+  {
+    "FROM": "AE.dh_ae.*.day",
+    "QUIZ": "Assistência Espiritual",
+    "QUESTION": "Dia da semana"
+  },
+
+  {
+    "FROM": "AE.dh_ae.*.time",
+    "QUIZ": "Assistência Espiritual",
+    "QUESTION": "Horário de Início"
+  },
+
+
+  {
+    "FROM": "AE.assistidos",
+    "QUIZ": "Assistência Espiritual",
+    "QUESTION": "Média de assistidos por semana"
+  },
+  {
+    "FROM": "AE.voluntarios",
+    "QUIZ": "Assistência Espiritual",
+    "QUESTION": "Média de voluntários por semana"
+  },
+  {
+    "FROM": "AE.preletores",
+    "QUIZ": "Assistência Espiritual",
+    "QUESTION": "Quantidade de Preletores"
+  },
+  {
+    "FROM": "AE.entrevistadores",
+    "QUIZ": "Assistência Espiritual",
+    "QUESTION": "Quantidade de entrevistadores"
+  },
+
+
+  {
+    "FROM": "CB.dh_cb.*.day",
+    "QUIZ": "Curso Básico do Espiritismo",
+    "QUESTION": "Dia da semana"
+  },
+
+  {
+    "FROM": "CB.dh_cb.*.time",
+    "QUIZ": "Curso Básico do Espiritismo",
+    "QUESTION": "Horário de Início"
+  },
+  {
+    "FROM": "CB.alunos",
+    "QUIZ": "Curso Básico do Espiritismo",
+    "QUESTION": "Total de Alunos"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Curso Básico do Espiritismo",
+    "QUESTION": "Total de Expositores"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Curso Básico do Espiritismo",
+    "QUESTION": "Dirigentes Disponíveis"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Curso Básico do Espiritismo",
+    "QUESTION": "Dirigentes Ativos"
+  },
+
+
+  {
+    "FROM": "EAE.alunos",
+    "QUIZ": "Escola de Aprendizes do Evangelho",
+    "QUESTION": "Total de Alunos"
+  },
+  {
+    "FROM": "EAE.expositores",
+    "QUIZ": "Escola de Aprendizes do Evangelho",
+    "QUESTION": "Total de Expositores"
+  },
+  {
+    "FROM": "EAE.dirigentes_aptos",
+    "QUIZ": "Escola de Aprendizes do Evangelho",
+    "QUESTION": "Dirigentes Disponíveis"
+  },
+  {
+    "FROM": "EAE.dirigentes",
+    "QUIZ": "Escola de Aprendizes do Evangelho",
+    "QUESTION": "Dirigentes Ativos"
+  },
+
+  {
+    "FROM": "EAE.turma",
+    "QUIZ": "Escola de Aprendizes do Evangelho",
+    "QUESTION": "Número da última turma de EAE aberta na casa espírita (Ex.: 20ª turma)"
+  },
+
+
+  {
+    "FROM": "EAE.dh_eae.*.day",
+    "QUIZ": "Escola de Aprendizes do Evangelho",
+    "QUESTION": "Dia da semana"
+  },
+
+  {
+    "FROM": "EAE.dh_eae.*.time",
+    "QUIZ": "Escola de Aprendizes do Evangelho",
+    "QUESTION": "Horário de Início"
+  },
+
+
+  {
+    "FROM": "CM.alunos",
+    "QUIZ": "Curso de Médiuns",
+    "QUESTION": "Total de Alunos"
+  },
+  {
+    "FROM": "CM.expositores",
+    "QUIZ": "Curso de Médiuns",
+    "QUESTION": "Total de Expositores"
+  },
+  {
+    "FROM": "CM.dirigentes_aptos",
+    "QUIZ": "Curso de Médiuns",
+    "QUESTION": "Dirigentes Disponíveis"
+  },
+  {
+    "FROM": "CM.dirigentes",
+    "QUIZ": "Curso de Médiuns",
+    "QUESTION": "Dirigentes Ativos"
+  },
+
+
+  {
+    "FROM": "CM.dh_cm.*.day",
+    "QUIZ": "Curso de Médiuns",
+    "QUESTION": "Dia da semana"
+  },
+
+  {
+    "FROM": "CM.dh_cm.*.time",
+    "QUIZ": "Curso de Médiuns",
+    "QUESTION": "Horário de Início"
+  },
+
+
+  {
+    "FROM": "EI.criancas",
+    "QUIZ": "Evangelização Infantil",
+    "QUESTION": "Total de Crianças"
+  },
+  {
+    "FROM": "EI.responsaveis",
+    "QUIZ": "Evangelização Infantil",
+    "QUESTION": "Total de Pais ou Responsáveis"
+  },
+  {
+    "FROM": "EI.evangelizadores",
+    "QUIZ": "Evangelização Infantil",
+    "QUESTION": "Evangelizadores Disponíveis"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Evangelização Infantil",
+    "QUESTION": "Evangelizadores Ativos"
+  },
+  {
+    "FROM": "EI.evangelizadores_advindos_mocidade",
+    "QUIZ": "Evangelização Infantil",
+    "QUESTION": "Evangelizadores que vieram da Mocidade"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Evangelização Infantil",
+    "QUESTION": "Qual a quantidade total de evangelizadores que veio da EAE?"
+  },
+  {
+    "FROM": "EI.fizeram_curso",
+    "QUIZ": "Evangelização Infantil",
+    "QUESTION": "Quantos evangelizadores fizeram o curso de Evangelização Infantil?"
+  },
+  {
+    "FROM": "EI.usam_material",
+    "QUIZ": "Evangelização Infantil",
+    "QUESTION": "Os evangelizadores utilizam o material de apoio da Evangelização Infantil da AEE?"
+  },
+
+  {
+    "FROM": "EI.dh_ei.*.day",
+    "QUIZ": "Evangelização Infantil",
+    "QUESTION": "Dia da semana"
+  },
+
+  {
+    "FROM": "EI.dh_ei.*.time",
+    "QUIZ": "Evangelização Infantil",
+    "QUESTION": "Horário de Início"
+  },
+
+  {
+    "FROM": "PRE.alunos",
+    "QUIZ": "Pré-Mocidade",
+    "QUESTION": "Total de Alunos"
+  },
+  {
+    "FROM": "PRE.alunos",
+    "QUIZ": "Pré-Mocidade",
+    "QUESTION": "Total de Expositores"
+  },
+  {
+    "FROM": "PRE.dirigentes_aptos",
+    "QUIZ": "Pré-Mocidade",
+    "QUESTION": "Dirigentes Disponíveis"
+  },
+  {
+    "FROM": "PRE.dirigentes",
+    "QUIZ": "Pré-Mocidade",
+    "QUESTION": "Dirigentes Ativos"
+  },
+  {
+    "FROM": "PRE.vinculados",
+    "QUIZ": "Pré-Mocidade",
+    "QUESTION": "Na sua casa, a Pré-Mocidade está mais vinculada à Evangelização Infantil ou à Mocidade?"
+  },
+
+
+  {
+    "FROM": "PRE.dh_pre.*.day",
+    "QUIZ": "Pré-Mocidade",
+    "QUESTION": "Dia da semana"
+  },
+
+  {
+    "FROM": "PRE.dh_pre.*.time",
+    "QUIZ": "Pré-Mocidade",
+    "QUESTION": "Horário de Início"
+  },
+
+  {
+    "FROM": "MOC.alunos",
+    "QUIZ": "Mocidade Espírita",
+    "QUESTION": "Total de Alunos"
+  },
+  {
+    "FROM": "MOC.expositores",
+    "QUIZ": "Mocidade Espírita",
+    "QUESTION": "Total de Alunos"
+  },
+  {
+    "FROM": "MOC.dirigentes_aptos",
+    "QUIZ": "Mocidade Espírita",
+    "QUESTION": "Qual a quantidade total de dirigentes disponíveis?"
+  },
+  {
+    "FROM": "MOC.dirigentes",
+    "QUIZ": "Mocidade Espírita",
+    "QUESTION": "Qual a quantidade total de dirigentes ativos?"
+  },
+
+  {
+    "FROM": "MOC.dh_moc.*.day",
+    "QUIZ": "Mocidade Espírita",
+    "QUESTION": "Dia da semana"
+  },
+
+  {
+    "FROM": "MOC.dh_moc.*.time",
+    "QUIZ": "Mocidade Espírita",
+    "QUESTION": "Horário de Início"
+  },
+
+
+  {
+    "FROM": "FDJ.ingressantes_no_ano",
+    "QUIZ": "Fraternidade dos Discípulos de Jesus",
+    "QUESTION": "Ingressaram no último ano"
+  },
+  {
+    "FROM": "FDJ.ingressantes_total",
+    "QUIZ": "Fraternidade dos Discípulos de Jesus",
+    "QUESTION": "Ingressaram desde a fundação do centro"
+  },
+
+  {
+    "FROM": "FDJ.dh_fdj.*.day",
+    "QUIZ": "Fraternidade dos Discípulos de Jesus",
+    "QUESTION": "Dia da semana"
+  },
+
+  {
+    "FROM": "FDJ.dh_fdj.*.time",
+    "QUIZ": "Fraternidade dos Discípulos de Jesus",
+    "QUESTION": "Horário de Início"
+  },
+ 
+  {
+    "FROM": "",
+    "QUIZ": "Falando ao Coração",
+    "QUESTION": "Qual a média de trabalhadores que participam do Falando ao Coração?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Falando ao Coração",
+    "QUESTION": "Qual a média de voluntários que já realizou o Curso de Formadores do Falando ao Coração?"
+  },
+
+  {
+    "FROM": "FC.dh_fc.*.day",
+    "QUIZ": "Falando ao Coração",
+    "QUESTION": "Dia da semana"
+  },
+
+  {
+    "FROM": "FC.dh_fc.*.time",
+    "QUIZ": "Falando ao Coração",
+    "QUESTION": "Horário de Início"
+  },
+
+  {
+    "FROM": "EAED.conhece",
+    "QUIZ": "Escola de Aprendizes à Distância",
+    "QUESTION": "Você conhece o trabalho de EAED - Escola de Aprendizes do Evangelho à Distância?"
+  },
+  {
+    "FROM": "EAED.quer_informacoes",
+    "QUIZ": "Escola de Aprendizes à Distância",
+    "QUESTION": "Você gostaria de receber informações sobre o trabalho de EAED?"
+  },
+  {
+    "FROM": "EAED.alunos",
+    "QUIZ": "Escola de Aprendizes à Distância",
+    "QUESTION": "Total de Alunos"
+  },
+  {
+    "FROM": "EAED.dirigentes",
+    "QUIZ": "Escola de Aprendizes à Distância",
+    "QUESTION": "Dirigentes Ativos"
+  },
+
+ {
+    "FROM": "EAED.dh_eaed.*.day",
+    "QUIZ": "Escola de Aprendizes à Distância",
+    "QUESTION": "Dia da semana"
+  },
+
+  {
+    "FROM": "EAED.dh_eaed.*.time",
+    "QUIZ": "Escola de Aprendizes à Distância",
+    "QUESTION": "Horário de Início"
+  },
+
+  {
+    "FROM": "EAEgD.conhece",
+    "QUIZ": "Escola de Aprendizes à Distância",
+    "QUESTION": "Você conhece o trabalho de EAEgD - Escola de Aprendizes do Evangelho à Distância?"
+  },
+  {
+    "FROM": "EAEgD.quer_informacoes",
+    "QUIZ": "Escola de Aprendizes à Distância",
+    "QUESTION": "Você gostaria de receber informações sobre o trabalho de EAEGd?"
+  },
+  {
+    "FROM": "EAEgD.alunos",
+    "QUIZ": "Escola de Aprendizes à Distância",
+    "QUESTION": "Total de Alunos"
+  },
+  {
+    "FROM": "EAEgD.dirigentes",
+    "QUIZ": "Escola de Aprendizes à Distância",
+    "QUESTION": "Dirigentes Ativos"
+  },
+
+  {
+    "FROM": "EAEgD.dh_eaegd.*.day",
+    "QUIZ": "Escola de Aprendizes à Distância",
+    "QUESTION": "Dia da semana"
+  },
+
+  {
+    "FROM": "EAEgD.dh_eaegd.*.time",
+    "QUIZ": "Escola de Aprendizes à Distância",
+    "QUESTION": "Horário de Início"
+  },
+  
+  {
+    "FROM": "",
+    "QUIZ": "Escola de Aprendizes à Distância",
+    "QUESTION": "Qual a quantidade total de alunos de EAED?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Escola de Aprendizes à Distância",
+    "QUESTION": "Qual a quantidade total de dirigentes disponíveis de EAED?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Escola de Aprendizes à Distância",
+    "QUESTION": "Qual a quantidade total de dirigentes ativos de EAED?"
+  },
+
+  {
+    "FROM": "EAED.dh_eaed.*.day",
+    "QUIZ": "Escola de Aprendizes à Distância",
+    "QUESTION": "Dia da semana"
+  },
+
+  {
+    "FROM": "EAED.dh_eaed.*.time",
+    "QUIZ": "Escola de Aprendizes à Distância",
+    "QUESTION": "Horário de Início"
+  },
+
+
+  {
+    "FROM": "",
+    "QUIZ": "Escola de Aprendizes à Distância em Grupo",
+    "QUESTION": "Você conhece o trabalho de EAEgD - Escola de Aprendizes do Evangelho à Distância?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Escola de Aprendizes à Distância em Grupo",
+    "QUESTION": "Gostaria de receber informações sobre o trabalho de EAEgD?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Escola de Aprendizes à Distância em Grupo",
+    "QUESTION": "Qual a quantidade total de alunos de EAEgD?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Escola de Aprendizes à Distância em Grupo",
+    "QUESTION": "Qual a quantidade total de dirigentes disponíveis de EAEgD?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Escola de Aprendizes à Distância em Grupo",
+    "QUESTION": "Qual a quantidade total de dirigentes ativos de EAEgD?"
+  },
+
+  {
+    "FROM": "trabalhos.livraria",
+    "QUIZ": "Outros Trabalhos",
+    "QUESTION": "Possui livraria"
+  },
+  {
+    "FROM": "trabalhos.bazar",
+    "QUIZ": "Outros Trabalhos",
+    "QUESTION": "Possui bazar"
+  },
+  {
+    "FROM": "trabalhos.biblioteca",
+    "QUIZ": "Outros Trabalhos",
+    "QUESTION": "Possui biblioteca"
+  },
+  {
+    "FROM": "trabalhos.apoio_gestante",
+    "QUIZ": "Outros Trabalhos",
+    "QUESTION": "Apoio à Gestante"
+  },
+  {
+    "FROM": "trabalhos.apoio_fumante",
+    "QUIZ": "Outros Trabalhos",
+    "QUESTION": "Possui apoio ao Fumante"
+  },
+  {
+    "FROM": "trabalhos.cesta_basica",
+    "QUIZ": "Outros Trabalhos",
+    "QUESTION": "Entrega cestas básicas"
+  },
+  {
+    "FROM": "trabalhos.outros_trabalhos",
+    "QUIZ": "Outros Trabalhos",
+    "QUESTION": "Descreva outros trabbalhos realizados pela casa"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "",
+    "QUESTION": "Sua casa costuma participar das reuniões da sua regional ?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Regionais",
+    "QUESTION": "Sua casa costuma realizar cursos de formadores internamente ou participa dos cursos de formadores da sua regional ?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Regionais",
+    "QUESTION": "Encaminhamos pessoas para os cursos aplicados pela regional"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Regionais",
+    "QUESTION": "Qual a quantidade total de pessoas encaminhadas no último ano para o curso de dirigentes de EAE ?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Regionais",
+    "QUESTION": "Qual a quantidade total de pessoas encaminhadas no último ano para o curso de dirigentes de Curso de Médiuns ?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Regionais",
+    "QUESTION": "Qual a quantidade total de pessoas encaminhadas no último ano para o curso de dirigentes de Mocidade ?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Regionais",
+    "QUESTION": "Qual a quantidade total de pessoas encaminhadas no último ano para o curso de dirigentes de Pré - Mocidade ?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Regionais",
+    "QUESTION": "Qual a quantidade total de pessoas encaminhadas no último ano para o curso de dirigentes de Evangelização Infantil ?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Regionais",
+    "QUESTION": "Qual a quantidade total de pessoas encaminhadas no último ano para o curso de aplicadores de Falando ao Coração ?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Regionais",
+    "QUESTION": "Como você avalia a importância do trabalho da Regional para o desenvolvimento do seu centro ?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Regionais",
+    "QUESTION": "Comente abaixo qualquer ideia, projeto, melhoria, critica, sugestão, que você e sua casa entendam ser importante para o ano de 2020, na Aliança Espírita Evangélica"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Secretaria da Aliança",
+    "QUESTION": "Você ou sua casa conhecem a Secretaria da Aliança ?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Secretaria da Aliança",
+    "QUESTION": "Quais dúvidas ou informações você e a sua casa acreditam que a Secretaria poderia colaborar ?"
+  },
+  {
+    "FROM": "",
+    "QUIZ": "Secretaria da Aliança",
+    "QUESTION": "Deixe aqui seu comentário ou avaliação sobre este cadastro"
+  }
+]

@@ -96,7 +96,7 @@ router.get("/bff/centros", async function (req, res) {
     if (regionalName) {
       centros = await regionalcontroller.getCentroByParam({"REGIONAL.NOME_REGIONAL":regionalName});
     } else {
-      centros = await regionalcontroller.getCentros();
+      centros = await regionalcontroller.getCentroByParam();
     }
 
     res.json(centros);
@@ -112,14 +112,10 @@ router.get("/bff/regional", async function (req, res) {
 
     let regionaisInfo;
     if (regionalName) {
-      regionaisInfo = await regionalcontroller.getRegionais();
+      regionaisInfo = await regionalcontroller.getRegionalByParams();
     } else {
-      const paramsParsed = parser.getParamsParsed({
-        NOME_REGIONAL: regionalName,
-      });
-      regionaisInfo = await regionalcontroller.getRegionalByParams(
-        paramsParsed
-      );
+
+      regionaisInfo = await regionalcontroller.getRegionalByParams( { NOME_REGIONAL: regionalName, } );
     }
 
     res.json(regionaisInfo);
@@ -135,9 +131,9 @@ router.get("/bff/generalinfo", async function (req, res) {
       start,
       end
     } = req.query;
-    const passes = await trabalhoscontroller.getPasses();
-    let responses = await trabalhoscontroller.getSummaries(start, end);
-    const centros = await regionalcontroller.getCentros();
+    const passes = await trabalhoscontroller.getPassesByParams();
+    let responses = await trabalhoscontroller.getSummariesByParams(start, end);
+    const centros = await regionalcontroller.getCentrosByParams();
 
 
 

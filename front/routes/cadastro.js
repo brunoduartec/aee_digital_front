@@ -4,17 +4,8 @@ var router = express.Router();
 const logger = require("../helpers/logger");
 const parser = require("../helpers/parser");
 
-const regionalController = require("../controllers/regional.controller");
-const regionalcontroller = new regionalController();
-
-const trabalhosController = require("../controllers/trabalhos.controller");
-const trabalhoscontroller = new trabalhosController();
-
-const SearchController = require("../controllers/search.controller");
-const searchcontroller = new SearchController(
-  regionalcontroller,
-  trabalhoscontroller
-);
+const BFFService = require("../services/bff.service")
+const bffservice = new BFFService();
 
 const userInfoController = require("../controllers/userInfo.controller");
 const userinfocontroller = new userInfoController(
@@ -75,18 +66,16 @@ router.get("/summary_coord", requireAuth, async function (req, res, next) {
   let regionalInfo;
 
   if (!regionalName) {
-    regionalInfo = await regionalcontroller.getRegionalByParams({ _id: ID})
+    regionalInfo = await bffservice.getRegionalData({ _id: ID})
     
   } else {
-    regionalInfo = await regionalcontroller.getRegionalByParams({ NOME_REGIONAL: regionalName,})
+    regionalInfo = await bffservice.getRegionalData({ NOME_REGIONAL: regionalName})
 
   }
 
   regionalInfo = regionalInfo[0];
 
-  const centros = await regionalcontroller.getCentroByParam(
-    {"REGIONAL._id": regionalInfo._id}
-  );
+  const centros = await bffservice.getCentroData( {"REGIONAL._id": regionalInfo._id} );
 
   let coord_quiz = await trabalhoscontroller.getQuizTemplateByParams( { CATEGORY: "Coordenador", } );
 

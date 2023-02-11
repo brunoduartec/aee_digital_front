@@ -1,0 +1,21 @@
+{
+  "voluntario": {
+    "rules": ["edit_cadastro", "view_cadastro"]
+  },
+  "presidente": {
+    "rules": ["edit_cadastro", "view_cadastro", "send_cadastro"]
+  },
+  "coord_regional": {
+    "rules": [
+      "edit_cadastro_regional",
+      "send_cadastro_regional",
+      "view_cadastro_regional_summary"
+    ]
+  },
+  "coord_geral": {
+    "rules": ["edit_cadastros", "send_cadastros", "view_summaries"]
+  },
+  "admin": {
+    "rules": ["*"]
+  }
+}
