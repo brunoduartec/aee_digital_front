@@ -11,6 +11,8 @@
       <h2>Validação de Informações - Secretaria AEE</h2>
     </div>
 
+      
+
     <div class="overlay"></div>
     <div class="spanner">
       <div class="loader"></div>
@@ -51,6 +53,12 @@
       </div>  
       <br>
 
+
+
+      <button id="openModalBtn">Abrir Modal</button>
+
+
+
       <div class="validacao-coord-subtitulo">
         <h3>Status por Regional</h3>
       </div>
@@ -75,17 +83,42 @@
       </div>
     </div>
 
-    
+  <!-- Modal HTML Markup -->
+<div id="myModal" class="modal">
+  <%- include("../modals/exportfile")%>
+</div>
 
     <script>
+
+var modal = document.getElementById("myModal");
+var btn = document.getElementById("openModalBtn");
+var span = document.getElementsByClassName("close")[0];
+
+btn.onclick = function() {
+  modal.style.display = "block";
+  exportar()
+}
+
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+
+   
       const start = <%- JSON.stringify(start) %> 
       const end = <%- JSON.stringify(end) %> 
       const regionais = <%- JSON.stringify(regionais) %>
       
       $(document).ready(function () {
-        console.log("Ready disparado");
-        myFunction();
-        showOverlay();
+    
+      console.log("Ready disparado");
+      myFunction();
+      showOverlay();
       });
 
       var xValues = ["Total", "Iniciaram", "Terminaram"];
@@ -125,7 +158,7 @@
 
         a.setAttribute(
           "onclick",
-          `DownloadRegionalResponses('${regionalName}')`
+          ` modal.style.display = "block" exportarRegional('${regionalName}')`
         );
         a.innerText = "Baixar Respostas";
         return a;
@@ -152,7 +185,7 @@
         }
       }
 
-      async function DownloadRegionalResponses(regionalName) {
+      async function DownloadRegionalResponses(regionalName, open=false) {
         try {
           console.log(regionalName);
           var apiUrl = `bff/exportregionalresponses?regionalName=${regionalName}`;
@@ -164,7 +197,7 @@
           });
 
           responseInfo = await responseInfo.json();
-          if (responseInfo.fileName) {
+          if (open && responseInfo.fileName) {
             window.open(responseInfo.fileName);
           }
           return responseInfo;
