@@ -1,3 +1,6 @@
+
+const onClickAction = 
+
 <div class="col-sm" style="max-width: 21rem;">
   <div class="card mb-3 cards-regionais" >
     <div class="card-body" id="card-body_<%=regionalInfo._id%>">
@@ -7,7 +10,7 @@
       <p class="card-text" >Finalizado: <span id="finalizado_<%=regionalInfo._id%>"></span></p>
       <p class="card-text" >Total: <span id="total_<%=regionalInfo._id%>"></span></p>
       <a href="/summary_coord?regionalName=<%=regionalInfo.NOME_REGIONAL%>&start=<%=start%>&end=<%=end%>" class="btn btn-primary btn-sm">Ver Detalhes</a>
-      <a onclick="DownloadRegionalResponses('<%=regionalInfo.NOME_REGIONAL%>')" class="btn btn-primary btn-sm">Baixar Respostas</a>
+      <a onclick="onClickAction('<%=regionalInfo.NOME_REGIONAL%>')" class="btn btn-primary btn-sm">Baixar Respostas</a>
     </div>
   </div>
 </div>

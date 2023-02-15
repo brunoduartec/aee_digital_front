@@ -45,7 +45,7 @@
                 class="btn btn-primary"
                 type="button"
                 value="Baixar Respostas"
-                onclick="DownloadResponses();"
+                onclick="downloadAll();"
               />
             </div>
           </div>
@@ -55,7 +55,8 @@
 
 
 
-      <button id="openModalBtn">Abrir Modal</button>
+
+      <button id="openModalBtn" onclick='modal.style.display = "block";'>Abrir Modal</button>
 
 
 
@@ -70,7 +71,7 @@
             <div class="row">
 
             <%for(var j=i; j<i+4 && j<regionais.length;j++){%>
-              <%- include("../partials/summary_alianca_regional",{regionalInfo: regionais[j],start,end})%>
+              <%- include("../partials/summary_alianca_regional",{regionalInfo: regionais[j],start,end, onClickAction:function(){ downloadRegional(regionais[j].NOME_REGIONAL)} })%>
             <%}%>
           
           </div>
@@ -84,30 +85,37 @@
     </div>
 
   <!-- Modal HTML Markup -->
-<div id="myModal" class="modal">
+
+  <script src="../../helpers/downloadreports.helpers.js"></script>
+
   <%- include("../modals/exportfile")%>
-</div>
+
 
     <script>
 
-var modal = document.getElementById("myModal");
-var btn = document.getElementById("openModalBtn");
-var span = document.getElementsByClassName("close")[0];
+    const modal = document.getElementById("myModal");
 
-btn.onclick = function() {
-  modal.style.display = "block";
-  exportar()
-}
+    const {DownloadReport, DownloadResponses, DownloadRegionalResponses} = require("../../helpers/downloadreports.helpers")
+    function openModal(){
+      modal.style.display = "block";
+    }
 
-span.onclick = function() {
-  modal.style.display = "none";
-}
-
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
+  async function downloadAll(){
+      openModal();
+      await DownloadReport(true)
   }
-}
+
+
+  async function downloadRegional(regionalName){
+    openModal();
+    await DownloadReport(false,regionalName)
+  }
+
+// window.onclick = function(event) {
+//   if (event.target == modal) {
+//     modal.style.display = "none";
+//   }
+// }
 
    
       const start = <%- JSON.stringify(start) %> 
@@ -150,61 +158,6 @@ window.onclick = function(event) {
       function myFunction() {
         var div = document.getElementById("regionais");
         callGetGeneralInfo(div);
-      }
-
-      function getDownloadButton(regionalName) {
-        let a = document.createElement("a");
-        a.setAttribute("class", "btn btn-primary");
-
-        a.setAttribute(
-          "onclick",
-          ` modal.style.display = "block" exportarRegional('${regionalName}')`
-        );
-        a.innerText = "Baixar Respostas";
-        return a;
-      }
-
-      async function DownloadResponses() {
-        try {
-          var apiUrl = `bff/exportrgeneralresponses`;
-          let responseInfo = await fetch(apiUrl, {
-            headers: {
-              "Content-Type": "application/json",
-            },
-            method: "GET",
-          });
-
-          responseInfo = await responseInfo.json();
-          if (responseInfo.fileName) {
-            window.open(responseInfo.fileName);
-          }
-          return responseInfo;
-        } catch (error) {
-          console.log(`Error at Download General Report`, error);
-          throw error;
-        }
-      }
-
-      async function DownloadRegionalResponses(regionalName, open=false) {
-        try {
-          console.log(regionalName);
-          var apiUrl = `bff/exportregionalresponses?regionalName=${regionalName}`;
-          let responseInfo = await fetch(apiUrl, {
-            headers: {
-              "Content-Type": "application/json",
-            },
-            method: "GET",
-          });
-
-          responseInfo = await responseInfo.json();
-          if (open && responseInfo.fileName) {
-            window.open(responseInfo.fileName);
-          }
-          return responseInfo;
-        } catch (error) {
-          console.log(`Error at Download ${regionalName}`, error);
-          throw error;
-        }
       }
 
       function setRegionalInfo(data) {
