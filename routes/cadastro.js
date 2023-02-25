@@ -70,7 +70,7 @@ router.post("/quiz", async function (req, res) {
 
 router.get("/summary_coord", requireAuth, async function (req, res, next) {
  try {
-  const { ID, regionalName, start, end } = req.query;
+  const { ID, regionalName, start, end, pais } = req.query;
   
   let regionalInfo;
 
@@ -78,7 +78,7 @@ router.get("/summary_coord", requireAuth, async function (req, res, next) {
     regionalInfo = await regionalcontroller.getRegionalByParams({ _id: ID})
     
   } else {
-    regionalInfo = await regionalcontroller.getRegionalByParams({ NOME_REGIONAL: regionalName,})
+    regionalInfo = await regionalcontroller.getRegionalByParams({ NOME_REGIONAL: regionalName, PAIS: pais})
 
   }
 
@@ -119,9 +119,21 @@ router.get("/summary_coord", requireAuth, async function (req, res, next) {
   
 });
 
+function sortRegional(regionalA, regionalB){
+  if( regionalA.NOME_REGIONAL > regionalB.NOME_REGIONAL)
+    {return 1}
+  else if(regionalA.NOME_REGIONAL < regionalB.NOME_REGIONAL)
+    {return -1}
+  else{
+    return 
+  }
+}
+
 router.get("/summary_alianca", requireAuth, async function (req, res) {
   const { start, end } = req.query;
   let regionais = await regionalcontroller.getRegionais();
+  regionais = regionais.sort(sortRegional)
+
   res.render("pages/summary_alianca", { start,end, regionais });
 });
 

@@ -6,7 +6,12 @@
       <p class="card-text" >Iniciado: <span id="iniciado_<%=regionalInfo._id%>"></span></p>
       <p class="card-text" >Finalizado: <span id="finalizado_<%=regionalInfo._id%>"></span></p>
       <p class="card-text" >Total: <span id="total_<%=regionalInfo._id%>"></span></p>
+      <% regionalInfo.PAIS %>
+      <%if(regionalInfo.PAIS == 'Brasil'){%>
       <a href="/summary_coord?regionalName=<%=regionalInfo.NOME_REGIONAL%>&start=<%=start%>&end=<%=end%>" class="btn btn-primary btn-sm">Ver Detalhes</a>
+      <%}else{%>  
+        <a href="/summary_coord?regionalName=<%=regionalInfo.NOME_REGIONAL%>&start=<%=start%>&end=<%=end%>&pais=<%=regionalInfo.PAIS%>" class="btn btn-primary btn-sm">Ver Detalhes</a>
+        <%}%>
       <a onclick="DownloadRegionalResponses('<%=regionalInfo.NOME_REGIONAL%>')" class="btn btn-primary btn-sm">Baixar Respostas</a>
     </div>
   </div>
