@@ -125,4 +125,34 @@ router.get("/summary_alianca", requireAuth, async function (req, res) {
   res.render("pages/summary_alianca", { start,end, regionais });
 });
 
+
+function sortRegional(regionalA, regionalB){
+  if( regionalA.NOME_REGIONAL > regionalB.NOME_REGIONAL)
+    {return 1}
+  else if(regionalA.NOME_REGIONAL < regionalB.NOME_REGIONAL)
+    {return -1}
+  else{
+    return 
+  }
+}
+
+router.get("/cadastro_centro", requireAuth, async function (req, res, next) {
+  try {
+    const { nomeRegional } = req.query;
+
+
+    let regionais = await regionalcontroller.getRegionais();
+    regionais = regionais.sort(sortRegional)
+  
+    const estados = [ 'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO' ];
+    
+    res.render("pages/cadastro_centro", { nomeRegional, estados, regionais });  
+  } catch (error) {
+    next(error)
+  }
+  
+});
+
+
+
 module.exports = router;

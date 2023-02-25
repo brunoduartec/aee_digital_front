@@ -535,3 +535,68 @@
   margin: 0 !important;
   padding: 0 !important;
 }
+
+.centro-form {
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  box-shadow: 0 0 10px #ccc;
+}
+
+.centro-form label {
+  display: block;
+  margin: 10px 0;
+}
+
+.centro-form input {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.centro-form select {
+  padding: 0.5em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1em;
+  margin-bottom: 1em;
+}
+
+.centro-form button[type="submit"] {
+  margin-top: 10px;
+  padding: 5px 10px;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input.campo-invalido,
+select.campo-invalido {
+  border-color: red;
+}
+
+.shake {
+  animation: shake 0.5s;
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translateX(-10px);
+  }
+  
+  20%, 80% {
+    transform: translateX(10px);
+  }
+
+  30%, 50%, 70% {
+    transform: translateX(-5px);
+  }
+
+  40%, 60% {
+    transform: translateX(5px);
+  }
+}

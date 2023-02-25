@@ -29,4 +29,15 @@ module.exports = class regionalController extends CacheableController{
   async updateCentro(params, value) {
     return await this.put('centros', params, value)
   }
+
+  async createCentro(body) {
+    try {
+      return await this.post('centros', body)  
+    } catch (error) {
+      this.logger.error("Erro criando centro", body, error)
+      throw error
+    }
+      
+    
+  }
 };

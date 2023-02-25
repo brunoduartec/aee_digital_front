@@ -358,54 +358,12 @@ router.post("/bff/initialize_centro", async function (req, res) {
     if (!centroId)
       throw new Error("centroId required")
 
-    let responses = await trabalhoscontroller.getQuizResponseByParams({
-      CENTRO_ID: centroId,
+    let responses = await trabalhoscontroller.initializeCentro(centroId);
+
+    res.json({
+      "message": "Adicionados",
+      responses
     });
-
-
-    if (responses.length == 0) {
-      const cadastroFormName = "Cadastro de Informações Anual";
-
-      let form = await trabalhoscontroller.getFormByParams({
-        "NAME": cadastroFormName
-      });
-
-      form = form[0];
-      let pages = form.PAGES;
-
-      let answersToAdd = []
-
-      pages.forEach(page => {
-        const quizes = page.QUIZES;
-
-        quizes.forEach((quiz)=>{
-          const questions = quiz.QUESTIONS;
-          questions.forEach(group=>{
-            let GROUP = group.GROUP
-            GROUP.forEach(question=>{
-              let answerInfo = {
-                CENTRO_ID: centroId,
-                QUIZ_ID: quiz._id,
-                QUESTION_ID: question._id,
-                ANSWER: " ",
-              };
-
-              answersToAdd.push(answerInfo)
-            })
-          })
-
-        })
-
-      });
-
-      
-      const answersAdded = await trabalhoscontroller.postQuizResponse(answersToAdd);
-
-      res.json({
-        "message": "Adicionados",
-        responses: answersAdded
-      });
-    }
   } catch (error) {
     logger.error(`/bff/initialize_centro: ${error}`);
     res.json({
