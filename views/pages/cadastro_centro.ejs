@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/head'); %>
+</head>
+
+<body class="body">
+    <header><%- include('../partials/header'); %></header>
+
+    <form action="/create_centro" method="post" class="centro-form" onsubmit="return validarFormulario()">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome"><br>
+
+        <label for="nome_curto">Nome Curto:</label>
+        <input type="text" id="nome_curto" name="nome_curto"><br>
+
+        <label for="estado">Estado:</label>
+        <select id="estado" name="estado">
+            <% estados.forEach(function(estado) { %>
+            <option value="<%= estado %>"><%= estado %></option>
+            <% }); %>
+        </select><br>
+
+        <label for="cidade">Cidade:</label>
+        <select id="cidade" name="cidade"></select>
+        
+
+        <% if(regionais){%>
+            <label for="regional">Regional:</label>
+            <select id="regional" name="regional">
+                <% regionais.forEach(function(regional) { %>
+                <option value="<%=regional._id%>"><%= regional.NOME_REGIONAL %><%=regional.PAIS != 'Brasil'? `: ${regional.PAIS}`  : ""%></option>
+                <% }); %>
+            </select><br>
+
+            <%}%>
+
+        <button type="submit">Cadastrar</button>
+    </form>
+
+    <footer><%- include('../partials/footer'); %></footer>
+</body>
+
+<script>
+    document.getElementById('estado').addEventListener('change', atualizarCidades);
+
+    window.onload = function() {
+  atualizarCidades();
+};
+
+    function validarFormulario() {
+        const nome = document.getElementById("nome");
+        const nome_curto = document.getElementById("nome_curto");
+        const cidade = document.getElementById("cidade");
+        const estado = document.getElementById("estado");
+
+        let camposValidos = true;
+
+        if (!nome.value) {
+            nome.classList.add("campo-invalido");
+            nome.classList.add("shake");
+            camposValidos = false;
+        } else {
+            nome.classList.remove("campo-invalido");
+            nome.classList.remove("shake");
+        }
+
+        if (!nome_curto.value) {
+            nome_curto.classList.add("campo-invalido");
+            nome_curto.classList.add("shake");
+            camposValidos = false;
+        } else {
+            nome_curto.classList.remove("campo-invalido");
+            nome_curto.classList.remove("shake");
+        }
+        
+
+        if (!cidade.value) {
+            cidade.classList.add("campo-invalido");
+            cidade.classList.add("shake");
+            camposValidos = false;
+        } else {
+            cidade.classList.remove("campo-invalido");
+            cidade.classList.remove("shake");
+        }
+
+        if (!estado.value) {
+            estado.classList.add("campo-invalido");
+            estado.classList.add("shake");
+            camposValidos = false;
+        } else {
+            estado.classList.remove("campo-invalido");
+            estado.classList.remove("shake");
+        }
+
+        return camposValidos;
+    }
+
+    function atualizarCidades() {
+    const estado = document.getElementById('estado').value;
+
+    let cidades = [];
+
+    // Verificar se as cidades do estado selecionado já estão no cache
+    if (localStorage.getItem(estado)) {
+        cidades = JSON.parse(localStorage.getItem(estado));
+        atualizarListaCidades(cidades);
+    } else {
+
+        const cidadesUrl = `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${estado}/municipios`;
+
+        fetch(cidadesUrl)
+        .then(response => response.json())
+        .then(data => {
+        cidades = data.map(cidade => cidade.nome);
+
+        // Armazenar as cidades do estado selecionado no cache local
+        localStorage.setItem(estado, JSON.stringify(cidades));
+        atualizarListaCidades(cidades);
+    })
+    .catch(error => console.error(error));
+    }
+    
+}
+
+    function atualizarListaCidades(cidades) {
+    const cidadeSelect = document.getElementById('cidade');
+
+    // Limpar as opções atuais do campo de seleção de cidades
+    cidadeSelect.innerHTML = '';
+
+    // Adicionar as novas opções com os nomes das cidades
+    cidades.forEach(cidade => {
+    const option = document.createElement('option');
+    option.value = cidade;
+    option.textContent = cidade;
+    cidadeSelect.appendChild(option);
+    });
+}
+</script>
+
+</html>

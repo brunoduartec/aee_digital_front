@@ -6,7 +6,7 @@ const { requireAuth } = require("../helpers/auth.helpers");
 const regionalController = require("../controllers/regional.controller");
 const regionalcontroller = new regionalController();
 
-const TrabalhoController = require("../controllers/regional.controller");
+const TrabalhoController = require("../controllers/trabalhos.controller");
 const trabalhocontroller = new TrabalhoController();
 
 const SearchController = require("../controllers/search.controller");
@@ -98,7 +98,7 @@ router.get("/trabalho_centro", requireAuth, async function (req, res) {
   }
 });
 
-router.get("/cadastro", requireAuth, async function (req, res) {
+router.get("/cadastro", requireAuth, async function (req, res, next) {
   const centro = req.query.nome;
   const edit = req.query.edit;
   const option = "Centro_Summary";
@@ -123,21 +123,41 @@ router.get("/cadastro", requireAuth, async function (req, res) {
   }
 });
 
-router.post("/update_centro", requireAuth, async function (req, res) {
-  // const centroInfo = {
-  //   NOME_CENTRO: req.body.nome,
-  //   NOME_CURTO: req.body.NOME_CURTO,
-  //   CNPJ_CENTRO: req.body.cnpj,
-  //   DATA_FUNDACAO: req.body.fundacao,
-  //   ENDERECO: req.body.endereco,
-  //   CEP: req.body.cep,
-  //   BAIRRO: req.body.bairro,
-  //   CIDADE: req.body.cidade,
-  //   ESTADO: req.body.estado,
-  //   PAIS: req.body.pais,
-  // };
+router.post("/create_centro", requireAuth, async function (req, res) {
+  try {
+    const defaultValue = "  "
+    const centroInfo = {
+      NOME_CENTRO: req.body.nome,
+      NOME_CURTO: req.body.nome_curto,
+      CNPJ_CENTRO: req.body.cnpj || defaultValue,
+      DATA_FUNDACAO: req.body.fundacao || "1/1/2000",
+      ENDERECO: req.body.endereco || defaultValue,
+      CEP: req.body.cep || defaultValue,
+      BAIRRO: req.body.bairro || defaultValue,
+      CIDADE: req.body.cidade || defaultValue,
+      ESTADO: req.body.estado || defaultValue,
+      PAIS: req.body.pais || "Brasil",
+      REGIONAL: req.body.regional
+    };
+  
+    const centroInfoAdded = await regionalcontroller.createCentro(centroInfo)
 
-  res.render("pages/detalhe", {});
+    await trabalhocontroller.initializeCentro(centroInfoAdded.ID)
+
+    let loginInfo = await trabalhocontroller.setPass(centroInfo.NOME_CENTRO, centroInfoAdded.ID, ['presidente'])
+    loginInfo = loginInfo[0]
+
+    res.render("pages/thanks", {
+      centroInfoAdded,
+      message:`informações do centro\nusuario: ${loginInfo.user}\n  senha:${loginInfo.pass}`
+    });
+  } catch (error) {
+    logger.error(`post:create_centro: ${req.body}`, error);
+    res.json({
+      message: "",
+      error
+    })
+  }
 });
 
 router.get("/pesquisar", requireAuth, async function (req, res) {

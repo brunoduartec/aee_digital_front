@@ -1,4 +1,5 @@
 const CacheableController = require("./cacheable.controller")
+const generator = require('generate-password');
 
 module.exports = class trabalhosController extends CacheableController {
   constructor() {
@@ -6,6 +7,59 @@ module.exports = class trabalhosController extends CacheableController {
       service: "aee_digital_trabalhos"
     })
 
+  }
+
+  async initializeCentro(centroId){
+    try {
+      let responses = await this.getQuizResponseByParams({
+        CENTRO_ID: centroId,
+      });
+  
+  
+      if (responses.length == 0) {
+        const cadastroFormName = "Cadastro de Informações Anual";
+  
+        let form = await this.getFormByParams({
+          "NAME": cadastroFormName
+        });
+  
+        form = form[0];
+        let pages = form.PAGES;
+  
+        let answersToAdd = []
+  
+        pages.forEach(page => {
+          const quizes = page.QUIZES;
+  
+          quizes.forEach((quiz)=>{
+            const questions = quiz.QUESTIONS;
+            questions.forEach(group=>{
+              let GROUP = group.GROUP
+              GROUP.forEach(question=>{
+                let answerInfo = {
+                  CENTRO_ID: centroId,
+                  QUIZ_ID: quiz._id,
+                  QUESTION_ID: question._id,
+                  ANSWER: " ",
+                };
+  
+                answersToAdd.push(answerInfo)
+              })
+            })
+  
+          })
+  
+        });
+  
+        const answersAdded = await this.postQuizResponse(answersToAdd);
+
+        return answersAdded
+      }
+    } catch (error) {
+      this.logger.error(`Erro Inicializando centro ${centroId}`)
+      throw error
+    }
+    
   }
 
 
@@ -66,6 +120,36 @@ module.exports = class trabalhosController extends CacheableController {
     return await this.put('pass', params, value)
   }
 
+  getFakeName(name){
+    const nameParts = name.split(" ")
+    const parte1 = nameParts[0];
+    const parte2 = nameParts.length>1 ? nameParts[1] : ""
+
+     // gerar dois números aleatórios entre 10 e 99
+  var num1 = Math.floor(Math.random() * 90) + 10;
+  
+
+    const nomeDeUsuario = `${parte1.substring(0, 3)}${parte2.substring(0, 5)}${num1}`;
+    return nomeDeUsuario.toLowerCase();
+  }
+
+  async setPass(hint,scope_id, groups ){
+    const pass = generator.generate({
+      length: 6,
+      numbers: true
+    });
+
+    const passInfo = {
+      groups,
+      scope_id,
+      pass,
+      user: this.getFakeName(hint)
+
+    }
+
+    return await this.post('pass', passInfo)
+  }
+
   async getPasses() {
     return await this.get('pass')
   }
@@ -119,8 +203,6 @@ module.exports = class trabalhosController extends CacheableController {
   async getQuizResponses() {
     return await this.get('atividade_generic_quiz_answer')
   }
-
-  
 
   async getPessoaByParams(params) {
     return await this.get('pessoa', params)

@@ -37,15 +37,27 @@
             <div class="col-md-6">
                 <canvas id="myChart" style="width: 100%; max-width: 600px"></canvas>
             </div>
-            <div>
-              <input
-                id="clickMe"
-                class="btn btn-primary"
-                type="button"
-                value="Baixar Respostas"
-                onclick="DownloadResponses();"
-              />
+
+            <div class="col-md-6">
+              
+                <input
+                  id="clickMe"
+                  class="btn btn-primary"
+                  type="button"
+                  value="Baixar Respostas"
+                  onclick="DownloadResponses();"
+                />
+             
+                <input
+                  id="novo_centro"
+                  class="btn btn-primary"
+                  type="button"
+                  value="Criar Centro"
+                  onclick="window.location.href='/cadastro_centro'"
+                />
+             
             </div>
+            
           </div>
         </div>
       </div>  
@@ -257,7 +269,12 @@
               };
 
               let centrosOfRegional = centros.filter((m) => {
-                return m.REGIONAL._id == regional._id;
+                try {
+                  return m.REGIONAL._id == regional._id;  
+                } catch (error) {
+                  console.log(m)
+                }
+                
               });
 
               for (const centroInfo of centrosOfRegional) {
