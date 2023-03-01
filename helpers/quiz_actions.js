@@ -90,7 +90,9 @@ module.exports = class QuizActions {
     };
     await this.trabalhoscontroller.postQuizSummary(params);
 
-    res.render("pages/thanks", {});
+    res.render("pages/thanks", {
+      message:""
+    });
   }
 
   async pdf(req, res, action_info) {
@@ -109,7 +111,7 @@ module.exports = class QuizActions {
       );
 
       this.logger.info(
-        `helpers:quiz_actions:open => ${JSON.stringify(form_info)}`
+        `helpers:quiz_actions:open => ${centro_id}`
       );
 
       res.render("pages/quiz", {

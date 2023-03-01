@@ -108,7 +108,7 @@ module.exports = class authController {
     try {
       this.logger.info(
         `controller:auth.controller:authenticate: Start auth: ${JSON.stringify(
-          loginInfo
+          loginInfo.user
         )}`
       );
       let auth = await this.checkUserPass(loginInfo.user, loginInfo.pass);

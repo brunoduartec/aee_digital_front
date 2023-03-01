@@ -21,7 +21,7 @@ const excelexporteresponses = new ExcelExportResponses(
 
 (async () => {
   await excelexporteresponses.init();
-  console.log("INITED");
+  logger.info("Initialized")
 })();
 
 const {
