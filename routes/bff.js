@@ -10,11 +10,12 @@ const regionalcontroller = new regionalController();
 const trabalhosController = require("../controllers/trabalhos.controller");
 const trabalhoscontroller = new trabalhosController();
 
-const ExcelExportResponses = require("../controllers/excelexportresponses.controller");
+const  ExcelExportReportsController = require("../controllers/excelexportresponses.controller");
+
 const excelExporterHelper = require("../helpers/excelexporter.helper");
 const excelexporter = new excelExporterHelper();
 
-const excelexporteresponses = new ExcelExportResponses(
+const excelexporteresponses = new ExcelExportReportsController(
   excelexporter,
   trabalhoscontroller
 );
@@ -296,8 +297,10 @@ router.get("/bff/answerbyregional", async function (req, res) {
 router.get("/bff/exportcentroresponses", async function (req, res) {
   try {
     const centroId = req.query.centroId;
+    const exporting_guid = req.query.guid
+    const io = req.io;
 
-    const fileSaved = await excelexporteresponses.exportCentro(centroId);
+    const fileSaved = await excelexporteresponses.exportCentro(centroId, exporting_guid, io);
 
     res.send({
       status: "success",
@@ -316,8 +319,10 @@ router.get("/bff/exportcentroresponses", async function (req, res) {
 router.get("/bff/exportregionalresponses", async function (req, res) {
   try {
     const regionalName = req.query.regionalName;
+    const exporting_guid = req.query.guid
+    const io = req.io;
 
-    const fileSaved = await excelexporteresponses.exportRegional(regionalName);
+    const fileSaved = await excelexporteresponses.exportRegional(regionalName, exporting_guid, io);
 
     res.send({
       status: "success",
@@ -335,7 +340,11 @@ router.get("/bff/exportregionalresponses", async function (req, res) {
 
 router.get("/bff/exportrgeneralresponses", async function (req, res) {
   try {
-    const fileSaved = await excelexporteresponses.exportAll();
+    const exporting_guid = req.query.guid
+    const io = req.io;
+
+    const fileSaved = await excelexporteresponses.exportAll(exporting_guid, io);
+
 
     res.send({
       status: "success",

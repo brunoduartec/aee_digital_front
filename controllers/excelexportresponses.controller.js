@@ -1,4 +1,3 @@
-
 module.exports = class ExcelExportReportsController {
   constructor(
     exporter,
@@ -18,36 +17,36 @@ module.exports = class ExcelExportReportsController {
   async init() {
     try {
 
-      const forms = await this.trabalhoscontroller.getFormByParams({ NAME: "Cadastro de Informações Anual" });
-      const form = forms[0];
+      const [form] = await this.trabalhoscontroller.getFormByParams({ NAME: "Cadastro de Informações Anual" });
+      this.headers = form.PAGES.flatMap(
+        (page) =>
+          page.QUIZES.flatMap(
+            (quiz) =>
+              quiz.QUESTIONS.flatMap((grouped_question) =>
+                grouped_question.GROUP.map(({ QUESTION: header, _id: key }) => ({
+                  header,
+                  key,
+                }))
+              )
+          )
+      );
 
-      this.headers = [];
+      let coord_quiz = await this.trabalhoscontroller.getQuizTemplateByParams({
+        CATEGORY: "Coordenador",
+      });
 
-      for (let index = 0; index < form.PAGES.length; index++) {
-        const page = form.PAGES[index];
+      const newHeaders = coord_quiz.flatMap(
+        (quiz) =>
+          quiz.QUESTIONS.flatMap((grouped_question) =>
+            grouped_question.GROUP.map(({ QUESTION: header, _id: key }) => ({
+              header,
+              key,
+            }))
+          )
+      )
 
-        for (let index = 0; index < page.QUIZES.length; index++) {
-          const quiz = page.QUIZES[index];
+      this.headers = this.headers.concat(newHeaders)
 
-          for (let index = 0; index < quiz.QUESTIONS.length; index++) {
-            const grouped_question = quiz.QUESTIONS[index];
-
-            for (
-              let index = 0;
-              index < grouped_question.GROUP.length;
-              index++
-            ) {
-              const question = grouped_question.GROUP[index];
-              const headerItem = {
-                header: question.QUESTION,
-                key: question._id,
-              };
-
-              this.headers.push(headerItem);
-            }
-          }
-        }
-      }
       return true;
     } catch (error) {
       this.logger.error(`controllers:excelexporterresponses:init: ${error}`);
@@ -89,133 +88,149 @@ module.exports = class ExcelExportReportsController {
     return `General_Report`;
   }
 
-  exportCentro(centroId) {
-    return new Promise((resolve, reject) => {
-      (async () => {
-        try {
-          const infoFormated = await this.formatCentroToExport(centroId);
-          let fileSaved = await this.exporter.export(
-            this.getCentroFileName(
-              infoFormated.centroName,
-              infoFormated.regionalName
-            ),
-            this.getHeaders(),
-            infoFormated.infoFormated,
-            this.getFormatInfo
-          );
-
-          resolve(fileSaved.substring(8));
-        } catch (error) {
-          this.logger.error(`ExportingCentro :${centroId}: ${error}`);
-          reject(error);
-        }
-      })();
-    });
+  async exportCentro(centroId, exporting_guid, io) {
+    try {
+      const infoFormated = await this.formatCentroToExport(centroId, exporting_guid, io);
+  
+      const fileSaved = await this.exporter.export(
+        this.getCentroFileName(
+          infoFormated.centroName,
+          infoFormated.regionalName
+        ),
+        this.getHeaders(),
+        infoFormated.infoFormated,
+        this.getFormatInfo
+      );
+  
+      return fileSaved.substring(8); // Assuming the first 8 characters are a prefix to be removed
+    } catch (error) {
+      this.logger.error(`ExportingCentro :${centroId}: ${error}`);
+      throw error;
+    }
   }
 
-  async exportCentrosByRegional(regionalName) {
-    let files = [];
+  async exportCentrosByRegional(regionalName, exporting_guid, io) {
     const centros = await this.reportinfo.getCentrosInRegionalInfo(
       regionalName
     );
-
-    const promises = [];
-
-    for (let index = 0; index < centros.length; index++) {
-      const centro = centros[index];
-      promises.push(this.exportCentro(centro._id));
-    }
-
-    await Promise.all(promises)
-      .then((f) => {
-        this.logger.info(
-          `controller:excelexportresponses.controller:exportCentrosByRegional ${f}`
-        );
-        files = files.concat(f);
-      })
-      .catch((error) => {
-        this.logger.error(
-          `controller:excelexportresponses.controller:exportCentrosByRegional ${error}`
-        );
-        throw new Error(error);
-      });
-
+  
+    const files = await Promise.all(centros.map(async (centro) => {
+      return this.exportCentro(centro._id, exporting_guid, io);
+    }))
+    .then((f) => {
+      this.logger.info(
+        `controller:excelexportresponses.controller:exportCentrosByRegional ${f}`
+      );
+      return f;
+    })
+    .catch((error) => {
+      this.logger.error(
+        `controller:excelexportresponses.controller:exportCentrosByRegional ${error}`
+      );
+      throw new Error(error);
+    });
+  
     return files;
   }
 
-  async exportRegional(regionalName) {
+  async exportRegional(regionalName, exporting_guid, io) {
 
     let centros = await this.regionaiscontroller.getCentroByParam({"REGIONAL.NOME_REGIONAL": regionalName});
 
-   
     const fileName = this.getRegionalFileName(regionalName);
 
-    return await this.exportBatch(fileName, centros);
+    return await this.exportBatch(fileName, centros, exporting_guid, io);
   }
 
-  async exportRegionais() {
-    const files = [];
+  async exportRegionais(exporting_guid, io) {
     const regionais = await this.regionaiscontroller.getRegionais();
-
-    for (let index = 0; index < regionais.length; index++) {
-      const regional = regionais[index];
-      let regionalFile = await this.exportRegional(regional.NOME_REGIONAL);
-      files.push(regionalFile);
-    }
-
+  
+    // Use Promise.all() to export regionals in parallel
+    const files = await Promise.all(regionais.map(async (regional) => {
+      const regionalFile = await this.exportRegional(regional.NOME_REGIONAL, exporting_guid, io);
+      return regionalFile;
+    }));
+  
     return files;
   }
 
-  async exportAll() {
+  async exportAll(exporting_guid, io) {
     const centros = await this.regionaiscontroller.getCentros();
     const fileName = this.getAllFileName();
 
-    return await this.exportBatch(fileName, centros);
+    return await this.exportBatch(fileName, centros, exporting_guid, io);
   }
 
-  async exportBatch(fileName, context) {
-    let infoFormated = [];
-    for (let index = 0; index < context.length; index++) {
-      const item = context[index];
-      const centroId = item._id;
-      try {
-        const centroInfoFormated = await this.formatCentroToExport(centroId);
-        infoFormated = infoFormated.concat(centroInfoFormated.infoFormated);
-      } catch (error) {
-        console.log("Nao conseguiu");
-      }
-    }
-
-    let fileSaved = await this.exporter.export(
-      fileName,
-      this.getHeaders(),
-      infoFormated,
-      this.getFormatInfo
-    );
-    return fileSaved.substring(8);
-  }
-
-  async formatCentroToExport(centroId) {
+  async exportBatch(fileName, context, exporting_guid, io) {
     try {
-      let centroInfo = await this.regionaiscontroller.getCentroByParam({_id: centroId})
-      centroInfo = centroInfo[0]
 
-      const centroName = centroInfo.NOME_CENTRO;
-      const regionalName = centroInfo.REGIONAL.NOME_REGIONAL;
+      io.emit(
+        "started",{
+        "event":"started",
+        "amount": context.length,
+        exporting_guid
+      });
+      // Call this.formatCentroToExport() in parallel for each centroId using Promise.all() and map()
+      const centroInfoPromises = context.map(item => this.formatCentroToExport(item._id, exporting_guid, io));
+      const centroInfoResults = await Promise.all(centroInfoPromises);
+  
+      // Concatenate the formatted info into a single array
+      let infoFormated = [];
+      for (const centroInfoResult of centroInfoResults) {
+        infoFormated = infoFormated.concat(centroInfoResult.infoFormated);
+      }
 
-      const data = await this.trabalhoscontroller.getQuizResponseByParams({CENTRO_ID: centroId})
+      io.emit("finished",{
+        "event":"finished",
+        exporting_guid
+      });
+  
+      const fileSaved = await this.exporter.export(
+        fileName,
+        this.getHeaders(),
+        infoFormated,
+        this.getFormatInfo
+      );
+      return fileSaved.substring(8);
+    } catch (error) {
+      console.log("Nao conseguiu");
+      throw new Error(error)
+    }
+  }
+  
 
-      const infoFormated = [];
-      infoFormated.push(data);
+  async formatCentroToExport(centroId, exporting_guid, io) {
+    try {
+      // Use Promise.all() to fetch centroInfo and data in parallel
+      const [centroInfo, data] = await Promise.all([
+        this.regionaiscontroller.getCentroByParam({ _id: centroId }),
+        this.trabalhoscontroller.getQuizResponseByParams({ CENTRO_ID: centroId }),
+      ]);
+  
+      const { NOME_CENTRO: centroName, REGIONAL: { NOME_REGIONAL: regionalName } } = centroInfo[0];
+      this.logger.info(`formated; ${centroName}`)
 
+      io.emit("progress",{
+        "event":"progress",
+        exporting_guid,
+        centroId
+      });
+
+      // Return info directly instead of pushing it into an array and then returning the array
       return {
         centroName,
         regionalName,
-        infoFormated,
+        infoFormated: [data],
       };
     } catch (error) {
+      // Rethrow the error instead of wrapping it in an object
       this.logger.error(`formatCentroToExport: ${centroId}: ${error}`);
-      throw { error };
+      io.emit("error",{
+        "event":"error",
+        exporting_guid,
+        centroId
+      });
+      throw error;
     }
   }
 };

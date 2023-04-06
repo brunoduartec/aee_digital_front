@@ -3,7 +3,7 @@
   <head>
     <%- include('../partials/head'); %>
   </head>
-
+  
   <body class="body">
     <header class="cabeçalho"><%- include('../partials/header'); %></header>
 
@@ -57,6 +57,8 @@
                 />
              
             </div>
+
+            <%- include('../modals/exporting.ejs') %>
             
           </div>
         </div>
@@ -90,6 +92,9 @@
     
 
     <script>
+      const openPopupBtn = document.querySelector('#open-popup');
+      const popupWrapper = document.querySelector('.popup-wrapper');
+
       const start = <%- JSON.stringify(start) %> 
       const end = <%- JSON.stringify(end) %> 
       const regionais = <%- JSON.stringify(regionais) %>
@@ -143,9 +148,22 @@
         return a;
       }
 
+      function generateGUID() {
+        function S4() {
+          return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+        }
+        return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+      }
+
+
       async function DownloadResponses() {
         try {
-          var apiUrl = `bff/exportrgeneralresponses`;
+
+          popupWrapper.style.display = 'block';
+          const exporting_guid = generateGUID();
+
+
+          var apiUrl = `bff/exportrgeneralresponses?guid=${exporting_guid}`;
           let responseInfo = await fetch(apiUrl, {
             headers: {
               "Content-Type": "application/json",
@@ -166,8 +184,10 @@
 
       async function DownloadRegionalResponses(regionalName) {
         try {
-          console.log(regionalName);
-          var apiUrl = `bff/exportregionalresponses?regionalName=${regionalName}`;
+          popupWrapper.style.display = 'block';
+
+          const exporting_guid = generateGUID();
+          var apiUrl = `bff/exportregionalresponses?regionalName=${regionalName}&guid=${exporting_guid}`;
           let responseInfo = await fetch(apiUrl, {
             headers: {
               "Content-Type": "application/json",

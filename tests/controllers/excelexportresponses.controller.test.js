@@ -1,5 +1,4 @@
-const ReportInfo = require("../../controllers/reportinfo.controller");
-const ExcelExportResponses = require("../../controllers/excelexportresponses.controller");
+const ExcelExportResponsesClass = require("../../controllers/excelexportresponses.controller");
 
 const form_mock = require("../form.mock.json");
 const centros_mock = require("../centros.mock.json");
@@ -7,63 +6,51 @@ const regionais_mock = require("../regionais.mock.json");
 const summaries_mock = require("../summaries.mock.json");
 const response_mock = require("../responses.mock.json");
 
-const excelexportercontroller = {
-  export: function () {
-    return "arquivomaneiro.xls";
-  },
-};
 
-const trabalhocontroller = {
-  getSummaries: async function () {
-    return summaries_mock;
-  },
-  getQuizResponses: async function () {
-    return response_mock;
-  },
-  getFormByParams: async function () {
-    return form_mock;
-  },
-};
+// Import the module that contains the formatCentroToExport function
+describe('ExcelExportResponses', () => {
+  describe('formatCentroToExport', () => {
+    // Mock regionaiscontroller and trabalhoscontroller with jest.fn()
+    const regionaiscontroller = {
+      getCentroByParam: jest.fn(() => Promise.resolve([{ NOME_CENTRO: 'Centro A', REGIONAL: { NOME_REGIONAL: 'Regional X' } }])),
+    };
+    const trabalhoscontroller = {
+      getQuizResponseByParams: jest.fn(() => Promise.resolve({ data: 'some data' })),
+    };
 
-const regionalcontroller = {
-  getCentros: async function () {
-    return centros_mock;
-  },
-  getRegionais: async function () {
-    return regionais_mock;
-  },
-};
+    // Create a new instance of ExcelExportResponses, passing in the mocked controllers
+    const ExcelExportResponses = new ExcelExportResponsesClass(regionaiscontroller, trabalhoscontroller);
 
-const logger = {
-  info: function (info) {
-    console.log(info);
-  },
-};
+    it('should return formatted centro info', async () => {
+      // Call the function with a mock centroId
+      const result = await ExcelExportResponses.formatCentroToExport('123');
 
-const excelexporter_mock = {
-  export: function () {
-    console.log("ARQUIVO");
-    return {};
-  },
-};
+      // Check that the expected functions were called with the expected arguments
+      expect(regionaiscontroller.getCentroByParam).toHaveBeenCalledWith({ _id: '123' });
+      expect(trabalhoscontroller.getQuizResponseByParams).toHaveBeenCalledWith({ CENTRO_ID: '123' });
 
-const exporter = new ReportInfo(
-  excelexporter_mock,
-  trabalhocontroller,
-  regionalcontroller,
-  0,
-  logger
-);
+      // Check that the result is formatted correctly
+      expect(result).toEqual({
+        centroName: 'Centro A',
+        regionalName: 'Regional X',
+        infoFormated: [{ data: 'some data' }],
+      });
+    });
 
-const excelexporter = new ExcelExportResponses(
-  excelexportercontroller,
-  exporter,
-  trabalhocontroller
-);
+    it('should throw an error if either controller function throws an error', async () => {
+      // Mock the getCentroByParam function to throw an error
+      regionaiscontroller.getCentroByParam.mockImplementationOnce(() => Promise.reject(new Error('Error')));
 
-(async () => {
-  await excelexporter.init();
-})();
+      // Call the function with a mock centroId and expect it to throw an error
+      await expect(ExcelExportResponses.formatCentroToExport('123')).rejects.toThrowError('Error');
+
+      // Check that the expected functions were called with the expected arguments
+      expect(regionaiscontroller.getCentroByParam).toHaveBeenCalledWith({ _id: '123' });
+      expect(trabalhoscontroller.getQuizResponseByParams).not.toHaveBeenCalled();
+    });
+  });
+});
+
 
 // describe("controllers:exportexcelresponses", () => {
 //   it("should validade init", async () => {
