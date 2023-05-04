@@ -163,14 +163,22 @@ module.exports = class SearchController {
             let groups = quiz.QUESTIONS;
 
             for (let j = 0; j < groups.length; j++) {
-              const group = groups[j].GROUP;
+              const groupInfo = groups[j]
+              const group = groupInfo.GROUP;
 
               for (let k = 0; k < group.length; k++) {
                 const question = group[k];
 
-                let answer = quiz_responses.filter((m) => {
-                    return m.QUESTION_ID == question._id;
-                });
+                let answer
+
+                
+                if(groupInfo.IS_MULTIPLE){
+                  answer = quiz_responses.filter((m) => { return m.QUESTION_ID == question._id; });
+
+                }else{
+                  const itemFound = quiz_responses.find((m) => { return m.QUESTION_ID == question._id; })
+                  answer = [itemFound  || " "];
+                }
 
                 if (answer.length > 0) {
                   question.ANSWER = JSON.parse(
@@ -197,6 +205,7 @@ module.exports = class SearchController {
           templates: form_template,
           titles: page_titles,
           finalized: finalized,
+          centro
         };
 
         this.logger.info(

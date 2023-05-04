@@ -4,7 +4,8 @@ module.exports = class regionalController extends CacheableController{
   constructor(
   ) {
     super({
-      service: "aee_digital_regionais"
+      service: "aee_digital_regionais",
+      ttl: 3000
     })
     
   }

@@ -204,7 +204,7 @@ module.exports = class ExcelExportReportsController {
       // Use Promise.all() to fetch centroInfo and data in parallel
       const [centroInfo, data] = await Promise.all([
         this.regionaiscontroller.getCentroByParam({ _id: centroId }),
-        this.trabalhoscontroller.getQuizResponseByParams({ CENTRO_ID: centroId }),
+        this.trabalhoscontroller.getQuizResponseByParams({ CENTRO_ID: centroId })
       ]);
   
       const { NOME_CENTRO: centroName, REGIONAL: { NOME_REGIONAL: regionalName } } = centroInfo[0];
