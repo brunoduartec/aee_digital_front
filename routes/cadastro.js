@@ -84,15 +84,12 @@ router.get("/summary_coord", requireAuth, async function (req, res, next) {
 
   regionalInfo = regionalInfo[0];
 
-  const centros = await regionalcontroller.getCentroByParam(
-    {"REGIONAL._id": regionalInfo._id}
-  );
-
-  let coord_quiz = await trabalhoscontroller.getQuizTemplateByParams( { CATEGORY: "Coordenador", } );
-
-  let coordenador = await trabalhoscontroller.getPessoaByParams( { _id: regionalInfo.COORDENADOR_ID, } );
-
-  let autoavaliacao = await trabalhoscontroller.getQuizTemplateByParams( { CATEGORY: "Auto Avaliação", } );
+  let [centros, coord_quiz, coordenador, autoavaliacao] = await Promise.all([
+    await regionalcontroller.getCentroByParam( {"REGIONAL._id": regionalInfo._id} ),
+    await trabalhoscontroller.getQuizTemplateByParams( { CATEGORY: "Coordenador", } ),
+    await trabalhoscontroller.getPessoaByParams( { _id: regionalInfo.COORDENADOR_ID, } ),
+    await trabalhoscontroller.getQuizTemplateByParams( { CATEGORY: "Auto Avaliação", } )
+  ]);
 
   let autoavaliacaoQuestion = autoavaliacao[0].QUESTIONS[0].GROUP[0];
   let avaliacaoQuestionId = autoavaliacaoQuestion._id;
@@ -138,15 +135,6 @@ router.get("/summary_alianca", requireAuth, async function (req, res) {
 });
 
 
-function sortRegional(regionalA, regionalB){
-  if( regionalA.NOME_REGIONAL > regionalB.NOME_REGIONAL)
-    {return 1}
-  else if(regionalA.NOME_REGIONAL < regionalB.NOME_REGIONAL)
-    {return -1}
-  else{
-    return 
-  }
-}
 
 router.get("/cadastro_centro", requireAuth, async function (req, res, next) {
   try {

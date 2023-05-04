@@ -104,6 +104,10 @@ module.exports = class trabalhosController extends CacheableController {
     return await this.get('atividade_generic_question', params)
   }
 
+  async getGroupedQuestionByParams(params) {
+    return await this.get('atividade_generic_group_question', params)
+  }
+
   async getGroupQuestionByParams(params) {
     return await this.get('atividade_generic_group_question', params)
   }

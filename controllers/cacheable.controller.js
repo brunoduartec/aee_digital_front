@@ -4,14 +4,15 @@ module.exports = class CacheableController {
         parser = require("../helpers/parser"),
         logger = require("../helpers/logger"),
         Request = require("../helpers/request"),
-        Cache = require("../helpers/cache.helpers")
+        Cache = require("../helpers/cache.helpers"),
+        ttl = 300
     }) {
         this.service = service
         this.parser = parser
         this.logger = logger
         this.request = new Request();
         this.cache = new Cache(service)
-        this.ttl = 300
+        this.ttl = ttl
     }
 
     getFormatedName(domain, key) {

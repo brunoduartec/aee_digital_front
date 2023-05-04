@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('../partials/head'); %>
+</head>
+
+<body class="body">
+
+  <header class="cabeçalho"><%- include('../partials/header'); %></header>
+
+
+  <div class="overlay"></div>
+  <div class="spanner">
+    <div class="loader"></div>
+    <p>Buscando informações, por favor aguarde</p>
+  </div>
+
+  <div id="tabela-dinamica"></div>
+
+
+  <script>
+    $(document).ready(async function () {
+
+      showOverlay();
+      var scope = "<%- scope_id%>"
+      var ID = "<%- ID%>"
+      // removeTabela()
+      let infoResponses = <%- JSON.stringify(infoResponses)%>
+
+      await buildTable(infoResponses)
+      generateReport(scope, ID)
+    });
+
+    async function generateReport(scope, ID) {
+      var apiUrl = `/bff/reports?scope_id=${scope}&ID=${ID}&guid=<%- guid%>`;
+      let responseInfo = await fetch(apiUrl, {
+        headers: {
+          "Content-Type": "application/json"
+        },
+        method: "GET"
+      });
+
+      responseInfo = await responseInfo.json();
+    }
+
+    const socket = io(); // conectando-se ao servidor
+    socket.on('report_generated', addRowToTables);
+    socket.on('end_report_generated', finishGeneration);
+
+
+    function removeTabela() {
+      const tabelaDinamica = document.getElementById('tabela-dinamica');
+      tabelaDinamica.innerHTML = '';
+
+    }
+
+    async function buildTable(info){
+          const infoResponses = info
+          // // selecione o elemento <div> para adicionar a tabela dinamicamente
+          const tabelaDinamica = document.getElementById("tabela-dinamica");
+
+          infoResponses.forEach(infoResponse => {
+
+            const alias = infoResponse.CATEGORY
+            const categoriaDiv = document.createElement("div")
+            const categoriaDivClass = "fw-bold"
+            categoriaDiv.setAttribute("class", categoriaDivClass);
+            categoriaDiv.innerText = alias
+
+            tabelaDinamica.appendChild(categoriaDiv);
+            // crie um novo elemento <table> e adicione-o ao elemento <div>
+              
+            novaTabela = document.createElement("table");
+            novaTabela.attributes.id = alias
+            const tableClass = "table table-bordered table-md";
+            novaTabela.setAttribute("class", tableClass);
+            novaTabela.setAttribute("id",`tabela-${alias}`);
+
+            tabelaDinamica.appendChild(novaTabela);
+            // adicione a classe CSS "table" ao novo elemento <table>
+            novaTabela.classList.add("table");
+            // crie o cabeçalho da tabela
+            const cabecalho = novaTabela.createTHead();
+            const cabecalhoLinha = cabecalho.insertRow();
+            infoResponse.QUESTIONS.forEach(function (columnName) {
+              const colunaCabecalho = document.createElement("th");
+              const style = "background-color: aquamarine;font-size: 12px"
+              colunaCabecalho.setAttribute("style", style);
+              colunaCabecalho.textContent = columnName.QUESTION;
+              cabecalhoLinha.appendChild(colunaCabecalho);
+            });
+          });
+    }
+
+
+    function finishGeneration(data){
+      if (data.exporting_guid == "<%- guid%>") {
+        hideOverlay();
+      
+      }
+    }
+
+    function addRowToTables(data) {
+      if (data.exporting_guid == "<%- guid%>") {
+        if (data.event == "row_generated") {
+          for (let index = 0; index < data.rowsInfo.length; index++) {
+            const rowInfo = data.rowsInfo[index];
+            const alias = rowInfo.CATEGORY;
+             // preencha os dados na tabela
+           const novaTabela = document.getElementById(`tabela-${alias}`);
+            const corpoTabela = novaTabela.createTBody();
+            const novaLinha = corpoTabela.insertRow();
+            rowInfo.row.forEach(function (row) {
+              const novaCelula = novaLinha.insertCell();
+              novaCelula.textContent = row;
+              
+            });
+          }
+        }
+      }
+    }
+  </script>
+
+
+  <footer><%- include('../partials/footer'); %></footer>
+
+</body>
+
+</html>
