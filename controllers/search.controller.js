@@ -204,8 +204,7 @@ module.exports = class SearchController {
         let quiz = {
           templates: form_template,
           titles: page_titles,
-          finalized: finalized,
-          centro
+          finalized: finalized
         };
 
         this.logger.info(
