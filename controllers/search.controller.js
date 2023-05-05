@@ -1,12 +1,12 @@
 module.exports = class SearchController {
   constructor(
-    regionalcontroller,
-    trabalhoscontroller,
+    RegionaisController = require("./regional.controller"),
+    TrabalhosController = require("./trabalhos.controller"),
     logger = require("../helpers/logger"),
     parser = require("../helpers/parser")
   ) {
-    this.regionalcontroller = regionalcontroller;
-    this.trabalhoscontroller = trabalhoscontroller;
+    this.regionalcontroller = new RegionaisController();
+    this.trabalhoscontroller = new TrabalhosController();
     this.logger = logger;
     this.parser = parser;
   }

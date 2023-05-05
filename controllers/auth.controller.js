@@ -1,6 +1,6 @@
 module.exports = class authController {
   constructor(
-    trabalhoscontroller,
+    TrabalhosController = require("./trabalhos.controller"),
     logger = require("../helpers/logger"),
     parser = require("../helpers/parser")
   ) {
@@ -12,7 +12,7 @@ module.exports = class authController {
     this.constructor.instance = this;
 
     this.logger = logger;
-    this.trabalhoscontroller = trabalhoscontroller;
+    this.trabalhoscontroller = new TrabalhosController();
 
     this.groups = require("../resources/groups.json");
     this.permissions = require("../resources/permissions.json");

@@ -12,26 +12,17 @@ const regionalcontroller = new regionalController();
 const trabalhosController = require("../controllers/trabalhos.controller");
 const trabalhoscontroller = new trabalhosController();
 
-const SearchController = require("../controllers/search.controller");
-const searchcontroller = new SearchController(
-  regionalcontroller,
-  trabalhoscontroller
-);
-
 const  ExcelExportReportsController = require("../controllers/excelexportresponses.controller");
 
-const excelExporterHelper = require("../helpers/excelexporter.helper");
-const excelexporter = new excelExporterHelper();
+const excelexporteresponses = new ExcelExportReportsController();
 
-const excelexporteresponses = new ExcelExportReportsController(
-  excelexporter,
-  trabalhoscontroller
-);
+const ReportController = require("../controllers/report.controller")
 
-(async () => {
-  await excelexporteresponses.init();
-  logger.info("Initialized")
-})();
+
+// (async () => {
+//   await excelexporteresponses.init();
+//   logger.info("Initialized")
+// })();
 
 const {
   requireAuth
@@ -524,36 +515,7 @@ async function setQuizResponse(centroID, quizID, questionID, ANSWER) {
 }
 
 
-async function getReportGroups() {
-  const form_alias = "Cadastro de Informações Anual";
 
-
-  let [form, coordinatorQuiz] = await Promise.all([
-    await trabalhoscontroller.getFormByParams({ NAME: form_alias }),
-    await trabalhoscontroller.getQuizTemplateByParams({ CATEGORY: "Coordenador", })
-  ]);
-
-  form = form[0];
-
-  let coordinatorQuizGroup = coordinatorQuiz[0];
-
-  let infoResponses = form.PAGES.flatMap(page => page.QUIZES);
-
-  infoResponses = infoResponses.map(m => {
-    return {
-      "CATEGORY": m.CATEGORY,
-      QUESTIONS: [{ QUESTION: "Nome Curto" }].concat(m.QUESTIONS.flatMap(group => group.GROUP))
-    };
-  });
-
-  const coordinatorQuestions = coordinatorQuizGroup.QUESTIONS.flatMap(group => group.GROUP);
-
-  infoResponses.push({
-    "CATEGORY": coordinatorQuizGroup.CATEGORY,
-    QUESTIONS:  [{ QUESTION: "Nome Curto" }].concat(coordinatorQuestions)
-  });
-  return { infoResponses, form_alias, coordinatorQuestions };
-}
 
 
 router.get("/bff/reports", async(req,res)=>{
@@ -561,180 +523,10 @@ router.get("/bff/reports", async(req,res)=>{
   const id = req.query.ID;
   const io = req.io;
   const exporting_guid = req.query.guid
-  var { infoResponses, form_alias, coordinatorQuestions } = await getReportGroups();
 
-
-  io.emit("report_generated",{
-    "event":"report_generated",
-    exporting_guid,
-    infoResponses
-  });
-
-  const centroInfoMethod = async function(id){
-    const pesquisaInfo = {
-      search: {
-        id: id,
-        name: form_alias,
-      },
-      option: "Quiz",
-    };
-    const pesquisa = await searchcontroller.getPesquisaResult(pesquisaInfo);
-
-    return pesquisa;
-
-  }
-
-  const getResponses = async function(search){
-    const answers = []
-    const templates = search.templates;
-    templates.PAGES.forEach((page) => {
-      page.QUIZES.forEach((quiz) => {
-        quiz.QUESTIONS.forEach((question) => {
-          question.GROUP.forEach((group) => {
-            const answer = {
-              QUESTION_ID: group._id,
-              ANSWER: group.ANSWER
-            }
-            answers.push(answer);
-          });
-        });
-      });
-    });
-
-    return answers
-  }
-
-  const getCoordenadorResponses = async function(coordinatorQuestions, centroResponses){
-    const responses = [];
-    for (const question of coordinatorQuestions) 
-    {
-      let response = centroResponses.find((m) => {
-        return m.QUESTION_ID == question._id;
-      });
-
-      responses.push({
-        QUESTION_ID: question._id,
-        ANSWER: [response.ANSWER]
-      })
-
-    }
-   return responses;
-  }
-
-
-  const createCentroMatrix = async function(infoResponses, centrosResponses, nome_curto){
-    let currentRow = 1
-
-    let rowsInfo = []
-    
-    infoResponses.forEach(header => {
-
-      let rowInfo = {
-        CATEGORY: header.CATEGORY,
-        row:[]
-      }
-
-      const cols = header.QUESTIONS.length
-      
-      if(!header.matrix){
-        //alocando memoria
-        header.matrix = new Array(2);
-        for(let i = 0; i < 2; i++) {
-          header.matrix[i] = new Array(cols);
-        }
-      }else{
-        const rows = header.matrix.length
-        header.matrix[rows] = new Array(cols);
-        currentRow = rows
-      }
+  const reportControler = new ReportController(exporting_guid)
   
-      header.matrix[currentRow][0] = nome_curto
-      header.matrix[0][0] = "Nome Curto"
-
-
-      for (let col = 1; col < cols; col++) {
-        const question = header.QUESTIONS[col]
-        
-        header.matrix[0][col] = question.QUESTION
-
-        let answer = centrosResponses.filter((m) => {
-          return m.QUESTION_ID == question._id
-        })[0]
-
-        let questionAnswer = (answer && answer.ANSWER) ? answer.ANSWER.toString() : ""
-        header.matrix[currentRow][col] = questionAnswer.replace(/true/g, "sim").replace(/false/g, "não")
-      }
-
-      rowInfo.row = header.matrix[currentRow]
-      rowsInfo.push(rowInfo)
-
-    });
-
-    io.emit("report_generated",{
-      "event":"row_generated",
-      exporting_guid,
-      rowsInfo
-    });
-    
-  }
-
-  const setCentroInfo = async function(centroId){
-    const [itemSearched, centro, centroResponses] = await Promise.all([
-      await centroInfoMethod(centroId),
-      await regionalcontroller.getCentroByParam({_id: centroId}),
-      await trabalhoscontroller.getQuizResponseByParams({CENTRO_ID: centroId})
-    ]);
-
-    let centrosResponses  = (await getResponses(itemSearched)).concat( await getCoordenadorResponses(coordinatorQuestions,centroResponses))
-
-    let nome_curto
-    if (Array.isArray(centro) && centro.length > 0 && typeof centro[0] === 'object' && 'NOME_CURTO' in centro[0]) {
-      nome_curto = centro[0].NOME_CURTO
-    }else{
-      nome_curto = centroId
-    }
-  
-    await createCentroMatrix(infoResponses, centrosResponses, nome_curto)
-   
-  }
-
-  const setRegionalInfo =  async function(regionalId){
-    let  [regionalInfo] = await regionalcontroller.getRegionalByParams({ _id: regionalId})
-    
-    const centros = await regionalcontroller.getCentroByParam( {"REGIONAL._id": regionalInfo._id} )
-  
-    Promise.all(centros.map(centro => setCentroInfo(centro._id))).then(()=>{
-      io.emit("end_report_generated",{
-        "event":"end_generated",
-        exporting_guid
-      });
-    });
-  }
-
-
-  switch (scope) {
-    case "CENTRO":
-    setCentroInfo(id).then(()=>{
-      io.emit("end_report_generated",{
-        "event":"end_generated",
-        exporting_guid
-      });
-    })
-      break;
-
-    case "REGIONAL":
-
-     setRegionalInfo(id)
-    break;
-
-    case "GERAL":
-
-    break;
-  
-    default:
-      break;
-  }
-
+  await reportControler.generateReport(scope, id, io);
   res.json({status:200, message: "finished"})
   
 })
@@ -743,8 +535,9 @@ router.get("/reports", async (req, res)=>{
   const scope_id = req.query.scope_id;
   const ID = req.query.ID;
   const guid = uuidv4();
+  const reportControler = new ReportController(guid)
+  var { infoResponses } = await reportControler.getReportGroups()
 
-  var { infoResponses } = await getReportGroups();
 
   res.render("pages/reports",{scope_id,ID,guid, infoResponses})
 })

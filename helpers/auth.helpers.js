@@ -1,9 +1,6 @@
 
-const trabalhosController = require("../controllers/trabalhos.controller");
-const trabalhoscontroller = new trabalhosController();
-
 const authController = require("../controllers/auth.controller");
-const authcontroller = new authController(trabalhoscontroller);
+const authcontroller = new authController();
 
 
 const SessionController = require("../controllers/session.controller");

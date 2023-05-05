@@ -1,15 +1,14 @@
 module.exports = class UserInfoController {
   constructor(
-    regionalcontroller,
-    trabalhocontroller,
-    searchcontroller,
+    RegionaisController = require("./regional.controller"),
+    TrabalhosController = require("./trabalhos.controller"),
+    SearchController = require("./search.controller"),
     logger = require("../helpers/logger"),
     parser = require("../helpers/parser")
   ) {
-    this.regionalcontroller = regionalcontroller;
-    this.trabalhocontroller = trabalhocontroller;
-    this.searchcontroller = searchcontroller;
-
+    this.regionalcontroller = new RegionaisController();
+    this.trabalhocontroller = new TrabalhosController();
+    this.searchcontroller = new SearchController();
     this.depara = require("../resources/de-para.json");
 
     this.logger = logger;
