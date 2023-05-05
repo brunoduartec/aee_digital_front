@@ -1,14 +1,14 @@
 module.exports = class QuizActions {
   constructor(
-    trabalhoscontroller,
-    userinfocontroller,
-    regionalcontroller,
-    logger,
-    parser
+    UserInfoController = require("../controllers/userInfo.controller"),
+    RegionaisController = require("../controllers/regional.controller"),
+    TrabalhosController = require("../controllers/trabalhos.controller"),
+    logger = require("../helpers/logger"),
+    parser = require("../helpers/parser")
   ) {
-    this.trabalhoscontroller = trabalhoscontroller;
-    this.userinfocontroller = userinfocontroller;
-    this.regionalcontroller = regionalcontroller;
+    this.userinfocontroller = new UserInfoController();
+    this.regionalcontroller = new RegionaisController();
+    this.trabalhoscontroller = new TrabalhosController();
     this.logger = logger;
     this.parser = parser;
   }

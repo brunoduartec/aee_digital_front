@@ -2,7 +2,6 @@ var express = require("express");
 var router = express.Router();
 
 const logger = require("../helpers/logger");
-const parser = require("../helpers/parser");
 
 const regionalController = require("../controllers/regional.controller");
 const regionalcontroller = new regionalController();
@@ -10,27 +9,8 @@ const regionalcontroller = new regionalController();
 const trabalhosController = require("../controllers/trabalhos.controller");
 const trabalhoscontroller = new trabalhosController();
 
-const SearchController = require("../controllers/search.controller");
-const searchcontroller = new SearchController(
-  regionalcontroller,
-  trabalhoscontroller
-);
-
-const userInfoController = require("../controllers/userInfo.controller");
-const userinfocontroller = new userInfoController(
-  regionalcontroller,
-  trabalhoscontroller,
-  searchcontroller
-);
-
 const QuizActions = require("../helpers/quiz_actions");
-const quiz_actions = new QuizActions(
-  trabalhoscontroller,
-  userinfocontroller,
-  regionalcontroller,
-  logger,
-  parser
-);
+const quiz_actions = new QuizActions();
 
 const { requireAuth } = require("../helpers/auth.helpers");
 

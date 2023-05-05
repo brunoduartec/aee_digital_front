@@ -10,10 +10,7 @@ const TrabalhoController = require("../controllers/trabalhos.controller");
 const trabalhocontroller = new TrabalhoController();
 
 const SearchController = require("../controllers/search.controller");
-const searchcontroller = new SearchController(
-  regionalcontroller,
-  trabalhocontroller
-);
+const searchcontroller = new SearchController();
 
 const logger = require("../helpers/logger");
 

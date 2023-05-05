@@ -1,14 +1,14 @@
 module.exports = class ExcelExportReportsController {
   constructor(
-    exporter,
-    trabalhoscontroller,
+    ExcelExporterHelper = require("../helpers/excelexporter.helper"),
+    TrabalhosController = require("./trabalhos.controller"),
     Regionaiscontroller = require("./regional.controller"),
     parser = require("../helpers/parser"),
     logger = require("../helpers/logger")
-  ) {
-    this.exporter = exporter;
+    ) {
+    this.exporter = new ExcelExporterHelper(),
     this.regionaiscontroller = new Regionaiscontroller();
-    this.trabalhoscontroller = trabalhoscontroller;
+    this.trabalhoscontroller = new TrabalhosController();
     this.logger = logger;
     this.parser = parser;
     this.headers = [];
