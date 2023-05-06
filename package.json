@@ -32,6 +32,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.2",
     "faker": "^6.6.6",
+    "fast-safe-stringify": "^2.1.1",
     "generate-password": "^1.7.0",
     "http": "0.0.1-security",
     "jquery": "^3.6.0",

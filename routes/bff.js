@@ -521,6 +521,7 @@ router.get("/bff/reports", async(req,res)=>{
   const exporting_guid = req.query.guid
 
   try {
+    logger.debug("Started generate report")
     const reportControler = new ReportController(exporting_guid)
     await reportControler.generateReport(scope, id, io);
     res.json({status:200, message: "finished"})  

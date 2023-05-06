@@ -114,8 +114,8 @@ module.exports = class ReportController extends BaseController {
 
 
     async createCentroMatrix(centrosResponses, nome_curto, io) {
-        
         try {
+            this.logger.debug("createCentroMatrix")
             let currentRow = 1
     
             let rowsInfo = []
@@ -162,6 +162,7 @@ module.exports = class ReportController extends BaseController {
     
             });
     
+            this.logger.debug("createCentroMatrix:Emiting", {exporting_guid:this.exporting_guid, rowsInfo})
             io.emit("report_generated", {
                 "event": "row_generated",
                 exporting_guid: this.exporting_guid,
@@ -177,6 +178,7 @@ module.exports = class ReportController extends BaseController {
     }
 
     async generateCentroReport(centroId, io) {
+        this.logger.debug("generateCentroReport", {centroId})
         const [itemSearched, centro, centroResponses] = await Promise.all([
             await this.centroInfoMethod(centroId),
             await this.regionalcontroller.getCentroByParam({
@@ -195,6 +197,8 @@ module.exports = class ReportController extends BaseController {
         } else {
             nome_curto = centroId
         }
+
+        
 
         await this.createCentroMatrix(centrosResponses, nome_curto, io)
 
@@ -220,7 +224,7 @@ module.exports = class ReportController extends BaseController {
     async generateReport(scope, scope_id, io){
         try {
             await this.getReportGroups();
-            
+            this.logger.debug("generateReport", {scope,scope_id})
             switch (scope) {
                 case "CENTRO":
                   this.generateCentroReport(scope_id, io).then(()=>{

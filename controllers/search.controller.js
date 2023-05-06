@@ -31,8 +31,8 @@ module.exports = class SearchController {
           items: centro,
         };
 
-        this.logger.info(
-          `controller:search.controller:getPesquisaResult:Centro ${centros}`
+        this.logger.debug(
+          `controller:search.controller:getPesquisaResult:Centro`
         );
         return centros;
       },
@@ -207,8 +207,8 @@ module.exports = class SearchController {
           finalized: finalized
         };
 
-        this.logger.info(
-          `controller:search.controller:getPesquisaResult:Quiz: ${quiz}`
+        this.logger.debug(
+          `controller:search.controller:getPesquisaResult:Quiz`
         );
         return quiz;
       },
