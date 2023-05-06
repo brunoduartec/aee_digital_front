@@ -520,10 +520,14 @@ router.get("/bff/reports", async(req,res)=>{
   const io = req.io;
   const exporting_guid = req.query.guid
 
-  const reportControler = new ReportController(exporting_guid)
-  
-  await reportControler.generateReport(scope, id, io);
-  res.json({status:200, message: "finished"})
+  try {
+    const reportControler = new ReportController(exporting_guid)
+    await reportControler.generateReport(scope, id, io);
+    res.json({status:200, message: "finished"})  
+  } catch (error) {
+    logger.error(`/bff/reports, ${error}`)
+    throw new Error(error)    
+  }
   
 })
 

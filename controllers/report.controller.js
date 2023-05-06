@@ -1,11 +1,14 @@
-module.exports = class ReportController {
+const BaseController = require("./base.controller");
+
+module.exports = class ReportController extends BaseController {
     constructor(
         exporting_guid,
         form_alias = "Cadastro de Informações Anual",
         RegionaisController = require("./regional.controller"),
         TrabalhosController = require("./trabalhos.controller"),
-        SearchController = require("./search.controller")
+        SearchController = require("./search.controller"),
     ) {
+        super("ReportController")
         this.regionalcontroller = new RegionaisController();
         this.trabalhoscontroller = new TrabalhosController()
         this.searchcontroller = new SearchController();
@@ -15,41 +18,48 @@ module.exports = class ReportController {
 
     async getReportGroups() {
 
-        let [form, coordinatorQuiz] = await Promise.all([
-            await this.trabalhoscontroller.getFormByParams({
-                NAME: this.form_alias
-            }),
-            await this.trabalhoscontroller.getQuizTemplateByParams({
-                CATEGORY: "Coordenador",
-            })
-        ]);
-
-        form = form[0];
-
-        let coordinatorQuizGroup = coordinatorQuiz[0];
-
-        this.infoResponses = form.PAGES.flatMap(page => page.QUIZES);
-
-        this.infoResponses = this.infoResponses.map(m => {
-            return {
-                "CATEGORY": m.CATEGORY,
+        try {
+            let [form, coordinatorQuiz] = await Promise.all([
+                await this.trabalhoscontroller.getFormByParams({
+                    NAME: this.form_alias
+                }),
+                await this.trabalhoscontroller.getQuizTemplateByParams({
+                    CATEGORY: "Coordenador",
+                })
+            ]);
+    
+            form = form[0];
+    
+            let coordinatorQuizGroup = coordinatorQuiz[0];
+    
+            this.infoResponses = form.PAGES.flatMap(page => page.QUIZES);
+    
+            this.infoResponses = this.infoResponses.map(m => {
+                return {
+                    "CATEGORY": m.CATEGORY,
+                    QUESTIONS: [{
+                        QUESTION: "Nome Curto"
+                    }].concat(m.QUESTIONS.flatMap(group => group.GROUP))
+                };
+            });
+    
+            this.coordinatorQuestions = coordinatorQuizGroup.QUESTIONS.flatMap(group => group.GROUP);
+    
+            this.infoResponses.push({
+                "CATEGORY": coordinatorQuizGroup.CATEGORY,
                 QUESTIONS: [{
                     QUESTION: "Nome Curto"
-                }].concat(m.QUESTIONS.flatMap(group => group.GROUP))
+                }].concat(this.coordinatorQuestions)
+            });
+            return {
+                infoResponses: this.infoResponses
             };
-        });
-
-        this.coordinatorQuestions = coordinatorQuizGroup.QUESTIONS.flatMap(group => group.GROUP);
-
-        this.infoResponses.push({
-            "CATEGORY": coordinatorQuizGroup.CATEGORY,
-            QUESTIONS: [{
-                QUESTION: "Nome Curto"
-            }].concat(this.coordinatorQuestions)
-        });
-        return {
-            infoResponses: this.infoResponses
-        };
+        } catch (error) {
+            throw new Error({
+                message:"getReportGroups",
+                error})
+        }
+ 
     }
 
     async centroInfoMethod(id) {
@@ -104,57 +114,65 @@ module.exports = class ReportController {
 
 
     async createCentroMatrix(centrosResponses, nome_curto, io) {
-        let currentRow = 1
-
-        let rowsInfo = []
-
-        this.infoResponses.forEach(header => {
-            let rowInfo = {
-                CATEGORY: header.CATEGORY,
-                row: []
-            }
-
-            const cols = header.QUESTIONS.length
-
-            if (!header.matrix) {
-                //alocando memoria
-                header.matrix = new Array(2);
-                for (let i = 0; i < 2; i++) {
-                    header.matrix[i] = new Array(cols);
+        
+        try {
+            let currentRow = 1
+    
+            let rowsInfo = []
+    
+            this.infoResponses.forEach(header => {
+                let rowInfo = {
+                    CATEGORY: header.CATEGORY,
+                    row: []
                 }
-            } else {
-                const rows = header.matrix.length
-                header.matrix[rows] = new Array(cols);
-                currentRow = rows
-            }
-
-            header.matrix[currentRow][0] = nome_curto
-            header.matrix[0][0] = "Nome Curto"
-
-
-            for (let col = 1; col < cols; col++) {
-                const question = header.QUESTIONS[col]
-
-                header.matrix[0][col] = question.QUESTION
-
-                let answer = centrosResponses.filter((m) => {
-                    return m.QUESTION_ID == question._id
-                })[0]
-
-                let questionAnswer = (answer && answer.ANSWER) ? answer.ANSWER.toString() : ""
-                header.matrix[currentRow][col] = questionAnswer.replace(/true/g, "sim").replace(/false/g, "não")
-            }
-
-            rowInfo.row = header.matrix[currentRow]
-            rowsInfo.push(rowInfo)
-
-        });
-
-        io.emit("report_generated", {
-            "event": "row_generated",
-            exporting_guid: this.exporting_guid,
-            rowsInfo
-        });
+    
+                const cols = header.QUESTIONS.length
+    
+                if (!header.matrix) {
+                    //alocando memoria
+                    header.matrix = new Array(2);
+                    for (let i = 0; i < 2; i++) {
+                        header.matrix[i] = new Array(cols);
+                    }
+                } else {
+                    const rows = header.matrix.length
+                    header.matrix[rows] = new Array(cols);
+                    currentRow = rows
+                }
+    
+                header.matrix[currentRow][0] = nome_curto
+                header.matrix[0][0] = "Nome Curto"
+    
+    
+                for (let col = 1; col < cols; col++) {
+                    const question = header.QUESTIONS[col]
+    
+                    header.matrix[0][col] = question.QUESTION
+    
+                    let answer = centrosResponses.filter((m) => {
+                        return m.QUESTION_ID == question._id
+                    })[0]
+    
+                    let questionAnswer = (answer && answer.ANSWER) ? answer.ANSWER.toString() : ""
+                    header.matrix[currentRow][col] = questionAnswer.replace(/true/g, "sim").replace(/false/g, "não")
+                }
+    
+                rowInfo.row = header.matrix[currentRow]
+                rowsInfo.push(rowInfo)
+    
+            });
+    
+            io.emit("report_generated", {
+                "event": "row_generated",
+                exporting_guid: this.exporting_guid,
+                rowsInfo
+            });
+        } catch (error) {
+            throw new Error({
+                message:"createCentroMatrix",
+                error
+            })
+        }
 
     }
 
@@ -200,29 +218,34 @@ module.exports = class ReportController {
     }
 
     async generateReport(scope, scope_id, io){
-        await this.getReportGroups();
-        switch (scope) {
-            case "CENTRO":
-              this.generateCentroReport(scope_id, io).then(()=>{
-              io.emit("end_report_generated",{
-                "event":"end_generated",
-                exporting_guid: this.exporting_guid
-              });
-            })
-              break;
-        
-            case "REGIONAL":
-        
-            this.generateRegionalReport(scope_id, io)
-            break;
-        
-            case "GERAL":
-        
-            break;
-          
-            default:
-              break;
-          }
+        try {
+            await this.getReportGroups();
+            
+            switch (scope) {
+                case "CENTRO":
+                  this.generateCentroReport(scope_id, io).then(()=>{
+                  io.emit("end_report_generated",{
+                    "event":"end_generated",
+                    exporting_guid: this.exporting_guid
+                  });
+                })
+                  break;
+            
+                case "REGIONAL":
+            
+                this.generateRegionalReport(scope_id, io)
+                break;
+            
+                case "GERAL":
+            
+                break;
+              
+                default:
+                  break;
+              }
+        } catch (error) {
+            throw new Error(error)
+        }
     }
 
 

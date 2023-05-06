@@ -1,15 +1,13 @@
-module.exports = class CacheableController {
+const BaseController = require("./base.controller");
+
+module.exports = class CacheableController extends BaseController {
     constructor({
         service = "service",
-        parser = require("../helpers/parser"),
-        logger = require("../helpers/logger"),
         Request = require("../helpers/request"),
         Cache = require("../helpers/cache.helpers"),
         ttl = 300
     }) {
-        this.service = service
-        this.parser = parser
-        this.logger = logger
+        super(service);
         this.request = new Request();
         this.cache = new Cache(service)
         this.ttl = ttl
