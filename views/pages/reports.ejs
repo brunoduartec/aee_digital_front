@@ -25,15 +25,18 @@
       showOverlay();
       var scope = "<%- scope_id%>"
       var ID = "<%- ID%>"
-      // removeTabela()
+      var guid = "<%- guid%>"
+
       let infoResponses = <%- JSON.stringify(infoResponses)%>
 
+      console.log("INFO", {scope,ID,guid})
+
       await buildTable(infoResponses)
-      generateReport(scope, ID)
+      generateReport(scope, ID, guid)
     });
 
-    async function generateReport(scope, ID) {
-      var apiUrl = `/bff/reports?scope_id=${scope}&ID=${ID}&guid=<%- guid%>`;
+    async function generateReport(scope, ID, guid) {
+      var apiUrl = `/bff/reports?scope_id=${scope}&ID=${ID}&guid=${guid}`;
       let responseInfo = await fetch(apiUrl, {
         headers: {
           "Content-Type": "application/json"
