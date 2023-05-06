@@ -47,9 +47,13 @@
       responseInfo = await responseInfo.json();
     }
 
-    const socket = io('/aee_digital_front'); // conectando-se ao servidor
+    const socket = io('/aee_digital_front', { reconnection: true, reconnectionAttempts: 5, reconnectionDelay: 1000 });
+
     socket.on('report_generated', addRowToTables);
     socket.on('end_report_generated', finishGeneration);
+    socket.on('reconnect', () => {
+      console.log('Reconnected to server');
+    });
 
 
     function removeTabela() {

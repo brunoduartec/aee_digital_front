@@ -35,6 +35,7 @@ const logFormat = format.combine(
 const fileRotateTransport = new transports.DailyRotateFile({
   filename: "logs/%DATE%-combined.log",
   datePattern: "DD-MMM-YYYY",
+  level: 'debug',
   format: logFormat,
   maxSize: "20m",
   maxFiles: "14d",
