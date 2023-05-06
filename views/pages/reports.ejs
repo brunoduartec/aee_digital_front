@@ -20,19 +20,21 @@
 
 
   <script>
+    let scope,ID,guid
     $(document).ready(async function () {
 
+      
+
       showOverlay();
-      var scope = "<%- scope_id%>"
-      var ID = "<%- ID%>"
-      var guid = "<%- guid%>"
+      scope = "<%- scope_id%>"
+      ID = "<%- ID%>"
+      guid = "<%- guid%>"
 
       let infoResponses = <%- JSON.stringify(infoResponses)%>
 
       console.log("INFO", {scope,ID,guid})
 
       await buildTable(infoResponses)
-      generateReport(scope, ID, guid)
     });
 
     async function generateReport(scope, ID, guid) {
@@ -54,6 +56,11 @@
     socket.on('reconnect', () => {
       console.log('Reconnected to server');
     });
+
+    socket.on('connect',()=>{
+      console.log("Connected do server")
+      generateReport(scope, ID, guid)
+    })
 
 
     function removeTabela() {
