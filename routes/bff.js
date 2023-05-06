@@ -539,7 +539,6 @@ router.get("/reports", async (req, res)=>{
   const reportControler = new ReportController(guid)
   var { infoResponses } = await reportControler.getReportGroups()
 
-
   res.render("pages/reports",{scope_id,ID,guid, infoResponses})
 })
 
