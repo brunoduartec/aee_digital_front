@@ -514,10 +514,6 @@ async function setQuizResponse(centroID, quizID, questionID, ANSWER) {
   }
 }
 
-
-
-
-
 router.get("/bff/reports", async(req,res)=>{
   const scope = req.query.scope_id;
   const id = req.query.ID;

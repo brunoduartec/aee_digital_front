@@ -55,8 +55,8 @@
 
     }
 
-    async function buildTable(info){
-          const infoResponses = info
+    async function buildTable(infoResponses){
+      console.log("Building Table", infoResponses)
           // // selecione o elemento <div> para adicionar a tabela dinamicamente
           const tabelaDinamica = document.getElementById("tabela-dinamica");
 
@@ -102,8 +102,10 @@
     }
 
     function addRowToTables(data) {
+
       if (data.exporting_guid == "<%- guid%>") {
         if (data.event == "row_generated") {
+          console.log("AddRow",data)
           for (let index = 0; index < data.rowsInfo.length; index++) {
             const rowInfo = data.rowsInfo[index];
             const alias = rowInfo.CATEGORY;
