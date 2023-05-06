@@ -26,8 +26,10 @@ const socketIo = require('socket.io');
 
 const io = socketIo(server_http);
 
+const appIo = io.of("/aee_digital_front")
+
 app.use((req, res, next) => {
-  req.io = io;
+  req.io = appIo;
   next();
 });
 
