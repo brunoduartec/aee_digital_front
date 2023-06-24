@@ -59,13 +59,12 @@ router.get("/summary_coord", requireAuth, async function (req, res, next) {
     
   } else {
     regionalInfo = await regionalcontroller.getRegionalByParams({ NOME_REGIONAL: regionalName, PAIS: pais})
-
   }
 
   regionalInfo = regionalInfo[0];
 
   let [centros, coord_quiz, coordenador, autoavaliacao] = await Promise.all([
-    await regionalcontroller.getCentroByParam( {"REGIONAL._id": regionalInfo._id} ),
+    await regionalcontroller.getCentroByParam( {REGIONAL: regionalInfo._id} ),
     await trabalhoscontroller.getQuizTemplateByParams( { CATEGORY: "Coordenador", } ),
     await trabalhoscontroller.getPessoaByParams( { _id: regionalInfo.COORDENADOR_ID, } ),
     await trabalhoscontroller.getQuizTemplateByParams( { CATEGORY: "Auto Avaliação", } )

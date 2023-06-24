@@ -135,11 +135,12 @@ router.get("/bff/generalinfo", async function (req, res) {
       start,
       end
     } = req.query;
-    const passes = await trabalhoscontroller.getPasses();
-    let responses = await trabalhoscontroller.getSummaries(start, end);
-    const centros = await regionalcontroller.getCentros();
 
-
+    const [passes, responses, centros] = await Promise.all([
+      await trabalhoscontroller.getPasses(),
+      await trabalhoscontroller.getSummaries(start, end),
+      await regionalcontroller.getCentros()
+    ]);
 
     res.json({
       passes: passes,

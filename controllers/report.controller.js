@@ -210,7 +210,7 @@ module.exports = class ReportController extends BaseController {
         })
 
         const centros = await this.regionalcontroller.getCentroByParam({
-            "REGIONAL._id": regionalInfo._id
+            "REGIONAL": regionalInfo._id
         })
 
         Promise.all(centros.map(centro => this.generateCentroReport(centro._id, io))).then(() => {
