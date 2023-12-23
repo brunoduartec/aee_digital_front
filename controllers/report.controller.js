@@ -4,13 +4,11 @@ module.exports = class ReportController extends BaseController {
     constructor(
         exporting_guid,
         form_alias = "Cadastro de Informações Anual",
-        RegionaisController = require("./regional.controller"),
-        TrabalhosController = require("./trabalhos.controller"),
+        Controller = require("./api.controller"),
         SearchController = require("./search.controller"),
     ) {
         super("ReportController")
-        this.regionalcontroller = new RegionaisController();
-        this.trabalhoscontroller = new TrabalhosController()
+        this.controller = new Controller();
         this.searchcontroller = new SearchController();
         this.form_alias = form_alias
         this.exporting_guid = exporting_guid;
@@ -19,18 +17,16 @@ module.exports = class ReportController extends BaseController {
     async getReportGroups() {
 
         try {
-            let [form, coordinatorQuiz] = await Promise.all([
-                await this.trabalhoscontroller.getFormByParams({
-                    NAME: this.form_alias
-                }),
-                await this.trabalhoscontroller.getQuizTemplateByParams({
-                    CATEGORY: "Coordenador",
+            let [form] = await Promise.all([
+                await this.controller.getFormByParams({
+                    NAME: this.form_alias,
+                    sortBy: "version:desc"
                 })
             ]);
     
             form = form[0];
-    
-            let coordinatorQuizGroup = coordinatorQuiz[0];
+
+            let coordinatorQuizGroup = await this.controller.findQuestionByCategory(form,"Coordenador");
     
             this.infoResponses = form.PAGES.flatMap(page => page.QUIZES);
     
@@ -62,13 +58,14 @@ module.exports = class ReportController extends BaseController {
  
     }
 
-    async centroInfoMethod(id) {
+    async centroInfoMethod(id, user_role) {
         const pesquisaInfo = {
             search: {
                 id: id,
                 name: this.form_alias,
             },
             option: "Quiz",
+            user_role
         };
         const pesquisa = await this.searchcontroller.getPesquisaResult(pesquisaInfo);
 
@@ -177,14 +174,14 @@ module.exports = class ReportController extends BaseController {
 
     }
 
-    async generateCentroReport(centroId, io) {
+    async generateCentroReport(centroId, io, user_role) {
         this.logger.debug("generateCentroReport", {centroId})
         const [itemSearched, centro, centroResponses] = await Promise.all([
-            await this.centroInfoMethod(centroId),
-            await this.regionalcontroller.getCentroByParam({
+            await this.centroInfoMethod(centroId, user_role),
+            await this.controller.getCentroByParam({
                 _id: centroId
             }),
-            await this.trabalhoscontroller.getQuizResponseByParams({
+            await this.controller.getQuizResponseByParams({
                 CENTRO_ID: centroId
             })
         ]);
@@ -205,15 +202,15 @@ module.exports = class ReportController extends BaseController {
     }
 
     async generateRegionalReport(regionalId, io) {
-        let [regionalInfo] = await this.regionalcontroller.getRegionalByParams({
+        let [regionalInfo] = await this.controller.getRegionalByParams({
             _id: regionalId
         })
 
-        const centros = await this.regionalcontroller.getCentroByParam({
+        const centros = await this.controller.getCentroByParam({
             "REGIONAL": regionalInfo._id
         })
 
-        Promise.all(centros.map(centro => this.generateCentroReport(centro._id, io))).then(() => {
+        Promise.all(centros.map(centro => this.generateCentroReport(centro._id, io, ["coord_geral"]))).then(() => {
             io.emit("end_report_generated", {
                 "event": "end_generated",
                 exporting_guid: this.exporting_guid
@@ -221,13 +218,13 @@ module.exports = class ReportController extends BaseController {
         });
     }
 
-    async generateReport(scope, scope_id, io){
+    async generateReport(scope, scope_id, io, user_role){
         try {
             await this.getReportGroups();
             this.logger.debug("generateReport", {scope,scope_id})
             switch (scope) {
                 case "CENTRO":
-                  this.generateCentroReport(scope_id, io).then(()=>{
+                  this.generateCentroReport(scope_id, io, user_role).then(()=>{
                   io.emit("end_report_generated",{
                     "event":"end_generated",
                     exporting_guid: this.exporting_guid

@@ -1,13 +1,11 @@
 module.exports = class UserInfoController {
   constructor(
-    RegionaisController = require("./regional.controller"),
-    TrabalhosController = require("./trabalhos.controller"),
+    Controller = require("./api.controller"),
     SearchController = require("./search.controller"),
     logger = require("../helpers/logger"),
     parser = require("../helpers/parser")
   ) {
-    this.regionalcontroller = new RegionaisController();
-    this.trabalhocontroller = new TrabalhosController();
+    this.controller = new Controller();
     this.searchcontroller = new SearchController();
     this.depara = require("../resources/de-para.json");
 
@@ -48,17 +46,25 @@ module.exports = class UserInfoController {
   }
 
 
-  async getFormInfo(centro_id, form_alias, page) {
-    const pesquisaInfo = {
-      search: {
-        id: centro_id,
-        name: form_alias,
-        page: page,
-      },
-      option: "Quiz",
-    };
-    const result = await this.searchcontroller.getPesquisaResult(pesquisaInfo);
-    return result;
+  async getFormInfo(centro_id, form_alias, page, user_role) {
+    try {
+      const pesquisaInfo = {
+        search: {
+          id: centro_id,
+          name: form_alias,
+          page: page,
+        },
+        option: "Quiz",
+        user_role
+      };
+      const result = await this.searchcontroller.getPesquisaResult(pesquisaInfo);
+      return result;
+      
+    } catch (error) {
+      this.logger.error(error)
+      throw(error)
+      
+    }
   }
 
   async initializeUserInfo(auth) {
@@ -85,7 +91,7 @@ module.exports = class UserInfoController {
           const paramsParsed = this.parser.getParamsParsed({
             NOME_REGIONAL: decodeURIComponent(info.regional),
           });
-          const regional = await this.regionalcontroller.getRegionalByParams(
+          const regional = await this.controller.getRegionalByParams(
             paramsParsed
           );
           info.scope_id = regional._id;
@@ -97,7 +103,7 @@ module.exports = class UserInfoController {
           "REGIONAL.NOME_REGIONAL": decodeURIComponent(info.regional),
         });
 
-        let centro = await this.regionalcontroller.getCentroByParam(
+        let centro = await this.controller.getCentroByParam(
           paramsParsed
         );
 

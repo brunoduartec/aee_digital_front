@@ -6,23 +6,14 @@ const { v4: uuidv4 } = require('uuid');
 const logger = require("../helpers/logger");
 const parser = require("../helpers/parser");
 
-const regionalController = require("../controllers/regional.controller");
-const regionalcontroller = new regionalController();
-
-const trabalhosController = require("../controllers/trabalhos.controller");
-const trabalhoscontroller = new trabalhosController();
+const Controller = require("../controllers/api.controller");
+const controller = new Controller();
 
 const  ExcelExportReportsController = require("../controllers/excelexportresponses.controller");
 
 const excelexporteresponses = new ExcelExportReportsController();
 
 const ReportController = require("../controllers/report.controller")
-
-
-// (async () => {
-//   await excelexporteresponses.init();
-//   logger.info("Initialized")
-// })();
 
 const {
   requireAuth
@@ -38,15 +29,12 @@ router.get("/bff/coord_responses", async function (req, res) {
       return templates;
     }
 
-    let coord_quiz = await trabalhoscontroller.getQuizTemplateByParams({
-      CATEGORY: "Coordenador",
-    });
+    const form = await controller.getFormByParams( { NAME: "Cadastro de Informações Anual", sortBy: "version:desc"});
+    const lastForm = form[0];
+    let coord_quiz = await controller.findQuestionByCategory(lastForm,"Coordenador");
 
-    coord_quiz = coord_quiz[0]
-
-    let coordresponse = await trabalhoscontroller.getQuizResponseByParams({
+    let coordresponse = await controller.getQuizResponseByParams({
       CENTRO_ID: centroId,
-      QUIZ_ID: coord_quiz._id,
       fields: "QUESTION_ID,_id,ANSWER"
     });
 
@@ -94,14 +82,14 @@ router.get("/bff/centros", async function (req, res) {
 
     let centros;
     if (regionalName) {
-      centros = await regionalcontroller.getCentroByParam({"REGIONAL.NOME_REGIONAL":regionalName});
+      centros = await controller.getCentroByParam({"REGIONAL.NOME_REGIONAL":regionalName});
     } else {
-      centros = await regionalcontroller.getCentros();
+      centros = await controller.getCentros();
     }
 
     res.json(centros);
   } catch (error) {
-    this.logger.error(`/bff/centros: ${error}`);
+    logger.error(`/bff/centros: ${error}`);
     throw error;
   }
 });
@@ -112,19 +100,19 @@ router.get("/bff/regional", async function (req, res) {
 
     let regionaisInfo;
     if (regionalName) {
-      regionaisInfo = await regionalcontroller.getRegionais();
+      regionaisInfo = await controller.getRegionais();
     } else {
       const paramsParsed = parser.getParamsParsed({
         NOME_REGIONAL: regionalName,
       });
-      regionaisInfo = await regionalcontroller.getRegionalByParams(
+      regionaisInfo = await controller.getRegionalByParams(
         paramsParsed
       );
     }
 
     res.json(regionaisInfo);
   } catch (error) {
-    this.logger.error(`/bff/regional: ${error}`);
+    logger.error(`/bff/regional: ${error}`);
     throw error;
   }
 });
@@ -137,9 +125,9 @@ router.get("/bff/generalinfo", async function (req, res) {
     } = req.query;
 
     const [passes, responses, centros] = await Promise.all([
-      await trabalhoscontroller.getPasses(),
-      await trabalhoscontroller.getSummaries(start, end),
-      await regionalcontroller.getCentros()
+      await controller.getPasses(),
+      await controller.getSummaries(start, end),
+      await controller.getCentros()
     ]);
 
     res.json({
@@ -148,7 +136,7 @@ router.get("/bff/generalinfo", async function (req, res) {
       centros: centros,
     });
   } catch (error) {
-    this.logger.error(`/bff/generalinfo: ${error}`);
+    logger.error(`/bff/generalinfo: ${error}`);
     throw error;
   }
 });
@@ -161,17 +149,14 @@ router.get("/bff/coord_info", async function (req, res) {
       _id: regional_id,
     });
 
-    const regionalInfo = await regionalcontroller.getRegionalByParams(
-      paramsParsed
-    );
+    let [regionalInfo, form, coordenador] = await Promise.all([
+      await controller.getRegionalByParams( paramsParsed ),
+      await controller.getFormByParams( { NAME: "Cadastro de Informações Anual", sortBy: "version:desc"}),
+      await controller.getPessoaById(regionalInfo.COORDENADOR_ID)
+    ]);
 
-    let coord_quiz = await trabalhoscontroller.getQuizTemplateByParams({
-      CATEGORY: "Coordenador",
-    });
-
-    let coordenador = await trabalhoscontroller.getPessoaByParams({
-      _id: regionalInfo.COORDENADOR_ID,
-    });
+    const lastForm = form[0];
+    let coord_quiz = await controller.findQuestionByCategory(lastForm,"Coordenador");
 
     res.json({
       regional: regionalInfo,
@@ -179,7 +164,7 @@ router.get("/bff/coord_info", async function (req, res) {
       coord_quiz: coord_quiz,
     });
   } catch (error) {
-    this.logger.error(`/bff/coord_info: ${error}`);
+    logger.error(`/bff/coord_info: ${error}`);
     throw error;
   }
 });
@@ -188,13 +173,13 @@ router.get("/bff/situacao", async function (req, res) {
   try {
     const nomeRegional = req.query.regionalName;
 
-    const centros = await regionalcontroller.getCentroByParam({"REGIONAL.NOME_REGIONAL":nomeRegional});
+    const centros = await controller.getCentroByParam({"REGIONAL.NOME_REGIONAL":nomeRegional});
 
     const centroIDs = centros.map((m) => {
       return m._id;
     });
 
-    let question = await trabalhoscontroller.getQuestionByParams({
+    let question = await controller.getQuestionByParams({
       QUESTION: "Situação",
     });
 
@@ -207,7 +192,7 @@ router.get("/bff/situacao", async function (req, res) {
       Inscritas: [],
     };
     for (const id of centroIDs) {
-      let summary = await trabalhoscontroller.getQuizSummaryByParams({
+      let summary = await controller.getQuizSummaryByParams({
         CENTRO_ID: id,
       });
       summary = summary[0];
@@ -216,7 +201,7 @@ router.get("/bff/situacao", async function (req, res) {
         situacoes.summary.push(summary);
       }
 
-      let situacao = await trabalhoscontroller.getQuizResponseByParams({
+      let situacao = await controller.getQuizResponseByParams({
         CENTRO_ID: id,
         QUESTION_ID: question._id,
         fields: "ANSWER,_id"
@@ -237,17 +222,17 @@ router.get("/bff/situacao", async function (req, res) {
 
     res.json(situacoes);
   } catch (error) {
-    this.logger.error(`/bff/situacao: ${error}`);
+    logger.error(`/bff/situacao: ${error}`);
     throw error;
   }
 });
 
 router.get("/bff/summaries", async function (req, res) {
   try {
-    const response = await trabalhoscontroller.getSummaries();
+    const response = await controller.getSummaries();
     res.json(response);
   } catch (error) {
-    this.logger.error(`/bff/summaries: ${error}`);
+    logger.error(`/bff/summaries: ${error}`);
     throw error;
   }
 });
@@ -256,13 +241,13 @@ router.get("/bff/summary", async function (req, res) {
   try {
     const centroID = req.query.centroID;
 
-    const response = await trabalhoscontroller.getQuizSummaryByParams({
+    const response = await controller.getQuizSummaryByParams({
       CENTRO_ID: centroID,
     });
 
     res.json(response);
   } catch (error) {
-    this.logger.error(`/bff/summary: ${error}`);
+    logger.error(`/bff/summary: ${error}`);
     throw error;
   }
 });
@@ -272,12 +257,12 @@ router.get("/bff/answerbyregional", async function (req, res) {
     const questionId = req.query.questionId;
     const regionalName = req.query.regionalName;
 
-    const questionAnswers = await trabalhoscontroller.getQuizResponseByParams({
+    const questionAnswers = await controller.getQuizResponseByParams({
       "QUESTION_ID": questionId,
       fields: "ANSWER,_id,CENTRO_ID"
     });
 
-    const centros = await regionalcontroller.getCentroByParam({"REGIONAL.NOME_REGIONAL":regionalName});
+    const centros = await controller.getCentroByParam({"REGIONAL.NOME_REGIONAL":regionalName});
     
     let questionResponses = {};
 
@@ -289,7 +274,7 @@ router.get("/bff/answerbyregional", async function (req, res) {
 
     res.json(questionResponses);
   } catch (error) {
-    this.logger.error(`/bff/answerbyregional: ${error}`);
+    logger.error(`/bff/answerbyregional: ${error}`);
     throw error;
   }
 });
@@ -367,7 +352,7 @@ router.post("/bff/initialize_centro", async function (req, res) {
     if (!centroId)
       throw new Error("centroId required")
 
-    let responses = await trabalhoscontroller.initializeCentro(centroId);
+    let responses = await controller.initializeCentro(centroId);
 
     res.json({
       "message": "Adicionados",
@@ -386,21 +371,21 @@ router.get("/bff/get_required", async function (req, res) {
   try {
     const centroId = req.query.centroID;
 
-    const responses = await trabalhoscontroller.getQuizResponseByParams({
+    const responses = await controller.getQuizResponseByParams({
       CENTRO_ID: centroId,
       fields: "ANSWER, QUESTION_ID"
     });
 
-    let questions = await trabalhoscontroller.getQuestionByParams({ IS_REQUIRED: true, fields:"_id, QUESTION" })
+    let questions = await controller.getQuestionByParams({ IS_REQUIRED: true, fields:"_id, QUESTION" })
 
     let not_finished = [];
 
     questions.forEach(question => {
       const hasResponse = responses.find((response)=>{
-        return response.QUESTION_ID == question._id && response.ANSWER.trim().length > 0
+        return response.QUESTION_ID == question._id
       })
 
-      if(!hasResponse){
+      if(!hasResponse  ||  hasResponse?.ANSWER?.trim().length == 0){
         not_finished.push(question.QUESTION)
       }
       
@@ -408,7 +393,7 @@ router.get("/bff/get_required", async function (req, res) {
 
     res.json(not_finished);
   } catch (error) {
-    this.logger.error(`/bff/get_required: ${error}`);
+    logger.error(`/bff/get_required: ${error}`);
     throw error;
   }
 });
@@ -419,13 +404,13 @@ router.delete("/bff/remove_answer", requireAuth, async function (req, res) {
     let paramsFrom = parser.getQueryParamsParsed(answer);
     let removedItem = 0
 
-    let quizResponse = await trabalhoscontroller.getQuizResponseByParams({
+    let quizResponse = await controller.getQuizResponseByParams({
       "QUESTION_ID": paramsFrom.questionId,
       CENTRO_ID: paramsFrom.centroId
     });
 
     if (quizResponse.length > 1) {
-      const removed = await trabalhoscontroller.deleteQuizResponseByParams({
+      const removed = await controller.deleteQuizResponseByParams({
         _id: paramsFrom.answerId,
         CENTRO_ID: paramsFrom.centroId,
       });
@@ -436,7 +421,7 @@ router.delete("/bff/remove_answer", requireAuth, async function (req, res) {
       removedItems: removedItem
     });
   } catch (error) {
-    this.logger.error(`/bff/remove_answer: ${error}`);
+    logger.error(`/bff/remove_answer: ${error}`);
     throw error;
   }
 });
@@ -450,7 +435,7 @@ router.post("/bff/add_answer", requireAuth, async function (req, res) {
     const answer = req.originalUrl;
     let paramsFrom = parser.getQueryParamsParsed(answer);
 
-    const groupQuestion = await trabalhoscontroller.getGroupQuestionByParams({
+    const groupQuestion = await controller.getGroupQuestionByParams({
       _id: paramsFrom.groupId,
     });
 
@@ -467,13 +452,13 @@ router.post("/bff/add_answer", requireAuth, async function (req, res) {
         QUESTION_ID: question._id,
         ANSWER: getDefaultValue(question),
       };
-      const quizResponse = await trabalhoscontroller.postQuizResponse(params);
+      const quizResponse = await controller.postQuizResponse(params);
       response.push(quizResponse[0]);
     }
 
     res.json(response);
   } catch (error) {
-    this.logger.error(`/bff/add_answer: ${error}`);
+    logger.error(`/bff/add_answer: ${error}`);
     throw error;
   }
 });
@@ -483,9 +468,7 @@ router.put("/bff/update_answer", requireAuth, async function (req, res) {
     const answer = req.originalUrl;
     let paramsFrom = parser.getQueryParamsParsed(answer);
 
-    const quizResponse = await trabalhoscontroller.putQuizResponse({
-      _id: paramsFrom.answerId,
-    }, {
+    const quizResponse = await controller.putQuizResponse( paramsFrom.answerId, {
       ANSWER: paramsFrom.answer,
     });
 
@@ -493,7 +476,7 @@ router.put("/bff/update_answer", requireAuth, async function (req, res) {
 
     res.json(quizResponse);
   } catch (error) {
-    this.logger.error(`/bff/update_answer: ${error}`);
+    logger.error(`/bff/update_answer: ${error}`);
     throw error;
   }
 });
@@ -506,7 +489,7 @@ async function setQuizResponse(centroID, quizID, questionID, ANSWER) {
       QUESTION_ID: questionID,
       ANSWER: ANSWER,
     };
-    let response = await trabalhoscontroller.postQuizResponse(answewrInfo);
+    let response = await controller.postQuizResponse(answewrInfo);
     response = response[0];
     return response;
   } catch (error) {
@@ -524,7 +507,7 @@ router.get("/bff/reports", async(req,res)=>{
   try {
     logger.debug("Started generate report")
     const reportControler = new ReportController(exporting_guid)
-    await reportControler.generateReport(scope, id, io);
+    await reportControler.generateReport(scope, id, io, ["coord_geral"]);
     res.json({status:200, message: "finished"})  
   } catch (error) {
     logger.error(`/bff/reports, ${error}`)

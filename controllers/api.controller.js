@@ -1,12 +1,43 @@
 const CacheableController = require("./cacheable.controller")
 const generator = require('generate-password');
 
-module.exports = class trabalhosController extends CacheableController {
-  constructor() {
+module.exports = class apiController extends CacheableController{
+  constructor(
+  ) {
     super({
-      service: "aee_digital_trabalhos"
+      service: "aee_digital_api",
+      ttl: 3000
     })
+    
+  }
 
+  async getRegionais() {
+    return await this.get('regionais')
+  }
+
+  async getRegionalByParams(params) {
+    return await this.get('regionais', params)
+  }
+
+  async getCentros() {
+    return await this.get('centros')
+  }
+
+  async getCentroByParam(params) {
+    return await this.get('centros', params)
+  }
+
+  async updateCentro(params, value) {
+    return await this.patch('centros', params, value)
+  }
+
+  async createCentro(body) {
+    try {
+      return await this.post('centros', body)  
+    } catch (error) {
+      this.logger.error("Erro criando centro", body, error)
+      throw error
+    }
   }
 
   async initializeCentro(centroId){
@@ -62,67 +93,39 @@ module.exports = class trabalhosController extends CacheableController {
     
   }
 
+  async getFormByParams(params) {
+    return await this.get('forms', params)
+  }
 
-  //TODO
-  async updateCoordResponseByCentroId(questionId, answerid, response) {
-    let c = this.cache.coord_responses;
-
-    let questionToUpdate = c.find((m) => {
-      return m.QUESTION_ID === questionId && m._id === answerid;
-    });
-
-    if (questionToUpdate) {
-      questionToUpdate.ANSWER = response;
+  findQuestionByCategory(form, category) {
+    // Iterar sobre as páginas
+    for (const page of form.PAGES) {
+      // Iterar sobre os quizzes em cada página
+      for (const quiz of page.QUIZES) {
+        if (quiz.CATEGORY === category) {
+          // Se a categoria corresponder, procurar pela questão
+          return quiz;
+        }
+      }
     }
   }
 
-  async getAtividades() {
-    return await this.get('atividade')
-  }
-
-  async getAtividadesCentroByParams(params) {
-    return await this.get('atividade_centro', params)
-  }
-
-  async getAtividadesCentroSummaryByParams(params) {
-    return await this.get('atividade_centro_summary', params)
-  }
-
-  async getFormByParams(params) {
-    return await this.get('atividade_generic_form', params)
-  }
-
-  async getQuizTemplates() {
-    return await this.get('atividade_generic_quiz')
-  }
-
-  async getQuizTemplateByParams(params) {
-    return await this.get('atividade_generic_quiz', params)
-  }
-
   async getQuestionByParams(params) {
-    return await this.get('atividade_generic_question', params)
-  }
-
-  async getGroupedQuestionByParams(params) {
-    return await this.get('atividade_generic_group_question', params)
+    return await this.get('questions', params)
   }
 
   async getGroupQuestionByParams(params) {
-    return await this.get('atividade_generic_group_question', params)
+    return await this.get('questions', params)
   }
 
   async getQuizResponseByParams(params) {
-    return await this.get('atividade_generic_quiz_answer', params)
+    return await this.get('answers', params)
   }
 
   async deleteQuizResponseByParams(params) {
-    return await this.delete('atividade_generic_quiz_answer', params)
+    return await this.delete('answers', params)
   }
 
-  async updatePass(params, value) {
-    return await this.put('pass', params, value)
-  }
 
   getFakeName(name){
     const nameParts = name.split(" ")
@@ -151,20 +154,20 @@ module.exports = class trabalhosController extends CacheableController {
 
     }
 
-    return await this.post('pass', passInfo)
+    return await this.post('passes', passInfo)
   }
 
   async getPasses() {
-    return await this.get('pass')
+    return await this.get('passes')
   }
 
 
   async getSummaries(start, end) {
     let params = {
-      fields: "CENTRO_ID,LASTMODIFIED,ID"
+      fields: "CENTRO_ID,createdAt"
     }
 
-    let summaries = await this.get('atividade_generic_quiz_summary', params)
+    let summaries = await this.get('summaries', params)
 
     if (start) {
       let startDateParts = start.split("/")
@@ -181,7 +184,7 @@ module.exports = class trabalhosController extends CacheableController {
       }
 
       summaries = summaries.filter((response) => {
-        const responseDate = new Date(response.LASTMODIFIED)
+        const responseDate = new Date(response.createdAt)
 
         return responseDate >= startDate && responseDate <= endDate
 
@@ -192,35 +195,31 @@ module.exports = class trabalhosController extends CacheableController {
   }
 
   async getPassByParams(params) {
-    return await this.get('pass', params)
+    return await this.get('passes', params)
   }
 
 
-  async putQuizResponse(params, value) {
-    return await this.put('atividade_generic_quiz_answer', params, value)
+  async putQuizResponse(id, value) {
+    return await this.patch('answers', id, value)
   }
 
   async postQuizResponse(body) {
-    return await this.post('atividade_generic_quiz_answer', body)
+    return await this.post('answers', body)
   }
 
-  async getQuizResponses() {
-    return await this.get('atividade_generic_quiz_answer')
+  async getPessoasById(id){
+    return await this.get('pessoas', id)
   }
 
   async getPessoaByParams(params) {
-    return await this.get('pessoa', params)
+    return await this.get('pessoas', params)
   }
 
   async getQuizSummaryByParams(params) {
-    return await this.get('atividade_generic_quiz_summary', params)
+    return await this.get('summaries', params)
   }
   async postQuizSummary(body) {
-    return await this.post('atividade_generic_quiz_summary', body)
-  }
-
-  async putQuizSummary(params, value) {
-    return await this.put('atividade_generic_quiz_summary', params, value)
+    return await this.post('summaries', body)
   }
 
   async checkFormCompletion(formName, centroId) {
@@ -243,7 +242,7 @@ module.exports = class trabalhosController extends CacheableController {
                 let response = responses.filter((m) => {
                   return (
                     m.CENTRO_ID === centroId &&
-                    m.QUIZ_ID === quiz._id &&
+                    // m.QUIZ_ID === quiz._id &&
                     m.QUESTION_ID === question._id
                   );
                 });
@@ -261,7 +260,7 @@ module.exports = class trabalhosController extends CacheableController {
       return true;
     } catch (error) {
       this.logger.error(
-        `controller:trabalhos.controller:checkFormCompletion ${centroId}`
+        `controller:api.controller:checkFormCompletion ${centroId}`
       );
       throw error;
     }

@@ -3,11 +3,8 @@ var router = express.Router();
 
 const { requireAuth } = require("../helpers/auth.helpers");
 
-const regionalController = require("../controllers/regional.controller");
-const regionalcontroller = new regionalController();
-
-const TrabalhoController = require("../controllers/trabalhos.controller");
-const trabalhocontroller = new TrabalhoController();
+const Controller = require("../controllers/api.controller");
+const controller = new Controller();
 
 const SearchController = require("../controllers/search.controller");
 const searchcontroller = new SearchController();
@@ -20,15 +17,15 @@ router.get("/centros", requireAuth, async function (req, res) {
   let centros;
   
   if (regionalName != null) {
-    centros = await regionalcontroller.getCentroByParam({"REGIONAL.NOME_REGIONAL": regionalName});
+    centros = await controller.getCentroByParam({"REGIONAL.NOME_REGIONAL": regionalName});
     regionals = [
       {
         NOME_REGIONAL: regionalName,
       },
     ];
   } else {
-    centros = await regionalcontroller.getCentros();
-    regionals = await regionalcontroller.getRegionais();
+    centros = await controller.getCentros();
+    regionals = await controller.getRegionais();
 
     regionals = regionals.sort(function (a, b) {
       if (a.NOME_REGIONAL > b.NOME_REGIONAL) {
@@ -47,26 +44,32 @@ router.get("/centros", requireAuth, async function (req, res) {
 });
 
 router.get("/centro", requireAuth, async function (req, res) {
-  const centro = req.query.nome;
-  const edit = req.query.edit;
-  const option = "Centro";
-
-  const pesquisaInfo = {
-    search: centro,
-    option: option,
-  };
-  const result = await searchcontroller.getPesquisaResult(pesquisaInfo);
-
-  if (edit) {
-    res.render("pages/editar", {
-      opcao: option,
-      result: result.items,
-    });
-  } else {
-    res.render("pages/detalhe", {
-      opcao: option,
-      result: result.items,
-    });
+  try {
+    const centro = req.query.nome;
+    const edit = req.query.edit;
+    const option = "Centro";
+  
+    const pesquisaInfo = {
+      search: centro,
+      option: option,
+    };
+    const result = await searchcontroller.getPesquisaResult(pesquisaInfo);
+  
+    if (edit) {
+      res.render("pages/editar", {
+        opcao: option,
+        result: result.items,
+      });
+    } else {
+      res.render("pages/detalhe", {
+        opcao: option,
+        result: result.items,
+      });
+    }
+    
+  } catch (error) {
+    this.logger.error("Error at centro route")
+    throw error;
   }
 });
 
@@ -95,7 +98,7 @@ router.get("/trabalho_centro", requireAuth, async function (req, res) {
   }
 });
 
-router.get("/cadastro", requireAuth, async function (req, res, next) {
+router.get("/cadastro", requireAuth, async function (req, res) {
   const centro = req.query.nome;
   const edit = req.query.edit;
   const option = "Centro_Summary";
@@ -137,11 +140,11 @@ router.post("/create_centro", requireAuth, async function (req, res) {
       REGIONAL: req.body.regional
     };
   
-    const centroInfoAdded = await regionalcontroller.createCentro(centroInfo)
+    const centroInfoAdded = await controller.createCentro(centroInfo)
 
-    await trabalhocontroller.initializeCentro(centroInfoAdded.ID)
+    await controller.initializeCentro(centroInfoAdded.ID)
 
-    let loginInfo = await trabalhocontroller.setPass(centroInfo.NOME_CENTRO, centroInfoAdded.ID, ['presidente'])
+    let loginInfo = await controller.setPass(centroInfo.NOME_CENTRO, centroInfoAdded.ID, ['presidente'])
     loginInfo = loginInfo[0]
 
     res.render("pages/thanks", {
@@ -158,7 +161,7 @@ router.post("/create_centro", requireAuth, async function (req, res) {
 });
 
 router.get("/pesquisar", requireAuth, async function (req, res) {
-  const regionais = await regionalcontroller.getRegionais();
+  const regionais = await controller.getRegionais();
 
   res.render("pages/pesquisar", {
     regionais: regionais,
