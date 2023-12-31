@@ -1,3 +1,4 @@
+const { v4: uuidv4 } = require('uuid');
 module.exports = class SearchController {
   constructor(
     Controller = require("./api.controller"),
@@ -66,13 +67,12 @@ module.exports = class SearchController {
 
             for (let j = 0; j < groups.length; j++) {
               const groupInfo = groups[j]
+              groupInfo._id = uuidv4();
               const group = groupInfo.GROUP;
-
               for (let k = 0; k < group.length; k++) {
                 const question = group[k];
 
                 let answer
-
 
                 if (groupInfo.IS_MULTIPLE) {
                   answer = quiz_responses.filter((m) => {

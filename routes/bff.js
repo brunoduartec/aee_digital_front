@@ -410,10 +410,7 @@ router.delete("/bff/remove_answer", requireAuth, async function (req, res) {
     });
 
     if (quizResponse.length > 1) {
-      const removed = await controller.deleteQuizResponseByParams({
-        _id: paramsFrom.answerId,
-        CENTRO_ID: paramsFrom.centroId,
-      });
+      const removed = await controller.deleteQuizResponseByParams(paramsFrom.answerId);
       removedItem = removed.deletedCount;
     }
 
@@ -433,13 +430,10 @@ function getDefaultValue(question) {
 router.post("/bff/add_answer", requireAuth, async function (req, res) {
   try {
     const answer = req.originalUrl;
+    const {body} = req;
     let paramsFrom = parser.getQueryParamsParsed(answer);
 
-    const groupQuestion = await controller.getGroupQuestionByParams({
-      _id: paramsFrom.groupId,
-    });
-
-    const questions = groupQuestion[0].GROUP;
+    const questions = body.groupInfo.GROUP;
 
     let response = [];
 
@@ -448,12 +442,11 @@ router.post("/bff/add_answer", requireAuth, async function (req, res) {
 
       const params = {
         CENTRO_ID: paramsFrom.centroId,
-        QUIZ_ID: paramsFrom.quizId,
         QUESTION_ID: question._id,
         ANSWER: getDefaultValue(question),
       };
       const quizResponse = await controller.postQuizResponse(params);
-      response.push(quizResponse[0]);
+      response.push(quizResponse);
     }
 
     res.json(response);

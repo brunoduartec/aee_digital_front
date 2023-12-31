@@ -95,7 +95,9 @@
     </table>
     <%if(group.IS_MULTIPLE){%>
       <div class="form-group col-md-<%= itemSize%> align-self-end">
-        <button type="button" class="btn btn-primary" style="vertical-align: bottom" onclick="Add('<%= group._id%>', '<%= quiz._id%>', '<%=centroId%>')">Adicionar</button>
+        <% var groupJson = JSON.stringify(group).replace(/'/g, "\\'").replace(/"/g, '\\"'); %>
+
+        <button type="button" class="btn btn-primary" style="vertical-align: bottom" onclick="Add('<%= groupJson %>', '<%= quiz._id%>', '<%=centroId%>')">Adicionar</button>
     </div>
     <%}%>
 

@@ -122,8 +122,8 @@ module.exports = class apiController extends CacheableController{
     return await this.get('answers', params)
   }
 
-  async deleteQuizResponseByParams(params) {
-    return await this.delete('answers', params)
+  async deleteQuizResponseByParams(id) {
+    return await this.delete('answers', id)
   }
 
 

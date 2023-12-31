@@ -13,39 +13,6 @@ module.exports = class UserInfoController {
     this.parser = parser;
   }
 
-  getInfo(item, param) {
-    let sub_params = param.split(".");
-    let sub;
-
-    if (sub_params.includes("*")) {
-      sub = [];
-      let index = sub_params.indexOf("*");
-      let sub_sub_param = [];
-      for (let i = 0; i < index; i++) {
-        sub_sub_param.push(sub_params[i]);
-      }
-      let sub_item = this.parser.getNestedObject(item, sub_sub_param);
-
-      if (sub_item) {
-        for (let i = 0; i < sub_item.length; i++) {
-          const it = sub_item[i];
-          const subToPush = this.parser.getNestedObject(it, [
-            sub_params[index + 1],
-          ]);
-          sub.push(subToPush);
-        }
-      } else {
-        sub.push(" ");
-      }
-
-      return sub;
-    } else {
-      sub = this.parser.getNestedObject(item, sub_params);
-      return sub;
-    }
-  }
-
-
   async getFormInfo(centro_id, form_alias, page, user_role) {
     try {
       const pesquisaInfo = {

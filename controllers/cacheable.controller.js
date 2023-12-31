@@ -107,14 +107,13 @@ module.exports = class CacheableController extends BaseController {
 
     }
 
-    async delete(domain, params) {
+    async delete(domain, id) {
         try {
-            let paramsParsed = this.parser.getParamsParsed(params)
             this.cache.clearGroup(domain)
 
             const response = await this.request.delete(
                 this.service,
-                `/${domain}?${paramsParsed}`
+                `/${domain}/${id}`
             );
 
             return response;
