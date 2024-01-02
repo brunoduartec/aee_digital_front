@@ -44,11 +44,16 @@
       });
   }
 
-  function callCreateRoute(table, clone, groupId, quizId, centroId) {
-    console.log("AQUI", groupId, quizId, centroId);
-    var apiUrl = `/bff/add_answer?groupId=${groupId}&quizId=${quizId}&centroId=${centroId}`;
+  function callCreateRoute(table, clone, groupInfo, formId, centroId) {
+    var apiUrl = `/bff/add_answer?centroId=${centroId}`;
     fetch(apiUrl, {
       method: "POST",
+      headers: {
+    'Content-Type': 'application/json'
+  },
+      body: JSON.stringify({
+    groupInfo
+  })
     })
       .then((response) => {
         console.log("AAA", response);
@@ -111,7 +116,9 @@
       });
   }
 
-  function Add(groupId, quizId, centroId) {
+  function Add(groupJson, formId, centroId) {
+    const groupInfo = JSON.parse(groupJson)
+    const groupId = groupInfo._id
     var table = document.getElementById(groupId);
     var template = document.getElementsByName(`group_${groupId}`);
 
@@ -119,7 +126,7 @@
 
     var clone = lastTemplate.cloneNode(true);
 
-    callCreateRoute(table, clone, groupId, quizId, centroId);
+    callCreateRoute(table, clone, groupInfo, formId, centroId);
   }
 
   function Delete(item, table_id, centroId) {

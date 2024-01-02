@@ -290,7 +290,7 @@
 
               let centrosOfRegional = centros.filter((m) => {
                 try {
-                  return m.REGIONAL._id == regional._id;  
+                  return m.REGIONAL._id == regional._id || m.REGIONAL == regional._id;  
                 } catch (error) {
                   console.log(m)
                 }

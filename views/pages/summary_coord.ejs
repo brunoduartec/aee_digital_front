@@ -451,7 +451,7 @@
 
               const data = centroDiv.children[5].children[0].children[0]
 
-              let date = new Date(lastSummary.LASTMODIFIED).toLocaleString("pt-BR")
+              let date = new Date(lastSummary.createdAt).toLocaleString("pt-BR")
               data.innerText = date
             }else{
               setPerguntasFaltantes(centroDiv,centro);

@@ -1,161 +1,64 @@
+const { v4: uuidv4 } = require('uuid');
 module.exports = class SearchController {
   constructor(
-    RegionaisController = require("./regional.controller"),
-    TrabalhosController = require("./trabalhos.controller"),
+    Controller = require("./api.controller"),
+    role = require('../helpers/role.helper'),
     logger = require("../helpers/logger"),
     parser = require("../helpers/parser")
   ) {
-    this.regionalcontroller = new RegionaisController();
-    this.trabalhoscontroller = new TrabalhosController();
+    this.controller = new Controller();
+    this.role = role;
     this.logger = logger;
     this.parser = parser;
   }
 
   async getPesquisaResult(pesquisaInfo) {
-    const regionalcontroller = this.regionalcontroller;
+    try {
+      const search = pesquisaInfo.search;
+      const user_role = pesquisaInfo.user_role[0]; // por enquanto ver 1 só
 
-    const regional = pesquisaInfo.regional;
-    const centro = pesquisaInfo.centro;
-    const trabalho = pesquisaInfo.trabalho;
-    const search = pesquisaInfo.search;
-    const opcao = pesquisaInfo.option;
+      let name = search.name;
+      let centro_id = search.id;
+      const page = search.page;
+      let finalized = false;
 
-    const searchByOpcao = {
-      Centro: async function () {
-        const paramsParsed = this.parser.getParamsParsed({
-          NOME_CURTO: decodeURIComponent(search),
-        });
-        const centro = await regionalcontroller.getCentroByParam(paramsParsed);
-        let centros = {
-          amount: centro ? centro.length : 0,
-          items: centro,
-        };
+      let form_template = await this.controller.getFormByParams({
+        NAME: name,
+        sortBy: "VERSION:desc"
+      });
 
-        this.logger.debug(
-          `controller:search.controller:getPesquisaResult:Centro`
+      form_template = form_template[0];
+      let pages = form_template.PAGES;
+
+      pages = pages.filter((m)=>{
+        const canShow = this.role.checkRole(user_role, m.ROLE);
+        return canShow
+      })
+
+      let page_titles = pages.map((m) => { return m.PAGE_NAME });
+
+      if (page < page_titles.length) {
+        let page_info = pages[page];
+        pages = [];
+        pages.push(page_info);
+      } else {
+        finalized = await this.controller.checkFormCompletion(
+          name,
+          centro_id
         );
-        return centros;
-      },
-      Centro_Summary: async function () {
-        let centroInfo = [];
-        let paramsParsed = this.parser.getParamsParsed({
-          NOME_CURTO: decodeURIComponent(centro),
-        });
+      }
 
-        centroInfo.push(
-          await regionalcontroller.getCentroByParam(paramsParsed)
-        );
-        const centro_id = centroInfo[0]._id;
+      const quiz_responses = await this.controller.getQuizResponseByParams({
+        CENTRO_ID: centro_id,
+        fields: "QUESTION_ID,_id,ANSWER"
+      });
 
-        let centroSummary = {};
-        const summary = await this.trabalhoscontroller.getAtividadesCentroSummaryByParams( { CENTRO_ID: centro_id } );
-        centroSummary.items = [];
-        centroSummary.amount = 0;
+      for (let index = 0; index < pages.length; index++) {
+        const page = pages[index];
 
-        const atividade_order = [
-          "Assistência Espiritual",
-          "Curso Básico",
-          "Escola de Aprendizes do Evangelho",
-          "Curso de Médiuns",
-          "Evangelização Infantil",
-          "Pré-Mocidade",
-          "Mocidade",
-        ];
+        const canShow = page_titles.includes(page.PAGE_NAME)
 
-        atividade_order.forEach((atividade_name) => {
-          const item = summary.find((summary) => {
-            return summary.ATIVIDADE.NOME_ATIVIDADE == atividade_name;
-          });
-          if (item) {
-            centroSummary.items.push(item);
-            centroSummary.amount++;
-          }
-        });
-
-        this.logger.info(
-          `controller:search.controller:getPesquisaResult:Centro_Summary: ${centroSummary}`
-        );
-        return centroSummary;
-      },
-
-      Trabalho: async function () {
-        let centros;
-
-        if (regional != "Todos") {
-          centros = await regionalcontroller.getCentroByParam({"REGIONAL.NOME_REGIONAL": regional});
-        } else {
-          centros = await regionalcontroller.getCentros();
-        }
-
-        let atividades = {};
-
-        atividades.items = [];
-        atividades.amount = 0;
-
-        for (let index = 0; index < centros.length; index++) {
-          const centro = centros[index];
-          const centro_id = centro._id;
-
-          let atividade = await this.trabalhoscontroller.getAtividadesCentroByParams( { CENTRO_ID: centro_id, "ATIVIDADE.NOME_ATIVIDADE": trabalho != "Todos" ? trabalho : null, } );
-
-          atividades.amount += atividade.length;
-          for (let index = 0; index < atividade.length; index++) {
-            let element = atividade[index];
-            element.NOME_CENTRO = centro.NOME_CENTRO;
-            element.REGIONAL = centro.REGIONAL.NOME_REGIONAL;
-          }
-          if (atividade && atividade.length > 0) {
-            atividades.items.push(atividade);
-          }
-        }
-
-        this.logger.info(
-          `controller:search.controller:getPesquisaResult:Trabalhos: ${atividades}`
-        );
-        return atividades;
-      },
-      Regional: async function () {
-        const centros = await regionalcontroller.getCentros();
-        let regional = {
-          amount: centros.length,
-          items: centros,
-        };
-        this.logger.info(
-          `controller:search.controller:getPesquisaResult:Regional: ${regional}`
-        );
-        return regional;
-      },
-
-      Quiz: async function () {
-        let name = search.name;
-        let centro_id = search.id;
-        const page = search.page;
-        let finalized = false;
-
-        let form_template = await this.trabalhoscontroller.getFormByParams( { NAME: name } );
-
-        form_template = form_template[0];
-        let pages = form_template.PAGES;
-        let page_titles = pages.map((m) => {
-          return m.PAGE_NAME;
-        });
-
-        if (page < pages.length) {
-          let page_info = pages[page];
-          pages = [];
-          pages.push(page_info);
-        } else {
-          finalized = await this.trabalhoscontroller.checkFormCompletion(
-            name,
-            centro_id
-          );
-        }
-
-        const quiz_responses = await this.trabalhoscontroller.getQuizResponseByParams({ CENTRO_ID: centro_id, fields:"QUESTION_ID,_id,ANSWER" });
-
-        for (let index = 0; index < pages.length; index++) {
-          const page = pages[index];
-
+        if (canShow) {
           let quizes = page.QUIZES;
           for (let index = 0; index < quizes.length; index++) {
             const quiz = quizes[index];
@@ -164,20 +67,23 @@ module.exports = class SearchController {
 
             for (let j = 0; j < groups.length; j++) {
               const groupInfo = groups[j]
+              groupInfo._id = uuidv4();
               const group = groupInfo.GROUP;
-
               for (let k = 0; k < group.length; k++) {
                 const question = group[k];
 
                 let answer
 
-                
-                if(groupInfo.IS_MULTIPLE){
-                  answer = quiz_responses.filter((m) => { return m.QUESTION_ID == question._id; });
+                if (groupInfo.IS_MULTIPLE) {
+                  answer = quiz_responses.filter((m) => {
+                    return m.QUESTION_ID == question._id;
+                  });
 
-                }else{
-                  const itemFound = quiz_responses.find((m) => { return m.QUESTION_ID == question._id; })
-                  answer = [itemFound  || " "];
+                } else {
+                  const itemFound = quiz_responses.find((m) => {
+                    return m.QUESTION_ID == question._id;
+                  })
+                  answer = [itemFound || " "];
                 }
 
                 if (answer.length > 0) {
@@ -200,19 +106,23 @@ module.exports = class SearchController {
             }
           }
         }
+      }
 
-        let quiz = {
-          templates: form_template,
-          titles: page_titles,
-          finalized: finalized
-        };
+      let quiz = {
+        templates: form_template,
+        titles: page_titles,
+        finalized: finalized
+      };
 
-        this.logger.debug(
-          `controller:search.controller:getPesquisaResult:Quiz`
-        );
-        return quiz;
-      },
-    };
-    return await searchByOpcao[opcao].call(this);
+      this.logger.debug(
+        `controller:search.controller:getPesquisaResult:Quiz`
+      );
+      return quiz;
+    } catch (error) {
+      this.logger.error(`searchcontroller :${error}`)
+      throw error;
+    }
+
+
   }
-};
+}

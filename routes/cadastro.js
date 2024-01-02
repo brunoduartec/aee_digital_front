@@ -3,11 +3,8 @@ var router = express.Router();
 
 const logger = require("../helpers/logger");
 
-const regionalController = require("../controllers/regional.controller");
-const regionalcontroller = new regionalController();
-
-const trabalhosController = require("../controllers/trabalhos.controller");
-const trabalhoscontroller = new trabalhosController();
+const Controller = require("../controllers/api.controller");
+const controller = new Controller();
 
 const QuizActions = require("../helpers/quiz_actions");
 const quiz_actions = new QuizActions();
@@ -20,9 +17,13 @@ router.get("/cadastro_alianca", requireAuth, async function (req, res) {
     const page = req.query.page || 0;
     const form_alias = "Cadastro de Informações Anual";
 
+    let form  = await controller.getFormByParams({ NAME: "Cadastro de Informações Anual", sortBy: "VERSION:desc" });
+    form = form[0];
+
     quiz_actions.open(req, res, {
       centro_id,
       form_alias,
+      form_id: form._id,
       page,
     });
   } catch (error) {
@@ -34,6 +35,7 @@ router.get("/cadastro_alianca", requireAuth, async function (req, res) {
 router.post("/quiz", async function (req, res) {
   let responses = req.body;
   const form_alias = responses.form_alias;
+  const form_id = responses.form_id;
   const centro_id = responses.centro_id;
   const page_index = responses.page;
   const page_redirect = responses.redirect;
@@ -41,6 +43,7 @@ router.post("/quiz", async function (req, res) {
 
   await quiz_actions[action](req, res, {
     centro_id,
+    form_id,
     form_alias,
     page_index,
     page_redirect,
@@ -55,26 +58,28 @@ router.get("/summary_coord", requireAuth, async function (req, res, next) {
   let regionalInfo;
 
   if (!regionalName) {
-    regionalInfo = await regionalcontroller.getRegionalByParams({ _id: ID})
+    regionalInfo = await controller.getRegionalByParams({ _id: ID})
     
   } else {
-    regionalInfo = await regionalcontroller.getRegionalByParams({ NOME_REGIONAL: regionalName, PAIS: pais})
-
+    regionalInfo = await controller.getRegionalByParams({ NOME_REGIONAL: regionalName, PAIS: pais})
   }
 
   regionalInfo = regionalInfo[0];
 
-  let [centros, coord_quiz, coordenador, autoavaliacao] = await Promise.all([
-    await regionalcontroller.getCentroByParam( {"REGIONAL._id": regionalInfo._id} ),
-    await trabalhoscontroller.getQuizTemplateByParams( { CATEGORY: "Coordenador", } ),
-    await trabalhoscontroller.getPessoaByParams( { _id: regionalInfo.COORDENADOR_ID, } ),
-    await trabalhoscontroller.getQuizTemplateByParams( { CATEGORY: "Auto Avaliação", } )
+  let [centros, coordenador, form] = await Promise.all([
+    await controller.getCentroByParam( {REGIONAL: regionalInfo._id} ),
+    await controller.getPessoasById(regionalInfo.COORDENADOR_ID),
+    await controller.getFormByParams( { NAME: "Cadastro de Informações Anual", sortBy: "VERSION:desc"} )
   ]);
 
-  let autoavaliacaoQuestion = autoavaliacao[0].QUESTIONS[0].GROUP[0];
+  let lastForm = form[0];
+
+  const avaliacaoCategory = controller.findQuestionByCategory(lastForm, "Auto Avaliação")
+
+  let autoavaliacaoQuestion = avaliacaoCategory.QUESTIONS[0].GROUP[0];
   let avaliacaoQuestionId = autoavaliacaoQuestion._id;
 
-  const summaries = await trabalhoscontroller.getSummaries(start, end);
+  const summaries = await controller.getSummaries(start, end);
 
   coordenador = coordenador[0];
 
@@ -86,7 +91,7 @@ router.get("/summary_coord", requireAuth, async function (req, res, next) {
     regionalInfo: regionalInfo,
     centros: centros,
     coordenador: coordenador,
-    coord_quiz: coord_quiz,
+    // coord_quiz: coord_quiz,
     summaries: summaries,
     avaliacaoQuestionId: avaliacaoQuestionId,
   });
@@ -108,7 +113,7 @@ function sortRegional(regionalA, regionalB){
 
 router.get("/summary_alianca", requireAuth, async function (req, res) {
   const { start, end } = req.query;
-  let regionais = await regionalcontroller.getRegionais();
+  let regionais = await controller.getRegionais();
   regionais = regionais.sort(sortRegional)
 
   res.render("pages/summary_alianca", { start,end, regionais });
@@ -121,7 +126,7 @@ router.get("/cadastro_centro", requireAuth, async function (req, res, next) {
     const { nomeRegional } = req.query;
 
 
-    let regionais = await regionalcontroller.getRegionais();
+    let regionais = await controller.getRegionais();
     regionais = regionais.sort(sortRegional)
   
     const estados = [ 'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO' ];

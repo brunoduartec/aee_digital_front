@@ -1,14 +1,12 @@
 module.exports = class QuizActions {
   constructor(
     UserInfoController = require("../controllers/userInfo.controller"),
-    RegionaisController = require("../controllers/regional.controller"),
-    TrabalhosController = require("../controllers/trabalhos.controller"),
+    Controller = require("../controllers/api.controller"),
     logger = require("../helpers/logger"),
     parser = require("../helpers/parser")
   ) {
     this.userinfocontroller = new UserInfoController();
-    this.regionalcontroller = new RegionaisController();
-    this.trabalhoscontroller = new TrabalhosController();
+    this.controller = new Controller();
     this.logger = logger;
     this.parser = parser;
   }
@@ -61,14 +59,14 @@ module.exports = class QuizActions {
 
           if (responses[question.ANSWER_ID]) {
             if (!question.ANSWER) {
-              await this.trabalhoscontroller.postQuizResponse({
+              await this.controller.postQuizResponse({
                 CENTRO_ID: centro_id,
                 QUIZ_ID: quiz._id,
                 QUESTION_ID: question._id,
                 ANSWER: answer,
               });
             } else if (question.ANSWER != responses[question._id]) {
-              await this.trabalhoscontroller.putQuizResponse({ _id: question.ANSWER_ID, }, { ANSWER: answer, });
+              await this.controller.putQuizResponse(question.ANSWER_ID, { ANSWER: answer, });
             }
           }
         }
@@ -77,18 +75,23 @@ module.exports = class QuizActions {
   }
 
   async send(req, res, action_info) {
-    let { centro_id } = action_info;
+    let { centro_id, form_id } = action_info;
 
-    const quiz_responses = await this.trabalhoscontroller.getQuizResponseByParams({ CENTRO_ID: centro_id, fields: "_id" });
+    const quiz_responses = await this.controller.getQuizResponseByParams({ CENTRO_ID: centro_id });
 
-    const quizResponsesMapped = quiz_responses.map((response)=>{ return response._id })
+    const quizResponsesMapped = quiz_responses.map((response)=>{ return {
+      QUESTION: response._id,
+      ANSWER: response.ANSWER 
+    }
+    })
 
     let params = {
       CENTRO_ID: centro_id,
-      ANSWERS: quizResponsesMapped,
-      LASTMODIFIED: new Date(),
+      FORM_ID: form_id,
+      QUESTIONS: quizResponsesMapped,
+      // LASTMODIFIED: new Date(),
     };
-    await this.trabalhoscontroller.postQuizSummary(params);
+    await this.controller.postQuizSummary(params);
 
     res.render("pages/thanks", {
       message:""
@@ -102,12 +105,13 @@ module.exports = class QuizActions {
   }
 
   async open(req, res, action_info) {
-    let { centro_id, form_alias, page } = action_info;
+    let { centro_id, form_alias, form_id, page } = action_info;
     try {
       const form_info = await this.userinfocontroller.getFormInfo(
         centro_id,
         form_alias,
-        page
+        page,
+        req?.session?.auth?.groups
       );
 
       this.logger.info(
@@ -117,6 +121,7 @@ module.exports = class QuizActions {
       res.render("pages/quiz", {
         index: page,
         form_alias: form_alias,
+        form_id,
         centro_id: centro_id,
         results: form_info.templates,
         titles: form_info.titles,

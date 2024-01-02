@@ -1,6 +1,6 @@
 module.exports = class authController {
   constructor(
-    TrabalhosController = require("./trabalhos.controller"),
+    Controller = require("./api.controller"),
     logger = require("../helpers/logger"),
     parser = require("../helpers/parser")
   ) {
@@ -12,7 +12,7 @@ module.exports = class authController {
     this.constructor.instance = this;
 
     this.logger = logger;
-    this.trabalhoscontroller = new TrabalhosController();
+    this.controller = new Controller();
 
     this.groups = require("../resources/groups.json");
     this.permissions = require("../resources/permissions.json");
@@ -20,7 +20,7 @@ module.exports = class authController {
   }
 
   async checkUserPass(user, pass) {
-    const auth = await this.trabalhoscontroller.getPassByParams({ user: user, pass: pass });
+    const auth = await this.controller.getPassByParams({ user: user, pass: pass });
 
     let userPass = auth[0];
 

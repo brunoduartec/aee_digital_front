@@ -63,14 +63,14 @@ module.exports = class CacheableController extends BaseController {
 
     }
 
-    async put(domain, params, body) {
+    async put(domain, id, body) {
         try {
-            let paramsParsed = this.parser.getParamsParsed(params)
+            // let paramsParsed = this.parser.getParamsParsed(params)
             this.cache.clearGroup(domain)
 
             const response = await this.request.put(
                 this.service,
-                `/${domain}?${paramsParsed}`,
+                `/${domain}/${id}`,
                 body
             );
 
@@ -85,14 +85,35 @@ module.exports = class CacheableController extends BaseController {
 
     }
 
-    async delete(domain, params) {
+    async patch(domain, id, body) {
         try {
-            let paramsParsed = this.parser.getParamsParsed(params)
+            // let paramsParsed = this.parser.getParamsParsed(params)
+            this.cache.clearGroup(domain)
+
+            const response = await this.request.patch(
+                this.service,
+                `/${domain}/${id}`,
+                body
+            );
+
+            return response
+
+        } catch (error) {
+            this.logger.error(
+                `${this.service}:${domain}: put Error=> ${error}`
+            );
+            throw error;
+        }
+
+    }
+
+    async delete(domain, id) {
+        try {
             this.cache.clearGroup(domain)
 
             const response = await this.request.delete(
                 this.service,
-                `/${domain}?${paramsParsed}`
+                `/${domain}/${id}`
             );
 
             return response;

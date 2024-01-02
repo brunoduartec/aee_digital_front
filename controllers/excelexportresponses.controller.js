@@ -1,14 +1,12 @@
 module.exports = class ExcelExportReportsController {
   constructor(
     ExcelExporterHelper = require("../helpers/excelexporter.helper"),
-    TrabalhosController = require("./trabalhos.controller"),
-    Regionaiscontroller = require("./regional.controller"),
+    Controller = require("./api.controller"),
     parser = require("../helpers/parser"),
     logger = require("../helpers/logger")
     ) {
     this.exporter = new ExcelExporterHelper(),
-    this.regionaiscontroller = new Regionaiscontroller();
-    this.trabalhoscontroller = new TrabalhosController();
+    this.controller = new Controller();
     this.logger = logger;
     this.parser = parser;
     this.headers = [];
@@ -17,7 +15,7 @@ module.exports = class ExcelExportReportsController {
   async init() {
     try {
 
-      const [form] = await this.trabalhoscontroller.getFormByParams({ NAME: "Cadastro de Informações Anual" });
+      const [form] = await this.controller.getFormByParams({ NAME: "Cadastro de Informações Anual", sortBy: "VERSION:desc" });
       this.headers = form.PAGES.flatMap(
         (page) =>
           page.QUIZES.flatMap(
@@ -30,22 +28,6 @@ module.exports = class ExcelExportReportsController {
               )
           )
       );
-
-      let coord_quiz = await this.trabalhoscontroller.getQuizTemplateByParams({
-        CATEGORY: "Coordenador",
-      });
-
-      const newHeaders = coord_quiz.flatMap(
-        (quiz) =>
-          quiz.QUESTIONS.flatMap((grouped_question) =>
-            grouped_question.GROUP.map(({ QUESTION: header, _id: key }) => ({
-              header,
-              key,
-            }))
-          )
-      )
-
-      this.headers = this.headers.concat(newHeaders)
 
       return true;
     } catch (error) {
@@ -135,7 +117,7 @@ module.exports = class ExcelExportReportsController {
 
   async exportRegional(regionalName, exporting_guid, io) {
 
-    let centros = await this.regionaiscontroller.getCentroByParam({"REGIONAL.NOME_REGIONAL": regionalName});
+    let centros = await this.controller.getCentroByParam({"REGIONAL.NOME_REGIONAL": regionalName});
 
     const fileName = this.getRegionalFileName(regionalName);
 
@@ -143,7 +125,7 @@ module.exports = class ExcelExportReportsController {
   }
 
   async exportRegionais(exporting_guid, io) {
-    const regionais = await this.regionaiscontroller.getRegionais();
+    const regionais = await this.controller.getRegionais();
   
     // Use Promise.all() to export regionals in parallel
     const files = await Promise.all(regionais.map(async (regional) => {
@@ -155,7 +137,7 @@ module.exports = class ExcelExportReportsController {
   }
 
   async exportAll(exporting_guid, io) {
-    const centros = await this.regionaiscontroller.getCentros();
+    const centros = await this.controller.getCentros();
     const fileName = this.getAllFileName();
 
     return await this.exportBatch(fileName, centros, exporting_guid, io);
@@ -203,8 +185,8 @@ module.exports = class ExcelExportReportsController {
     try {
       // Use Promise.all() to fetch centroInfo and data in parallel
       const [centroInfo, data] = await Promise.all([
-        this.regionaiscontroller.getCentroByParam({ _id: centroId }),
-        this.trabalhoscontroller.getQuizResponseByParams({ CENTRO_ID: centroId })
+        this.controller.getCentroByParam({ _id: centroId }),
+        this.controller.getQuizResponseByParams({ CENTRO_ID: centroId })
       ]);
   
       const { NOME_CENTRO: centroName, REGIONAL: { NOME_REGIONAL: regionalName } } = centroInfo[0];

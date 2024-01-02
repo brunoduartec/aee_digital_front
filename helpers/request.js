@@ -1,4 +1,5 @@
 const axios = require("axios");
+const polly = require("polly-js")
 
 module.exports = class Request {
   constructor(logger = require("../helpers/logger")) {
@@ -10,7 +11,7 @@ module.exports = class Request {
     this.logger = logger;
     this.constructor.instance = this;
 
-    this.base = "/api/v1";
+    this.base = "";
     this.instances = {};
   }
 
@@ -18,12 +19,22 @@ module.exports = class Request {
     this.instances[name] = host;
   }
 
+  async executeMethodWithRetry(method, url, retries=2){
+    return polly()
+    .waitAndRetry(retries)
+    .executeForPromise(async () => {
+      const response = await axios[method](url)
+      if (!response.error) {
+        return response;
+      }else{
+        return Promise.reject(response.error);
+      }
+    });
+  }
+
   async get(instanceName, route) {
     try {
-      const response = await axios.get(
-        encodeURI(`${this.instances[instanceName]}${this.base}${route}`)
-      );
-      // this.logger.info(`helpers:request:get ${JSON.stringify(response.data)}`);
+      const response = await this.executeMethodWithRetry("get",encodeURI(`${this.instances[instanceName]}${this.base}${route}`))
       return response.data;
     } catch (error) {
       this.logger.error(`helpers:request:get => ${error}`);
@@ -48,6 +59,22 @@ module.exports = class Request {
   async put(instanceName, route, body) {
     try {
       const response = await axios.put(
+        decodeURIComponent(
+          `${this.instances[instanceName]}${this.base}${route}`
+        ),
+        body
+      );
+      // this.logger.info(`helpers:request:put  ${response.data}`);
+      return response.data;
+    } catch (error) {
+      this.logger.error(`helpers:request:put ${error}`);
+      throw error;
+    }
+  }
+
+  async patch(instanceName, route, body) {
+    try {
+      const response = await axios.patch(
         decodeURIComponent(
           `${this.instances[instanceName]}${this.base}${route}`
         ),
