@@ -20,7 +20,7 @@ module.exports = class ReportController extends BaseController {
             let [form] = await Promise.all([
                 await this.controller.getFormByParams({
                     NAME: this.form_alias,
-                    sortBy: "version:desc"
+                    sortBy: "VERSION:desc"
                 })
             ]);
     

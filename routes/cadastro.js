@@ -17,7 +17,7 @@ router.get("/cadastro_alianca", requireAuth, async function (req, res) {
     const page = req.query.page || 0;
     const form_alias = "Cadastro de Informações Anual";
 
-    let form  = await controller.getFormByParams({ NAME: "Cadastro de Informações Anual", sortBy: "version:desc" });
+    let form  = await controller.getFormByParams({ NAME: "Cadastro de Informações Anual", sortBy: "VERSION:desc" });
     form = form[0];
 
     quiz_actions.open(req, res, {
@@ -69,7 +69,7 @@ router.get("/summary_coord", requireAuth, async function (req, res, next) {
   let [centros, coordenador, form] = await Promise.all([
     await controller.getCentroByParam( {REGIONAL: regionalInfo._id} ),
     await controller.getPessoasById(regionalInfo.COORDENADOR_ID),
-    await controller.getFormByParams( { NAME: "Cadastro de Informações Anual", sortBy: "version:desc"} )
+    await controller.getFormByParams( { NAME: "Cadastro de Informações Anual", sortBy: "VERSION:desc"} )
   ]);
 
   let lastForm = form[0];

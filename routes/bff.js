@@ -29,7 +29,7 @@ router.get("/bff/coord_responses", async function (req, res) {
       return templates;
     }
 
-    const form = await controller.getFormByParams( { NAME: "Cadastro de Informações Anual", sortBy: "version:desc"});
+    const form = await controller.getFormByParams( { NAME: "Cadastro de Informações Anual", sortBy: "VERSION:desc"});
     const lastForm = form[0];
     let coord_quiz = await controller.findQuestionByCategory(lastForm,"Coordenador");
 
@@ -151,7 +151,7 @@ router.get("/bff/coord_info", async function (req, res) {
 
     let [regionalInfo, form, coordenador] = await Promise.all([
       await controller.getRegionalByParams( paramsParsed ),
-      await controller.getFormByParams( { NAME: "Cadastro de Informações Anual", sortBy: "version:desc"}),
+      await controller.getFormByParams( { NAME: "Cadastro de Informações Anual", sortBy: "VERSION:desc"}),
       await controller.getPessoaById(regionalInfo.COORDENADOR_ID)
     ]);
 
@@ -371,12 +371,26 @@ router.get("/bff/get_required", async function (req, res) {
   try {
     const centroId = req.query.centroID;
 
-    const responses = await controller.getQuizResponseByParams({
-      CENTRO_ID: centroId,
-      fields: "ANSWER, QUESTION_ID"
-    });
+    const [responses, [form]]= await Promise.all([
+      await controller.getQuizResponseByParams({ CENTRO_ID: centroId, fields: "ANSWER, QUESTION_ID" }),
+      await controller.getFormByParams({ NAME: "Cadastro de Informações Anual", sortBy: "VERSION:desc" })
+    ]);
 
-    let questions = await controller.getQuestionByParams({ IS_REQUIRED: true, fields:"_id, QUESTION" })
+    const questions = [];
+
+    form.PAGES.forEach(page=>{
+      page.QUIZES.forEach(quiz=>{
+        quiz.QUESTIONS.forEach(questionGroup=>{
+          questionGroup.GROUP.forEach(q=>{
+            if(q.IS_REQUIRED)
+            questions.push(q)
+          })
+        })
+      })
+    })
+
+
+    // let questions = await controller.getQuestionByParams({ IS_REQUIRED: true, fields:"_id, QUESTION" })
 
     let not_finished = [];
 

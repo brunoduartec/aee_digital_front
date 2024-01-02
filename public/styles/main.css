@@ -600,3 +600,9 @@ select.campo-invalido {
     transform: translateX(5px);
   }
 }
+
+.group-container {
+  display: flex;
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center; /* Centraliza verticalmente, se necessário */
+}

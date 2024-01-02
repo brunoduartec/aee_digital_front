@@ -26,7 +26,7 @@
   }
   const itemSize = 12/size;
   for (let index = 0; index < answers_length; index++) {%>
-    <div class="form row" id="group_<%=group._id%>" name="group_<%=group._id%>">
+    <div class="form row group-container" id="group_<%=group._id%>" name="group_<%=group._id%>">
     <%group.GROUP.forEach(function(question){%>
 
       <%

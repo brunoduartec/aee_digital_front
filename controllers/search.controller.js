@@ -24,7 +24,7 @@ module.exports = class SearchController {
 
       let form_template = await this.controller.getFormByParams({
         NAME: name,
-        sortBy: "version:desc"
+        sortBy: "VERSION:desc"
       });
 
       form_template = form_template[0];
