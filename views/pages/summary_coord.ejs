@@ -224,7 +224,7 @@
             <%
             questionInfo = defaultOptionResponse
             %>
-            <%- include('../partials/sub_quiz_option', {question:questionInfo});%>
+            <%- include('../partials/sub_quiz_option', {question:questionInfo, centroId: centro._id});%>
           </div>
         </span>
         <span class="border col-md-1"
@@ -232,7 +232,7 @@
             <%
             questionInfo = defaultResponse
             %>
-            <%- include('../partials/sub_quiz_input', {question:questionInfo});%></div></span
+            <%- include('../partials/sub_quiz_input', {question:questionInfo, centroId: centro._id});%></div></span
         >
         <span class="border col-md-1"
           ><div class="form-group"><p name="data_avaliacao" id="data_avaliacao_<%=centro._id%>">

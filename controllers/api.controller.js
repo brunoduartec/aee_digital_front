@@ -199,8 +199,12 @@ module.exports = class apiController extends CacheableController{
   }
 
 
-  async putQuizResponse(id, value) {
+  async patchQuizResponse(id, value) {
     return await this.patch('answers', id, value)
+  }
+
+  async putQuizResponse(params, value) {
+    return await this.put('answers', params, value)
   }
 
   async postQuizResponse(body) {

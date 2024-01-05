@@ -472,14 +472,15 @@ router.post("/bff/add_answer", requireAuth, async function (req, res) {
 
 router.put("/bff/update_answer", requireAuth, async function (req, res) {
   try {
-    const answer = req.originalUrl;
-    let paramsFrom = parser.getQueryParamsParsed(answer);
+    const params = req.originalUrl;
+    const answer = req?.body?.answer;
+    let paramsFrom = parser.getQueryParamsParsed(params);
 
-    const quizResponse = await controller.putQuizResponse( paramsFrom.answerId, {
-      ANSWER: paramsFrom.answer,
+    const quizResponse = await controller.putQuizResponse( paramsFrom, {
+      CENTRO_ID: paramsFrom.centroId,
+      QUESTION_ID: paramsFrom.questionId,
+      ANSWER: answer,
     });
-
-    
 
     res.json(quizResponse);
   } catch (error) {

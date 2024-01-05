@@ -1,4 +1,6 @@
-<select id="<%= question.ANSWER_ID%>" name="<%= question.ANSWER_ID%>" class="form-select" questionId="<%=question._id%>" onfocusout="updateFormItem(this)">
+<% itemId = `${centroId}${question._id}`%>
+
+<select id="<%= itemId%>" name="<%= itemId%>" class="form-select" questionId="<%=question._id%>"  centroId="<%=centroId%>" onfocusout="updateFormItem(this)">
     <%if(!question.PRESET_VALUES){%>
     <option>Vazio</option>
     <%}else{%>
