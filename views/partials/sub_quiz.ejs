@@ -51,25 +51,25 @@
        
       <% switch (question.ANSWER_TYPE) {
           case 'Option' : %>
-            <%- include('./sub_quiz_option', {question:questionInfo});%>
+            <%- include('./sub_quiz_option', {question:questionInfo, centroId});%>
           <%break; 
           case 'Date' :%>
-            <%- include('./sub_quiz_date', {question:questionInfo});%>
+            <%- include('./sub_quiz_date', {question:questionInfo, centroId});%>
           <%break;
           case 'Boolean' :%>
-            <%- include('./sub_quiz_radio', {question:questionInfo});%>
+            <%- include('./sub_quiz_radio', {question:questionInfo, centroId});%>
           <%break;
             case 'TextArea' :%>
-            <%- include('./sub_quiz_textarea', {question:questionInfo});%>
+            <%- include('./sub_quiz_textarea', {question:questionInfo, centroId});%>
           <%break;
             case 'Time' :%>
-            <%- include('./sub_quiz_time', {question:questionInfo});%>
+            <%- include('./sub_quiz_time', {question:questionInfo, centroId});%>
           <%break;
           case 'Dia_Trabalho' :%>
-            <%- include('./sub_quiz_dia_trabalho', {question:questionInfo});%>
+            <%- include('./sub_quiz_dia_trabalho', {question:questionInfo, centroId});%>
           <%break;
           default:%>
-            <%- include('./sub_quiz_input', {question:questionInfo});%>
+            <%- include('./sub_quiz_input', {question:questionInfo, centroId});%>
           <% break;
         } %>
 

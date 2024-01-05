@@ -1,47 +1,48 @@
 <script>
   function updateFormItem(item) {
     const subId = item.id.split("_");
-
     id = subId[0];
 
     var itemsChanged = document.getElementsByName(id);
     var itemChanged;
 
-    for (let index = 0; index < itemsChanged.length; index++) {
-      const element = itemsChanged[index];
-      if (element.value) {
-        itemChanged = element;
-        break;
-      }
+    let valueToApply
+
+    itemChanged = itemsChanged[0];
+    if(itemsChanged.length > 1){
+      checkerIndex = subId[1]
+      valueToApply = checkerIndex=="1"?"true":"false";
     }
-
-    const valueToApply = itemChanged ? itemChanged.value.toString(): ""
-
-    const answerId = item.id;
-    let questionId;
-
-    var apiUrl = `/bff/update_answer?answerId=${answerId}&answer=${valueToApply}`;
-    if (itemChanged) {
-      questionId = itemChanged.getAttribute("questionId");
+    else{
+      valueToApply = itemChanged ? itemChanged.value.toString(): ""
+    }
+      const questionId = itemChanged.getAttribute("questionId");
+      const centroId = itemChanged.getAttribute("centroId");
+      var apiUrl = `/bff/update_answer?questionId=${questionId}&centroId=${centroId}`;
+      
       if (questionId) {
-        apiUrl = apiUrl.concat(`&questionId=${questionId}`);
-      }
-    }
+    
+        fetch(apiUrl, {
+        method: "PUT",
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+        answer: valueToApply
+        })
 
-    fetch(apiUrl, {
-      method: "PUT",
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        const responseInfo = data[0];
-      })
-      .catch((err) => {
-        console.log("---ERROR---", err);
-        throw error;
-        // Do something for an error here
-      });
+        })
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            const responseInfo = data[0];
+          })
+          .catch((err) => {
+            console.log("---ERROR---", err);
+            throw error;
+          });
+    }
   }
 
   function callCreateRoute(table, clone, groupInfo, formId, centroId) {

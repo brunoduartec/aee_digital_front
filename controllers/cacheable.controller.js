@@ -63,14 +63,14 @@ module.exports = class CacheableController extends BaseController {
 
     }
 
-    async put(domain, id, body) {
+    async put(domain, params, body) {
         try {
-            // let paramsParsed = this.parser.getParamsParsed(params)
+            let paramsParsed = this.parser.getParamsParsed(params)
             this.cache.clearGroup(domain)
 
             const response = await this.request.put(
                 this.service,
-                `/${domain}/${id}`,
+                `/${domain}?${paramsParsed}`,
                 body
             );
 

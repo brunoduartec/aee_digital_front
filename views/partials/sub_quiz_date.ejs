@@ -1,9 +1,12 @@
+<% itemId = `${centroId}${question._id}`%>
+
 <input
   type="date"
-  id="<%= question.ANSWER_ID%>"
-  name="<%= question.ANSWER_ID%>"
+  id="<%= itemId%>"
+  name="<%= itemId%>"
   value="<%=question.ANSWER%>"
   class="form-control"
   questionId="<%=question._id%>"
+  centroId="<%=centroId%>"
   onfocusout="updateFormItem(this)"
 />
