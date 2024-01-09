@@ -130,7 +130,8 @@
     callCreateRoute(table, clone, groupInfo, formId, centroId);
   }
 
-  function Delete(item, table_id, centroId) {
+  function Delete(item, table_id, centroId, question) {
+    console.log("QUESTION",JSON.stringify(question))
     const itemParent = item.parentNode;
     const itemParentParent = itemParent.parentNode;
     const children = itemParentParent.children;
@@ -145,7 +146,7 @@
 
       for (let j = 0; j < elementChildren.length; j++) {
         const elementChild = elementChildren[j];
-        const answerId = elementChild.getAttribute("id");
+        const answerId = elementChild.getAttribute("answerId");
         const questionId = elementChild.getAttribute("questionid");
         if (answerId) {
           callDeleteRoute(element, table_id,centroId, questionId, answerId);

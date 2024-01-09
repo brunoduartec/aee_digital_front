@@ -15,7 +15,7 @@ module.exports = class ExcelExportReportsController {
   async init() {
     try {
 
-      const [form] = await this.controller.getFormByParams({ NAME: "Cadastro de Informações Anual", sortBy: "VERSION:desc" });
+      const [form] = await this.controller.getLastFormByParams({ NAME: "Cadastro de Informações Anual"});
       this.headers = form.PAGES.flatMap(
         (page) =>
           page.QUIZES.flatMap(

@@ -18,14 +18,11 @@ module.exports = class ReportController extends BaseController {
 
         try {
             let [form] = await Promise.all([
-                await this.controller.getFormByParams({
-                    NAME: this.form_alias,
-                    sortBy: "VERSION:desc"
+                await this.controller.getLastFormByParams({
+                    NAME: this.form_alias
                 })
             ]);
     
-            form = form[0];
-
             let coordinatorQuizGroup = await this.controller.findQuestionByCategory(form,"Coordenador");
     
             this.infoResponses = form.PAGES.flatMap(page => page.QUIZES);

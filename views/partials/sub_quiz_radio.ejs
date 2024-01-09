@@ -3,6 +3,7 @@
 <div class="radio">
   <input class="form-check-input" 
   type="radio"
+  answerId="<%=question.ANSWER_ID ? question.ANSWER_ID:undefined %>"
   questionId="<%=question._id%>"
   centroId="<%=centroId%>"
   name="<%= itemId%>" id="<%=
@@ -13,6 +14,7 @@
   <input
     class="form-check-input"
     type="radio"
+    answerId="<%=question.ANSWER_ID ? question.ANSWER_ID:undefined %>"
     questionId="<%=question._id%>"
     centroId="<%=centroId%>"
     name="<%= itemId%>"

@@ -1,7 +1,9 @@
 var express = require("express");
 var router = express.Router();
 
-const { requireAuth } = require("../helpers/auth.helpers");
+const {
+  requireAuth
+} = require("../helpers/auth.helpers");
 
 const Controller = require("../controllers/api.controller");
 const controller = new Controller();
@@ -15,14 +17,14 @@ router.get("/centros", requireAuth, async function (req, res) {
   const regionalName = req.query.regionalName;
   let regionals;
   let centros;
-  
+
   if (regionalName != null) {
-    centros = await controller.getCentroByParam({"REGIONAL.NOME_REGIONAL": regionalName});
-    regionals = [
-      {
-        NOME_REGIONAL: regionalName,
-      },
-    ];
+    centros = await controller.getCentroByParam({
+      "REGIONAL.NOME_REGIONAL": regionalName
+    });
+    regionals = [{
+      NOME_REGIONAL: regionalName,
+    }, ];
   } else {
     centros = await controller.getCentros();
     regionals = await controller.getRegionais();
@@ -48,13 +50,13 @@ router.get("/centro", requireAuth, async function (req, res) {
     const centro = req.query.nome;
     const edit = req.query.edit;
     const option = "Centro";
-  
+
     const pesquisaInfo = {
       search: centro,
       option: option,
     };
     const result = await searchcontroller.getPesquisaResult(pesquisaInfo);
-  
+
     if (edit) {
       res.render("pages/editar", {
         opcao: option,
@@ -66,7 +68,7 @@ router.get("/centro", requireAuth, async function (req, res) {
         result: result.items,
       });
     }
-    
+
   } catch (error) {
     this.logger.error("Error at centro route")
     throw error;
@@ -137,19 +139,35 @@ router.post("/create_centro", requireAuth, async function (req, res) {
       CIDADE: req.body.cidade || defaultValue,
       ESTADO: req.body.estado || defaultValue,
       PAIS: req.body.pais || "Brasil",
-      REGIONAL: req.body.regional
+      REGIONAL: req.body.regional,
+      FUNCIONAMENTO: {
+        "segunda": [
+
+        ],
+        "terca": [],
+        "quarta": [],
+        "quinta": [
+
+        ],
+        "sexta": [],
+        "sabado": [
+
+        ],
+        "domingo": []
+      }
     };
-  
+
     const centroInfoAdded = await controller.createCentro(centroInfo)
+    const centroId = centroInfoAdded._id;
 
-    await controller.initializeCentro(centroInfoAdded.ID)
+    // await controller.initializeCentro(centroId)
 
-    let loginInfo = await controller.setPass(centroInfo.NOME_CENTRO, centroInfoAdded.ID, ['presidente'])
+    let loginInfo = await controller.setPass(centroInfo.NOME_CENTRO, centroId, ['presidente'], req.body.login, req.body.password)
     loginInfo = loginInfo[0]
 
     res.render("pages/thanks", {
       centroInfoAdded,
-      message:`informações do centro\nusuario: ${loginInfo.user}\n  senha:${loginInfo.pass}`
+      message: `informações do centro\nusuario: ${loginInfo.user}\n  senha:${loginInfo.pass}`
     });
   } catch (error) {
     logger.error(`post:create_centro: ${req.body}`, error);

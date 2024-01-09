@@ -29,9 +29,8 @@ router.get("/bff/coord_responses", async function (req, res) {
       return templates;
     }
 
-    const form = await controller.getFormByParams( { NAME: "Cadastro de Informações Anual", sortBy: "VERSION:desc"});
-    const lastForm = form[0];
-    let coord_quiz = await controller.findQuestionByCategory(lastForm,"Coordenador");
+    const form = await controller.getLastFormByParams( { NAME: "Cadastro de Informações Anual"});
+    let coord_quiz = await controller.findQuestionByCategory(form,"Coordenador");
 
     let coordresponse = await controller.getQuizResponseByParams({
       CENTRO_ID: centroId,
@@ -151,7 +150,7 @@ router.get("/bff/coord_info", async function (req, res) {
 
     let [regionalInfo, form, coordenador] = await Promise.all([
       await controller.getRegionalByParams( paramsParsed ),
-      await controller.getFormByParams( { NAME: "Cadastro de Informações Anual", sortBy: "VERSION:desc"}),
+      await controller.getLastFormByParams( { NAME: "Cadastro de Informações Anual"}),
       await controller.getPessoaById(regionalInfo.COORDENADOR_ID)
     ]);
 
@@ -371,9 +370,9 @@ router.get("/bff/get_required", async function (req, res) {
   try {
     const centroId = req.query.centroID;
 
-    const [responses, [form]]= await Promise.all([
+    const [responses, form]= await Promise.all([
       await controller.getQuizResponseByParams({ CENTRO_ID: centroId, fields: "ANSWER, QUESTION_ID" }),
-      await controller.getFormByParams({ NAME: "Cadastro de Informações Anual", sortBy: "VERSION:desc" })
+      await controller.getLastFormByParams({ NAME: "Cadastro de Informações Anual"})
     ]);
 
     const questions = [];
