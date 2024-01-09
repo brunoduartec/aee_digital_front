@@ -17,8 +17,7 @@ router.get("/cadastro_alianca", requireAuth, async function (req, res) {
     const page = req.query.page || 0;
     const form_alias = "Cadastro de Informações Anual";
 
-    let form  = await controller.getFormByParams({ NAME: "Cadastro de Informações Anual", sortBy: "VERSION:desc" });
-    form = form[0];
+    let form  = await controller.getLastFormByParams({ NAME: "Cadastro de Informações Anual"});
 
     quiz_actions.open(req, res, {
       centro_id,
@@ -69,12 +68,10 @@ router.get("/summary_coord", requireAuth, async function (req, res, next) {
   let [centros, coordenador, form] = await Promise.all([
     await controller.getCentroByParam( {REGIONAL: regionalInfo._id} ),
     await controller.getPessoasById(regionalInfo.COORDENADOR_ID),
-    await controller.getFormByParams( { NAME: "Cadastro de Informações Anual", sortBy: "VERSION:desc"} )
+    await controller.getLastFormByParams( { NAME: "Cadastro de Informações Anual"} )
   ]);
 
-  let lastForm = form[0];
-
-  const avaliacaoCategory = controller.findQuestionByCategory(lastForm, "Auto Avaliação")
+  const avaliacaoCategory = controller.findQuestionByCategory(form, "Auto Avaliação")
 
   let autoavaliacaoQuestion = avaliacaoCategory.QUESTIONS[0].GROUP[0];
   let avaliacaoQuestionId = autoavaliacaoQuestion._id;

@@ -22,12 +22,10 @@ module.exports = class SearchController {
       const page = search.page;
       let finalized = false;
 
-      let form_template = await this.controller.getFormByParams({
-        NAME: name,
-        sortBy: "VERSION:desc"
+      let form_template = await this.controller.getLastFormByParams({
+        NAME: name
       });
 
-      form_template = form_template[0];
       let pages = form_template.PAGES;
 
       pages = pages.filter((m)=>{

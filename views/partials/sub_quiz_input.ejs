@@ -7,6 +7,7 @@
   name="<%= itemId%>"
   value="<%=question.ANSWER%>"
   centroId="<%=centroId%>"
+  answerId="<%=question.ANSWER_ID ? question.ANSWER_ID:undefined %>"
   questionId="<%=question._id%>"
   onfocusout="updateFormItem(this)"
 />

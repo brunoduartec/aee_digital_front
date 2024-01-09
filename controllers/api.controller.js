@@ -50,11 +50,10 @@ module.exports = class apiController extends CacheableController{
       if (responses.length == 0) {
         const cadastroFormName = "Cadastro de Informações Anual";
   
-        let form = await this.getFormByParams({
+        let form = await this.getLastFormByParams({
           "NAME": cadastroFormName
         });
   
-        form = form[0];
         let pages = form.PAGES;
   
         let answersToAdd = []
@@ -95,6 +94,15 @@ module.exports = class apiController extends CacheableController{
 
   async getFormByParams(params) {
     return await this.get('forms', params)
+  }
+
+  async getLastFormByParams(params){
+    const sortBy= "VERSION:desc"
+    params.sortBy = sortBy
+
+    const form = await this.get('forms', params)
+
+    return form[0];
   }
 
   findQuestionByCategory(form, category) {
@@ -140,18 +148,32 @@ module.exports = class apiController extends CacheableController{
     return nomeDeUsuario.toLowerCase();
   }
 
-  async setPass(hint,scope_id, groups ){
-    const pass = generator.generate({
-      length: 6,
-      numbers: true
-    });
+  async setPass(hint,scope_id, groups, login, password ){
+    
+    let pass;
+    if(!password){
+      pass = generator.generate({
+        length: 6,
+        numbers: true
+      });
+    }
+    else{
+      pass = password
+    }
+
+    let user;
+    if(!login){
+      user = this.getFakeName(hint)
+    }
+    else{
+      user = login;
+    }
 
     const passInfo = {
       groups,
       scope_id,
       pass,
-      user: this.getFakeName(hint)
-
+      user
     }
 
     return await this.post('passes', passInfo)
@@ -231,8 +253,6 @@ module.exports = class apiController extends CacheableController{
       let form = await this.getFormByParams({
         NAME: formName
       });
-
-      form = form[0];
 
       let responses = await this.getQuizResponseByParams({
         CENTRO_ID: centroId

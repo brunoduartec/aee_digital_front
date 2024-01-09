@@ -80,7 +80,7 @@
 
       <%if(group.IS_MULTIPLE){%>
         <div class="form-group col-md-<%= itemSize%> ">
-            <button type="button" class="btn btn-warning" style="vertical-align: bottom" onclick="Delete(this, '<%= group._id%>','<%= centroId%>')">
+            <button type="button" class="btn btn-warning" style="vertical-align: bottom" onclick="Delete(this, '<%= group._id%>','<%= centroId%>', '<%=questionInfo%>')">
                 <img src="/img/trash-fill.svg" alt="Bootstrap">
               </button>
         </div>
