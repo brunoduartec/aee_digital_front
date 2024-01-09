@@ -250,7 +250,7 @@ module.exports = class apiController extends CacheableController{
 
   async checkFormCompletion(formName, centroId) {
     try {
-      let form = await this.getFormByParams({
+      let form = await this.getLastFormByParams({
         NAME: formName
       });
 
