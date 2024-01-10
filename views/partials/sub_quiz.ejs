@@ -30,11 +30,12 @@
     <%group.GROUP.forEach(function(question){%>
 
       <%
+      let questionInfo
       if(question.ANSWER && question.ANSWER_ID){
         let l = question.ANSWER.length
         const answer = question.ANSWER[index]
         const answer_id = question.ANSWER_ID[index]
-        const questionInfo = {
+        questionInfo = {
          ANSWER: answer,
          ANSWER_ID: answer_id,
          PRESET_VALUES: question.PRESET_VALUES,
