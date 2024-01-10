@@ -21,6 +21,11 @@
 
   <%
   let size = group.GROUP.length;
+  let questionInfo = {
+    ANSWER: "",
+    ANSWER_ID: "",
+    _id: ""
+  }
   if(group.IS_MULTIPLE){
     size++;
   }
@@ -30,7 +35,6 @@
     <%group.GROUP.forEach(function(question){%>
 
       <%
-      let questionInfo
       if(question.ANSWER && question.ANSWER_ID){
         let l = question.ANSWER.length
         const answer = question.ANSWER[index]
