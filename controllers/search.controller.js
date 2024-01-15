@@ -78,7 +78,7 @@ module.exports = class SearchController {
                   });
 
                 } else {
-                  const itemFound = quiz_responses.find((m) => {
+                  const itemFound = quiz_responses.findLast((m) => {
                     return m.QUESTION_ID == question._id;
                   })
                   answer = [itemFound || " "];
