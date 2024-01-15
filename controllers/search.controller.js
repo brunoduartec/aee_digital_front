@@ -78,10 +78,13 @@ module.exports = class SearchController {
                   });
 
                 } else {
-                  const itemFound = quiz_responses.findLast((m) => {
+                  const itemFound = quiz_responses.filter((m) => {
                     return m.QUESTION_ID == question._id;
                   })
-                  answer = [itemFound || " "];
+
+                  const itemToUse = itemFound[itemFound.length-1];
+
+                  answer = [itemToUse || " "];
                 }
 
                 if (answer.length > 0) {
