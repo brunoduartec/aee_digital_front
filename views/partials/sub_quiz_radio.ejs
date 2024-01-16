@@ -6,9 +6,11 @@
   answerId="<%=question.ANSWER_ID ? question.ANSWER_ID:undefined %>"
   questionId="<%=question._id%>"
   centroId="<%=centroId%>"
-  name="<%= itemId%>" id="<%=
-  itemId%>_1" <%if(question.ANSWER == "true" ){%> checked value="true"<%}%>
-  onfocusout="updateFormItem(this)"/>
+  name="<%= itemId%>" 
+  id="<%=itemId%>_1" 
+  value="true"
+  onfocusout="updateFormItem(this)"
+  <%if(question.ANSWER == "true" ){%> checked <%}%>
   <label for="<%= itemId%>1"> Sim </label>
 
   <input
@@ -19,7 +21,8 @@
     centroId="<%=centroId%>"
     name="<%= itemId%>"
     id="<%= itemId%>_2"
-    <% if(!question.ANSWER || question.ANSWER!="true" ){%> checked value = "false" <%}%>
-    onfocusout="updateFormItem(this)"/>
+    value="false"
+    onfocusout="updateFormItem(this)"
+    <% if(!question.ANSWER || question.ANSWER!="true" ){%> checked <%}%>
    <label for="<%= itemId%>2"> Não </label>
 </div>
