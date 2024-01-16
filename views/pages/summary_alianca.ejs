@@ -22,6 +22,7 @@
     </div>
 
     <div class="validacao-aee">
+      <div>
         <div>
           <p><b>Dados de <%= start %> até <%= end%></b></p>
         </div>
@@ -62,6 +63,13 @@
             
           </div>
         </div>
+      </div>
+
+      <div>
+        <canvas id="totalChart" style="width: 100%"></canvas>
+      </div>
+
+
       </div>  
       <br>
 
@@ -130,6 +138,59 @@
           },
         },
       });
+
+
+      // Script para criar o gráfico
+      async function fetchDataAndRenderChart() {
+          try {
+              // Fazendo a chamada à API
+              const response = await fetch('/bff/summaries');
+              const data = await response.json();
+
+              // Processando os dados para contar as ocorrências por dia
+              const countPerDay = {};
+              data.forEach(item => {
+                  const date = new Date(item.createdAt).toLocaleDateString();
+                  countPerDay[date] = (countPerDay[date] || 0) + 1;
+              });
+
+              // Preparando os dados para o gráfico
+              const chartData = {
+                  labels: Object.keys(countPerDay),
+                  datasets: [{
+                      label: 'Finalizados por Dia',
+                      data: Object.values(countPerDay),
+                      backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                      borderColor: 'rgba(54, 162, 235, 1)',
+                      borderWidth: 1
+                  }]
+              };
+
+              // Opções do gráfico
+              const options = {
+                  scales: {
+                      y: {
+                          beginAtZero: true
+                      }
+                  },
+                  responsive: true,
+                  maintainAspectRatio: false,
+              };
+
+              // Renderizando o gráfico
+              const ctx = document.getElementById('totalChart').getContext('2d');
+              new Chart(ctx, {
+                  type: 'line',
+                  data: chartData,
+                  options: options
+              });
+
+          } catch (error) {
+              console.error('Erro ao buscar ou processar dados:', error);
+          }
+      }
+
+      fetchDataAndRenderChart();
 
       function myFunction() {
         var div = document.getElementById("regionais");
@@ -249,15 +310,15 @@
 
         const status_total_casas = document.getElementById("status_total_casas")
         status_total_casas.innerText= total
+        const status_nao_iniciaram = document.getElementById("status_nao_iniciaram")
+        status_nao_iniciaram.innerText= `${total - started} (${Math.round((total - started)/total * 100)}%)`
 
         const status_iniciaram = document.getElementById("status_iniciaram")
-        status_iniciaram.innerText=started
+        status_iniciaram.innerText=`${started} (${Math.round((started)/total * 100)}%)`
 
-        const status_nao_iniciaram = document.getElementById("status_nao_iniciaram")
-        status_nao_iniciaram.innerText= total - started
 
         const status_finalizaram = document.getElementById("status_finalizaram")
-        status_finalizaram.innerText=finished
+        status_finalizaram.innerText=`${finished} (${Math.round(finished/total * 100)}%)`
 
 
         myChart.update();
