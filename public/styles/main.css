@@ -606,3 +606,8 @@ select.campo-invalido {
   justify-content: center; /* Centraliza horizontalmente */
   align-items: center; /* Centraliza verticalmente, se necessário */
 }
+
+#totalChart{
+  height: 200px !important; /* Ajuste a altura conforme necessário */
+  width: 100% !important;   /* Para manter o gráfico responsivo */
+}
