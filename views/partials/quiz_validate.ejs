@@ -1,61 +1,49 @@
 <script>
   function updateFormItem(item) {
-    const subId = item.id.split("_");
-    id = subId[0];
+    let valueToApply = item ? item.value.toString() : "";
 
-    var itemsChanged = document.getElementsByName(id);
-    var itemChanged;
+    const questionId = item.getAttribute("questionId");
+    const centroId = item.getAttribute("centroId");
+    const answerId = item.getAttribute("answerId");
 
-    let valueToApply
+    var apiUrl = `/bff/update_answer?questionId=${questionId}&centroId=${centroId}&answerId=${answerId}`;
 
-    itemChanged = itemsChanged[0];
-    if(itemsChanged.length > 1){
-      checkerIndex = subId[1]
-      valueToApply = checkerIndex=="1"?"true":"false";
-    }
-    else{
-      valueToApply = itemChanged ? itemChanged.value.toString(): ""
-    }
-      const questionId = itemChanged.getAttribute("questionId");
-      const centroId = itemChanged.getAttribute("centroId");
-      var apiUrl = `/bff/update_answer?questionId=${questionId}&centroId=${centroId}`;
-      
-      if (questionId) {
-    
-        fetch(apiUrl, {
-        method: "PUT",
-        headers: {
-        'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-        answer: valueToApply
-        })
+    if (questionId) {
+
+      fetch(apiUrl, {
+          method: "PUT",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            answer: valueToApply
+          })
 
         })
-          .then((response) => {
-            return response.json();
-          })
-          .then((data) => {
-            const responseInfo = data[0];
-          })
-          .catch((err) => {
-            console.log("---ERROR---", err);
-            throw error;
-          });
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          const responseInfo = data[0];
+        })
+        .catch((err) => {
+          console.log("---ERROR---", err);
+          throw error;
+        });
     }
   }
 
   function callCreateRoute(table, clone, groupInfo, formId, centroId) {
     var apiUrl = `/bff/add_answer?centroId=${centroId}`;
     fetch(apiUrl, {
-      method: "POST",
-      headers: {
-    'Content-Type': 'application/json'
-  },
-      body: JSON.stringify({
-    groupInfo
-  })
-    })
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          groupInfo
+        })
+      })
       .then((response) => {
         console.log("AAA", response);
         return response.json();
@@ -94,19 +82,18 @@
   function callDeleteRoute(item, table_id, centroId, questionId, answerId) {
     var apiUrl = `/bff/remove_answer?centroId=${centroId}&questionId=${questionId}&answerId=${answerId}`;
     fetch(apiUrl, {
-      method: "DELETE",
-    })
+        method: "DELETE",
+      })
       .then((response) => {
-       
+
         return response.json();
       })
       .then((data) => {
-        if(data?.removedItems>0){
+        if (data?.removedItems > 0) {
           var p = item.parentNode;
           p.remove();
           console.log("--ITEM REMOVED--");
-        }
-        else{
+        } else {
           console.log("--ITEM NOT REMOVED--");
         }
       })
@@ -131,7 +118,7 @@
   }
 
   function Delete(item, table_id, centroId, question) {
-    console.log("QUESTION",JSON.stringify(question))
+    console.log("QUESTION", JSON.stringify(question))
     const itemParent = item.parentNode;
     const itemParentParent = itemParent.parentNode;
     const children = itemParentParent.children;
@@ -149,7 +136,7 @@
         const answerId = elementChild.getAttribute("answerId");
         const questionId = elementChild.getAttribute("questionid");
         if (answerId) {
-          callDeleteRoute(element, table_id,centroId, questionId, answerId);
+          callDeleteRoute(element, table_id, centroId, questionId, answerId);
           break;
         }
       }
