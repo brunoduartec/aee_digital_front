@@ -6,7 +6,12 @@
     const centroId = item.getAttribute("centroId");
     const answerId = item.getAttribute("answerId");
 
-    var apiUrl = `/bff/update_answer?questionId=${questionId}&centroId=${centroId}&answerId=${answerId}`;
+
+    var apiUrl = `/bff/update_answer?questionId=${questionId}&centroId=${centroId}`;
+
+    if(answerId){
+      apiUrl = apiUrl + `&answerId=${answerId}`
+    }
 
     if (questionId) {
 
