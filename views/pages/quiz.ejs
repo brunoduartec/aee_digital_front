@@ -38,7 +38,7 @@
           Validação</a>
 
         <%}else{%>
-        <a class="nav-link" href="/cadastro_alianca?ID=<%=centro_id%>&page=<%=i%>"><%=i+1%>° Validação</a>
+        <a class="nav-link" href="/cadastro_alianca?ID=<%=centro_id%>&page=<%=i%>"><%=i+1%>° Validação B</a>
         <%}%>
           </li>
 
@@ -54,14 +54,13 @@
         <input type="hidden" id="page" name="redirect" value="/cadastro_alianca?ID=<%=centro_id%>" />
 
         <%
-            const maxPage = results.PAGES.length;
-
+            const maxPage = titles.length;
             if(indexToNumber >= maxPage){%>
         <%- include('../partials/summary', {quiz:results}); %>
         <%}else{
-            let page = results.PAGES[indexToNumber];
-
-            page.QUIZES.forEach(function(result){%>
+          let page = results.PAGES[indexToNumber];
+          
+          page.QUIZES.forEach(function(result){%>
         <%- include('../partials/sub_quiz', {quiz:result, centroId: centro_id}); %>
         <%}); %>
         <%}%>
