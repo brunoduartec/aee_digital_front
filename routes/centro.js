@@ -160,10 +160,7 @@ router.post("/create_centro", requireAuth, async function (req, res) {
     const centroInfoAdded = await controller.createCentro(centroInfo)
     const centroId = centroInfoAdded._id;
 
-    // await controller.initializeCentro(centroId)
-
     let loginInfo = await controller.setPass(centroInfo.NOME_CENTRO, centroId, ['presidente'], req.body.login, req.body.password)
-    loginInfo = loginInfo[0]
 
     res.render("pages/thanks", {
       centroInfoAdded,
@@ -171,10 +168,11 @@ router.post("/create_centro", requireAuth, async function (req, res) {
     });
   } catch (error) {
     logger.error(`post:create_centro: ${req.body}`, error);
-    res.json({
-      message: "",
-      error
-    })
+    throw error;
+    // res.json({
+    //   message: "",
+    //   error
+    // })
   }
 });
 

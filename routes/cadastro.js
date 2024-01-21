@@ -67,7 +67,7 @@ router.get("/summary_coord", requireAuth, async function (req, res, next) {
 
   let [centros, coordenador, form] = await Promise.all([
     await controller.getCentroByParam( {REGIONAL: regionalInfo._id} ),
-    await controller.getPessoasById(regionalInfo.COORDENADOR_ID),
+    await controller.getPessoasById({ _id:regionalInfo.COORDENADOR_ID}),
     await controller.getLastFormByParams( { NAME: "Cadastro de Informações Anual"} )
   ]);
 
