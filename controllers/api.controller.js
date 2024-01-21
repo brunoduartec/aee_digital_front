@@ -149,34 +149,41 @@ module.exports = class apiController extends CacheableController{
   }
 
   async setPass(hint,scope_id, groups, login, password ){
-    
-    let pass;
-    if(!password){
-      pass = generator.generate({
-        length: 6,
-        numbers: true
-      });
-    }
-    else{
-      pass = password
-    }
+    try {
+      
+      let pass;
+      if(!password){
+        pass = generator.generate({
+          length: 6,
+          numbers: true
+        });
+      }
+      else{
+        pass = password
+      }
+  
+      let user;
+      if(!login){
+        user = this.getFakeName(hint)
+      }
+      else{
+        user = login;
+      }
+  
+      const passInfo = {
+        groups,
+        scope_id,
+        pass,
+        user
+      }
 
-    let user;
-    if(!login){
-      user = this.getFakeName(hint)
+      const response = await this.post('passes', passInfo)
+  
+      return response
+    } catch (error) {
+      this.logger("error at create passes", error)
+      throw error;
     }
-    else{
-      user = login;
-    }
-
-    const passInfo = {
-      groups,
-      scope_id,
-      pass,
-      user
-    }
-
-    return await this.post('passes', passInfo)
   }
 
   async getPasses() {
@@ -248,40 +255,47 @@ module.exports = class apiController extends CacheableController{
     return await this.post('summaries', body)
   }
 
+
+  async getRequiredQuestionsNotAnswered(formName, centroId){
+
+    const [responses, form]= await Promise.all([
+      await this.getQuizResponseByParams({ CENTRO_ID: centroId, fields: "ANSWER, QUESTION_ID" }),
+      await this.getLastFormByParams({ NAME: formName})
+    ]);
+
+    const questions = [];
+
+    form.PAGES.forEach(page=>{
+      page.QUIZES.forEach(quiz=>{
+        quiz.QUESTIONS.forEach(questionGroup=>{
+          questionGroup.GROUP.forEach(q=>{
+            if(q.IS_REQUIRED)
+            questions.push(q)
+          })
+        })
+      })
+    })
+
+    let not_finished = [];
+
+    questions.forEach(question => {
+      const hasResponse = responses.find((response)=>{
+        return response.QUESTION_ID == question._id
+      })
+
+      if(!hasResponse  ||  hasResponse?.ANSWER?.trim().length == 0){
+        not_finished.push(question.QUESTION)
+      }
+      
+    });
+
+    return not_finished;
+  }
+
   async checkFormCompletion(formName, centroId) {
     try {
-      let form = await this.getLastFormByParams({
-        NAME: formName
-      });
-
-      let responses = await this.getQuizResponseByParams({
-        CENTRO_ID: centroId
-      });
-
-      for (const page of form.PAGES) {
-        for (const quiz of page.QUIZES) {
-          for (const groupQuestions of quiz.QUESTIONS) {
-            for (const question of groupQuestions.GROUP) {
-              if (question.IS_REQUIRED) {
-                let response = responses.filter((m) => {
-                  return (
-                    m.CENTRO_ID === centroId &&
-                    // m.QUIZ_ID === quiz._id &&
-                    m.QUESTION_ID === question._id
-                  );
-                });
-
-                if (response.length == 0) {
-                  return false;
-                } else if (response[0].ANSWER == " ") {
-                  return false;
-                }
-              }
-            }
-          }
-        }
-      }
-      return true;
+      const hasUnresoldedQuestions = (await this.getRequiredQuestionsNotAnswered(formName, centroId)).length == 0;
+      return hasUnresoldedQuestions;
     } catch (error) {
       this.logger.error(
         `controller:api.controller:checkFormCompletion ${centroId}`

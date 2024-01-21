@@ -19,11 +19,11 @@ module.exports = class Request {
     this.instances[name] = host;
   }
 
-  async executeMethodWithRetry(method, url, retries=2){
-    return polly()
+  async executeMethodWithRetry(method, url, body, retries=2){
+    return await polly()
     .waitAndRetry(retries)
     .executeForPromise(async () => {
-      const response = await axios[method](url)
+      const response = await axios[method](url, body)
       if (!response.error) {
         return response;
       }else{
@@ -44,10 +44,14 @@ module.exports = class Request {
 
   async post(instanceName, route, body) {
     try {
-      const response = await axios.post(
-        encodeURI(`${this.instances[instanceName]}${this.base}${route}`),
-        body
-      );
+
+      const response = await this.executeMethodWithRetry("post", encodeURI(`${this.instances[instanceName]}${this.base}${route}`),
+      body)
+
+      // const response = await axios.post(
+      //   encodeURI(`${this.instances[instanceName]}${this.base}${route}`),
+      //   body
+      // );
       // this.logger.info(`helpers:request:post ${JSON.stringify(response.data)}`);
       return response.data;
     } catch (error) {

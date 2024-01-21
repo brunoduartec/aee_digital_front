@@ -369,40 +369,8 @@ router.post("/bff/initialize_centro", async function (req, res) {
 router.get("/bff/get_required", async function (req, res) {
   try {
     const centroId = req.query.centroID;
-
-    const [responses, form]= await Promise.all([
-      await controller.getQuizResponseByParams({ CENTRO_ID: centroId, fields: "ANSWER, QUESTION_ID" }),
-      await controller.getLastFormByParams({ NAME: "Cadastro de Informações Anual"})
-    ]);
-
-    const questions = [];
-
-    form.PAGES.forEach(page=>{
-      page.QUIZES.forEach(quiz=>{
-        quiz.QUESTIONS.forEach(questionGroup=>{
-          questionGroup.GROUP.forEach(q=>{
-            if(q.IS_REQUIRED)
-            questions.push(q)
-          })
-        })
-      })
-    })
-
-
-    // let questions = await controller.getQuestionByParams({ IS_REQUIRED: true, fields:"_id, QUESTION" })
-
-    let not_finished = [];
-
-    questions.forEach(question => {
-      const hasResponse = responses.find((response)=>{
-        return response.QUESTION_ID == question._id
-      })
-
-      if(!hasResponse  ||  hasResponse?.ANSWER?.trim().length == 0){
-        not_finished.push(question.QUESTION)
-      }
-      
-    });
+    const formName = "Cadastro de Informações Anual"
+    const not_finished = await controller.getRequiredQuestionsNotAnswered(formName, centroId)
 
     res.json(not_finished);
   } catch (error) {
