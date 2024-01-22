@@ -111,7 +111,7 @@ module.exports = class QuizActions {
         centro_id,
         form_alias,
         page,
-        req?.session?.auth?.groups
+        req?.user?.groups
       );
 
       this.logger.info(

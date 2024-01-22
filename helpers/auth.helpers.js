@@ -1,10 +1,9 @@
+const jwt = require("jsonwebtoken");
 
 const authController = require("../controllers/auth.controller");
 const authcontroller = new authController();
 
-
-const SessionController = require("../controllers/session.controller");
-const sessioncontroller = new SessionController();
+const tokenpass = "aeealianca"
 
 const pageByPermission = {
   presidente: function (info) {
@@ -19,8 +18,20 @@ const pageByPermission = {
 };
 
 const requireAuth = (req, res, next) => {
-  if (req.user) {
-    next();
+  const token = req.cookies.authToken;
+
+  if (token) {
+    try {
+      const verificado = jwt.verify(token, tokenpass);
+      req.user = verificado;
+
+      next();
+    } catch (error) {
+      req.session.originalUrl = req.originalUrl;
+      res.render("pages/login", {
+        message: {},
+      });
+    }
   } else {
     req.session.originalUrl = req.originalUrl;
     res.render("pages/login", {
@@ -39,27 +50,22 @@ async function TryAuthenticate(req, res) {
   if (!auth) {
     res.redirect("/login?failedAuth=true");
   } else {
-    const authToken = sessioncontroller.generateAuthToken();
-
-    sessioncontroller.setAuthToken(authToken, loginInfo.user);
-
-    req.session.authToken = authToken;
 
     let info = {
       link: auth.scope_id,
     };
 
     req.session.auth = auth;
+
+    const token = jwt.sign(auth,tokenpass,{expiresIn:'3d'})
+    res.cookie('authToken', token, { httpOnly: true });
+
     res.redirect(pageByPermission[auth.groups[0]](info));
   }
 }
 
 async function TryLogout(req, res) {
-  sessioncontroller.clearAuthToken(req.session.authToken);
-  req.session.authToken = null;
-  req.session.auth = null;
-  req.session = null;
-
+  res.clearCookie('authToken');
   res.redirect("/");
 }
 
