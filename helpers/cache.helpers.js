@@ -45,4 +45,7 @@ module.exports = class Cache{
             }
         });
     }
+    flushAll(){
+        this.cache.flushAll();
+    }
 }

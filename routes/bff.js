@@ -15,6 +15,8 @@ const excelexporteresponses = new ExcelExportReportsController();
 
 const ReportController = require("../controllers/report.controller")
 
+const Cache = require("../helpers/cache.helpers")
+
 const {
   requireAuth
 } = require("../helpers/auth.helpers");
@@ -499,6 +501,14 @@ router.get("/reports", async (req, res)=>{
   var { infoResponses } = await reportControler.getReportGroups()
 
   res.render("pages/reports",{scope_id,ID,guid, infoResponses})
+})
+
+router.get("/clearcache", async(req,res)=>{
+  const cache = new Cache()
+
+  cache.flushAll();
+
+  res.json({message:"All cache cleared"})
 })
 
 

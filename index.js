@@ -9,7 +9,10 @@ const port = process.env.PORT || config.port;
 const http = require("http");
 
 const express = require("express");
+const cookieParser = require("cookie-parser")
 const app = express();
+app.use(cookieParser());
+
 const server_http = http.createServer(app);
 server_http.listen(port, "0.0.0.0", function () {
   logger.info(`index:server is running on port: ${port}`);
@@ -52,7 +55,7 @@ app.use(require("./routes/centro"));
 app.use(require("./routes/bff"));
 
 app.get("/", requireAuth, async function (req, res) {
-  const auth = req.session.auth;
+  const auth = req.user;
   let info = {
     link: auth.scope_id,
   };
