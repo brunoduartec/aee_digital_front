@@ -1,16 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var session = require("express-session");
 
 const {TryAuthenticate, TryLogout} = require("../helpers/auth.helpers")
-
-router.use(
-    session({
-      secret: "secret",
-      resave: true,
-      saveUninitialized: true,
-    })
-  );
 
 router.get("/login", async function (req, res) {
   const failedAuth = req.query.failedAuth;
