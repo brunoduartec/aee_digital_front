@@ -279,7 +279,7 @@ module.exports = class apiController extends CacheableController{
     let not_finished = [];
 
     questions.forEach(question => {
-      const hasResponse = responses.find((response)=>{
+      const hasResponse = responses.findLast((response)=>{
         return response.QUESTION_ID == question._id
       })
 
