@@ -27,13 +27,13 @@ const requireAuth = (req, res, next) => {
 
       next();
     } catch (error) {
-      req.session.originalUrl = req.originalUrl;
+      // req.session.originalUrl = req.originalUrl;
       res.render("pages/login", {
         message: {},
       });
     }
   } else {
-    req.session.originalUrl = req.originalUrl;
+    // req.session.originalUrl = req.originalUrl;
     res.render("pages/login", {
       message: {},
     });
@@ -54,8 +54,6 @@ async function TryAuthenticate(req, res) {
     let info = {
       link: auth.scope_id,
     };
-
-    req.session.auth = auth;
 
     const token = jwt.sign(auth,tokenpass,{expiresIn:'3d'})
     res.cookie('authToken', token, { httpOnly: true });
