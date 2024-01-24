@@ -27,13 +27,11 @@ const requireAuth = (req, res, next) => {
 
       next();
     } catch (error) {
-      // req.session.originalUrl = req.originalUrl;
       res.render("pages/login", {
         message: {},
       });
     }
   } else {
-    // req.session.originalUrl = req.originalUrl;
     res.render("pages/login", {
       message: {},
     });
