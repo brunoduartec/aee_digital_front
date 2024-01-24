@@ -279,9 +279,11 @@ module.exports = class apiController extends CacheableController{
     let not_finished = [];
 
     questions.forEach(question => {
-      const hasResponse = responses.findLast((response)=>{
+      let hasResponse = responses.filter((response)=>{
         return response.QUESTION_ID == question._id
       })
+
+      hasResponse = hasResponse[hasResponse.length -1]; 
 
       if(!hasResponse  ||  hasResponse?.ANSWER?.trim().length == 0){
         not_finished.push(question.QUESTION)
