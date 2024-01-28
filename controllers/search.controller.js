@@ -16,6 +16,7 @@ module.exports = class SearchController {
     try {
       const search = pesquisaInfo.search;
       const user_role = pesquisaInfo.user_role[0]; // por enquanto ver 1 só
+      const selectedAnswers = [];
 
       let name = search.name;
       let centro_id = search.id;
@@ -77,6 +78,13 @@ module.exports = class SearchController {
                     return m.QUESTION_ID == question._id;
                   });
 
+                  answer.forEach(element => {
+                    selectedAnswers.push({
+                      QUESTION: question._id,
+                      ANSWER: element.ANSWER
+                    })
+                  });
+
                 } else {
                   const itemFound = quiz_responses.filter((m) => {
                     return m.QUESTION_ID == question._id;
@@ -85,6 +93,11 @@ module.exports = class SearchController {
                   const itemToUse = itemFound[itemFound.length-1];
 
                   answer = [itemToUse || " "];
+                  
+                  selectedAnswers.push({
+                    QUESTION: question._id,
+                    ANSWER:itemToUse?itemToUse.ANSWER:" "
+                  })
                 }
 
                 if (answer.length > 0) {
@@ -111,6 +124,7 @@ module.exports = class SearchController {
 
       let quiz = {
         templates: form_template,
+        answers: selectedAnswers,
         titles: page_titles,
         finalized: finalized
       };

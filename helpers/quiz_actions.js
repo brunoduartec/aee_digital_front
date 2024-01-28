@@ -77,19 +77,17 @@ module.exports = class QuizActions {
   async send(req, res, action_info) {
     let { centro_id, form_id } = action_info;
 
-    const quiz_responses = await this.controller.getQuizResponseByParams({ CENTRO_ID: centro_id });
-
-    const quizResponsesMapped = quiz_responses.map((response)=>{ return {
-      QUESTION: response._id,
-      ANSWER: response.ANSWER 
-    }
-    })
+    const form_info = await this.userinfocontroller.getFormInfo(
+      centro_id,
+      action_info.form_alias,
+      action_info.page_index,
+      ["coord_geral"]
+    );
 
     let params = {
       CENTRO_ID: centro_id,
       FORM_ID: form_id,
-      QUESTIONS: quizResponsesMapped,
-      // LASTMODIFIED: new Date(),
+      QUESTIONS: form_info.answers,
     };
     await this.controller.postQuizSummary(params);
 
